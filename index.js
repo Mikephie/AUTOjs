@@ -8,13 +8,21 @@ const converter = require('./script-converter');
 // 从环境变量获取配置
 const INPUT_DIR = process.env.INPUT_DIR || 'input';
 const OUTPUT_DIR = process.env.OUTPUT_DIR || 'output';
-const OUTPUT_FORMAT = process.env.OUTPUT_FORMAT || 'loon';
+// 支持同时转换多种格式（默认同时转换loon和surge）
+const OUTPUT_FORMATS = (process.env.OUTPUT_FORMAT || 'loon,surge').split(',').map(f => f.trim().toLowerCase());
 
 // 启用详细日志
 const DEBUG = process.env.DEBUG === 'true';
 
 // 定义支持的脚本文件扩展名
 const SUPPORTED_EXTENSIONS = ['.js', '.conf', '.txt', '.sgmodule', '.plugin'];
+
+// 定义输出文件扩展名映射
+const FORMAT_EXTENSIONS = {
+  'loon': '.plugin',
+  'surge': '.sgmodule',
+  'quantumultx': '.conf'
+};
 
 function debug(message, ...args) {
   if (DEBUG) {
@@ -77,7 +85,7 @@ async function main() {
   try {
     console.log('======================================');
     console.log(`脚本转换开始`);
-    console.log(`配置: 输入目录=${INPUT_DIR}, 输出目录=${OUTPUT_DIR}, 输出格式=${OUTPUT_FORMAT}`);
+    console.log(`配置: 输入目录=${INPUT_DIR}, 输出目录=${OUTPUT_DIR}, 输出格式=${OUTPUT_FORMATS.join(', ')}`);
     console.log('======================================');
     
     // 输出转换器中可用的方法
@@ -106,69 +114,71 @@ async function main() {
         continue;
       }
       
-      // 创建保持目录结构的输出路径
-      const fileBaseName = path.parse(name).name;
-      const outputRelPath = path.join(path.dirname(relativePath), `${fileBaseName}.${OUTPUT_FORMAT}`);
-      const outputPath = path.join(OUTPUT_DIR, outputRelPath);
-      
       console.log('\n------------------------------');
       console.log(`处理文件: ${relativePath}`);
       console.log(`输入路径: ${inputPath}`);
-      console.log(`输出路径: ${outputPath}`);
       
       try {
-        // 确保输出目录存在（包括嵌套目录）
-        await ensureOutputDir(outputPath);
-        
         // 读取文件内容
         const content = await fs.readFile(inputPath, 'utf8');
         console.log(`成功读取文件: ${relativePath} (${content.length} 字节)`);
         debug('文件内容预览:', content.substring(0, 150) + '...');
         
-        // 尝试使用封装好的转换函数
-        if (typeof converter.convertScript === 'function') {
-          console.log('使用封装的convertScript函数');
-          const convertedContent = converter.convertScript(content, OUTPUT_FORMAT);
+        // 对每种输出格式进行转换
+        for (const format of OUTPUT_FORMATS) {
+          // 创建保持目录结构的输出路径，使用正确的扩展名
+          const fileBaseName = path.parse(name).name;
+          const outputExt = FORMAT_EXTENSIONS[format] || `.${format}`;
+          const outputRelPath = path.join(path.dirname(relativePath), `${fileBaseName}${outputExt}`);
+          const outputPath = path.join(OUTPUT_DIR, outputRelPath);
+          
+          console.log(`转换为 ${format} 格式，输出路径: ${outputPath}`);
+          
+          // 确保输出目录存在（包括嵌套目录）
+          await ensureOutputDir(outputPath);
+          
+          // 转换内容
+          let convertedContent;
+          if (typeof converter.convertScript === 'function') {
+            console.log(`使用封装的convertScript函数转换为 ${format} 格式`);
+            convertedContent = converter.convertScript(content, format);
+          } else {
+            // 如果没有封装函数，则使用逐步转换流程
+            console.log(`使用逐步转换流程转换为 ${format} 格式`);
+            
+            // 提取脚本内容
+            const extractedContent = converter.extractScriptContent(content);
+            debug('提取的内容长度:', extractedContent.length);
+            
+            // 检测脚本类型
+            const scriptType = converter.detectScriptType ? 
+                              converter.detectScriptType(extractedContent) : 
+                              'unknown';
+            console.log(`检测到脚本类型: ${scriptType}`);
+            
+            // 解析脚本
+            const scriptInfo = converter.parseScript(extractedContent, scriptType);
+            console.log(`成功解析脚本，元数据:`, Object.keys(scriptInfo.metadata || {}).join(', '));
+            debug('解析的元数据:', JSON.stringify(scriptInfo.metadata || {}, null, 2));
+            
+            // 转换脚本
+            if (format === 'loon') {
+              convertedContent = converter.convertToLoon(scriptInfo);
+            } else if (format === 'surge') {
+              convertedContent = converter.convertToSurge(scriptInfo);
+            } else if (format === 'quantumultx') {
+              convertedContent = converter.convertToQuantumultX(scriptInfo);
+            } else {
+              throw new Error(`不支持的输出格式: ${format}`);
+            }
+          }
+          
+          debug('转换后的内容预览:', convertedContent.substring(0, 150) + '...');
+          
+          // 写入转换后的内容
           await fs.writeFile(outputPath, convertedContent);
-          console.log(`成功转换并保存: ${outputPath}`);
-          continue;
+          console.log(`成功转换并保存 ${format} 格式: ${outputPath}`);
         }
-        
-        // 如果没有封装函数，则使用逐步转换流程
-        console.log('使用逐步转换流程');
-        
-        // 提取脚本内容
-        const extractedContent = converter.extractScriptContent(content);
-        debug('提取的内容长度:', extractedContent.length);
-        
-        // 检测脚本类型
-        const scriptType = converter.detectScriptType ? 
-                           converter.detectScriptType(extractedContent) : 
-                           'unknown';
-        console.log(`检测到脚本类型: ${scriptType}`);
-        
-        // 解析脚本
-        const scriptInfo = converter.parseScript(extractedContent, scriptType);
-        console.log(`成功解析脚本，元数据:`, Object.keys(scriptInfo.metadata).join(', '));
-        debug('解析的元数据:', JSON.stringify(scriptInfo.metadata, null, 2));
-        
-        // 转换脚本
-        let convertedContent;
-        if (OUTPUT_FORMAT === 'loon') {
-          convertedContent = converter.convertToLoon(scriptInfo);
-        } else if (OUTPUT_FORMAT === 'surge') {
-          convertedContent = converter.convertToSurge(scriptInfo);
-        } else if (OUTPUT_FORMAT === 'quantumultx') {
-          convertedContent = converter.convertToQuantumultX(scriptInfo);
-        } else {
-          throw new Error(`不支持的输出格式: ${OUTPUT_FORMAT}`);
-        }
-        
-        debug('转换后的内容预览:', convertedContent.substring(0, 150) + '...');
-        
-        // 写入转换后的内容
-        await fs.writeFile(outputPath, convertedContent);
-        console.log(`成功转换并保存: ${outputPath}`);
       } catch (fileError) {
         console.error(`处理文件 ${relativePath} 时出错:`, fileError);
         console.error('错误堆栈:', fileError.stack);
