@@ -5,6 +5,9 @@ const converter = require('./script-converter');
 
 async function run() {
   try {
+    // 打印当前目录文件，用于调试
+    console.log('当前目录文件:', fs.readdirSync('.'));
+    
     // 获取Action输入参数
     const inputDir = process.env.INPUT_DIR || core.getInput('INPUT_DIR') || 'input';
     const outputDir = process.env.OUTPUT_DIR || core.getInput('OUTPUT_DIR') || 'output';
