@@ -1,5 +1,5 @@
 /**
- * 脚本转换器模块
+ * 脚本转换器模块 - 改进版
  */
 
 /**
@@ -8,9 +8,8 @@
  * @returns {string} 提取的脚本内容
  */
 function extractScriptContent(content) {
-  // 移除注释和空行，保留核心脚本内容
-  // 这是一个简单实现，可能需要根据实际脚本格式进行调整
-  return content.trim();
+  // 直接返回原始内容，保留所有信息以便更好地解析
+  return content;
 }
 
 /**
@@ -23,18 +22,89 @@ function parseScript(content) {
   const lines = content.split('\n');
   const metadata = {};
   const scriptBody = [];
-  let inMetadata = false;
   
-  // 尝试提取元数据（通常在注释中）
+  // 尝试提取更多可能的元数据格式
   for (const line of lines) {
-    // 检测元数据格式，例如: // @name MyScript
-    const metaMatch = line.match(/\/\/\s*@(\w+)\s+(.*)/);
-    if (metaMatch) {
-      const [, key, value] = metaMatch;
+    // 检测多种元数据格式
+    // 格式1: // @name MyScript
+    const metaMatch1 = line.match(/\/\/\s*@(\w+)\s+(.*)/);
+    // 格式2: // name: MyScript
+    const metaMatch2 = line.match(/\/\/\s*(\w+):\s*(.*)/);
+    // 格式3: /* name: MyScript */
+    const metaMatch3 = line.match(/\/\*\s*(\w+):\s*(.*)\s*\*\//);
+    // 格式4: // #!name MyScript
+    const metaMatch4 = line.match(/\/\/\s*#!(\w+)\s+(.*)/);
+    
+    if (metaMatch1) {
+      const [, key, value] = metaMatch1;
       metadata[key] = value.trim();
-    } else if (!line.trim().startsWith('//')) {
+    } else if (metaMatch2) {
+      const [, key, value] = metaMatch2;
+      metadata[key] = value.trim();
+    } else if (metaMatch3) {
+      const [, key, value] = metaMatch3;
+      metadata[key] = value.trim();
+    } else if (metaMatch4) {
+      const [, key, value] = metaMatch4;
+      metadata[key] = value.trim();
+    } else if (!line.trim().startsWith('//') && !line.trim().startsWith('/*')) {
       // 如果不是注释行，认为是脚本主体
       scriptBody.push(line);
+    }
+  }
+  
+  // 尝试从文件内容自动分析脚本名称（如果元数据未提供）
+  if (!metadata.name) {
+    // 寻找可能的脚本名称模式
+    for (const line of lines) {
+      // 查找明显的名称定义，如变量赋值
+      const nameMatch = line.match(/(const|let|var)\s+(\w+Name|scriptName|NAME|SCRIPT_NAME)\s*=\s*['"](.*)['"]/);
+      if (nameMatch) {
+        metadata.name = nameMatch[3].trim();
+        break;
+      }
+      
+      // 查找函数名称，可能是脚本的主函数
+      const funcMatch = line.match(/function\s+(\w+)\s*\(\)/);
+      if (funcMatch && !['main', 'init', 'start', 'run'].includes(funcMatch[1].toLowerCase())) {
+        metadata.name = funcMatch[1].trim();
+        break;
+      }
+    }
+  }
+  
+  // 如果脚本内有日期相关内容，可能是定时任务
+  if (!metadata.cron) {
+    const cronContent = content.match(/每日|每天|定时|cron|scheduler|timer/i);
+    if (cronContent) {
+      metadata.cron = "0 9 * * *"; // 默认为每天早上9点
+    }
+  }
+  
+  // 检测是否需要MITM
+  if (!metadata.mitm) {
+    const mitmContent = content.match(/request|http|fetch|url|api|\.com|\.net|\.org|\.cn/i);
+    if (mitmContent) {
+      // 尝试从内容中提取域名
+      const domainMatch = content.match(/['"]https?:\/\/([^\/'"]+)/);
+      if (domainMatch) {
+        metadata.mitm = domainMatch[1];
+      }
+    }
+  }
+  
+  // 尝试分析脚本可能的描述
+  if (!metadata.desc && !metadata.description) {
+    // 查找文件顶部可能的描述注释
+    for (let i = 0; i < Math.min(10, lines.length); i++) {
+      const line = lines[i].trim();
+      if (line.startsWith('//') && line.length > 3 && !line.match(/[@#!](\w+)/)) {
+        const desc = line.replace(/^\/\/\s*/, '').trim();
+        if (desc.length > 5 && desc.length < 100) {
+          metadata.desc = desc;
+          break;
+        }
+      }
     }
   }
   
@@ -52,8 +122,11 @@ function parseScript(content) {
 function convertToLoon(scriptInfo) {
   const { metadata, body } = scriptInfo;
   
-  let result = `#!name=${metadata.name || 'Unknown Script'}\n`;
-  result += `#!desc=${metadata.desc || metadata.description || '脚本描述未提供'}\n`;
+  // 如果没有名称，从文件名中提取
+  const scriptName = metadata.name || '脚本';
+  
+  let result = `#!name=${scriptName}\n`;
+  result += `#!desc=${metadata.desc || metadata.description || scriptName + '自动转换'}\n`;
   result += `#!author=${metadata.author || '未知作者'}\n`;
   result += `#!homepage=${metadata.homepage || ''}\n`;
   result += `#!icon=${metadata.icon || ''}\n\n`;
@@ -63,13 +136,13 @@ function convertToLoon(scriptInfo) {
   
   // 如果有cron定义，添加定时任务
   if (metadata.cron) {
-    result += `cron "${metadata.cron}" script-path=${metadata.name || 'script'}.js, tag=${metadata.name || 'script'}\n`;
+    result += `cron "${metadata.cron}" script-path=${scriptName}.js, tag=${scriptName}\n`;
   }
   
   // 如果有HTTP请求脚本
   if (metadata.http || metadata.mitm) {
     const pattern = metadata.pattern || '*';
-    result += `http-response ${pattern} script-path=${metadata.name || 'script'}.js, requires-body=true, tag=${metadata.name || 'http-script'}\n`;
+    result += `http-response ${pattern} script-path=${scriptName}.js, requires-body=true, tag=${scriptName}\n`;
   }
   
   // 如果需要MITM
@@ -89,8 +162,11 @@ function convertToLoon(scriptInfo) {
 function convertToSurge(scriptInfo) {
   const { metadata, body } = scriptInfo;
   
-  let result = `#!name=${metadata.name || 'Unknown Script'}\n`;
-  result += `#!desc=${metadata.desc || metadata.description || '脚本描述未提供'}\n`;
+  // 如果没有名称，从文件名中提取
+  const scriptName = metadata.name || '脚本';
+  
+  let result = `#!name=${scriptName}\n`;
+  result += `#!desc=${metadata.desc || metadata.description || scriptName + '自动转换'}\n`;
   result += `#!author=${metadata.author || '未知作者'}\n`;
   result += `#!homepage=${metadata.homepage || ''}\n`;
   result += `#!icon=${metadata.icon || ''}\n\n`;
@@ -100,13 +176,13 @@ function convertToSurge(scriptInfo) {
   
   // 如果有cron定义，添加定时任务
   if (metadata.cron) {
-    result += `${metadata.name || 'script'} = type=cron,cronexp="${metadata.cron}",script-path=${metadata.name || 'script'}.js\n`;
+    result += `${scriptName} = type=cron,cronexp="${metadata.cron}",script-path=${scriptName}.js\n`;
   }
   
   // 如果有HTTP请求脚本
   if (metadata.http || metadata.mitm) {
     const pattern = metadata.pattern || '*';
-    result += `${metadata.name || 'http-script'} = type=http-response,pattern=${pattern},requires-body=1,script-path=${metadata.name || 'script'}.js\n`;
+    result += `${scriptName} = type=http-response,pattern=${pattern},requires-body=1,script-path=${scriptName}.js\n`;
   }
   
   // 如果需要MITM
