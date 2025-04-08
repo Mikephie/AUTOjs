@@ -6,11 +6,11 @@ const converter = require('./script-converter');
 async function run() {
   try {
     // 获取Action输入参数
-    const inputDir = core.getInput('INPUT_DIR') || 'input';
-    const outputDir = core.getInput('OUTPUT_DIR') || 'output';
-    const outputFormat = core.getInput('OUTPUT_FORMAT') || 'loon';
+    const inputDir = process.env.INPUT_DIR || core.getInput('INPUT_DIR') || 'input';
+    const outputDir = process.env.OUTPUT_DIR || core.getInput('OUTPUT_DIR') || 'output';
+    const outputFormat = process.env.OUTPUT_FORMAT || core.getInput('OUTPUT_FORMAT') || 'loon';
     
-    console.log(`开始转换脚本: 输入目录=${inputDir}, 输出目录=${outputDir}, 格式=${outputFormat}`);
+    console.log(`开始处理脚本，输入目录: ${inputDir}，输出目录: ${outputDir}，输出格式: ${outputFormat}`);
     
     // 确保目录存在
     if (!fs.existsSync(inputDir)) {
@@ -63,7 +63,7 @@ async function run() {
         // 写入输出文件
         fs.writeFileSync(outputPath, result, 'utf8');
         
-        console.log(`✅ 转换成功: ${file} -> ${outputFileName}`);
+        console.log(`✅ ${file} -> ${outputFileName}`);
         results.push({
           file,
           success: true,
@@ -83,12 +83,28 @@ async function run() {
     const successCount = results.filter(r => r.success).length;
     const failCount = results.filter(r => !r.success).length;
     
+    console.log(`处理结果:`);
+    results.forEach(r => {
+      if (r.success) {
+        console.log(`✅ ${r.file} -> ${r.outputFile}`);
+      } else {
+        console.log(`❌ 处理 ${r.file} 失败: ${r.error}`);
+      }
+    });
+    
     console.log(`处理结果: ${successCount} 成功, ${failCount} 失败, 共 ${results.length} 个文件`);
     
-    // 设置Action输出
-    core.setOutput('success_count', successCount);
-    core.setOutput('fail_count', failCount);
-    core.setOutput('total_count', results.length);
+    // 设置Action输出（使用新的环境文件方式替代废弃的set-output）
+    if (process.env.GITHUB_OUTPUT) {
+      fs.appendFileSync(process.env.GITHUB_OUTPUT, `success_count=${successCount}\n`);
+      fs.appendFileSync(process.env.GITHUB_OUTPUT, `fail_count=${failCount}\n`);
+      fs.appendFileSync(process.env.GITHUB_OUTPUT, `total_count=${results.length}\n`);
+    } else {
+      // 兼容旧版本
+      core.setOutput('success_count', successCount);
+      core.setOutput('fail_count', failCount);
+      core.setOutput('total_count', results.length);
+    }
     
     // 如果有失败，设置警告
     if (failCount > 0) {
