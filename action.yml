@@ -26,8 +26,4 @@ outputs:
 
 runs:
   using: 'node16'
-  main: 'dist/index.js'
-
-branding:
-  icon: 'refresh-cw'
-  color: 'blue'
+  main: 'index.js'  # 改为直接使用index.js而不是dist/index.js
