@@ -1,0 +1,33 @@
+name: 'Script Format Converter'
+description: '自动将QX/Loon脚本转换为Surge/Loon格式'
+author: 'Your Name'
+
+inputs:
+  INPUT_DIR:
+    description: '输入脚本目录路径'
+    required: false
+    default: 'input'
+  OUTPUT_DIR:
+    description: '输出脚本目录路径'
+    required: false
+    default: 'output'
+  OUTPUT_FORMAT:
+    description: '输出格式 (surge 或 loon)'
+    required: false
+    default: 'loon'
+
+outputs:
+  success_count:
+    description: '成功转换的脚本数量'
+  fail_count:
+    description: '转换失败的脚本数量'
+  total_count:
+    description: '总共处理的脚本数量'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+
+branding:
+  icon: 'refresh-cw'
+  color: 'blue'
