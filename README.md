@@ -1,178 +1,196 @@
-# 脚本格式转换器使用指南
+# AUTOjs - 脚本格式自动转换工具
 
-本指南将帮助你设置和使用脚本格式转换器，将QX/Loon脚本转换为Surge/Loon格式。
+![GitHub Actions](https://github.com/yourusername/AUTOjs/actions/workflows/script-conversion-workflow.yml/badge.svg)
+[![GitHub Stars](https://img.shields.io/github/stars/yourusername/AUTOjs.svg)](https://github.com/yourusername/AUTOjs/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/yourusername/AUTOjs.svg)](https://github.com/yourusername/AUTOjs/network/members)
 
-## 一、设置仓库
+## 项目简介
 
-### 1. 创建新仓库
+AUTOjs 是一个自动脚本转换工具，可以将 QuantumultX 格式的脚本自动转换为 Loon 和 Surge 格式。本工具使用 GitHub Actions 自动化处理，无需本地环境，只需将原始脚本放入 `input` 目录，即可自动生成对应的 Loon 插件和 Surge 模块。
 
-1. 访问GitHub并登录你的账户
-2. 点击"New repository"创建新仓库
-3. 填写仓库名称，例如"script-converter"
-4. 选择"Public"或"Private"权限
-5. 点击"Create repository"
+## 功能特点
 
-### 2. 上传文件
+- 🚀 **全自动转换**：使用 GitHub Actions 自动触发转换流程
+- 🔄 **多格式支持**：从 QuantumultX 格式转换到 Loon 和 Surge 格式
+- 📂 **保持目录结构**：转换后的文件保持原始的目录组织
+- 📝 **保留注释和元数据**：保留原始脚本中的注释和元数据信息
+- 📦 **自动打包**：自动生成转换结果的压缩包方便下载
 
-可以使用以下方法上传文件：
+## 使用方法
 
-**方法1：通过GitHub网页界面**
+### 获取转换后的脚本
 
-1. 在仓库页面，点击"Add file" > "Upload files"
-2. 拖拽或选择要上传的文件
-3. 添加提交信息
-4. 点击"Commit changes"
+已转换的脚本位于以下目录：
 
-**方法2：通过Git命令行**
+- **Loon 格式**：[loon 目录](./loon)
+- **Surge 格式**：[surge 目录](./surge)
 
-```bash
-# 克隆仓库
-git clone https://github.com/你的用户名/script-converter.git
-cd script-converter
+您也可以下载打包好的文件：
 
-# 复制所有文件到仓库目录
+- [loon-scripts.tar.gz](./loon-scripts.tar.gz) - Loon 格式脚本集合
+- [surge-scripts.tar.gz](./surge-scripts.tar.gz) - Surge 格式脚本集合
 
-# 提交并推送
-git add .
-git commit -m "初始化仓库"
-git push origin main
+### 提交新脚本
+
+如果您想要添加或更新脚本：
+
+1. Fork 本仓库
+2. 将 QuantumultX 格式的脚本添加到 `input` 目录
+3. 提交 Pull Request
+4. GitHub Actions 将自动处理转换并更新结果
+
+或者直接创建 Issue，附上脚本内容或链接，我们会处理并添加。
+
+## 转换说明
+
+转换过程会自动处理以下内容：
+
+- **元数据**：名称、描述、作者等信息
+- **重写规则**：包括普通重写和脚本重写
+- **过滤规则**：各类过滤和屏蔽规则
+- **脚本设置**：响应处理、定时任务等
+- **MITM 设置**：中间人解密所需的域名配置
+
+### 支持的文件类型
+
+支持的输入文件扩展名：`.js`、`.conf`、`.txt`、`.sgmodule`、`.plugin`
+
+### 输出格式
+
+- Loon 格式：`.plugin` 文件
+- Surge 格式：`.sgmodule` 文件
+
+## 自动更新机制
+
+本工具设置了多种自动触发机制：
+
+- 当有新文件推送到 `input` 目录时
+- 当 Pull Request 修改了 `input` 目录中的文件时
+- 每周日自动执行一次完整转换
+- 可以手动触发工作流执行转换
+
+## 使用示例
+
+QuantumultX 原始脚本：
+```javascript
+/*
+#!name=样例QX脚本
+#!desc=用于测试转换功能的样例脚本
+#!author=Converter
+#!category=示例
+
+[rewrite_local]
+# 广告拦截
+^https?:\/\/api\.example\.com\/ads - reject-dict
+^https?:\/\/api\.example\.com\/banner - reject-img
+
+# 脚本处理
+^https?:\/\/api\.example\.com\/user\/profile url script-response-body https://example.com/scripts/profile.js
+^https?:\/\/api\.example\.com\/check_in url script-request-header https://example.com/scripts/checkin.js
+
+[filter_local]
+# 规则设置
+host, ad.example.com, reject
+host-suffix, stats.example.com, reject
+host-keyword, tracker, reject
+ip-cidr, 10.10.10.10/24, direct
+user-agent, Example App*, direct
+
+[mitm]
+hostname = api.example.com, *.example.net, stats.example.org
+*/
 ```
 
-### 3. 目录结构确认
+转换后的 Loon 格式：
+```ini
+#!name=样例QX脚本
+#!desc=用于测试转换功能的样例脚本
+#!author=Converter
+#!category=示例
 
-确保你的仓库有以下基本结构：
+[Rewrite]
+# 广告拦截
+^https?:\/\/api\.example\.com\/ads - reject
+^https?:\/\/api\.example\.com\/banner - reject-img
 
-```
-script-converter/
-├── .github/workflows/script-conversion-workflow.yml
-├── input/
-├── script-converter.js
-├── index.js
-├── package.json
-├── action.yml
-└── README.md
-```
+[Script]
+# 脚本处理
+http-response ^https?:\/\/api\.example\.com\/user\/profile script-path=https://example.com/scripts/profile.js, requires-body=true, tag=profile
+http-request ^https?:\/\/api\.example\.com\/check_in script-path=https://example.com/scripts/checkin.js, tag=checkin
 
-## 二、准备仓库
+[Rule]
+# 规则设置
+DOMAIN,ad.example.com,REJECT
+DOMAIN-SUFFIX,stats.example.com,REJECT
+DOMAIN-KEYWORD,tracker,REJECT
+IP-CIDR,10.10.10.10/24,DIRECT
+USER-AGENT,Example App*,DIRECT
 
-### 1. 配置GitHub Actions权限
-
-1. 在仓库页面，点击"Settings"
-2. 在左侧菜单中选择"Actions" > "General"
-3. 在"Workflow permissions"部分，选择"Read and write permissions"
-4. 点击"Save"保存设置
-
-### 2. 安装依赖并构建
-
-```bash
-# 在本地仓库目录中
-npm install
-npm run build
+[MITM]
+hostname = api.example.com, *.example.net, stats.example.org
 ```
 
-构建后会生成dist目录，包含打包后的代码。将这个目录也提交到仓库中。
+转换后的 Surge 格式：
+```ini
+#!name=样例QX脚本
+#!desc=用于测试转换功能的样例脚本
+#!author=Converter
+#!category=示例
 
-```bash
-git add dist/
-git commit -m "添加构建文件"
-git push origin main
+[Rule]
+# 规则设置
+DOMAIN,ad.example.com,REJECT
+DOMAIN-SUFFIX,stats.example.com,REJECT
+DOMAIN-KEYWORD,tracker,REJECT
+IP-CIDR,10.10.10.10/24,DIRECT
+USER-AGENT,Example App*,DIRECT
+
+[Map Local]
+# 广告拦截
+^https?:\/\/api\.example\.com\/ads data="HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 2
+
+{}"
+^https?:\/\/api\.example\.com\/banner data="HTTP/1.1 200 OK
+Content-Type: image/png
+Content-Length: 0"
+
+[Script]
+# 脚本处理
+profile = type=http-response, pattern=^https?:\/\/api\.example\.com\/user\/profile, requires-body=1, script-path=https://example.com/scripts/profile.js, timeout=60
+checkin = type=http-request, pattern=^https?:\/\/api\.example\.com\/check_in, requires-body=0, script-path=https://example.com/scripts/checkin.js, timeout=60
+
+[MITM]
+hostname = %APPEND% api.example.com, *.example.net, stats.example.org
 ```
 
-## 三、使用转换器
+## 技术架构
 
-### 1. 添加要转换的脚本
+- **脚本解析**：使用正则表达式和字符串处理函数解析原始脚本
+- **格式转换**：根据目标格式构建正确的配置结构
+- **自动化流程**：通过 GitHub Actions 实现完全自动化处理
+- **多平台支持**：统一的转换核心，支持扩展更多格式
 
-将QX或Loon格式的脚本放入`input`目录：
+## 贡献指南
 
-- 通过GitHub网页界面：
-  1. 进入`input`目录
-  2. 点击"Add file" > "Upload files"
-  3. 上传脚本文件
-  4. 提交更改
+欢迎贡献代码或提出建议！您可以通过以下方式参与：
 
-- 通过Git命令行：
-  ```bash
-  # 将脚本复制到input目录
-  cp 你的脚本.js script-converter/input/
-  
-  # 提交并推送
-  cd script-converter
-  git add input/
-  git commit -m "添加需要转换的脚本"
-  git push origin main
-  ```
+1. 提交 Bug 报告或功能请求
+2. 改进现有的转换逻辑
+3. 添加对新格式的支持
+4. 优化代码和文档
 
-### 2. 触发转换工作流
+## 许可证
 
-有三种方式可以触发转换：
+本项目采用 [MIT 许可证](LICENSE)。
 
-1. **自动触发**：当你向`input`目录添加文件时自动触发
-2. **定时触发**：每周日自动运行一次
-3. **手动触发**：
-   - 访问仓库的"Actions"标签页
-   - 选择"Script Conversion Workflow"
-   - 点击"Run workflow"
-   - 选择输出格式（surge或loon）
-   - 点击"Run workflow"按钮
+## 鸣谢
 
-### 3. 查看转换结果
+- 感谢所有脚本作者和分享者
+- 感谢 GitHub Actions 提供的自动化服务
+- 感谢社区中所有提供反馈和建议的用户
 
-1. 在"Actions"标签页查看工作流运行情况
-2. 成功运行后，转换后的脚本会:
-   - 自动提交到`output`目录
-   - 作为构建产物上传（可下载）
+---
 
-## 四、高级用法
-
-### 1. 自定义转换参数
-
-修改`.github/workflows/script-conversion-workflow.yml`文件中的环境变量：
-
-```yaml
-env:
-  INPUT_DIR: 'input'      # 修改输入目录
-  OUTPUT_DIR: 'output'    # 修改输出目录
-  OUTPUT_FORMAT: 'loon'   # 默认输出格式
-```
-
-### 2. 本地运行转换
-
-不使用GitHub Actions时，可在本地运行：
-
-```bash
-# 单个文件转换
-node script-converter.js input/脚本文件.js output/转换后.plugin loon
-
-# 或
-node script-converter.js input/脚本文件.js output/转换后.sgmodule surge
-```
-
-### 3. 批量处理
-
-```bash
-# 设置环境变量并运行
-export INPUT_DIR=input
-export OUTPUT_DIR=output
-export OUTPUT_FORMAT=surge
-node index.js
-```
-
-## 五、疑难解答
-
-### 常见问题
-
-1. **工作流运行失败**
-   - 检查Actions日志了解详细错误
-   - 确认脚本格式是否正确
-   - 验证GitHub Actions权限设置
-
-2. **脚本格式问题**
-   - 确保脚本中包含正确的节点标记
-   - 检查QX格式是否使用`[rewrite_local]`, `[filter_local]`等节点
-   - 检查Loon格式是否使用`[Rule]`, `[Rewrite]`等节点
-
-3. **输出不符合预期**
-   - 检查原脚本是否包含必要的元数据
-   - 查看是否有不支持的特殊格式
-
-如有其他问题，请查看Actions日志或提交Issue。
+**免责声明**：本工具仅供学习和参考，所有转换后的脚本版权归原作者所有。请遵守相关法律法规和服务条款使用脚本。
