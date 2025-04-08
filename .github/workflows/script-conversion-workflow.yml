@@ -1,5 +1,4 @@
 name: Script Conversion Workflow
-
 on:
   workflow_dispatch:
     inputs:
@@ -19,20 +18,18 @@ on:
       - 'input/**'
   schedule:
     - cron: '0 0 * * 0'  # 每周日UTC 00:00运行
-
 jobs:
   convert:
     runs-on: ubuntu-latest
     name: 转换脚本
     permissions:
       contents: write  # 确保有写入内容的权限
-
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
         with:
           fetch-depth: 0  # 获取完整历史记录，以便能够推送
-
+          
       - name: 安装Node.js
         uses: actions/setup-node@v3
         with:
@@ -45,8 +42,7 @@ jobs:
           
       - name: 安装依赖
         run: |
-          npm init -y
-          npm install
+          npm install @actions/core
           
       - name: 运行脚本转换
         id: converter
@@ -56,6 +52,13 @@ jobs:
           INPUT_DIR: 'input'
           OUTPUT_DIR: 'output'
           OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon' }}
+          
+      - name: 上传转换结果
+        uses: actions/upload-artifact@v3
+        with:
+          name: converted-scripts
+          path: output/
+          retention-days: 7
           
       - name: 提交转换结果
         run: |
