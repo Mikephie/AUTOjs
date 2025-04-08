@@ -5,9 +5,10 @@ on:
       output_format:
         description: '转换输出格式'
         required: true
-        default: 'loon'
+        default: 'loon,surge'
         type: choice
         options:
+          - loon,surge
           - loon
           - surge
   push:
@@ -43,7 +44,7 @@ jobs:
         env:
           INPUT_DIR: 'input'
           OUTPUT_DIR: 'output'
-          OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon' }}
+          OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
           
       - name: 打包转换结果
         run: |
