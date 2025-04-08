@@ -36,20 +36,28 @@ jobs:
       - name: 准备环境
         run: |
           mkdir -p input
-          mkdir -p output
+          mkdir -p loon
+          mkdir -p surge
           npm install @actions/core
           
       - name: 运行转换
         run: node index.js
         env:
           INPUT_DIR: 'input'
-          OUTPUT_DIR: 'output'
           OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
           
       - name: 打包转换结果
         run: |
-          tar -czvf converted-scripts.tar.gz output/
-          echo "转换结果已打包为 converted-scripts.tar.gz"
+          # 为每种格式创建单独的压缩包
+          if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
+            tar -czvf loon-scripts.tar.gz loon/
+            echo "Loon脚本已打包为 loon-scripts.tar.gz"
+          fi
+          
+          if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
+            tar -czvf surge-scripts.tar.gz surge/
+            echo "Surge脚本已打包为 surge-scripts.tar.gz"
+          fi
           
       - name: 提交并推送结果
         run: |
@@ -66,7 +74,16 @@ jobs:
           git pull --no-rebase || echo "拉取失败，继续执行"
           
           # 再次暂存变更的文件并提交
-          git add output/ converted-scripts.tar.gz
+          git add loon/ surge/ || echo "没有 loon/ 或 surge/ 目录"
+          
+          if [ -f "loon-scripts.tar.gz" ]; then
+            git add loon-scripts.tar.gz
+          fi
+          
+          if [ -f "surge-scripts.tar.gz" ]; then
+            git add surge-scripts.tar.gz
+          fi
+          
           git commit -m "自动转换脚本" || echo "没有需要提交的更改"
           
           # 推送更改
