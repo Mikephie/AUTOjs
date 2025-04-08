@@ -13,10 +13,64 @@ const OUTPUT_FORMAT = process.env.OUTPUT_FORMAT || 'loon';
 // 启用详细日志
 const DEBUG = process.env.DEBUG === 'true';
 
+// 定义支持的脚本文件扩展名
+const SUPPORTED_EXTENSIONS = ['.js', '.conf', '.txt', '.sgmodule', '.plugin'];
+
 function debug(message, ...args) {
   if (DEBUG) {
     console.log(`[DEBUG] ${message}`, ...args);
   }
+}
+
+/**
+ * 检查文件是否为支持的脚本类型
+ * @param {string} filename 文件名
+ * @returns {boolean} 是否为支持的脚本类型
+ */
+function isSupportedScript(filename) {
+  const ext = path.extname(filename).toLowerCase();
+  return SUPPORTED_EXTENSIONS.includes(ext);
+}
+
+/**
+ * 递归获取目录中的所有文件
+ * @param {string} dir 目录路径
+ * @returns {Promise<Array>} 文件信息列表
+ */
+async function getAllFiles(dir) {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  
+  // 处理所有项目的Promise数组
+  const filePromises = entries.map(async (entry) => {
+    const fullPath = path.join(dir, entry.name);
+    
+    if (entry.isDirectory()) {
+      // 递归处理子目录
+      return getAllFiles(fullPath);
+    } else if (entry.isFile()) {
+      // 返回文件信息
+      return [{
+        path: fullPath,
+        relativePath: path.relative(INPUT_DIR, fullPath),
+        name: entry.name
+      }];
+    }
+    
+    return [];
+  });
+  
+  // 等待所有Promise完成并扁平化结果
+  const nestedFiles = await Promise.all(filePromises);
+  return nestedFiles.flat();
+}
+
+/**
+ * 确保输出目录存在
+ * @param {string} outputPath 完整的输出路径
+ */
+async function ensureOutputDir(outputPath) {
+  const dir = path.dirname(outputPath);
+  await fs.mkdir(dir, { recursive: true });
 }
 
 async function main() {
@@ -32,10 +86,10 @@ async function main() {
     // 确保输出目录存在
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
     
-    // 获取输入目录中的所有文件
+    // 获取输入目录中的所有文件（包括子目录）
     let files;
     try {
-      files = await fs.readdir(INPUT_DIR);
+      files = await getAllFiles(INPUT_DIR);
       console.log(`找到 ${files.length} 个文件需要处理`);
     } catch (err) {
       console.error(`读取输入目录(${INPUT_DIR})失败:`, err);
@@ -43,32 +97,32 @@ async function main() {
     }
     
     // 处理每个文件
-    for (const file of files) {
-      const inputPath = path.join(INPUT_DIR, file);
-      const outputPath = path.join(OUTPUT_DIR, `${path.parse(file).name}.${OUTPUT_FORMAT}.conf`);
+    for (const fileInfo of files) {
+      const { path: inputPath, relativePath, name } = fileInfo;
       
-      console.log('\n------------------------------');
-      console.log(`处理文件: ${file}`);
-      console.log(`输入路径: ${inputPath}`);
-      console.log(`输出路径: ${outputPath}`);
-      
-      // 检查文件状态
-      let stats;
-      try {
-        stats = await fs.stat(inputPath);
-        if (!stats.isFile()) {
-          console.log(`跳过非文件项目: ${file}`);
-          continue;
-        }
-      } catch (err) {
-        console.error(`获取文件状态失败: ${inputPath}`, err);
+      // 跳过不支持的文件类型
+      if (!isSupportedScript(name)) {
+        console.log(`跳过不支持的文件类型: ${name}`);
         continue;
       }
       
+      // 创建保持目录结构的输出路径
+      const fileBaseName = path.parse(name).name;
+      const outputRelPath = path.join(path.dirname(relativePath), `${fileBaseName}.${OUTPUT_FORMAT}`);
+      const outputPath = path.join(OUTPUT_DIR, outputRelPath);
+      
+      console.log('\n------------------------------');
+      console.log(`处理文件: ${relativePath}`);
+      console.log(`输入路径: ${inputPath}`);
+      console.log(`输出路径: ${outputPath}`);
+      
       try {
+        // 确保输出目录存在（包括嵌套目录）
+        await ensureOutputDir(outputPath);
+        
         // 读取文件内容
         const content = await fs.readFile(inputPath, 'utf8');
-        console.log(`成功读取文件: ${file} (${content.length} 字节)`);
+        console.log(`成功读取文件: ${relativePath} (${content.length} 字节)`);
         debug('文件内容预览:', content.substring(0, 150) + '...');
         
         // 尝试使用封装好的转换函数
@@ -116,7 +170,7 @@ async function main() {
         await fs.writeFile(outputPath, convertedContent);
         console.log(`成功转换并保存: ${outputPath}`);
       } catch (fileError) {
-        console.error(`处理文件 ${file} 时出错:`, fileError);
+        console.error(`处理文件 ${relativePath} 时出错:`, fileError);
         console.error('错误堆栈:', fileError.stack);
         // 继续处理下一个文件
       }
