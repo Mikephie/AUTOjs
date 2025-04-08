@@ -24,10 +24,14 @@ jobs:
   convert:
     runs-on: ubuntu-latest
     name: 转换脚本
+    permissions:
+      contents: write  # 确保有写入内容的权限
 
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整历史记录，以便能够推送
 
       - name: 安装Node.js
         uses: actions/setup-node@v3
@@ -47,22 +51,16 @@ jobs:
       - name: 运行脚本转换
         id: converter
         run: |
-          node script-converter.js
+          node index.js
         env:
           INPUT_DIR: 'input'
           OUTPUT_DIR: 'output'
           OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon' }}
           
-      - name: 上传转换结果
-        uses: actions/upload-artifact@v1
-        with:
-          name: converted-scripts
-          path: output/
-          
       - name: 提交转换结果
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add output/
-          git commit -m "自动转换脚本: ${{ steps.converter.outputs.success_count }} 成功, ${{ steps.converter.outputs.fail_count }} 失败" || echo "No changes to commit"
+          git commit -m "自动转换脚本: ${{ steps.converter.outputs.success_count || '0' }} 成功, ${{ steps.converter.outputs.fail_count || '0' }} 失败" || echo "No changes to commit"
           git push
