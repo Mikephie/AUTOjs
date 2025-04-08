@@ -54,7 +54,7 @@ jobs:
           OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon' }}
           
       - name: 上传转换结果
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v1
         with:
           name: converted-scripts
           path: output/
