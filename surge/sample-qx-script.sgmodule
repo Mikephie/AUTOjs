@@ -10,10 +10,12 @@ DOMAIN-KEYWORD, tracker, reject
 ip-cidr, 10.10.10.10/24, direct
 USER-AGENT, Example App*, direct
 
-[URL Rewrite]
+[Map Local]
 # 广告拦截
-^https?:\/\/api\.example\.com\/ads - reject
-^https?:\/\/api\.example\.com\/banner - reject-img
+^https?:\/\/api\.example\.com\/ads data="{}"
+^https?:\/\/api\.example\.com\/banner data="HTTP/1.1 200 OK
+Content-Type: image/png
+Content-Length: 0"
 
 [Script]
 # 脚本处理

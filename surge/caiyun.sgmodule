@@ -7,23 +7,23 @@
 # 上传信息
 DOMAIN, gather.colorfulclouds.net ,reject
 
-[URL Rewrite]
+[Map Local]
 # 普通版开屏广告(此广告不定时出现)
-^https:\/\/ad\.cyapi\.cn\/v2\/req\?app_name=weather - reject
+^https:\/\/ad\.cyapi\.cn\/v2\/req\?app_name=weather data="{}"
 # 7.1.9 限时福利Svip
-^https:\/\/biz\.cyapi\.cn\/p\/v1\/trial_card\/info - reject
+^https:\/\/biz\.cyapi\.cn\/p\/v1\/trial_card\/info data="{}"
 # 7.2.0普通版修改VIP后提示账号迁移
-^https:\/\/biz\.cyapi\.cn\/api\/v1\/token\/device$ - reject
+^https:\/\/biz\.cyapi\.cn\/api\/v1\/token\/device$ data="{}"
 # 亲友卡
-^https:\/\/biz\.cyapi\.cn\/p\/v1\/entries - reject
+^https:\/\/biz\.cyapi\.cn\/p\/v1\/entries data="{}"
 # 左上角+进去推荐
-^https:\/\/starplucker\.cyapi\.cn\/v3\/config$ - reject
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config$ data="{}"
 # 通知
-^https:\/\/starplucker\.cyapi\.cn\/v3\/notification\/message_center - reject
+^https:\/\/starplucker\.cyapi\.cn\/v3\/notification\/message_center data="{}"
 # 会员限时弹窗
-^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ - reject
-^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ - reject
-^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ - reject
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ data="{}"
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ data="{}"
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ data="{}"
 
 [Script]
 # 赏叶赏花模块
