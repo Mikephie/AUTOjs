@@ -335,7 +335,7 @@ function convertToSurge(scriptInfo) {
   }
 
   // 处理Rule部分
-  if (scriptInfo.rules.length > 0) {
+  if (scriptInfo.rules && scriptInfo.rules.length > 0) {
     config += "\n[Rule]";
     
     let lastComment = "";
@@ -354,13 +354,13 @@ function convertToSurge(scriptInfo) {
     config += "\n";
   }
 
-  // 处理URL Rewrite部分 - 用于reject规则
+  // 处理Map Local部分 - 用于reject规则
   const rejectRules = scriptInfo.rewrites.filter(r => 
-    r.content.includes(' - reject')
+    r.content.includes(' - reject') || r.content.includes(' - reject-dict') || r.content.includes(' - reject-img')
   );
   
   if (rejectRules.length > 0) {
-    config += "\n[URL Rewrite]";
+    config += "\n[Map Local]";
     
     let lastComment = "";
     for (const rule of rejectRules) {
@@ -370,22 +370,55 @@ function convertToSurge(scriptInfo) {
         lastComment = rule.comment;
       }
       
-      // 转换重写格式为Surge格式
-      let surgeRewrite = rule.content;
+      // 提取URL模式和reject类型
+      const parts = rule.content.split(' - ');
+      const pattern = parts[0].trim();
+      const rejectType = parts[1].trim();
       
-      // 如果是QX格式 pattern - reject-dict 转为 pattern - reject
-      if (surgeRewrite.includes(' - reject-dict')) {
-        surgeRewrite = surgeRewrite.replace(' - reject-dict', ' - reject');
+      // 设置数据类型和内容
+      let dataType = "text/plain";
+      let data = "HTTP/1.1 200 OK";
+      
+      if (rejectType === 'reject-img' || rejectType === 'reject-200') {
+        data = "HTTP/1.1 200 OK\r\nContent-Type: image/png\r\nContent-Length: 0";
+      } else if (rejectType === 'reject-dict' || rejectType === 'reject-json') {
+        dataType = "application/json";
+        data = "{}";
+      } else if (rejectType === 'reject-array') {
+        dataType = "application/json";
+        data = "[]";
       }
       
-      config += `\n${surgeRewrite}`;
+      config += `\n${pattern} data="${data}"`;
+    }
+    
+    config += "\n";
+  }
+
+  // 处理URL Rewrite部分 - 用于非reject的URL重写规则
+  const urlRewriteRules = scriptInfo.rewrites.filter(r => 
+    !r.content.includes(' - reject') && !r.content.includes(' - reject-dict') && !r.content.includes(' - reject-img')
+  );
+  
+  if (urlRewriteRules.length > 0) {
+    config += "\n[URL Rewrite]";
+    
+    let lastComment = "";
+    for (const rule of urlRewriteRules) {
+      // 如果有新注释，添加它
+      if (rule.comment && rule.comment !== lastComment) {
+        config += `\n${rule.comment}`;
+        lastComment = rule.comment;
+      }
+      
+      config += `\n${rule.content}`;
     }
     
     config += "\n";
   }
 
   // 处理Script部分
-  if (scriptInfo.scripts.length > 0) {
+  if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
     config += "\n[Script]";
     
     let lastComment = "";
