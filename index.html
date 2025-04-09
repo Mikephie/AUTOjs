@@ -3,25 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>脚本转换工具</title>
+    <title>脚本转换测试</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        textarea { width: 100%; height: 200px; margin-bottom: 10px; }
-        button { padding: 10px 20px; margin-right: 10px; }
-        .script-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-        .script-item { padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        textarea { width: 100%; height: 150px; margin-bottom: 10px; }
+        button { padding: 10px 20px; margin-right: 10px; margin-bottom: 20px; }
+        #logs { background: #f5f5f5; padding: 10px; border: 1px solid #ddd; height: 150px; overflow: auto; margin-top: 20px; font-family: monospace; }
     </style>
 </head>
 <body>
-    <h1>脚本转换工具</h1>
-    
-    <div id="scriptList" class="script-list">
-        <!-- 脚本列表将在这里显示 -->
-        <p>加载脚本列表中...</p>
-    </div>
+    <h1>脚本转换测试页面</h1>
     
     <h2>输入脚本内容</h2>
-    <textarea id="input" placeholder="粘贴QuantumultX脚本内容到这里..."></textarea>
+    <textarea id="input" placeholder="粘贴QuantumultX脚本内容到这里...">https://raw.githubusercontent.com/Mikephie/Script/main/qx/axs.js</textarea>
     
     <div>
         <button onclick="convertToLoon()">转换为Loon格式</button>
@@ -32,134 +26,160 @@
     <h2>转换结果</h2>
     <textarea id="output" readonly></textarea>
     
+    <h2>执行日志</h2>
+    <div id="logs"></div>
+    
     <script>
-        // 配置
-        const config = {
-            owner: 'Mikephie', 
-            repo: 'AUTOjs',
-            branch: 'main',
-            inputDir: 'input'
-        };
+        // 添加日志功能
+        function log(message) {
+            const logsEl = document.getElementById('logs');
+            const time = new Date().toLocaleTimeString();
+            logsEl.innerHTML += `[${time}] ${message}<br>`;
+            logsEl.scrollTop = logsEl.scrollHeight; // 自动滚动到底部
+            console.log(message);
+        }
         
-        // 转换函数
+        // 转换为Loon格式
         function convertToLoon() {
             const input = document.getElementById('input').value;
             const output = document.getElementById('output');
             
+            log(`开始转换为Loon格式...`);
+            log(`输入内容: ${input.substring(0, 50)}${input.length > 50 ? '...' : ''}`);
+            
             if (!input.trim()) {
+                log(`错误: 输入内容为空`);
                 alert('请输入脚本内容');
                 return;
             }
             
+            // 检测输入类型
+            const isUrl = input.trim().startsWith('http') && !input.includes('\n');
+            log(`输入类型: ${isUrl ? 'URL链接' : '脚本内容'}`);
+            
+            if (isUrl) {
+                log(`处理URL: ${input}`);
+                // 对于URL，我们保持不变
+                output.value = input;
+                log(`URL保持不变`);
+                return;
+            }
+            
             // 转换逻辑
+            log(`应用Loon转换规则...`);
             let result = input;
             
+            // 记录原始内容
+            log(`转换前: ${result.substring(0, 100)}${result.length > 100 ? '...' : ''}`);
+            
             // 处理主机名
-            result = result.replace(/hostname\s*=\s*(.*)/, 'hostname = $1');
+            const hostnameRegex = /hostname\s*=\s*(.*)/;
+            if (hostnameRegex.test(result)) {
+                log(`找到hostname, 应用替换...`);
+                result = result.replace(hostnameRegex, 'hostname = $1');
+            } else {
+                log(`未找到hostname`);
+            }
             
             // 处理脚本规则
-            result = result.replace(/^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm, 
-                                   'http-$2 $1 script-path=$3$4');
+            const scriptRegex = /^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm;
+            if (result.match(scriptRegex)) {
+                log(`找到脚本规则, 应用替换...`);
+                result = result.replace(scriptRegex, 'http-$2 $1 script-path=$3$4');
+            } else {
+                log(`未找到脚本规则`);
+            }
             
             // 处理reject规则
-            result = result.replace(/^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm, 
-                                   'http-request $1 reject$2');
+            const rejectRegex = /^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm;
+            if (result.match(rejectRegex)) {
+                log(`找到reject规则, 应用替换...`);
+                result = result.replace(rejectRegex, 'http-request $1 reject$2');
+            } else {
+                log(`未找到reject规则`);
+            }
             
+            log(`转换后: ${result.substring(0, 100)}${result.length > 100 ? '...' : ''}`);
             output.value = result;
+            log(`转换完成`);
         }
         
+        // 转换为Surge格式
         function convertToSurge() {
             const input = document.getElementById('input').value;
             const output = document.getElementById('output');
             
+            log(`开始转换为Surge格式...`);
+            log(`输入内容: ${input.substring(0, 50)}${input.length > 50 ? '...' : ''}`);
+            
             if (!input.trim()) {
+                log(`错误: 输入内容为空`);
                 alert('请输入脚本内容');
                 return;
             }
             
+            // 检测输入类型
+            const isUrl = input.trim().startsWith('http') && !input.includes('\n');
+            log(`输入类型: ${isUrl ? 'URL链接' : '脚本内容'}`);
+            
+            if (isUrl) {
+                log(`处理URL: ${input}`);
+                // 对于URL，我们保持不变
+                output.value = input;
+                log(`URL保持不变`);
+                return;
+            }
+            
             // 转换逻辑
+            log(`应用Surge转换规则...`);
             let result = input;
             
+            // 记录原始内容
+            log(`转换前: ${result.substring(0, 100)}${result.length > 100 ? '...' : ''}`);
+            
             // 处理主机名
-            result = result.replace(/hostname\s*=\s*(.*)/, 'hostname = %APPEND% $1');
+            const hostnameRegex = /hostname\s*=\s*(.*)/;
+            if (hostnameRegex.test(result)) {
+                log(`找到hostname, 应用替换...`);
+                result = result.replace(hostnameRegex, 'hostname = %APPEND% $1');
+            } else {
+                log(`未找到hostname`);
+            }
             
             // 处理脚本规则
-            result = result.replace(/^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm, 
-                                   '$2 $1 script-path=$3$4');
+            const scriptRegex = /^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm;
+            if (result.match(scriptRegex)) {
+                log(`找到脚本规则, 应用替换...`);
+                result = result.replace(scriptRegex, '$2 $1 script-path=$3$4');
+            } else {
+                log(`未找到脚本规则`);
+            }
             
             // 处理reject规则
-            result = result.replace(/^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm, 
-                                   'URL-REGEX $1 reject$2');
+            const rejectRegex = /^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm;
+            if (result.match(rejectRegex)) {
+                log(`找到reject规则, 应用替换...`);
+                result = result.replace(rejectRegex, 'URL-REGEX $1 reject$2');
+            } else {
+                log(`未找到reject规则`);
+            }
             
+            log(`转换后: ${result.substring(0, 100)}${result.length > 100 ? '...' : ''}`);
             output.value = result;
+            log(`转换完成`);
         }
         
         function clearAll() {
             document.getElementById('input').value = '';
             document.getElementById('output').value = '';
+            document.getElementById('logs').innerHTML = '';
+            log('已清空所有内容');
         }
         
-        // 简化脚本列表加载 - 无异步操作
+        // 页面加载完成
         document.addEventListener('DOMContentLoaded', function() {
-            const scriptListEl = document.getElementById('scriptList');
-            
-            // 使用GET参数控制是否加载脚本列表，避免不必要的网络请求
-            const urlParams = new URLSearchParams(window.location.search);
-            const shouldLoadList = urlParams.get('loadList') !== 'false';
-            
-            if (!shouldLoadList) {
-                scriptListEl.innerHTML = '<p>脚本列表已禁用</p>';
-                return;
-            }
-            
-            scriptListEl.innerHTML = '<p>点击下方按钮加载脚本列表</p><button onclick="loadScriptList()">加载脚本列表</button>';
+            log('页面已加载，准备转换');
         });
-        
-        // 独立函数，仅在用户请求时加载
-        function loadScriptList() {
-            const scriptListEl = document.getElementById('scriptList');
-            scriptListEl.innerHTML = '<p>加载中...</p>';
-            
-            // 设置请求超时
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
-            
-            fetch(`https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.inputDir}?ref=${config.branch}`, {
-                signal: controller.signal
-            })
-            .then(response => {
-                clearTimeout(timeoutId);
-                if (!response.ok) throw new Error('加载失败');
-                return response.json();
-            })
-            .then(files => {
-                // 过滤出 .js 文件
-                const scriptFiles = files.filter(file => file.name.endsWith('.js'));
-                
-                if (scriptFiles.length === 0) {
-                    scriptListEl.innerHTML = '<p>没有找到脚本文件</p>';
-                    return;
-                }
-                
-                let html = '';
-                scriptFiles.forEach(file => {
-                    const name = file.name.replace('.js', '');
-                    html += `
-                        <div class="script-item">
-                            <div>${name}</div>
-                            <a href="https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/${config.inputDir}/${file.name}" target="_blank">查看</a>
-                        </div>
-                    `;
-                });
-                
-                scriptListEl.innerHTML = html;
-            })
-            .catch(error => {
-                clearTimeout(timeoutId);
-                console.error('Error:', error);
-                scriptListEl.innerHTML = `<p>加载失败: ${error.message}</p><button onclick="loadScriptList()">重试</button>`;
-            });
-        }
     </script>
 </body>
 </html>
