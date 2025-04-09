@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>订阅信息</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --glass-bg-light: rgba(255, 255, 255, 0.6);
+      --glass-bg-dark: rgba(20, 20, 20, 0.4);
+      --text-light: #111;
+      --text-dark: #eee;
+      --accent: #00ffe0;
+      --border-radius: 12px;
+      --blur: 12px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body.light {
+      background: linear-gradient(135deg, #e6f2ff, #cbdfff);
+      color: var(--text-light);
+    }
+
+    body.dark {
+      background: radial-gradient(circle at top left, #0a0a0a, #1a1a1a);
+      color: var(--text-dark);
+    }
+
+    canvas#particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .card {
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 420px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: fadeIn 1s ease-out;
+    }
+
+    body.light .card {
+      background: var(--glass-bg-light);
+    }
+
+    body.dark .card {
+      background: var(--glass-bg-dark);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .info {
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .info strong {
+      color: var(--accent);
+    }
+
+    .toggle-btn, .export-btn {
+      position: fixed;
+      top: 1rem;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+
+    .toggle-btn:hover, .export-btn:hover {
+      background: #00ccb5;
+    }
+
+    .toggle-btn { right: 1rem; }
+    .export-btn { right: 120px; }
+
+    canvas#trafficChart {
+      max-width: 280px;
+      margin: 1.5rem auto;
+    }
+
+    .countdown {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <button class="toggle-btn" onclick="toggleTheme()">切换主题</button>
+  <button class="export-btn" onclick="exportData()">导出数据</button>
+
+  <div class="card">
+    <h1>订阅信息</h1>
+    <div class="countdown" id="countdown"></div>
+    <canvas id="trafficChart"></canvas>
+    <div class="info" id="info">
+      <p><strong>总订阅数：</strong>36</p>
+      <p><strong>有效订阅：</strong>31</p>
+      <p><strong>已失效订阅：</strong>5</p>
+      <p><strong>可用流量：</strong>101.84 GB</p>
+      <p><strong>今日使用：</strong>541.27 MB</p>
+      <p><strong>总共使用：</strong>32.84 GB</p>
+      <p><strong>重置时间：</strong>2025-04-10</p>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      total: 101.84 + 32.84,
+      used: 32.84,
+      left: 101.84,
+      reset: "2025-04-10",
+      today: "541.27 MB",
+      all: {
+        total: 36,
+        valid: 31,
+        invalid: 5
+      }
+    };
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+    document.body.classList.add(currentTheme);
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      document.body.classList.toggle('light');
+      const newTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme);
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "订阅数据.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    const ctx = document.getElementById('trafficChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['已用流量', '剩余流量'],
+        datasets: [{
+          data: [data.used, data.left],
+          backgroundColor: ['#ff6384', '#36a2eb'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            labels: {
+              color: getComputedStyle(document.body).color
+            }
+          }
+        }
+      }
+    });
+
+    function updateCountdown() {
+      const now = new Date();
+      const reset = new Date(data.reset + "T00:00:00");
+      const diff = Math.ceil((reset - now) / (1000 * 60 * 60 * 24));
+      const countdownText = diff > 0 ? `距离流量重置还有 ${diff} 天` : "已到流量重置日";
+      document.getElementById("countdown").innerText = countdownText;
+    }
+    updateCountdown();
+
+    // 粒子背景动画
+    const canvas = document.getElementById('particles');
+    const ctx2 = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    for (let i = 0; i < 100; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        r: Math.random() * 2 + 1
+      });
+    }
+
+    function drawParticles() {
+      ctx2.clearRect(0, 0, canvas.width, canvas.height);
+      ctx2.fillStyle = 'rgba(0, 255, 255, 0.7)';
+      for (const p of particles) {
+        ctx2.beginPath();
+        ctx2.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+        ctx2.fill();
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      }
+      requestAnimationFrame(drawParticles);
+    }
+
+    drawParticles();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
