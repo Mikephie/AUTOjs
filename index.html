@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AUTOjs 脚本转换工具</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-    <!-- 引入您的转换器脚本 -->
+    <style>
+        .script-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .script-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+    <!-- 引入转换器脚本 -->
     <script src="web-converter.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -20,112 +29,19 @@
         <div class="mb-10">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-semibold text-gray-800">可用脚本列表</h2>
-                <button id="refreshBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm transition">
-                    刷新列表
-                </button>
-            </div>
-            <div id="scriptList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="col-span-full text-center py-10">
-                    <p class="text-gray-600 text-lg">正在加载脚本列表...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md p-6 mb-10">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">在线脚本转换</h2>
-            <div class="mb-4">
-                <label for="scriptInput" class="block text-sm font-medium text-gray-700 mb-1">输入脚本内容</label>
-                <textarea id="scriptInput" rows="8" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm" placeholder="在此粘贴原始脚本内容..."></textarea>
-            </div>
-            <div class="flex flex-wrap gap-4 mb-6">
-                <button id="convertToLoonBtn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-md shadow-sm transition">转换为 Loon 格式</button>
-                <button id="convertToSurgeBtn" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-6 rounded-md shadow-sm transition">转换为 Surge 格式</button>
-                <button id="clearBtn" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md shadow-sm transition">清空</button>
-            </div>
-            <div id="resultContainer" class="hidden">
-                <label for="scriptOutput" class="block text-sm font-medium text-gray-700 mb-1">转换结果</label>
-                <div class="relative">
-                    <textarea id="scriptOutput" rows="8" class="w-full p-3 border border-gray-300 rounded-md shadow-sm font-mono text-sm bg-gray-50" readonly></textarea>
-                    <button id="copyBtn" class="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white p-1 rounded-md shadow-sm transition" title="复制到剪贴板">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                <div class="flex space-x-2">
+                    <button id="refreshBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm transition flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
+                        刷新列表
                     </button>
                 </div>
             </div>
-        </div>
-    </main>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const scriptInput = document.getElementById('scriptInput');
-            const scriptOutput = document.getElementById('scriptOutput');
-            const resultContainer = document.getElementById('resultContainer');
-            const copyBtn = document.getElementById('copyBtn');
-            
-            // 按钮点击事件
-            document.getElementById('convertToLoonBtn').addEventListener('click', function() {
-                const input = scriptInput.value.trim();
-                if (!input) {
-                    alert('请输入脚本内容');
-                    return;
-                }
-                
-                // 使用导入的转换器
-                const result = window.scriptConverter.convertToLoon(input);
-                scriptOutput.value = result;
-                resultContainer.classList.remove('hidden');
-            });
-            
-            document.getElementById('convertToSurgeBtn').addEventListener('click', function() {
-                const input = scriptInput.value.trim();
-                if (!input) {
-                    alert('请输入脚本内容');
-                    return;
-                }
-                
-                // 使用导入的转换器
-                const result = window.scriptConverter.convertToSurge(input);
-                scriptOutput.value = result;
-                resultContainer.classList.remove('hidden');
-            });
-            
-            document.getElementById('clearBtn').addEventListener('click', function() {
-                scriptInput.value = '';
-                scriptOutput.value = '';
-                resultContainer.classList.add('hidden');
-            });
-            
-            // 复制按钮
-            copyBtn.addEventListener('click', function() {
-                scriptOutput.select();
-                document.execCommand('copy');
-                
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <div id="scriptList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="col-span-full text-center py-10">
+                    <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                `;
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                }, 2000);
-            });
-            
-            // 加载脚本列表
-            loadScriptList();
-            
-            document.getElementById('refreshBtn').addEventListener('click', loadScriptList);
-            
-            // 加载脚本列表的函数
-            function loadScriptList() {
-                const scriptListEl = document.getElementById('scriptList');
-                scriptListEl.innerHTML = '<div class="col-span-full text-center py-10"><p class="text-gray-600 text-lg">正在加载脚本列表...</p></div>';
-                
-                // 这里添加加载脚本列表的代码
-                // ...
-            }
-        });
-    </script>
-</body>
-</html>
+                    <p class="text-gray-600 text-lg">正在
