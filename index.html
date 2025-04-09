@@ -71,8 +71,44 @@
                 <button id="convertToSurgeBtn" class="bg-purple-700 hover:bg-purple-800 text-white py-2 px-6 rounded-md shadow-sm transition">转换为 Surge 格式</button>
                 <button id="clearBtn" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-md shadow-sm transition">清空</button>
             </div>
+            <div id="resultContainer" class="hidden">
+                <label for="scriptOutput" class="block text-sm font-medium text-gray-300 mb-1">转换结果</label>
+                <div class="relative">
+                    <textarea id="scriptOutput" rows="8" class="w-full p-3 border border-gray-600 rounded-md shadow-sm font-mono text-sm bg-gray-900 text-gray-200" readonly></textarea>
+                    <button id="copyBtn" class="absolute top-2 right-2 bg-blue-700 hover:bg-blue-800 text-white p-1 rounded-md shadow-sm transition" title="复制到剪贴板">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-          <script>
+        <div class="bg-gray-800 rounded-lg shadow-2xl p-6 dark-card">
+            <h2 class="text-2xl font-semibold text-gray-100 mb-4">关于本工具</h2>
+            <p class="text-gray-300 mb-4">
+                这是一个通过 GitHub Actions 自动将 QuantumultX 格式的脚本转换为 Loon 和 Surge 格式的工具。您可以在线转换自己的脚本。
+            </p>
+            <p class="text-gray-300 mb-4">
+                本项目开源于 GitHub，欢迎参与贡献或提出建议。
+            </p>
+            <div>
+                <a href="https://github.com/Mikephie/AUTOjs" target="_blank" class="inline-flex items-center text-blue-400 hover:text-blue-300 transition">
+                    <svg class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                    </svg>
+                    GitHub 仓库
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-6 mt-10">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 AUTOjs 脚本转换工具 | 基于 GitHub Pages 构建</p>
+        </div>
+    </footer>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             // 获取 DOM 元素
             const scriptInput = document.getElementById('scriptInput');
@@ -108,7 +144,7 @@
                 panelScriptUrl.classList.remove('hidden');
                 panelScriptContent.classList.add('hidden');
             });
-          // 从URL获取脚本内容
+            // 从URL获取脚本内容
             async function fetchScriptContent(url) {
                 try {
                     // 尝试直接获取内容
@@ -170,7 +206,7 @@
                     copyBtn.innerHTML = originalText;
                 }, 2000);
             });
-          // 获取转换输入内容
+            // 获取转换输入内容
             async function getInputContent() {
                 // 如果是URL选项卡激活
                 if (!panelScriptUrl.classList.contains('hidden')) {
@@ -241,5 +277,3 @@
     </script>
 </body>
 </html>
-
-                    
