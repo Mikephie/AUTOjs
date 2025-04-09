@@ -125,6 +125,63 @@
             const clearBtn = document.getElementById('clearBtn');
             const copyBtn = document.getElementById('copyBtn');
 
+            // 转换函数实现 - 从script-converter.js提取
+            function convertToLoon(content) {
+                // 先检查是否是单行链接
+                if (content.trim().startsWith('http') && !content.includes('\n')) {
+                    // 如果是单行URL，保持不变
+                    return content;
+                }
+                
+                let result = content;
+                
+                // 处理主机名
+                result = result.replace(/hostname\s*=\s*(.*)/, 'hostname = $1');
+                
+                // 处理脚本头部信息
+                result = result.replace(/^#!name=(.*)$/m, '#!name=$1');
+                result = result.replace(/^#!desc=(.*)$/m, '#!desc=$1');
+                
+                // 处理脚本规则
+                // 先处理script规则
+                result = result.replace(/^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm, 
+                                       'http-$2 $1 script-path=$3$4');
+                
+                // 处理reject规则
+                result = result.replace(/^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm, 
+                                       'http-request $1 reject$2');
+                
+                return result;
+            }
+            
+            function convertToSurge(content) {
+                // 先检查是否是单行链接
+                if (content.trim().startsWith('http') && !content.includes('\n')) {
+                    // 如果是单行URL，保持不变
+                    return content;
+                }
+                
+                let result = content;
+                
+                // 处理主机名
+                result = result.replace(/hostname\s*=\s*(.*)/, 'hostname = %APPEND% $1');
+                
+                // 处理脚本头部信息
+                result = result.replace(/^#!name=(.*)$/m, '#!name=$1');
+                result = result.replace(/^#!desc=(.*)$/m, '#!desc=$1');
+                
+                // 处理脚本规则
+                // 先处理script规则
+                result = result.replace(/^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm, 
+                                       '$2 $1 script-path=$3$4');
+                
+                // 处理reject规则
+                result = result.replace(/^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm, 
+                                       'URL-REGEX $1 reject$2');
+                
+                return result;
+            }
+
             // 加载脚本列表
             async function loadScriptList() {
                 scriptListEl.innerHTML = `
@@ -282,8 +339,8 @@
                 resultContainer.classList.add('hidden');
             });
 
-            // 转换函数 - 这里需要根据实际的转换逻辑来实现
-            function convertScript(format) {
+            // 转换按钮点击事件
+            convertToLoonBtn.addEventListener('click', () => {
                 const originalScript = scriptInput.value.trim();
                 
                 if (!originalScript) {
@@ -291,54 +348,27 @@
                     return;
                 }
                 
-                let convertedScript = '';
-                
-                // 这里是简单的转换逻辑示例，实际需要根据你的转换规则来实现
-                if (format === 'loon') {
-                    // 转换为 Loon 格式的逻辑
-                    convertedScript = originalScript
-                        .replace(/hostname\s*=\s*/, 'hostname = ')
-                        .replace(/^#!name=(.*)$/m, '#!name=$1')
-                        .replace(/^#!desc=(.*)$/m, '#!desc=$1');
-                        
-                    // 处理脚本语句
-                    convertedScript = convertedScript.replace(
-                        /^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm,
-                        'http-$2 $1 script-path=$3$4'
-                    );
-                    
-                    // 转换 reject 类型
-                    convertedScript = convertedScript.replace(
-                        /^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm,
-                        'http-request $1 reject$2'
-                    );
-                } else if (format === 'surge') {
-                    // 转换为 Surge 格式的逻辑
-                    convertedScript = originalScript
-                        .replace(/hostname\s*=\s*/, 'hostname = %APPEND% ')
-                        .replace(/^#!name=(.*)$/m, '#!name=$1')
-                        .replace(/^#!desc=(.*)$/m, '#!desc=$1');
-                        
-                    // 处理脚本语句
-                    convertedScript = convertedScript.replace(
-                        /^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm,
-                        '$2 $1 script-path=$3$4'
-                    );
-                    
-                    // 转换 reject 类型
-                    convertedScript = convertedScript.replace(
-                        /^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm,
-                        'URL-REGEX $1 reject$2'
-                    );
-                }
+                // 使用转换函数
+                const convertedScript = convertToLoon(originalScript);
                 
                 scriptOutput.value = convertedScript;
                 resultContainer.classList.remove('hidden');
-            }
-
-            // 转换按钮点击事件
-            convertToLoonBtn.addEventListener('click', () => convertScript('loon'));
-            convertToSurgeBtn.addEventListener('click', () => convertScript('surge'));
+            });
+            
+            convertToSurgeBtn.addEventListener('click', () => {
+                const originalScript = scriptInput.value.trim();
+                
+                if (!originalScript) {
+                    alert('请输入脚本内容');
+                    return;
+                }
+                
+                // 使用转换函数
+                const convertedScript = convertToSurge(originalScript);
+                
+                scriptOutput.value = convertedScript;
+                resultContainer.classList.remove('hidden');
+            });
 
             // 复制按钮点击事件
             copyBtn.addEventListener('click', () => {
