@@ -3,7 +3,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>脚本转换工具</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+<script>
+  // 可选：如果需要明确指定暗黑模式策略或其他配置
+  tailwind.config = {
+    darkMode: 'class', // 确保使用 class 策略
+  }
+</script>
     <style>
         /* 基本过渡效果 */
         button, a, input, select, textarea {
