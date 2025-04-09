@@ -638,11 +638,3 @@ module.exports = {
   convertScript,
   detectScriptType
 };
-
-// 使转换函数在浏览器环境中可用
-if (typeof window !== 'undefined') {
-  window.scriptConverter = {
-    convertToLoon: convertToLoon,
-    convertToSurge: convertToSurge
-  };
-}
