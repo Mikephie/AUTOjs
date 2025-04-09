@@ -1,10 +1,7 @@
 /**
- * 优化版脚本转换器模块
+ * 优化版脚本转换器模块 - 浏览器兼容版
  * 参考Scriptable实现提炼而成
  */
-
-const fs = require('fs').promises;
-const path = require('path');
 
 /**
  * 从文件内容中提取脚本内容
@@ -312,10 +309,19 @@ function parseQXRewrites(sectionContent, result) {
 
 /**
  * 转换为Surge格式
- * @param {Object} scriptInfo 脚本信息
+ * @param {Object|string} input 脚本信息对象或字符串
  * @returns {string} Surge格式的脚本内容
  */
-function convertToSurge(scriptInfo) {
+function convertToSurge(input) {
+  // 如果输入是字符串，先处理它
+  let scriptInfo;
+  if (typeof input === 'string') {
+    const extractedContent = extractScriptContent(input);
+    scriptInfo = parseScript(extractedContent);
+  } else {
+    scriptInfo = input;
+  }
+  
   // 使用元数据
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
@@ -478,10 +484,19 @@ function convertToSurge(scriptInfo) {
 
 /**
  * 转换为Loon格式
- * @param {Object} scriptInfo 脚本信息
+ * @param {Object|string} input 脚本信息对象或字符串
  * @returns {string} Loon格式的脚本内容
  */
-function convertToLoon(scriptInfo) {
+function convertToLoon(input) {
+  // 如果输入是字符串，先处理它
+  let scriptInfo;
+  if (typeof input === 'string') {
+    const extractedContent = extractScriptContent(input);
+    scriptInfo = parseScript(extractedContent);
+  } else {
+    scriptInfo = input;
+  }
+  
   // 使用元数据
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
@@ -603,12 +618,32 @@ function detectScriptType(content) {
 }
 
 /**
+ * 处理单个URL
+ * @param {string} url URL链接
+ * @param {string} targetFormat 目标格式 (loon, surge)
+ * @returns {string} 转换后的格式
+ */
+function handleSingleUrl(url, targetFormat) {
+  if (targetFormat === 'loon') {
+    return `http-request ${url} script-path=${url}`;
+  } else if (targetFormat === 'surge') {
+    return `script-request-header ${url} script-path=${url}`;
+  }
+  return url;
+}
+
+/**
  * 转换脚本格式
  * @param {string} content 原始脚本内容
- * @param {string} targetFormat 目标格式 (loon, surge, quantumultx)
+ * @param {string} targetFormat 目标格式 (loon, surge)
  * @returns {string} 转换后的脚本内容
  */
 function convertScript(content, targetFormat) {
+  // 检查是否是单个URL链接
+  if (content.trim().startsWith('http') && !content.includes('\n')) {
+    return handleSingleUrl(content, targetFormat);
+  }
+  
   // 提取脚本内容
   const extractedContent = extractScriptContent(content);
   
@@ -626,15 +661,16 @@ function convertScript(content, targetFormat) {
     return convertToSurge(scriptInfo);
   }
   
-  // 默认返回解析后的JSON（用于调试）
-  return JSON.stringify(scriptInfo, null, 2);
+  // 默认返回原内容
+  return content;
 }
 
-module.exports = {
-  extractScriptContent,
-  parseScript,
-  convertToLoon,
-  convertToSurge,
-  convertScript,
-  detectScriptType
-};
+// 在浏览器环境中暴露转换函数
+if (typeof window !== 'undefined') {
+  window.scriptConverter = {
+    convertToLoon: convertToLoon,
+    convertToSurge: convertToSurge,
+    convertScript: convertScript,
+    detectScriptType: detectScriptType
+  };
+}
