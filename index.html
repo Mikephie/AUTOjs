@@ -3,182 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>脚本转换测试</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        textarea { width: 100%; height: 150px; margin-bottom: 10px; }
-        button { padding: 10px 20px; margin-right: 10px; margin-bottom: 20px; }
-        #logs { background: #f5f5f5; padding: 10px; border: 1px solid #ddd; height: 150px; overflow: auto; margin-top: 20px; font-family: monospace; }
-    </style>
+    <title>AUTOjs 脚本转换工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <!-- 引入您的转换器脚本 -->
+    <script src="web-converter.js"></script>
 </head>
-<body>
-    <h1>脚本转换测试页面</h1>
-    
-    <h2>输入脚本内容</h2>
-    <textarea id="input" placeholder="粘贴QuantumultX脚本内容到这里...">https://raw.githubusercontent.com/Mikephie/Script/main/qx/axs.js</textarea>
-    
-    <div>
-        <button onclick="convertToLoon()">转换为Loon格式</button>
-        <button onclick="convertToSurge()">转换为Surge格式</button>
-        <button onclick="clearAll()">清空</button>
-    </div>
-    
-    <h2>转换结果</h2>
-    <textarea id="output" readonly></textarea>
-    
-    <h2>执行日志</h2>
-    <div id="logs"></div>
-    
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold mb-2">AUTOjs 脚本转换工具</h1>
+            <p class="text-lg opacity-90">QuantumultX、Loon 和 Surge 脚本格式自动转换</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8 px-4">
+        <div class="mb-10">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800">可用脚本列表</h2>
+                <button id="refreshBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm transition">
+                    刷新列表
+                </button>
+            </div>
+            <div id="scriptList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="col-span-full text-center py-10">
+                    <p class="text-gray-600 text-lg">正在加载脚本列表...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-10">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">在线脚本转换</h2>
+            <div class="mb-4">
+                <label for="scriptInput" class="block text-sm font-medium text-gray-700 mb-1">输入脚本内容</label>
+                <textarea id="scriptInput" rows="8" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm" placeholder="在此粘贴原始脚本内容..."></textarea>
+            </div>
+            <div class="flex flex-wrap gap-4 mb-6">
+                <button id="convertToLoonBtn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-md shadow-sm transition">转换为 Loon 格式</button>
+                <button id="convertToSurgeBtn" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-6 rounded-md shadow-sm transition">转换为 Surge 格式</button>
+                <button id="clearBtn" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md shadow-sm transition">清空</button>
+            </div>
+            <div id="resultContainer" class="hidden">
+                <label for="scriptOutput" class="block text-sm font-medium text-gray-700 mb-1">转换结果</label>
+                <div class="relative">
+                    <textarea id="scriptOutput" rows="8" class="w-full p-3 border border-gray-300 rounded-md shadow-sm font-mono text-sm bg-gray-50" readonly></textarea>
+                    <button id="copyBtn" class="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white p-1 rounded-md shadow-sm transition" title="复制到剪贴板">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
     <script>
-        // 添加日志功能
-        function log(message) {
-            const logsEl = document.getElementById('logs');
-            const time = new Date().toLocaleTimeString();
-            logsEl.innerHTML += `[${time}] ${message}<br>`;
-            logsEl.scrollTop = logsEl.scrollHeight; // 自动滚动到底部
-            console.log(message);
-        }
-        
-        // 转换为Loon格式
-        function convertToLoon() {
-            const input = document.getElementById('input').value;
-            const output = document.getElementById('output');
-            
-            log(`开始转换为Loon格式...`);
-            log(`输入内容: ${input.substring(0, 50)}${input.length > 50 ? '...' : ''}`);
-            
-            if (!input.trim()) {
-                log(`错误: 输入内容为空`);
-                alert('请输入脚本内容');
-                return;
-            }
-            
-            // 检测输入类型
-            const isUrl = input.trim().startsWith('http') && !input.includes('\n');
-            log(`输入类型: ${isUrl ? 'URL链接' : '脚本内容'}`);
-            
-            if (isUrl) {
-                log(`处理URL: ${input}`);
-                // 对于URL，我们保持不变
-                output.value = input;
-                log(`URL保持不变`);
-                return;
-            }
-            
-            // 转换逻辑
-            log(`应用Loon转换规则...`);
-            let result = input;
-            
-            // 记录原始内容
-            log(`转换前: ${result.substring(0, 100)}${result.length > 100 ? '...' : ''}`);
-            
-            // 处理主机名
-            const hostnameRegex = /hostname\s*=\s*(.*)/;
-            if (hostnameRegex.test(result)) {
-                log(`找到hostname, 应用替换...`);
-                result = result.replace(hostnameRegex, 'hostname = $1');
-            } else {
-                log(`未找到hostname`);
-            }
-            
-            // 处理脚本规则
-            const scriptRegex = /^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm;
-            if (result.match(scriptRegex)) {
-                log(`找到脚本规则, 应用替换...`);
-                result = result.replace(scriptRegex, 'http-$2 $1 script-path=$3$4');
-            } else {
-                log(`未找到脚本规则`);
-            }
-            
-            // 处理reject规则
-            const rejectRegex = /^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm;
-            if (result.match(rejectRegex)) {
-                log(`找到reject规则, 应用替换...`);
-                result = result.replace(rejectRegex, 'http-request $1 reject$2');
-            } else {
-                log(`未找到reject规则`);
-            }
-            
-            log(`转换后: ${result.substring(0, 100)}${result.length > 100 ? '...' : ''}`);
-            output.value = result;
-            log(`转换完成`);
-        }
-        
-        // 转换为Surge格式
-        function convertToSurge() {
-            const input = document.getElementById('input').value;
-            const output = document.getElementById('output');
-            
-            log(`开始转换为Surge格式...`);
-            log(`输入内容: ${input.substring(0, 50)}${input.length > 50 ? '...' : ''}`);
-            
-            if (!input.trim()) {
-                log(`错误: 输入内容为空`);
-                alert('请输入脚本内容');
-                return;
-            }
-            
-            // 检测输入类型
-            const isUrl = input.trim().startsWith('http') && !input.includes('\n');
-            log(`输入类型: ${isUrl ? 'URL链接' : '脚本内容'}`);
-            
-            if (isUrl) {
-                log(`处理URL: ${input}`);
-                // 对于URL，我们保持不变
-                output.value = input;
-                log(`URL保持不变`);
-                return;
-            }
-            
-            // 转换逻辑
-            log(`应用Surge转换规则...`);
-            let result = input;
-            
-            // 记录原始内容
-            log(`转换前: ${result.substring(0, 100)}${result.length > 100 ? '...' : ''}`);
-            
-            // 处理主机名
-            const hostnameRegex = /hostname\s*=\s*(.*)/;
-            if (hostnameRegex.test(result)) {
-                log(`找到hostname, 应用替换...`);
-                result = result.replace(hostnameRegex, 'hostname = %APPEND% $1');
-            } else {
-                log(`未找到hostname`);
-            }
-            
-            // 处理脚本规则
-            const scriptRegex = /^(https?:\/\/[^\s]+)\s+url\s+script-([a-z-]+)\s+([^\s]+)(.*)$/gm;
-            if (result.match(scriptRegex)) {
-                log(`找到脚本规则, 应用替换...`);
-                result = result.replace(scriptRegex, '$2 $1 script-path=$3$4');
-            } else {
-                log(`未找到脚本规则`);
-            }
-            
-            // 处理reject规则
-            const rejectRegex = /^(https?:\/\/[^\s]+)\s+url\s+reject(-.*)?$/gm;
-            if (result.match(rejectRegex)) {
-                log(`找到reject规则, 应用替换...`);
-                result = result.replace(rejectRegex, 'URL-REGEX $1 reject$2');
-            } else {
-                log(`未找到reject规则`);
-            }
-            
-            log(`转换后: ${result.substring(0, 100)}${result.length > 100 ? '...' : ''}`);
-            output.value = result;
-            log(`转换完成`);
-        }
-        
-        function clearAll() {
-            document.getElementById('input').value = '';
-            document.getElementById('output').value = '';
-            document.getElementById('logs').innerHTML = '';
-            log('已清空所有内容');
-        }
-        
-        // 页面加载完成
         document.addEventListener('DOMContentLoaded', function() {
-            log('页面已加载，准备转换');
+            const scriptInput = document.getElementById('scriptInput');
+            const scriptOutput = document.getElementById('scriptOutput');
+            const resultContainer = document.getElementById('resultContainer');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            // 按钮点击事件
+            document.getElementById('convertToLoonBtn').addEventListener('click', function() {
+                const input = scriptInput.value.trim();
+                if (!input) {
+                    alert('请输入脚本内容');
+                    return;
+                }
+                
+                // 使用导入的转换器
+                const result = window.scriptConverter.convertToLoon(input);
+                scriptOutput.value = result;
+                resultContainer.classList.remove('hidden');
+            });
+            
+            document.getElementById('convertToSurgeBtn').addEventListener('click', function() {
+                const input = scriptInput.value.trim();
+                if (!input) {
+                    alert('请输入脚本内容');
+                    return;
+                }
+                
+                // 使用导入的转换器
+                const result = window.scriptConverter.convertToSurge(input);
+                scriptOutput.value = result;
+                resultContainer.classList.remove('hidden');
+            });
+            
+            document.getElementById('clearBtn').addEventListener('click', function() {
+                scriptInput.value = '';
+                scriptOutput.value = '';
+                resultContainer.classList.add('hidden');
+            });
+            
+            // 复制按钮
+            copyBtn.addEventListener('click', function() {
+                scriptOutput.select();
+                document.execCommand('copy');
+                
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                `;
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            });
+            
+            // 加载脚本列表
+            loadScriptList();
+            
+            document.getElementById('refreshBtn').addEventListener('click', loadScriptList);
+            
+            // 加载脚本列表的函数
+            function loadScriptList() {
+                const scriptListEl = document.getElementById('scriptList');
+                scriptListEl.innerHTML = '<div class="col-span-full text-center py-10"><p class="text-gray-600 text-lg">正在加载脚本列表...</p></div>';
+                
+                // 这里添加加载脚本列表的代码
+                // ...
+            }
         });
     </script>
 </body>
