@@ -324,6 +324,7 @@ function convertToSurge(scriptInfo) {
   let config = `#!name=${name}
 #!desc=${desc}
 #!author=${author}
+#!category=${category}
 `;
 
   if (scriptInfo.metadata.homepage) {
@@ -490,6 +491,7 @@ function convertToLoon(scriptInfo) {
   let config = `#!name=${name}
 #!desc=${desc}
 #!author=${author}
+#!category=${category}
 `;
 
   if (scriptInfo.metadata.homepage) {
