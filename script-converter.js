@@ -1,6 +1,7 @@
 /**
- * 优化版脚本转换器模块
- * 参考Scriptable实现提炼而成
+ * 优化版脚本转换器模块 - 浏览器兼容版 v1.2
+ * 最后更新: 2025-04-10
+ * 更新内容: 修复规则格式问题，将reject策略转为大写
  */
 
 const fs = require('fs').promises;
@@ -315,17 +316,24 @@ function parseQXRewrites(sectionContent, result) {
  * @param {Object} scriptInfo 脚本信息
  * @returns {string} Surge格式的脚本内容
  */
-function convertToSurge(scriptInfo) {
+function convertToSurge(input) {
+  // 如果输入是字符串，先处理它
+  let scriptInfo;
+  if (typeof input === 'string') {
+    const extractedContent = extractScriptContent(input);
+    scriptInfo = parseScript(extractedContent);
+  } else {
+    scriptInfo = input;
+  }
+  
   // 使用元数据
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
   const author = scriptInfo.metadata.author || "Converter";
-  const category = scriptInfo.metadata.category || "工具";
   
   let config = `#!name=${name}
 #!desc=${desc}
 #!author=${author}
-#!category=${category}
 `;
 
   if (scriptInfo.metadata.homepage) {
@@ -336,33 +344,33 @@ function convertToSurge(scriptInfo) {
     config += `#!icon=${scriptInfo.metadata.icon}\n`;
   }
 
-  // 处理Rule部分
-if (scriptInfo.rules && scriptInfo.rules.length > 0) {
-  config += "\n[Rule]";
-  
-  let lastComment = "";
-  for (const rule of scriptInfo.rules) {
-    // 如果有新注释，添加它
-    if (rule.comment && rule.comment !== lastComment) {
-      config += `\n${rule.comment}`;
-      lastComment = rule.comment;
+  // 处理Rule部分 - 修复格式
+  if (scriptInfo.rules && scriptInfo.rules.length > 0) {
+    config += "\n[Rule]";
+    
+    let lastComment = "";
+    for (const rule of scriptInfo.rules) {
+      // 如果有新注释，添加它
+      if (rule.comment && rule.comment !== lastComment) {
+        config += `\n${rule.comment}`;
+        lastComment = rule.comment;
+      }
+      
+      // 转换规则格式为Surge格式
+      let surgeRule = rule.content;
+      
+      // 修复规则格式: 移除逗号后的额外空格，并将策略名转为大写
+      surgeRule = surgeRule.replace(/\s*,\s*/g, ','); // 移除逗号周围的空格
+      surgeRule = surgeRule.replace(/,([^,]+)$/g, function(match, policy) {
+        // 将最后一个逗号后的策略名转为大写
+        return ',' + policy.trim().toUpperCase();
+      });
+      
+      config += `\n${surgeRule}`;
     }
     
-    // 转换规则格式为Surge格式
-    let surgeRule = rule.content;
-    
-    // 修复规则格式: 移除逗号后的额外空格，并将策略名转为大写
-    surgeRule = surgeRule.replace(/\s*,\s*/g, ','); // 移除逗号周围的空格
-    surgeRule = surgeRule.replace(/,([^,]+)$/g, function(match, policy) {
-      // 将最后一个逗号后的策略名转为大写
-      return ',' + policy.trim().toUpperCase();
-    });
-    
-    config += `\n${surgeRule}`;
+    config += "\n";
   }
-  
-  config += "\n";
-}
 
   // 处理Map Local部分 - 用于reject规则
   const rejectRules = scriptInfo.rewrites.filter(r => 
@@ -383,7 +391,7 @@ if (scriptInfo.rules && scriptInfo.rules.length > 0) {
       // 提取URL模式和reject类型
       const parts = rule.content.split(' - ');
       const pattern = parts[0].trim();
-      const rejectType = parts[1].trim();
+      let rejectType = parts[1].trim().toLowerCase(); // 转小写以统一处理
       
       // 设置数据类型和内容
       let dataType = "text/plain";
@@ -399,39 +407,42 @@ if (scriptInfo.rules && scriptInfo.rules.length > 0) {
         data = "[]";
       }
       
+      // 添加 status-code=200 参数
+      console.log('处理 reject 规则:', pattern, rejectType);
       config += `\n${pattern} data="${data}" status-code=200`;
+      console.log('生成的配置行:', `${pattern} data="${data}" status-code=200`);
     }
     
     config += "\n";
   }
 
   // 处理URL Rewrite部分 - 用于非reject的URL重写规则
-const urlRewriteRules = scriptInfo.rewrites.filter(r => 
-  !r.content.includes(' - reject') && !r.content.includes(' - reject-dict') && !r.content.includes(' - reject-img')
-);
-
-if (urlRewriteRules.length > 0) {
-  config += "\n[URL Rewrite]";
+  const urlRewriteRules = scriptInfo.rewrites.filter(r => 
+    !r.content.includes(' - reject') && !r.content.includes(' - reject-dict') && !r.content.includes(' - reject-img')
+  );
   
-  let lastComment = "";
-  for (const rule of urlRewriteRules) {
-    // 如果有新注释，添加它
-    if (rule.comment && rule.comment !== lastComment) {
-      config += `\n${rule.comment}`;
-      lastComment = rule.comment;
+  if (urlRewriteRules.length > 0) {
+    config += "\n[URL Rewrite]";
+    
+    let lastComment = "";
+    for (const rule of urlRewriteRules) {
+      // 如果有新注释，添加它
+      if (rule.comment && rule.comment !== lastComment) {
+        config += `\n${rule.comment}`;
+        lastComment = rule.comment;
+      }
+      
+      // 转换为大写REJECT
+      let surgeRewrite = rule.content;
+      surgeRewrite = surgeRewrite.replace(/ - reject($| )/g, ' - REJECT$1');
+      surgeRewrite = surgeRewrite.replace(/ - reject-dict($| )/g, ' - REJECT-DICT$1');
+      surgeRewrite = surgeRewrite.replace(/ - reject-img($| )/g, ' - REJECT-IMG$1');
+      
+      config += `\n${surgeRewrite}`;
     }
     
-    // 转换为大写REJECT (新增)
-    let surgeRewrite = rule.content;
-    surgeRewrite = surgeRewrite.replace(/ - reject($| )/g, ' - REJECT$1');
-    surgeRewrite = surgeRewrite.replace(/ - reject-dict($| )/g, ' - REJECT-DICT$1');
-    surgeRewrite = surgeRewrite.replace(/ - reject-img($| )/g, ' - REJECT-IMG$1');
-    
-    config += `\n${surgeRewrite}`;
+    config += "\n";
   }
-  
-  config += "\n";
-}
 
   // 处理Script部分
   if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
@@ -497,17 +508,24 @@ if (urlRewriteRules.length > 0) {
  * @param {Object} scriptInfo 脚本信息
  * @returns {string} Loon格式的脚本内容
  */
-function convertToLoon(scriptInfo) {
+function convertToLoon(input) {
+  // 如果输入是字符串，先处理它
+  let scriptInfo;
+  if (typeof input === 'string') {
+    const extractedContent = extractScriptContent(input);
+    scriptInfo = parseScript(extractedContent);
+  } else {
+    scriptInfo = input;
+  }
+  
   // 使用元数据
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
   const author = scriptInfo.metadata.author || "Converter";
-  const category = scriptInfo.metadata.category || "工具";
   
   let config = `#!name=${name}
 #!desc=${desc}
 #!author=${author}
-#!category=${category}
 `;
 
   if (scriptInfo.metadata.homepage) {
@@ -519,59 +537,59 @@ function convertToLoon(scriptInfo) {
   }
 
   // 处理Rule部分
-if (scriptInfo.rules.length > 0) {
-  config += "\n[Rule]";
-  
-  let lastComment = "";
-  for (const rule of scriptInfo.rules) {
-    // 如果有新注释，添加它
-    if (rule.comment && rule.comment !== lastComment) {
-      config += `\n${rule.comment}`;
-      lastComment = rule.comment;
+  if (scriptInfo.rules.length > 0) {
+    config += "\n[Rule]";
+    
+    let lastComment = "";
+    for (const rule of scriptInfo.rules) {
+      // 如果有新注释，添加它
+      if (rule.comment && rule.comment !== lastComment) {
+        config += `\n${rule.comment}`;
+        lastComment = rule.comment;
+      }
+      
+      // 修复规则格式
+      let loonRule = rule.content;
+      
+      // 移除逗号周围的额外空格
+      loonRule = loonRule.replace(/\s*,\s*/g, ',');
+      
+      // 将最后一个逗号后的策略名转为大写
+      loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
+        return ',' + policy.trim().toUpperCase();
+      });
+      
+      config += `\n${loonRule}`;
     }
     
-    // 修复规则格式
-    let loonRule = rule.content;
-    
-    // 移除逗号周围的额外空格
-    loonRule = loonRule.replace(/\s*,\s*/g, ',');
-    
-    // 将最后一个逗号后的策略名转为大写
-    loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
-      return ',' + policy.trim().toUpperCase();
-    });
-    
-    config += `\n${loonRule}`;
+    config += "\n";
   }
-  
-  config += "\n";
-}
 
-// 处理Rewrite部分
-if (scriptInfo.rewrites.length > 0) {
-  config += "\n[Rewrite]";
-  
-  let lastComment = "";
-  for (const rule of scriptInfo.rewrites) {
-    // 如果有新注释，添加它
-    if (rule.comment && rule.comment !== lastComment) {
-      config += `\n${rule.comment}`;
-      lastComment = rule.comment;
+  // 处理Rewrite部分
+  if (scriptInfo.rewrites.length > 0) {
+    config += "\n[Rewrite]";
+    
+    let lastComment = "";
+    for (const rule of scriptInfo.rewrites) {
+      // 如果有新注释，添加它
+      if (rule.comment && rule.comment !== lastComment) {
+        config += `\n${rule.comment}`;
+        lastComment = rule.comment;
+      }
+      
+      // 转换QX格式为Loon格式
+      let loonRewrite = rule.content;
+      
+      // 将QX pattern - reject-dict 等转为 Loon pattern - REJECT (大写)
+      loonRewrite = loonRewrite.replace(/ - reject($| )/g, ' - REJECT$1');
+      loonRewrite = loonRewrite.replace(/ - reject-dict($| )/g, ' - REJECT$1');
+      loonRewrite = loonRewrite.replace(/ - reject-img($| )/g, ' - REJECT$1');
+      
+      config += `\n${loonRewrite}`;
     }
     
-    // 转换QX格式为Loon格式
-    let loonRewrite = rule.content;
-    
-    // 将QX pattern - reject-dict 等转为 Loon pattern - REJECT (大写)
-    loonRewrite = loonRewrite.replace(/ - reject($| )/g, ' - REJECT$1');
-    loonRewrite = loonRewrite.replace(/ - reject-dict($| )/g, ' - REJECT$1');
-    loonRewrite = loonRewrite.replace(/ - reject-img($| )/g, ' - REJECT$1');
-    
-    config += `\n${loonRewrite}`;
+    config += "\n";
   }
-  
-  config += "\n";
-}
 
   // 处理Script部分
   if (scriptInfo.scripts.length > 0) {
