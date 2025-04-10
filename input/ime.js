@@ -1,6 +1,6 @@
 /*
 #!name= ✨ iMe ✨
-#!desc=iMe
+#!desc=社交平台
 #!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/ime.png
