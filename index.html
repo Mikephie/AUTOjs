@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>展示页面</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(to right, #1e1e2f, #2c2c3d);
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background-color: #2a2a3d;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      margin-bottom: 0.5em;
+      text-align: center;
+      color: #ffcc70;
+    }
+
+    h2 {
+      font-size: 1.6em;
+      margin-top: 1.5em;
+      color: #ffa07a;
+    }
+
+    p {
+      font-size: 1em;
+      line-height: 1.6;
+      margin-bottom: 1em;
+    }
+
+    code {
+      background-color: #1c1c28;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-family: "Courier New", Courier, monospace;
+      color: #7ec3ff;
+    }
+
+    .highlight {
+      color: #7fffd4;
+      font-weight: bold;
+    }
+
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 126, 95, 0.4);
+      margin-top: 20px;
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 126, 95, 0.6);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.6em;
+      }
+      h2 {
+        font-size: 1.3em;
+      }
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>我的展示页面</h1>
+    <p>欢迎来到我的自定义展示页面，这是一个带有 <code>暗色主题</code> 和 <code>渐变按钮</code> 的简单网页。</p>
+    
+    <h2>功能介绍</h2>
+    <p>此页面展示以下功能：</p>
+    <ul>
+      <li>响应式设计</li>
+      <li>现代暗色主题</li>
+      <li>视觉层次提升</li>
+    </ul>
+
+    <h2>使用说明</h2>
+    <p>你可以将此页面嵌入到任何支持 <code>HTML</code> 的平台中。所有内容均保留，无删减。</p>
+
+    <h2>其他说明</h2>
+    <p>如需进一步定制颜色或动画，请编辑 <code>&lt;style&gt;</code> 标签中的 CSS。</p>
+
+    <a href="#" class="button">查看更多</a>
+  </div>
+</body>
+</html>
