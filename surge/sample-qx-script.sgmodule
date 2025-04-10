@@ -13,10 +13,10 @@ USER-AGENT, Example App*, direct
 
 [Map Local]
 # 广告拦截
-^https?:\/\/api\.example\.com\/ads data="{}"
+^https?:\/\/api\.example\.com\/ads data="{}" status-code=200
 ^https?:\/\/api\.example\.com\/banner data="HTTP/1.1 200 OK
 Content-Type: image/png
-Content-Length: 0"
+Content-Length: 0" status-code=200
 
 [Script]
 # 脚本处理
