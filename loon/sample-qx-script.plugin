@@ -13,8 +13,8 @@ USER-AGENT, Example App*, direct
 
 [Rewrite]
 # 广告拦截
-^https?:\/\/api\.example\.com\/ads - reject
-^https?:\/\/api\.example\.com\/banner - reject-img
+^https?:\/\/api\.example\.com\/ads - REJECT
+^https?:\/\/api\.example\.com\/banner - REJECT
 
 [Script]
 # 脚本处理
