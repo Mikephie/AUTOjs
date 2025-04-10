@@ -325,10 +325,12 @@ function convertToSurge(input) {
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
   const author = scriptInfo.metadata.author || "Converter";
+  const category = scriptInfo.metadata.category || "工具";
   
   let config = `#!name=${name}
 #!desc=${desc}
 #!author=${author}
+#!category=${category}
 `;
 
   if (scriptInfo.metadata.homepage) {
@@ -516,10 +518,12 @@ function convertToLoon(input) {
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
   const author = scriptInfo.metadata.author || "Converter";
+  const category = scriptInfo.metadata.category || "工具";
   
   let config = `#!name=${name}
 #!desc=${desc}
 #!author=${author}
+#!category=${category}
 `;
 
   if (scriptInfo.metadata.homepage) {
