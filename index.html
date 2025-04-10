@@ -1,60 +1,83 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AUTOjs 脚本转换工具</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <style>
+        :root {
+            --bg-primary: #f3f4f6;
+            --text-primary: #111827;
+            --card-bg: #ffffff;
+            --header-gradient-from: #2563eb;
+            --header-gradient-to: #4f46e5;
+            --footer-bg: #1f2937;
+        }
+        
+        .dark {
+            --bg-primary: #1f2937;
+            --text-primary: #f3f4f6;
+            --card-bg: #111827;
+            --header-gradient-from: #1e40af;
+            --header-gradient-to: #312e81;
+            --footer-bg: #111827;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        .bg-card {
+            background-color: var(--card-bg);
+        }
+        
+        .header-gradient {
+            background-image: linear-gradient(to right, var(--header-gradient-from), var(--header-gradient-to));
+        }
+        
+        .footer-bg {
+            background-color: var(--footer-bg);
+        }
+        
         .script-card {
             transition: transform 0.2s, box-shadow 0.2s;
         }
+        
         .script-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+        
         .tab-active {
             border-bottom: 2px solid #3B82F6;
-            color: #1E40AF;
+            color: #3B82F6;
         }
     </style>
     <!-- 引入转换器脚本 -->
     <script src="web-converter.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-md">
-        <div class="container mx-auto">
-            <h1 class="text-3xl font-bold mb-2">AUTOjs 脚本转换工具</h1>
-            <p class="text-lg opacity-90">QuantumultX、Loon 和 Surge 脚本格式自动转换</p>
+<body>
+    <header class="header-gradient text-white p-6 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">AUTOjs 脚本转换工具</h1>
+            <button id="toggleDarkMode" class="p-2 rounded-full hover:bg-opacity-20 hover:bg-white">
+                <!-- 月亮图标 (暗模式) -->
+                <svg xmlns="http://www.w3.org/2000/svg" id="darkIcon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <!-- 太阳图标 (亮模式) -->
+                <svg xmlns="http://www.w3.org/2000/svg" id="lightIcon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </button>
         </div>
     </header>
 
     <main class="container mx-auto py-8 px-4">
-        <div class="mb-10">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-semibold text-gray-800">可用脚本列表</h2>
-                <div class="flex space-x-2">
-                    <button id="refreshBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm transition flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                        刷新列表
-                    </button>
-                </div>
-            </div>
-            <div id="scriptList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="col-span-full text-center py-10">
-                    <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p class="text-gray-600 text-lg">正在加载脚本列表...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-md p-6 mb-10">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">在线脚本转换</h2>
+        <div class="bg-card rounded-lg shadow-md p-6 mb-10">
+            <h2 class="text-2xl font-semibold mb-6">在线脚本转换</h2>
             
             <!-- 选项卡导航 -->
             <div class="flex border-b mb-6">
@@ -64,21 +87,21 @@
             
             <!-- 脚本内容输入面板 -->
             <div id="panelScriptContent" class="mb-4 hidden">
-                <label for="scriptFormat" class="block text-sm font-medium text-gray-700 mb-1">原始脚本格式</label>
-                <select id="scriptFormat" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <label for="scriptFormat" class="block text-sm font-medium mb-1">原始脚本格式</label>
+                <select id="scriptFormat" class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-card">
                     <option value="quantumultx" selected>QuantumultX</option>
                 </select>
                 <div class="mt-4">
-                    <label for="scriptInput" class="block text-sm font-medium text-gray-700 mb-1">输入脚本内容</label>
-                    <textarea id="scriptInput" rows="8" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm" placeholder="在此粘贴原始脚本内容..."></textarea>
+                    <label for="scriptInput" class="block text-sm font-medium mb-1">输入脚本内容</label>
+                    <textarea id="scriptInput" rows="8" class="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm bg-card" placeholder="在此粘贴原始脚本内容..."></textarea>
                 </div>
             </div>
             
             <!-- 脚本链接输入面板 -->
             <div id="panelScriptUrl" class="mb-4">
-                <label for="scriptUrlInput" class="block text-sm font-medium text-gray-700 mb-1">输入脚本链接</label>
-                <input type="text" id="scriptUrlInput" class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm" placeholder="例如: https://raw.githubusercontent.com/user/repo/main/script.js">
-                <p class="text-sm text-gray-500 mt-1">注意: 由于浏览器安全限制，链接转换需要链接服务器支持跨域访问。如果无法转换，请直接复制脚本内容。</p>
+                <label for="scriptUrlInput" class="block text-sm font-medium mb-1">输入脚本链接</label>
+                <input type="text" id="scriptUrlInput" class="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm bg-card" placeholder="例如: https://raw.githubusercontent.com/user/repo/main/script.js">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">注意: 由于浏览器安全限制，链接转换需要链接服务器支持跨域访问。如果无法转换，请直接复制脚本内容。</p>
             </div>
             
             <div class="flex flex-wrap gap-4 mb-6">
@@ -87,9 +110,9 @@
                 <button id="clearBtn" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md shadow-sm transition">清空</button>
             </div>
             <div id="resultContainer" class="hidden">
-                <label for="scriptOutput" class="block text-sm font-medium text-gray-700 mb-1">转换结果</label>
+                <label for="scriptOutput" class="block text-sm font-medium mb-1">转换结果</label>
                 <div class="relative">
-                    <textarea id="scriptOutput" rows="8" class="w-full p-3 border border-gray-300 rounded-md shadow-sm font-mono text-sm bg-gray-50" readonly></textarea>
+                    <textarea id="scriptOutput" rows="8" class="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm font-mono text-sm bg-card bg-opacity-50" readonly></textarea>
                     <button id="copyBtn" class="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white p-1 rounded-md shadow-sm transition" title="复制到剪贴板">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -99,16 +122,16 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">关于本工具</h2>
-            <p class="text-gray-700 mb-4">
-                这是一个通过 GitHub Actions 自动将 QuantumultX 格式的脚本转换为 Loon 和 Surge 格式的工具。所有脚本会定期自动更新，您可以直接下载使用或在线转换自己的脚本。
+        <div class="bg-card rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-semibold mb-4">关于本工具</h2>
+            <p class="mb-4 dark:text-gray-300">
+                这是一个通过 GitHub Actions 自动将 QuantumultX 格式的脚本转换为 Loon 和 Surge 格式的工具。您可以直接输入脚本内容或脚本链接进行在线转换。
             </p>
-            <p class="text-gray-700 mb-4">
+            <p class="mb-4 dark:text-gray-300">
                 本项目开源于 GitHub，欢迎参与贡献或提出建议。
             </p>
             <div>
-                <a href="https://github.com/Mikephie/AUTOjs" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition">
+                <a href="https://github.com/Mikephie/AUTOjs" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition">
                     <svg class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
                     </svg>
@@ -118,7 +141,7 @@
         </div>
     </main>
 
-    <footer class="bg-gray-800 text-white py-6 mt-10">
+    <footer class="footer-bg text-white py-6 mt-10">
         <div class="container mx-auto px-4 text-center text-gray-400">
             <p>© 2025 AUTOjs 脚本转换工具 | 基于 GitHub Pages 构建</p>
         </div>
@@ -126,19 +149,44 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 配置信息 - 需要根据实际仓库调整
-            const config = {
-                owner: 'Mikephie', // 修改为你的 GitHub 用户名
-                repo: 'AUTOjs',    // 修改为你的仓库名
-                branch: 'main',    // 修改为你的分支名
-                inputDir: 'input', // 输入目录
-                loonDir: 'loon',   // Loon 脚本目录
-                surgeDir: 'surge'  // Surge 脚本目录
-            };
+            // 暗模式切换
+            const html = document.documentElement;
+            const toggleDarkMode = document.getElementById('toggleDarkMode');
+            const darkIcon = document.getElementById('darkIcon');
+            const lightIcon = document.getElementById('lightIcon');
+            
+            // 检查本地存储的主题偏好
+            const isDarkMode = localStorage.getItem('darkMode') === 'true' || 
+                              (localStorage.getItem('darkMode') === null && 
+                               window.matchMedia('(prefers-color-scheme: dark)').matches);
+            
+            // 初始设置
+            if (isDarkMode) {
+                html.classList.add('dark');
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+            } else {
+                html.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+            
+            // 切换暗模式处理
+            toggleDarkMode.addEventListener('click', () => {
+                if (html.classList.contains('dark')) {
+                    html.classList.remove('dark');
+                    localStorage.setItem('darkMode', 'false');
+                    lightIcon.classList.add('hidden');
+                    darkIcon.classList.remove('hidden');
+                } else {
+                    html.classList.add('dark');
+                    localStorage.setItem('darkMode', 'true');
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                }
+            });
 
             // 获取 DOM 元素
-            const scriptListEl = document.getElementById('scriptList');
-            const refreshBtn = document.getElementById('refreshBtn');
             const scriptInput = document.getElementById('scriptInput');
             const scriptUrlInput = document.getElementById('scriptUrlInput');
             const scriptOutput = document.getElementById('scriptOutput');
@@ -206,156 +254,6 @@
                     }
                 }
             }
-
-            // 加载脚本列表
-            async function loadScriptList() {
-                scriptListEl.innerHTML = `
-                    <div class="col-span-full text-center py-10">
-                        <svg class="animate-spin h-10 w-10 text-blue-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <p class="text-gray-600 text-lg">正在加载脚本列表...</p>
-                    </div>
-                `;
-
-                try {
-                    // 尝试从 scripts.json 加载数据
-                    const jsonResponse = await fetch('scripts.json');
-                    
-                    if (jsonResponse.ok) {
-                        // 如果 scripts.json 存在，使用它
-                        const data = await jsonResponse.json();
-                        const scriptFiles = data.scripts;
-                        
-                        if (scriptFiles.length === 0) {
-                            scriptListEl.innerHTML = `
-                                <div class="col-span-full text-center py-10">
-                                    <p class="text-gray-600 text-lg">没有找到可用的脚本文件。</p>
-                                </div>
-                            `;
-                            return;
-                        }
-                        
-                        // 清空列表并添加新的脚本卡片
-                        scriptListEl.innerHTML = '';
-                        
-                        scriptFiles.forEach(script => {
-                            const scriptName = script.filename;
-                            const scriptNameWithoutExt = script.name;
-                            const updateTime = new Date(script.updateTime).toLocaleDateString();
-                            
-                            const card = document.createElement('div');
-                            card.className = 'bg-white rounded-lg shadow-md p-5 script-card';
-                            card.innerHTML = `
-                                <h3 class="text-lg font-semibold text-gray-800 mb-2">${scriptNameWithoutExt}</h3>
-                                <p class="text-xs text-gray-500 mb-3">更新于: ${updateTime}</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <a href="https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/${script.formats.quantumultx}" 
-                                       class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 transition" 
-                                       target="_blank">
-                                       QuantumultX
-                                    </a>
-                                    ${script.formats.loon ? `
-                                    <a href="https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/${script.formats.loon}" 
-                                       class="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200 transition" 
-                                       target="_blank">
-                                       Loon
-                                    </a>
-                                    ` : ''}
-                                    ${script.formats.surge ? `
-                                    <a href="https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/${script.formats.surge}" 
-                                       class="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition" 
-                                       target="_blank">
-                                       Surge
-                                    </a>
-                                    ` : ''}
-                                </div>
-                            `;
-                            scriptListEl.appendChild(card);
-                        });
-                        
-                        // 添加更新时间信息
-                        const lastUpdateEl = document.createElement('div');
-                        lastUpdateEl.className = 'col-span-full text-center text-xs text-gray-500 mt-6';
-                        lastUpdateEl.textContent = `最后更新: ${new Date(data.generatedTime).toLocaleString()}`;
-                        scriptListEl.appendChild(lastUpdateEl);
-                        
-                        return;
-                    }
-                    
-                    // 如果 scripts.json 不存在，回退到使用 GitHub API
-                    const response = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.inputDir}?ref=${config.branch}`);
-                    
-                    if (!response.ok) {
-                        throw new Error('无法获取脚本列表，请检查仓库配置');
-                    }
-                    
-                    const files = await response.json();
-                    
-                    // 过滤出 .js 文件
-                    const scriptFiles = files.filter(file => file.name.endsWith('.js'));
-                    
-                    if (scriptFiles.length === 0) {
-                        scriptListEl.innerHTML = `
-                            <div class="col-span-full text-center py-10">
-                                <p class="text-gray-600 text-lg">没有找到可用的脚本文件。</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    // 清空列表并添加新的脚本卡片
-                    scriptListEl.innerHTML = '';
-                    
-                    scriptFiles.forEach(file => {
-                        const scriptName = file.name;
-                        const scriptNameWithoutExt = scriptName.replace('.js', '');
-                        
-                        const card = document.createElement('div');
-                        card.className = 'bg-white rounded-lg shadow-md p-5 script-card';
-                        card.innerHTML = `
-                            <h3 class="text-lg font-semibold text-gray-800 mb-3">${scriptNameWithoutExt}</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <a href="https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/${config.inputDir}/${scriptName}" 
-                                   class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 transition" 
-                                   target="_blank">
-                                   QuantumultX
-                                </a>
-                                <a href="https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/${config.loonDir}/${scriptName}" 
-                                   class="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200 transition" 
-                                   target="_blank">
-                                   Loon
-                                </a>
-                                <a href="https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/${config.surgeDir}/${scriptName}" 
-                                   class="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded-full hover:bg-purple-200 transition" 
-                                   target="_blank">
-                                   Surge
-                                </a>
-                            </div>
-                        `;
-                        scriptListEl.appendChild(card);
-                    });
-                    
-                } catch (error) {
-                    console.error('Error loading script list:', error);
-                    scriptListEl.innerHTML = `
-                        <div class="col-span-full text-center py-10">
-                            <p class="text-red-600 text-lg">加载脚本列表失败: ${error.message}</p>
-                            <button id="retryBtn" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm transition">
-                                重试
-                            </button>
-                        </div>
-                    `;
-                    document.getElementById('retryBtn').addEventListener('click', loadScriptList);
-                }
-            }
-
-            // 初始加载脚本列表
-            loadScriptList();
-            
-            // 刷新按钮点击事件
-            refreshBtn.addEventListener('click', loadScriptList);
 
             // 清空按钮点击事件
             clearBtn.addEventListener('click', () => {
