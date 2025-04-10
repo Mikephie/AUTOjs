@@ -398,26 +398,32 @@ function convertToSurge(scriptInfo) {
   }
 
   // 处理URL Rewrite部分 - 用于非reject的URL重写规则
-  const urlRewriteRules = scriptInfo.rewrites.filter(r => 
-    !r.content.includes(' - reject') && !r.content.includes(' - reject-dict') && !r.content.includes(' - reject-img')
-  );
+const urlRewriteRules = scriptInfo.rewrites.filter(r => 
+  !r.content.includes(' - reject') && !r.content.includes(' - reject-dict') && !r.content.includes(' - reject-img')
+);
+
+if (urlRewriteRules.length > 0) {
+  config += "\n[URL Rewrite]";
   
-  if (urlRewriteRules.length > 0) {
-    config += "\n[URL Rewrite]";
-    
-    let lastComment = "";
-    for (const rule of urlRewriteRules) {
-      // 如果有新注释，添加它
-      if (rule.comment && rule.comment !== lastComment) {
-        config += `\n${rule.comment}`;
-        lastComment = rule.comment;
-      }
-      
-      config += `\n${rule.content}`;
+  let lastComment = "";
+  for (const rule of urlRewriteRules) {
+    // 如果有新注释，添加它
+    if (rule.comment && rule.comment !== lastComment) {
+      config += `\n${rule.comment}`;
+      lastComment = rule.comment;
     }
     
-    config += "\n";
+    // 转换为大写REJECT (新增)
+    let surgeRewrite = rule.content;
+    surgeRewrite = surgeRewrite.replace(/ - reject($| )/g, ' - REJECT$1');
+    surgeRewrite = surgeRewrite.replace(/ - reject-dict($| )/g, ' - REJECT-DICT$1');
+    surgeRewrite = surgeRewrite.replace(/ - reject-img($| )/g, ' - REJECT-IMG$1');
+    
+    config += `\n${surgeRewrite}`;
   }
+  
+  config += "\n";
+}
 
   // 处理Script部分
   if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
@@ -523,30 +529,30 @@ function convertToLoon(scriptInfo) {
   }
 
   // 处理Rewrite部分
-  if (scriptInfo.rewrites.length > 0) {
-    config += "\n[Rewrite]";
-    
-    let lastComment = "";
-    for (const rule of scriptInfo.rewrites) {
-      // 如果有新注释，添加它
-      if (rule.comment && rule.comment !== lastComment) {
-        config += `\n${rule.comment}`;
-        lastComment = rule.comment;
-      }
-      
-      // 转换QX格式为Loon格式
-      let loonRewrite = rule.content;
-      
-      // 将QX pattern - reject-dict 转为 Loon pattern - reject
-      if (loonRewrite.includes(' - reject-dict')) {
-        loonRewrite = loonRewrite.replace(' - reject-dict', ' - reject');
-      }
-      
-      config += `\n${loonRewrite}`;
+if (scriptInfo.rewrites.length > 0) {
+  config += "\n[Rewrite]";
+  
+  let lastComment = "";
+  for (const rule of scriptInfo.rewrites) {
+    // 如果有新注释，添加它
+    if (rule.comment && rule.comment !== lastComment) {
+      config += `\n${rule.comment}`;
+      lastComment = rule.comment;
     }
     
-    config += "\n";
+    // 转换QX格式为Loon格式
+    let loonRewrite = rule.content;
+    
+    // 将QX pattern - reject-dict 转为 Loon pattern - REJECT (大写)
+    loonRewrite = loonRewrite.replace(/ - reject($| )/g, ' - REJECT$1');
+    loonRewrite = loonRewrite.replace(/ - reject-dict($| )/g, ' - REJECT$1');
+    loonRewrite = loonRewrite.replace(/ - reject-img($| )/g, ' - REJECT$1');
+    
+    config += `\n${loonRewrite}`;
   }
+  
+  config += "\n";
+}
 
   // 处理Script部分
   if (scriptInfo.scripts.length > 0) {
