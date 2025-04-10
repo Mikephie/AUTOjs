@@ -1,5 +1,5 @@
 /**
- * 优化版脚本转换器模块 - 浏览器兼容版
+ * 优化版脚本转换器模块 - 浏览器兼容版 v1.1
  * 参考Scriptable实现提炼而成
  */
 
@@ -166,7 +166,6 @@ function extractHostname(loonMITM, qxMITM, result) {
     }
   }
 }
-
 /**
  * 解析带注释的节点
  * @param {string} sectionContent 节点内容
@@ -306,7 +305,6 @@ function parseQXRewrites(sectionContent, result) {
     }
   }
 }
-
 /**
  * 转换为Surge格式
  * @param {Object|string} input 脚本信息对象或字符串
@@ -395,7 +393,10 @@ function convertToSurge(input) {
         data = "[]";
       }
       
+      // 修改：添加 status-code=200 参数
+      console.log('处理 reject 规则:', pattern, rejectType);
       config += `\n${pattern} data="${data}" status-code=200`;
+      console.log('生成的配置行:', `${pattern} data="${data}" status-code=200`);
     }
     
     config += "\n";
@@ -481,7 +482,6 @@ function convertToSurge(input) {
   
   return config;
 }
-
 /**
  * 转换为Loon格式
  * @param {Object|string} input 脚本信息对象或字符串
