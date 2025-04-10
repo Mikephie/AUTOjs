@@ -7,67 +7,131 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <style>
         :root {
-            --bg-primary: #f3f4f6;
-            --text-primary: #111827;
-            --card-bg: #ffffff;
-            --header-gradient-from: #2563eb;
-            --header-gradient-to: #4f46e5;
-            --footer-bg: #1f2937;
+            --bg-primary: #0a0f2b; /* Deep space blue */
+            --text-primary: #e0e7ff; /* Light futuristic white */
+            --card-bg: rgba(20, 30, 60, 0.8); /* Semi-transparent tech glass */
+            --header-gradient-from: #ff00cc; /* Vibrant pink */
+            --header-gradient-to: #3333ff; /* Electric blue */
+            --footer-bg: #1a1a3d; /* Dark tech gradient */
+            --glow-color: #00ffcc; /* Neon cyan glow */
         }
-        
+
         .dark {
-            --bg-primary: #1f2937;
-            --text-primary: #f3f4f6;
-            --card-bg: #111827;
-            --header-gradient-from: #1e40af;
-            --header-gradient-to: #312e81;
-            --footer-bg: #111827;
+            --bg-primary: #0a0f2b;
+            --text-primary: #e0e7ff;
+            --card-bg: rgba(20, 30, 60, 0.8);
+            --header-gradient-from: #ff00cc;
+            --header-gradient-to: #3333ff;
+            --footer-bg: #1a1a3d;
         }
-        
+
         body {
-            background-color: var(--bg-primary);
+            background: linear-gradient(135deg, var(--bg-primary), #1e1e5a);
             color: var(--text-primary);
+            font-family: 'Orbitron', sans-serif; /* Futuristic font */
+            overflow-x: hidden;
         }
-        
+
         .bg-card {
-            background-color: var(--card-bg);
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            backdrop-filter: blur(10px);
         }
-        
+
         .header-gradient {
-            background-image: linear-gradient(to right, var(--header-gradient-from), var(--header-gradient-to));
+            background: linear-gradient(90deg, var(--header-gradient-from), var(--header-gradient-to));
+            animation: glowPulse 3s infinite alternate;
         }
-        
+
         .footer-bg {
-            background-color: var(--footer-bg);
+            background: var(--footer-bg);
+            border-top: 1px solid var(--glow-color);
         }
-        
+
         .script-card {
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .script-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.5);
         }
-        
+
         .tab-active {
-            border-bottom: 2px solid #3B82F6;
-            color: #3B82F6;
+            border-bottom: 3px solid var(--glow-color);
+            color: var(--glow-color);
+            animation: tabGlow 1.5s infinite;
+        }
+
+        /* Animations */
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 10px var(--glow-color); }
+            100% { box-shadow: 0 0 25px var(--glow-color); }
+        }
+
+        @keyframes tabGlow {
+            0% { text-shadow: 0 0 5px var(--glow-color); }
+            50% { text-shadow: 0 0 15px var(--glow-color); }
+            100% { text-shadow: 0 0 5px var(--glow-color); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .btn-glow {
+            background: linear-gradient(45deg, #ff00cc, #00ffcc);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            transition: all 0.5s;
+        }
+
+        .btn-glow:hover::before {
+            top: -100%;
+            left: -100%;
+        }
+
+        textarea, input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glow-color);
+            color: var(--text-primary);
+            transition: box-shadow 0.3s;
+        }
+
+        textarea:focus, input:focus {
+            box-shadow: 0 0 15px var(--glow-color);
         }
     </style>
-    <!-- 引入转换器脚本 -->
+    <!-- Google Fonts for futuristic typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Assuming a converter script is available -->
     <script src="web-converter.js"></script>
 </head>
 <body>
     <header class="header-gradient text-white p-6 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold">AUTOjs 脚本转换工具</h1>
-            <button id="toggleDarkMode" class="p-2 rounded-full hover:bg-opacity-20 hover:bg-white">
-                <!-- 月亮图标 (暗模式) -->
+        <div class="container mx-auto flex justify-between items-center animate-fade-in">
+            <h1 class="text-4xl font-bold tracking-wider">AUTOjs</h1>
+            <button id="toggleDarkMode" class="p-2 rounded-full hover:bg-opacity-20 hover:bg-white transition">
                 <svg xmlns="http://www.w3.org/2000/svg" id="darkIcon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 демонстрация0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
-                <!-- 太阳图标 (亮模式) -->
                 <svg xmlns="http://www.w3.org/2000/svg" id="lightIcon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
@@ -75,45 +139,42 @@
         </div>
     </header>
 
-    <main class="container mx-auto py-8 px-4">
-        <div class="bg-card rounded-lg shadow-md p-6 mb-10">
-            <h2 class="text-2xl font-semibold mb-6">在线脚本转换</h2>
+    <main class="container mx-auto py-12 px-4">
+        <div class="bg-card rounded-lg shadow-md p-8 mb-12 script-card animate-fade-in">
+            <h2 class="text-3xl font-semibold mb-6 text-center">在线脚本转换</h2>
             
-            <!-- 选项卡导航 -->
-            <div class="flex border-b mb-6">
-                <div id="tabScriptContent" class="px-4 py-2 cursor-pointer">脚本内容</div>
+            <div class="flex border-b mb-6 justify-center gap-8">
+                <div id="tabScriptContent" class="px-4 py-2 cursor-pointer hover:text-glow-color">脚本内容</div>
                 <div id="tabScriptUrl" class="px-4 py-2 cursor-pointer tab-active">脚本链接</div>
             </div>
             
-            <!-- 脚本内容输入面板 -->
-            <div id="panelScriptContent" class="mb-4 hidden">
-                <label for="scriptFormat" class="block text-sm font-medium mb-1">原始脚本格式</label>
-                <select id="scriptFormat" class="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-card">
+            <div id="panelScriptContent" class="mb-6 hidden">
+                <label for="scriptFormat" class="block text-sm font-medium mb-2">原始脚本格式</label>
+                <select id="scriptFormat" class="w-full p-3 rounded-md shadow-sm focus:ring-0">
                     <option value="quantumultx" selected>QuantumultX</option>
                 </select>
                 <div class="mt-4">
-                    <label for="scriptInput" class="block text-sm font-medium mb-1">输入脚本内容</label>
-                    <textarea id="scriptInput" rows="8" class="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm bg-card" placeholder="在此粘贴原始脚本内容..."></textarea>
+                    <label for="scriptInput" class="block text-sm font-medium mb-2">输入脚本内容</label>
+                    <textarea id="scriptInput" rows="8" class="w-full p-4 rounded-md font-mono text-sm" placeholder="在此粘贴原始脚本内容..."></textarea>
                 </div>
             </div>
             
-            <!-- 脚本链接输入面板 -->
-            <div id="panelScriptUrl" class="mb-4">
-                <label for="scriptUrlInput" class="block text-sm font-medium mb-1">输入脚本链接</label>
-                <input type="text" id="scriptUrlInput" class="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 font-mono text-sm bg-card" placeholder="例如: https://raw.githubusercontent.com/user/repo/main/script.js">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">注意: 由于浏览器安全限制，链接转换需要链接服务器支持跨域访问。如果无法转换，请直接复制脚本内容。</p>
+            <div id="panelScriptUrl" class="mb-6">
+                <label for="scriptUrlInput" class="block text-sm font-medium mb-2">输入脚本链接</label>
+                <input type="text" id="scriptUrlInput" class="w-full p-4 rounded-md font-mono text-sm" placeholder="例如: https://raw.githubusercontent.com/user/repo/main/script.js">
+                <p class="text-sm text-gray-400 mt-2">注意: 链接需支持跨域访问，否则请粘贴脚本内容。</p>
             </div>
             
-            <div class="flex flex-wrap gap-4 mb-6">
-                <button id="convertToLoonBtn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-md shadow-sm transition">转换为 Loon 格式</button>
-                <button id="convertToSurgeBtn" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-6 rounded-md shadow-sm transition">转换为 Surge 格式</button>
-                <button id="clearBtn" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-md shadow-sm transition">清空</button>
+            <div class="flex flex-wrap gap-4 mb-6 justify-center">
+                <button id="convertToLoonBtn" class="btn-glow text-white py-3 px-8 rounded-md shadow-lg transition">转换为 Loon</button>
+                <button id="convertToSurgeBtn" class="btn-glow text-white py-3 px-8 rounded-md shadow-lg transition">转换为 Surge</button>
+                <button id="clearBtn" class="bg-gray-700 hover:bg-gray-600 text-white py-3 px-8 rounded-md shadow-lg transition">清空</button>
             </div>
             <div id="resultContainer" class="hidden">
-                <label for="scriptOutput" class="block text-sm font-medium mb-1">转换结果</label>
+                <label for="scriptOutput" class="block text-sm font-medium mb-2">转换结果</label>
                 <div class="relative">
-                    <textarea id="scriptOutput" rows="8" class="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm font-mono text-sm bg-card bg-opacity-50" readonly></textarea>
-                    <button id="copyBtn" class="absolute top-2 right-2 bg-blue-500 hover:bg-blue-600 text-white p-1 rounded-md shadow-sm transition" title="复制到剪贴板">
+                    <textarea id="scriptOutput" rows="8" class="w-full p-4 rounded-md font-mono text-sm" readonly></textarea>
+                    <button id="copyBtn" class="absolute top-2 right-2 btn-glow text-white p-2 rounded-md transition" title="复制到剪贴板">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                         </svg>
@@ -122,45 +183,39 @@
             </div>
         </div>
 
-        <div class="bg-card rounded-lg shadow-md p-6">
-            <h2 class="text-2xl font-semibold mb-4">关于本工具</h2>
-            <p class="mb-4 dark:text-gray-300">
-                这是一个通过 GitHub Actions 自动将 QuantumultX 格式的脚本转换为 Loon 和 Surge 格式的工具。您可以直接输入脚本内容或脚本链接进行在线转换。
+        <div class="bg-card rounded-lg shadow-md p-8 script-card animate-fade-in">
+            <h2 class="text-3xl font-semibold mb-4 text-center">关于本工具</h2>
+            <p class="mb-4 text-center">
+                AUTOjs - 高科技脚本转换利器，基于 GitHub Actions，瞬间将 QuantumultX 脚本转化为 Loon 和 Surge 格式。
             </p>
-            <p class="mb-4 dark:text-gray-300">
-                本项目开源于 GitHub，欢迎参与贡献或提出建议。
-            </p>
-            <div>
-                <a href="https://github.com/Mikephie/AUTOjs" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition">
-                    <svg class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <div class="text-center">
+                <a href="https://github.com/Mikephie/AUTOjs" target="_blank" class="inline-flex items-center text-glow-color hover:text-opacity-80 transition">
+                    <svg class="h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
                         <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
                     </svg>
-                    GitHub 仓库
+                    GitHub 星际仓库
                 </a>
             </div>
         </div>
     </main>
 
-    <footer class="footer-bg text-white py-6 mt-10">
-        <div class="container mx-auto px-4 text-center text-gray-400">
-            <p>© 2025 AUTOjs 脚本转换工具 | 基于 GitHub Pages 构建</p>
+    <footer class="footer-bg text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center text-gray-400 animate-fade-in">
+            <p>© 2025 AUTOjs | 星际科技驱动</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 暗模式切换
             const html = document.documentElement;
             const toggleDarkMode = document.getElementById('toggleDarkMode');
             const darkIcon = document.getElementById('darkIcon');
             const lightIcon = document.getElementById('lightIcon');
             
-            // 检查本地存储的主题偏好
             const isDarkMode = localStorage.getItem('darkMode') === 'true' || 
                               (localStorage.getItem('darkMode') === null && 
                                window.matchMedia('(prefers-color-scheme: dark)').matches);
             
-            // 初始设置
             if (isDarkMode) {
                 html.classList.add('dark');
                 darkIcon.classList.add('hidden');
@@ -171,7 +226,6 @@
                 darkIcon.classList.remove('hidden');
             }
             
-            // 切换暗模式处理
             toggleDarkMode.addEventListener('click', () => {
                 if (html.classList.contains('dark')) {
                     html.classList.remove('dark');
@@ -186,7 +240,6 @@
                 }
             });
 
-            // 获取 DOM 元素
             const scriptInput = document.getElementById('scriptInput');
             const scriptUrlInput = document.getElementById('scriptUrlInput');
             const scriptOutput = document.getElementById('scriptOutput');
@@ -196,13 +249,11 @@
             const clearBtn = document.getElementById('clearBtn');
             const copyBtn = document.getElementById('copyBtn');
             
-            // 选项卡相关元素
             const tabScriptContent = document.getElementById('tabScriptContent');
             const tabScriptUrl = document.getElementById('tabScriptUrl');
             const panelScriptContent = document.getElementById('panelScriptContent');
             const panelScriptUrl = document.getElementById('panelScriptUrl');
             
-            // 切换选项卡
             tabScriptContent.addEventListener('click', function() {
                 tabScriptContent.classList.add('tab-active');
                 tabScriptUrl.classList.remove('tab-active');
@@ -217,45 +268,29 @@
                 panelScriptContent.classList.add('hidden');
             });
 
-            // 从URL获取脚本内容
             async function fetchScriptContent(url) {
                 try {
-                    // 尝试直接获取内容
                     const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error(`获取脚本内容失败: ${response.status} ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`获取失败: ${response.status}`);
                     return await response.text();
                 } catch (directError) {
-                    // 如果直接获取失败，尝试通过CORS代理
                     try {
                         const corsProxies = [
                             `https://cors-anywhere.herokuapp.com/${url}`,
                             `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
                             `https://corsproxy.io/?${encodeURIComponent(url)}`
                         ];
-                        
-                        // 尝试所有可能的代理
                         for (const proxyUrl of corsProxies) {
-                            try {
-                                const proxyResponse = await fetch(proxyUrl);
-                                if (proxyResponse.ok) {
-                                    return await proxyResponse.text();
-                                }
-                            } catch (e) {
-                                console.error(`代理 ${proxyUrl} 获取失败:`, e);
-                                // 继续尝试下一个代理
-                            }
+                            const proxyResponse = await fetch(proxyUrl);
+                            if (proxyResponse.ok) return await proxyResponse.text();
                         }
-                        
-                        throw new Error('所有CORS代理均获取失败');
+                        throw new Error('所有代理失败');
                     } catch (proxyError) {
-                        throw new Error(`无法获取脚本内容，可能是由于浏览器的安全限制。请尝试直接复制脚本内容。错误: ${directError.message}`);
+                        throw new Error(`无法获取脚本: ${directError.message}`);
                     }
                 }
             }
 
-            // 清空按钮点击事件
             clearBtn.addEventListener('click', () => {
                 scriptInput.value = '';
                 scriptUrlInput.value = '';
@@ -263,30 +298,22 @@
                 resultContainer.classList.add('hidden');
             });
 
-            // 获取转换输入内容
             async function getInputContent() {
-                // 如果是URL选项卡激活
                 if (!panelScriptUrl.classList.contains('hidden')) {
                     const url = scriptUrlInput.value.trim();
                     if (!url) {
                         alert('请输入脚本链接');
                         return null;
                     }
-                    
                     try {
-                        // 显示加载状态
-                        scriptOutput.value = "正在获取脚本内容...";
+                        scriptOutput.value = "正在获取...";
                         resultContainer.classList.remove('hidden');
-                        
-                        // 获取链接内容
-                        const content = await fetchScriptContent(url);
-                        return content;
+                        return await fetchScriptContent(url);
                     } catch (error) {
                         alert(error.message);
                         return null;
                     }
                 } else {
-                    // 脚本内容选项卡
                     const content = scriptInput.value.trim();
                     if (!content) {
                         alert('请输入脚本内容');
@@ -296,18 +323,14 @@
                 }
             }
 
-            // 转换按钮点击事件
             convertToLoonBtn.addEventListener('click', async () => {
                 const input = await getInputContent();
                 if (!input) return;
-                
                 try {
-                    // 使用window.scriptConverter中的方法
                     const result = window.scriptConverter.convertToLoon(input);
                     scriptOutput.value = result;
                     resultContainer.classList.remove('hidden');
                 } catch (error) {
-                    console.error('转换错误:', error);
                     scriptOutput.value = `转换失败: ${error.message}`;
                     resultContainer.classList.remove('hidden');
                 }
@@ -316,34 +339,22 @@
             convertToSurgeBtn.addEventListener('click', async () => {
                 const input = await getInputContent();
                 if (!input) return;
-                
                 try {
-                    // 使用window.scriptConverter中的方法
                     const result = window.scriptConverter.convertToSurge(input);
                     scriptOutput.value = result;
                     resultContainer.classList.remove('hidden');
                 } catch (error) {
-                    console.error('转换错误:', error);
                     scriptOutput.value = `转换失败: ${error.message}`;
                     resultContainer.classList.remove('hidden');
                 }
             });
 
-            // 复制按钮点击事件
             copyBtn.addEventListener('click', () => {
                 scriptOutput.select();
                 document.execCommand('copy');
-                
-                // 显示复制成功提示
                 const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                `;
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                }, 2000);
+                copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+                setTimeout(() => copyBtn.innerHTML = originalText, 2000);
             });
         });
     </script>
