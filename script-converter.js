@@ -391,7 +391,7 @@ function convertToSurge(scriptInfo) {
         data = "[]";
       }
       
-      config += `\n${pattern} data="${data}"`;
+      config += `\n${pattern} data="${data}" status-code=200`;
     }
     
     config += "\n";
