@@ -320,6 +320,7 @@ function convertToSurge(scriptInfo) {
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
   const author = scriptInfo.metadata.author || "Converter";
+  const category = scriptInfo.metadata.category || "工具";
   
   let config = `#!name=${name}
 #!desc=${desc}
@@ -487,6 +488,7 @@ function convertToLoon(scriptInfo) {
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
   const author = scriptInfo.metadata.author || "Converter";
+  const category = scriptInfo.metadata.category || "工具";
   
   let config = `#!name=${name}
 #!desc=${desc}
