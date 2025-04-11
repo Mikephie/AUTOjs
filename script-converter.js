@@ -409,8 +409,8 @@ function convertToSurge(input) {
       
       // 添加 status-code=200 参数
       console.log('处理 reject 规则:', pattern, rejectType);
-      config += `\n${pattern} data-type=${dataType} data="${data}" status-code=200`;
-      console.log('生成的配置行:', `${pattern} data="${data}" status-code=200`);
+      config += `\n${pattern} data-type=text data="${data}" status-code=200`;
+      console.log('生成的配置行:', `${pattern} data-type=text data="${data}" status-code=200`);
     }
     
     config += "\n";
