@@ -1,12 +1,11 @@
 #!name=✨ 彩云天气 ✨
 #!desc=天气预测
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
-#!category=🔐APP
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/caiyun.png
 
 [Rule]
 # 上传信息
-DOMAIN, gather.colorfulclouds.net ,reject
+DOMAIN,gather.colorfulclouds.net,REJECT
 
 [Rewrite]
 # 普通版开屏广告(此广告不定时出现)

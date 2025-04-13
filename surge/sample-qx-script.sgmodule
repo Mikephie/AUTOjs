@@ -1,20 +1,19 @@
 #!name=样例QX脚本
 #!desc=用于测试转换功能的样例脚本
 #!author=Converter
-#!category=示例
 
 [Rule]
 # 规则设置
-DOMAIN, ad.example.com, reject
-DOMAIN-SUFFIX, stats.example.com, reject
-DOMAIN-KEYWORD, tracker, reject
-ip-cidr, 10.10.10.10/24, direct
-USER-AGENT, Example App*, direct
+DOMAIN,ad.example.com,REJECT
+DOMAIN-SUFFIX,stats.example.com,REJECT
+DOMAIN-KEYWORD,tracker,REJECT
+ip-cidr,10.10.10.10/24,DIRECT
+USER-AGENT,Example App*,DIRECT
 
 [Map Local]
 # 广告拦截
-^https?:\/\/api\.example\.com\/ads data="{}" status-code=200
-^https?:\/\/api\.example\.com\/banner data="HTTP/1.1 200 OK
+^https?:\/\/api\.example\.com\/ads data-type=text data="{}" status-code=200
+^https?:\/\/api\.example\.com\/banner data-type=text data="HTTP/1.1 200 OK
 Content-Type: image/png
 Content-Length: 0" status-code=200
 
