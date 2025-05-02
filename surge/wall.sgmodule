@@ -1,0 +1,10 @@
+#!name=✨ Wallcraft ✨
+#!desc=图像壁纸
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/wallcraft.png
+
+[Script]
+wall = type=http-response, pattern=^https?:\/\/billing-ios\.wallpaperscraft\.com\/(verify_receipt|products)\/remove_ads$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/wall.js, timeout=60
+
+[MITM]
+hostname = %APPEND% billing-ios.wallpaperscraft.com
