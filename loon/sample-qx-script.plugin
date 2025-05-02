@@ -4,16 +4,16 @@
 
 [Rule]
 # 规则设置
-DOMAIN, ad.example.com, reject
-DOMAIN-SUFFIX, stats.example.com, reject
-DOMAIN-KEYWORD, tracker, reject
-ip-cidr, 10.10.10.10/24, direct
-USER-AGENT, Example App*, direct
+DOMAIN,ad.example.com,REJECT
+DOMAIN-SUFFIX,stats.example.com,REJECT
+DOMAIN-KEYWORD,tracker,REJECT
+ip-cidr,10.10.10.10/24,DIRECT
+USER-AGENT,Example App*,DIRECT
 
 [Rewrite]
 # 广告拦截
-^https?:\/\/api\.example\.com\/ads - reject
-^https?:\/\/api\.example\.com\/banner - reject-img
+^https?:\/\/api\.example\.com\/ads - REJECT
+^https?:\/\/api\.example\.com\/banner - REJECT
 
 [Script]
 # 脚本处理
