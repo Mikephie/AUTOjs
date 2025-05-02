@@ -4,7 +4,7 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/wallcraft.png
 
 [Script]
-http-response ^https?:\/\/billing-ios\.wallpaperscraft\.com\/(verify_receipt|products)\/remove_ads$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/wall.js, requires-body=true, timeout=60, tag=wall
+http-response ^https:\/\/billing-ios\.wallpaperscraft\.com\/v1\/(?:verify_receipt|products)\/remove_ads script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/wall.js, requires-body=true, timeout=60, tag=wall
 
 [MITM]
 hostname = billing-ios.wallpaperscraft.com
