@@ -18,6 +18,7 @@ USER-AGENT,Example App*,DIRECT
 Content-Type: image/png
 Content-Length: 0" status-code=200
 
+
 [Script]
 # 脚本处理
 profile = type=http-response, pattern=^https?:\/\/api\.example\.com\/user\/profile, requires-body=1, script-path=https://example.com/scripts/profile.js, timeout=60

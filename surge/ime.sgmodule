@@ -3,6 +3,7 @@
 #!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/ime.png
+
 [Script]
 ime = type=http-response, pattern=https:\/\/api\.imem\.app\/api\/premium\/getOwnStatus, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/ime.js, timeout=60
 

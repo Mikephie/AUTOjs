@@ -3,6 +3,7 @@
 #!category=🔐APP
 #!author=MikePhie
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/caiyun.png
+
 [Script]
 # 彩云天气SVIP
 caiyun = type=http-response, pattern=^https:\/\/biz\.cyapi\.cn\/(v1\/user|v2\/user\/account|membership_rights|v3\/user), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/app/main/scripts/caiyun.js, timeout=60
