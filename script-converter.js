@@ -451,7 +451,7 @@ function convertToSurge(input) {
 
   // 处理Script部分
   if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
-    config += "\n[Script]";
+    config += "\n\n[Script]";
     
     let lastComment = "";
     let ruleCounter = 0;
