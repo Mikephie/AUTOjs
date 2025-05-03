@@ -1,5 +1,6 @@
 #!name=样例QX脚本
 #!desc=用于测试转换功能的样例脚本
+#!category=示例
 #!author=Converter
 
 [Rule]
