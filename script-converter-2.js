@@ -332,26 +332,21 @@ function convertToSurge(input) {
   const author = scriptInfo.metadata.author || "Converter";
   
   let config = `#!name=${name}
-#!desc=${desc}`;
-
-  // 添加category字段（如果存在）
-  if (scriptInfo.metadata.category) {
-    config += `\n#!category=${scriptInfo.metadata.category}`;
-  }
-
-  config += `\n#!author=${author}`;
+#!desc=${desc}
+#!author=${author}
+`;
 
   if (scriptInfo.metadata.homepage) {
-    config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
+    config += `#!homepage=${scriptInfo.metadata.homepage}\n`;
   }
   
   if (scriptInfo.metadata.icon) {
-    config += `\n#!icon=${scriptInfo.metadata.icon}`;
+    config += `#!icon=${scriptInfo.metadata.icon}\n`;
   }
 
   // 处理Rule部分 - 修复格式
   if (scriptInfo.rules && scriptInfo.rules.length > 0) {
-    config += "\n\n[Rule]";
+    config += "\n[Rule]";
     
     let lastComment = "";
     for (const rule of scriptInfo.rules) {
@@ -529,26 +524,21 @@ function convertToLoon(input) {
   const author = scriptInfo.metadata.author || "Converter";
   
   let config = `#!name=${name}
-#!desc=${desc}`;
-
-  // 添加category字段（如果存在）
-  if (scriptInfo.metadata.category) {
-    config += `\n#!category=${scriptInfo.metadata.category}`;
-  }
-
-  config += `\n#!author=${author}`;
+#!desc=${desc}
+#!author=${author}
+`;
 
   if (scriptInfo.metadata.homepage) {
-    config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
+    config += `#!homepage=${scriptInfo.metadata.homepage}\n`;
   }
   
   if (scriptInfo.metadata.icon) {
-    config += `\n#!icon=${scriptInfo.metadata.icon}`;
+    config += `#!icon=${scriptInfo.metadata.icon}\n`;
   }
 
   // 处理Rule部分
   if (scriptInfo.rules.length > 0) {
-    config += "\n\n[Rule]";
+    config += "\n[Rule]";
     
     let lastComment = "";
     for (const rule of scriptInfo.rules) {

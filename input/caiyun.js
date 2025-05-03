@@ -1,6 +1,6 @@
 /*
 #!name= ✨ 彩云天气 ✨
-#!desc=天气预测test
+#!desc=天气预测
 #!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/caiyun.png
