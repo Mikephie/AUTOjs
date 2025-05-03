@@ -1,0 +1,33 @@
+{
+  "name": "Al Photo Cleaner: Tidy-Mighty",
+  "appStoreLink": "",
+  "appId": "1635087040",
+  "bundleId": "com.flashtransport.fightenegery",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.flashtransport.fightenegery.weekly.notrail.pro"
+    },
+    {
+      "id": 2,
+      "productId": "com.flashtransport.fightenegery.weekly.notrial"
+    },
+    {
+      "id": 3,
+      "productId": "com.flashtransport.fightenegery.weekly.base"
+    },
+    {
+      "id": 4,
+      "productId": "com.flashtransport.fightenegery.yearly.base"
+    },
+    {
+      "id": 5,
+      "productId": "com.flashtransport.fightenegery.3monthly.base"
+    },
+    {
+      "id": 6,
+      "productId": "com.flashtransport.fightenegery.weekly.pro"
+    }
+  ],
+  "updatedAt": "2025-04-16T04:52:22.075Z"
+}

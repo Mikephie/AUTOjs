@@ -1,0 +1,41 @@
+{
+  "name": "Speak Translate Translator",
+  "appStoreLink": "",
+  "appId": "804641004",
+  "bundleId": "com.appicfun.translatorfree",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.appicfun.translatorfree.01m_03dt_lim50302"
+    },
+    {
+      "id": 2,
+      "productId": "com.appicfun.translatorfree.01m_03dt_lim50301"
+    },
+    {
+      "id": 3,
+      "productId": "speak_translate_ios"
+    },
+    {
+      "id": 4,
+      "productId": "com.appicfun.translatorfree.01m_lim50302"
+    },
+    {
+      "id": 5,
+      "productId": "com.appicfun.translatorfree.01y_07dt_high_lim50302"
+    },
+    {
+      "id": 6,
+      "productId": "com.appicfun.translatorfree.01m_07dt_extralimit"
+    },
+    {
+      "id": 7,
+      "productId": "com.appicfun.translatorfree.01y_7dt_lim50302"
+    },
+    {
+      "id": 8,
+      "productId": "com.appicfun.translatorfree.07d_03dt_lim50302"
+    }
+  ],
+  "updatedAt": "2025-04-03T02:29:40.268Z"
+}

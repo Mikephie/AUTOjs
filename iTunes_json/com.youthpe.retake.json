@@ -1,0 +1,21 @@
+{
+  "name": "Retake -Al Photo Enhancer",
+  "appStoreLink": "",
+  "appId": "1643416039",
+  "bundleId": "com.youthpe.retake",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "retake_subscription_yearly"
+    },
+    {
+      "id": 2,
+      "productId": "retake_subscription_monthly"
+    },
+    {
+      "id": 3,
+      "productId": "retake_unlock_forever"
+    }
+  ],
+  "updatedAt": "2025-03-28T14:52:39.220Z"
+}

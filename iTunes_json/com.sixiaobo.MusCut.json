@@ -1,0 +1,13 @@
+{
+  "name": "PureCollage",
+  "appStoreLink": "",
+  "appId": "1645828363",
+  "bundleId": "com.sixiaobo.MusCut",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.purecollage.pro"
+    }
+  ],
+  "updatedAt": "2025-04-20T06:45:34.841Z"
+}

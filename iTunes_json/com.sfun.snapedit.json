@@ -1,0 +1,53 @@
+{
+  "name": "SnapEdit Remove Objects Al",
+  "appStoreLink": "",
+  "appId": "1611282499",
+  "bundleId": "com.sfun.snapedit",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "se_premium_weekly_499_3d0"
+    },
+    {
+      "id": 2,
+      "productId": "se_299_1m_3d0"
+    },
+    {
+      "id": 3,
+      "productId": "se_premium_weekly_299_3d0"
+    },
+    {
+      "id": 4,
+      "productId": "se_099_1w_0d0"
+    },
+    {
+      "id": 5,
+      "productId": "se_premium_yearly_2499_7d0_b"
+    },
+    {
+      "id": 6,
+      "productId": "se_premium_weekly_combo_a"
+    },
+    {
+      "id": 7,
+      "productId": "se_premium_weekly_trial_a"
+    },
+    {
+      "id": 8,
+      "productId": "se_premium_monthly_trial_b"
+    },
+    {
+      "id": 9,
+      "productId": "se_1999_1y_3d0"
+    },
+    {
+      "id": 10,
+      "productId": "se_premium_weekly_combo_b"
+    },
+    {
+      "id": 11,
+      "productId": "se_premium_yearly_combo_e"
+    }
+  ],
+  "updatedAt": "2025-03-31T13:34:55.431Z"
+}

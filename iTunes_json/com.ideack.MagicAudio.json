@@ -1,0 +1,29 @@
+{
+  "name": "Music Clip Ringtone Maker",
+  "appStoreLink": "",
+  "appId": "1467161113",
+  "bundleId": "com.ideack.MagicAudio",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "MagicAudioSubscribeOneYear"
+    },
+    {
+      "id": 2,
+      "productId": "MagicAudioSubscribeOneMonth"
+    },
+    {
+      "id": 3,
+      "productId": "MagicAudioPermanent"
+    },
+    {
+      "id": 4,
+      "productId": "MagicAudio_Subscribe_Year1"
+    },
+    {
+      "id": 5,
+      "productId": "MagicAudioSubscribeThreeMonth"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:24:19.778Z"
+}

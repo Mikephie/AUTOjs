@@ -1,0 +1,33 @@
+{
+  "name": "Translator Voice Translate",
+  "appStoreLink": "",
+  "appId": "1263008827",
+  "bundleId": "co.vulcanlabs.translator",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "co.vulcanlabs.translator.week"
+    },
+    {
+      "id": 2,
+      "productId": "co.vulcanlabs.translator.weekly"
+    },
+    {
+      "id": 3,
+      "productId": "co.vulcanlabs.translator.monthly"
+    },
+    {
+      "id": 4,
+      "productId": "co.vulcanlabs.translator.month"
+    },
+    {
+      "id": 5,
+      "productId": "co.vulcanlabs.translator.lifetime"
+    },
+    {
+      "id": 6,
+      "productId": "co.vulcanlabs.translator.six"
+    }
+  ],
+  "updatedAt": "2025-03-29T06:52:33.807Z"
+}

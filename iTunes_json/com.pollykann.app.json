@@ -1,0 +1,41 @@
+{
+  "name": "Pollykann Ultra Media Player",
+  "appStoreLink": "https://apps.apple.com/my/app/codesnippet-pro-c...",
+  "appId": "1547395471",
+  "bundleId": "com.pollykann.app",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "vip.annually.pollykann"
+    },
+    {
+      "id": 2,
+      "productId": "vip.3years.pollykann"
+    },
+    {
+      "id": 3,
+      "productId": "vip.monthly.pollykann"
+    },
+    {
+      "id": 4,
+      "productId": "vip.forever.pollykann"
+    },
+    {
+      "id": 5,
+      "productId": "point02.consumable.pollykann"
+    },
+    {
+      "id": 6,
+      "productId": "vip.5years.pollykann"
+    },
+    {
+      "id": 7,
+      "productId": "point06.consumable.pollykann"
+    },
+    {
+      "id": 8,
+      "productId": "point05.consumable.pollykann 22:15"
+    }
+  ],
+  "updatedAt": "2025-03-27T08:27:17.602Z"
+}

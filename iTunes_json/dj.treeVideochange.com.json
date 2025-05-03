@@ -1,0 +1,17 @@
+{
+  "name": "Video to text& Text extraction",
+  "appStoreLink": "",
+  "appId": "6502915408",
+  "bundleId": "dj.treeVideochange.com",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.dj.videototext.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.dj.videototext.forever"
+    }
+  ],
+  "updatedAt": "2025-03-28T08:00:51.926Z"
+}

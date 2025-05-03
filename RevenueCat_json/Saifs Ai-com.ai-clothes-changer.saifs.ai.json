@@ -1,0 +1,30 @@
+{
+  "user_agent": "Saifs%20Ai",
+  "bundle_id": "com.ai-clothes-changer.saifs.ai",
+  "data": {
+    "ai_clothes_changer_1_99": {
+      "entitlements": [
+        "ai_clothes_changer_1_99"
+      ],
+      "product_identifier": "ai_clothes_changer_1_99"
+    },
+    "ai_clothes_changer_99_99_half_yearly": {
+      "entitlements": [
+        "ai_clothes_changer_99_99_half_yearly"
+      ],
+      "product_identifier": "ai_clothes_changer_99_99_half_yearly"
+    },
+    "ai_clothes_changer_9_99_weekly": {
+      "entitlements": [
+        "ai_clothes_changer_9_99_weekly"
+      ],
+      "product_identifier": "ai_clothes_changer_9_99_weekly"
+    },
+    "ai_clothes_changer_lifetime_offer": {
+      "entitlements": [
+        "lifetime"
+      ],
+      "product_identifier": "ai_clothes_changer_lifetime_offer"
+    }
+  }
+}

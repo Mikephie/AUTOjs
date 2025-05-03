@@ -1,0 +1,29 @@
+{
+  "name": "Mockview Mockup Generator",
+  "appStoreLink": "",
+  "appId": "1592728145",
+  "bundleId": "com.kavsoft.MockviewApp",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "kavsoft.dev.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "kavsoft.dev.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "dev.kavsoft.tip"
+    },
+    {
+      "id": 4,
+      "productId": "dev.kavsoft.protip"
+    },
+    {
+      "id": 5,
+      "productId": "dev.kavsoft.promaxtip"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:24:19.778Z"
+}

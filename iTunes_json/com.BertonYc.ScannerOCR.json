@@ -1,0 +1,49 @@
+{
+  "name": "Almighty Scanner-Picture2Text",
+  "appStoreLink": "",
+  "appId": "1452449272",
+  "bundleId": "com.BertonYc.ScannerOCR",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Scanner_Subscibe_Auto_Month"
+    },
+    {
+      "id": 2,
+      "productId": "Scanner_Subscribe_Year"
+    },
+    {
+      "id": 3,
+      "productId": "Scanner_Subscibe_28Month"
+    },
+    {
+      "id": 4,
+      "productId": "Scanner_Subscibe_Auto_Year"
+    },
+    {
+      "id": 5,
+      "productId": "Scanner_Subscibe_Auto_Quarter"
+    },
+    {
+      "id": 6,
+      "productId": "Scanner_Subscibe_Permanent"
+    },
+    {
+      "id": 7,
+      "productId": "Scanner_Subscribe_TryMonth"
+    },
+    {
+      "id": 8,
+      "productId": "Scanner_128_Year"
+    },
+    {
+      "id": 9,
+      "productId": "Scanner_Subscibe_OneYear"
+    },
+    {
+      "id": 10,
+      "productId": "Scanner_Subscibe_OneMonth"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:51:05.855Z"
+}

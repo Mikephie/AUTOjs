@@ -1,0 +1,49 @@
+{
+  "name": "Ritmo Video: Make Photo Sing",
+  "appStoreLink": "",
+  "appId": "1570388141",
+  "bundleId": "com.video.editor.ritmo",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "ritmo_month_notrial"
+    },
+    {
+      "id": 2,
+      "productId": "ritmo_weekly_trial"
+    },
+    {
+      "id": 3,
+      "productId": "ritmo_monthly_trial"
+    },
+    {
+      "id": 4,
+      "productId": "ritmo_weekly_notrial"
+    },
+    {
+      "id": 5,
+      "productId": "ritmo_weekly_notrial02"
+    },
+    {
+      "id": 6,
+      "productId": "ritmo_weekly_trial02"
+    },
+    {
+      "id": 7,
+      "productId": "ritmo_yearly_trial"
+    },
+    {
+      "id": 8,
+      "productId": "ritmo_yearly_notrial"
+    },
+    {
+      "id": 9,
+      "productId": "ritmo_monthly_trialoffer"
+    },
+    {
+      "id": 10,
+      "productId": "ritmo_weekly_trialoffer"
+    }
+  ],
+  "updatedAt": "2025-03-29T05:22:30.705Z"
+}

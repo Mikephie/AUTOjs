@@ -1,0 +1,45 @@
+{
+  "name": "Clime: NOAA Weather Radar Live",
+  "appStoreLink": "",
+  "appId": "749133753",
+  "bundleId": "com.apalonapps.radarfree",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.apalonapps.radarfree.07d_07dt_TRL00002"
+    },
+    {
+      "id": 2,
+      "productId": "com.apalonapps.radarfree.7d_7dt_t4"
+    },
+    {
+      "id": 3,
+      "productId": "com.apalonapps.radarfree.01m_07dt_TRL00002"
+    },
+    {
+      "id": 4,
+      "productId": "com.apalonapps.radarfree.01m_07dt_CLIME00002"
+    },
+    {
+      "id": 5,
+      "productId": "com.apalonapps.radarfree.01y_TRL00002"
+    },
+    {
+      "id": 6,
+      "productId": "clime_ios"
+    },
+    {
+      "id": 7,
+      "productId": "com.apalonapps.radarfree.07d_TRL00002"
+    },
+    {
+      "id": 8,
+      "productId": "com.apalonapps.radarfree.07d_07dt_CLIME00002"
+    },
+    {
+      "id": 9,
+      "productId": "com.apalonapps.radarfree.1y_t4"
+    }
+  ],
+  "updatedAt": "2025-04-03T02:29:40.268Z"
+}

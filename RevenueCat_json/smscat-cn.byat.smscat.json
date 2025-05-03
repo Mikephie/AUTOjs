@@ -1,0 +1,30 @@
+{
+  "user_agent": "smscat",
+  "bundle_id": "cn.byat.smscat",
+  "data": {
+    "smscat_vip_lifetime": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "smscat_vip_lifetime"
+    },
+    "smscat_vip_monthly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "smscat_vip_monthly"
+    },
+    "smscat_vip_weekly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "smscat_vip_weekly"
+    },
+    "smscat_vip_yearly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "smscat_vip_yearly"
+    }
+  }
+}

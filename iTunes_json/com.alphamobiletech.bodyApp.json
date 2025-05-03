@@ -1,0 +1,13 @@
+{
+  "name": "BodyApp- Best Body Editor",
+  "appStoreLink": "",
+  "appId": "1413690783",
+  "bundleId": "com.alphamobiletech.bodyApp",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Bodyapp_Forever"
+    }
+  ],
+  "updatedAt": "2025-03-26T23:17:57.914Z"
+}

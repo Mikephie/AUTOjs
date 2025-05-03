@@ -1,0 +1,21 @@
+{
+  "name": "表格手机版-xlsx 电子表格",
+  "appStoreLink": "",
+  "appId": "6467396526",
+  "bundleId": "zhangjt.biaoge.2024review",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "zhangjt.biaoge.weekvip"
+    },
+    {
+      "id": 2,
+      "productId": "zhangjt.biaoge.monthvip"
+    },
+    {
+      "id": 3,
+      "productId": "zhangjt.biaoge.yearvip"
+    }
+  ],
+  "updatedAt": "2025-03-29T07:13:58.739Z"
+}

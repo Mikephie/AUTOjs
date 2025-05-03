@@ -1,0 +1,13 @@
+{
+  "name": "Sorter Photo Organization",
+  "appStoreLink": "",
+  "appId": "6444217685",
+  "bundleId": "com.sixiaobo.PhotosSorter",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "sorter.pro.ipa"
+    }
+  ],
+  "updatedAt": "2025-03-28T08:22:41.010Z"
+}

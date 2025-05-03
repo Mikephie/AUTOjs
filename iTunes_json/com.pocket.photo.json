@@ -1,0 +1,21 @@
+{
+  "name": "一寸证件照",
+  "appStoreLink": "",
+  "appId": "1598878022",
+  "bundleId": "com.pocket.photo",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.pocket.photo.week"
+    },
+    {
+      "id": 2,
+      "productId": "com.pocket.photo.month"
+    },
+    {
+      "id": 3,
+      "productId": "com.pocket.photo.year"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:57:48.434Z"
+}

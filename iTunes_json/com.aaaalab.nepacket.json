@@ -1,0 +1,21 @@
+{
+  "name": "HTTPS Traffic",
+  "appStoreLink": "",
+  "appId": "1522630336",
+  "bundleId": "com.aaaalab.nepacket",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.aaaalab.nepacket.iap.full"
+    },
+    {
+      "id": 2,
+      "productId": "com.aaaalab.packet.auto.renew.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.aaaalab.consumable.50point"
+    }
+  ],
+  "updatedAt": "2025-03-28T12:48:10.463Z"
+}

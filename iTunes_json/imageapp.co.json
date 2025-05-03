@@ -1,0 +1,41 @@
+{
+  "name": "乐颜-一键生成写真视频",
+  "appStoreLink": "",
+  "appId": "6468887986",
+  "bundleId": "imageapp.co",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.ai.merge.week.vip.pro"
+    },
+    {
+      "id": 2,
+      "productId": "com.ai.merge.month.vip.pro"
+    },
+    {
+      "id": 3,
+      "productId": "com.ai.merge.week.vip"
+    },
+    {
+      "id": 4,
+      "productId": "com.ai.merge.month.vip"
+    },
+    {
+      "id": 5,
+      "productId": "com.ai.merge.year.vip.pro"
+    },
+    {
+      "id": 6,
+      "productId": "com.ai.merge.forever.vip"
+    },
+    {
+      "id": 7,
+      "productId": "com.ai.merge.year.vip"
+    },
+    {
+      "id": 8,
+      "productId": "com.ai.merge.quarter.vip"
+    }
+  ],
+  "updatedAt": "2025-03-28T12:48:10.463Z"
+}

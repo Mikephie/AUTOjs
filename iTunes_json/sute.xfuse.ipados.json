@@ -1,0 +1,21 @@
+{
+  "name": "磁力宅播放器",
+  "appStoreLink": "",
+  "appId": "6497060674",
+  "bundleId": "sute.xfuse.ipados",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "WeekSubscription"
+    },
+    {
+      "id": 2,
+      "productId": "MonthSubscription"
+    },
+    {
+      "id": 3,
+      "productId": "com.xfuse.ProVision"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:51:05.855Z"
+}

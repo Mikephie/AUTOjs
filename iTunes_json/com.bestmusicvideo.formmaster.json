@@ -1,0 +1,53 @@
+{
+  "name": "Spreadsheet-xlsx&csv editor",
+  "appStoreLink": "",
+  "appId": "1518721142",
+  "bundleId": "com.bestmusicvideo.formmaster",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "HWIPPROUCT"
+    },
+    {
+      "id": 2,
+      "productId": "com.form.1weekvip"
+    },
+    {
+      "id": 3,
+      "productId": "com.form.1yearvip"
+    },
+    {
+      "id": 4,
+      "productId": "com.form.1monthvip"
+    },
+    {
+      "id": 5,
+      "productId": "com.form.permanetvip"
+    },
+    {
+      "id": 6,
+      "productId": "com.formaster.ai50times"
+    },
+    {
+      "id": 7,
+      "productId": "com.formaster.ai10times"
+    },
+    {
+      "id": 8,
+      "productId": "com.formaster.ai100times"
+    },
+    {
+      "id": 9,
+      "productId": "com.form.3y"
+    },
+    {
+      "id": 10,
+      "productId": "com.form.1w"
+    },
+    {
+      "id": 11,
+      "productId": "com.formaster.monthlytrial"
+    }
+  ],
+  "updatedAt": "2025-03-29T04:42:00.917Z"
+}

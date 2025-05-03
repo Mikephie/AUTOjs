@@ -1,0 +1,21 @@
+{
+  "name": "Zip RAR File Extractor",
+  "appStoreLink": "",
+  "appId": "769409043",
+  "bundleId": "com.ipopgame.izipfree",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.ipopgame.izipfree.promonthlyupgrade"
+    },
+    {
+      "id": 2,
+      "productId": "com.ipopgame.izipfree.proweeklyupgrade"
+    },
+    {
+      "id": 3,
+      "productId": "com.ipopgame.izipfree.removeallads"
+    }
+  ],
+  "updatedAt": "2025-04-26T22:48:59.131Z"
+}

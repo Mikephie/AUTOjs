@@ -1,0 +1,17 @@
+{
+  "name": "Pandora Track Subscriptions",
+  "appStoreLink": "",
+  "appId": "1470560916",
+  "bundleId": "com.ziheng.OneBox",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.ziheng.pandora.lifetime"
+    },
+    {
+      "id": 2,
+      "productId": "com.ziheng.pandora.yearly"
+    }
+  ],
+  "updatedAt": "2025-03-27T21:47:36.701Z"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "记账 -Pixiu",
+  "appStoreLink": "",
+  "appId": "1461452315",
+  "bundleId": "com.RuoG.Pixiu",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.RuoG.Pixiu.VIPYear"
+    }
+  ],
+  "updatedAt": "2025-03-29T06:42:44.710Z"
+}

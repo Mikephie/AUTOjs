@@ -1,0 +1,13 @@
+{
+  "name": "Documents: File Manager Docs",
+  "appStoreLink": "",
+  "appId": "364901807",
+  "bundleId": "com.readdle.ReaddleDocslPad",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.readdle.ReaddleDocslPad.subscription.year50"
+    }
+  ],
+  "updatedAt": "2025-03-28T04:36:59.965Z"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Call Screen-Colorful Call Show",
+  "appStoreLink": "",
+  "appId": "1670020102",
+  "bundleId": "com.mycall.cn",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "easycall_week13243"
+    }
+  ],
+  "updatedAt": "2025-03-29T06:52:33.807Z"
+}

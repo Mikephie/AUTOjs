@@ -1,0 +1,17 @@
+{
+  "name": "Fonts for iPhones and iPad",
+  "appStoreLink": "",
+  "appId": "1550755352",
+  "bundleId": "fronts.keyboard.singingfish",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "fonts_year"
+    },
+    {
+      "id": 2,
+      "productId": "Fonts_Permanent_Purchase"
+    }
+  ],
+  "updatedAt": "2025-03-29T04:42:00.917Z"
+}

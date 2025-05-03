@@ -1,0 +1,12 @@
+{
+  "user_agent": "TuneMyMusic",
+  "bundle_id": "com.liang.TuneMyMusic",
+  "data": {
+    "com.liang.TuneMyMusic.product_lifetime": {
+      "entitlements": [
+        "product_lifetime"
+      ],
+      "product_identifier": "com.liang.TuneMyMusic.product_lifetime"
+    }
+  }
+}

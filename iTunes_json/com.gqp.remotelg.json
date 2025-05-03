@@ -1,0 +1,17 @@
+{
+  "name": "Universal Remote TV Samsung",
+  "appStoreLink": "",
+  "appId": "6470742162",
+  "bundleId": "com.gqp.remotelg",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.gqp.remotelg.lifetime"
+    },
+    {
+      "id": 2,
+      "productId": "com.gqp.remotelg.week"
+    }
+  ],
+  "updatedAt": "2025-03-29T06:52:33.807Z"
+}

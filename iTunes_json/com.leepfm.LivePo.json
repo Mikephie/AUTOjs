@@ -1,0 +1,13 @@
+{
+  "name": "LivePo -Video Into Live",
+  "appStoreLink": "",
+  "appId": "6741813954",
+  "bundleId": "com.leepfm.LivePo",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "livepo_lifetime_pro"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:17:11.853Z"
+}

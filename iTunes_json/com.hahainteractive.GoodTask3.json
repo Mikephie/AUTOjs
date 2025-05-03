@@ -1,0 +1,21 @@
+{
+  "name": "GoodTask To Do List, Tasks",
+  "appStoreLink": "",
+  "appId": "1068039220",
+  "bundleId": "com.hahainteractive.GoodTask3",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.hahainteractive.goodtask3.pro"
+    },
+    {
+      "id": 2,
+      "productId": "com.hahainteractive.goodtask3.support"
+    },
+    {
+      "id": 3,
+      "productId": "com.hahainteractive.goodtask3.supportonce"
+    }
+  ],
+  "updatedAt": "2025-04-08T02:30:10.514Z"
+}

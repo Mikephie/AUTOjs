@@ -1,0 +1,41 @@
+{
+  "name": "Photomator Photo Editor",
+  "appStoreLink": "",
+  "appId": "1444636541",
+  "bundleId": "Photomator",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "pixelmator_photo_yearly_v1"
+    },
+    {
+      "id": 2,
+      "productId": "pixelmator_photo_monthly_v1"
+    },
+    {
+      "id": 3,
+      "productId": "pixelmator_photo_lifetime_v1_pro_offer"
+    },
+    {
+      "id": 4,
+      "productId": "pixelmator_photo_lifetime_v1"
+    },
+    {
+      "id": 5,
+      "productId": "pixelmator_photo_yearly_v1_sale"
+    },
+    {
+      "id": 6,
+      "productId": "pixelmator_photo_yearly_v1_ab"
+    },
+    {
+      "id": 7,
+      "productId": "pixelmator_photo_monthly_v1_ab"
+    },
+    {
+      "id": 8,
+      "productId": "pixelmator_photo_lifetime_v1_ab"
+    }
+  ],
+  "updatedAt": "2025-04-20T23:27:16.583Z"
+}

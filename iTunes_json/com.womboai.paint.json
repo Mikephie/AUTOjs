@@ -1,0 +1,49 @@
+{
+  "name": "WOMBO Dream Al Art Generator",
+  "appStoreLink": "",
+  "appId": "1586366816",
+  "bundleId": "com.womboai.paint",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "dream_weekly_jan_2024_699"
+    },
+    {
+      "id": 2,
+      "productId": "dream_monthly_v3_c_999"
+    },
+    {
+      "id": 3,
+      "productId": "dream_yearly_v3_d_8999"
+    },
+    {
+      "id": 4,
+      "productId": "dream_monthly"
+    },
+    {
+      "id": 5,
+      "productId": "dream_yearly"
+    },
+    {
+      "id": 6,
+      "productId": "dream_yearly_jan_2024_3999"
+    },
+    {
+      "id": 7,
+      "productId": "dream_monthly_v3_b_699"
+    },
+    {
+      "id": 8,
+      "productId": "dream_yearly_v3_c_5999"
+    },
+    {
+      "id": 9,
+      "productId": "dream_monthly_a"
+    },
+    {
+      "id": 10,
+      "productId": "dream_yearly_discounted_upsell_feb_2024_1999"
+    }
+  ],
+  "updatedAt": "2025-03-28T08:07:51.891Z"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "视频提取器-视频转文字音频下载存图",
+  "appStoreLink": "",
+  "appId": "6449595225",
+  "bundleId": "com.OneExtractor.Video",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.OneExtractor.Video.Month"
+    },
+    {
+      "id": 2,
+      "productId": "com.OneExtractor.Video.Forever"
+    },
+    {
+      "id": 3,
+      "productId": "com.OneExtractor.Video.Year"
+    }
+  ],
+  "updatedAt": "2025-03-28T15:04:32.395Z"
+}

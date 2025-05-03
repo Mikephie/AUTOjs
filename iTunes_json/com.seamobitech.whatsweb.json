@@ -1,0 +1,37 @@
+{
+  "name": "Dual Web Chat for WhatsWA",
+  "appStoreLink": "",
+  "appId": "1618030954",
+  "bundleId": "com.seamobitech.whatsweb",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.seamobitech.whatsweb.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.seamobitech.whatsweb.chat.weekly"
+    },
+    {
+      "id": 3,
+      "productId": "com.seamobitech.whatsweb.lifetime"
+    },
+    {
+      "id": 4,
+      "productId": "com.seamobitech.whatsweb.yearly"
+    },
+    {
+      "id": 5,
+      "productId": "com.seamobitech.whatsweb.monthly.trial"
+    },
+    {
+      "id": 6,
+      "productId": "com.seamobitech.whatsweb.chat.lifetime"
+    },
+    {
+      "id": 7,
+      "productId": "com.seamobitech.whatsweb.yearly.trial"
+    }
+  ],
+  "updatedAt": "2025-03-27T22:00:12.571Z"
+}

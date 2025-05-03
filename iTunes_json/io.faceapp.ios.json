@@ -1,0 +1,45 @@
+{
+  "name": "FaceApp: Perfect Face Editor",
+  "appStoreLink": "",
+  "appId": "1180884341",
+  "bundleId": "io.faceapp.ios",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "pro_month"
+    },
+    {
+      "id": 2,
+      "productId": "pro_year_trial"
+    },
+    {
+      "id": 3,
+      "productId": "pro_year"
+    },
+    {
+      "id": 4,
+      "productId": "pro_month_trial"
+    },
+    {
+      "id": 5,
+      "productId": "pro_year_trial_b"
+    },
+    {
+      "id": 6,
+      "productId": "pro_month_promo_appstore"
+    },
+    {
+      "id": 7,
+      "productId": "pro_year_promo_appstore"
+    },
+    {
+      "id": 8,
+      "productId": "pro_year_referral"
+    },
+    {
+      "id": 9,
+      "productId": "pro_year_b"
+    }
+  ],
+  "updatedAt": "2025-03-28T08:22:41.011Z"
+}

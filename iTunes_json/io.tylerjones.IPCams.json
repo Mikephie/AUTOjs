@@ -1,0 +1,49 @@
+{
+  "name": "IP Camera Viewer -IPCams",
+  "appStoreLink": "",
+  "appId": "1045600272",
+  "bundleId": "io.tylerjones.IPCams",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "ipcams_pro_yearly_999"
+    },
+    {
+      "id": 2,
+      "productId": "ipcams_pro_monthly_099"
+    },
+    {
+      "id": 3,
+      "productId": "ipcams_pro_plus_yearly"
+    },
+    {
+      "id": 4,
+      "productId": "ipcams_pro_plus_monthly"
+    },
+    {
+      "id": 5,
+      "productId": "ipcams_pro_lifetime"
+    },
+    {
+      "id": 6,
+      "productId": "ipcams_pro_yearly_family_1499"
+    },
+    {
+      "id": 7,
+      "productId": "ipcams_pro_plus_lifetime_upgrade"
+    },
+    {
+      "id": 8,
+      "productId": "ipcams_pro_lifetime_family"
+    },
+    {
+      "id": 9,
+      "productId": "ipcams_pro_lifetime_family_upgrade"
+    },
+    {
+      "id": 10,
+      "productId": "ipcams_pro_plus_lifetime"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:38:07.780Z"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "VDIT -Video Maker Editor",
+  "appStoreLink": "",
+  "appId": "1483410865",
+  "bundleId": "me.imgbase.videoday",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "me.imgbase.videoday.profeaturesMonthly"
+    },
+    {
+      "id": 2,
+      "productId": "me.imgbase.videoday.profeaturesYearly"
+    },
+    {
+      "id": 3,
+      "productId": "me.imgbase.videoday.profeaturesWeekly"
+    },
+    {
+      "id": 4,
+      "productId": "me.imgbase.videoday.profeaturesLifetime"
+    }
+  ],
+  "updatedAt": "2025-03-28T08:07:51.891Z"
+}

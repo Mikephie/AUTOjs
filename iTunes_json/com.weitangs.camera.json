@@ -1,0 +1,21 @@
+{
+  "name": "最美证件照-高清版",
+  "appStoreLink": "https://apps.apple.com/my/app/facelab-face-age-a...",
+  "appId": "6443771099",
+  "bundleId": "com.weitangs.camera",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "644377109928"
+    },
+    {
+      "id": 2,
+      "productId": "644377109922"
+    },
+    {
+      "id": 3,
+      "productId": "644377109930"
+    }
+  ],
+  "updatedAt": "2025-03-27T10:29:47.431Z"
+}

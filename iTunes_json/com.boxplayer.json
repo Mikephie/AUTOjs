@@ -1,0 +1,21 @@
+{
+  "name": "BoxPlayer",
+  "appStoreLink": "",
+  "appId": "6739804060",
+  "bundleId": "com.boxplayer",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.boxplayer.earlybird.lifetimely"
+    },
+    {
+      "id": 2,
+      "productId": "com.boxplayer.sub.month"
+    },
+    {
+      "id": 3,
+      "productId": "com.boxplayer.lifetimely"
+    }
+  ],
+  "updatedAt": "2025-04-27T11:26:11.133Z"
+}

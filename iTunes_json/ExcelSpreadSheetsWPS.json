@@ -1,0 +1,33 @@
+{
+  "name": "Simple Spreadsheet: view edit",
+  "appStoreLink": "",
+  "appId": "1454075397",
+  "bundleId": "ExcelSpreadSheetsWPS",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.turbocms.SimpleSpreadSheet.viponeyear"
+    },
+    {
+      "id": 2,
+      "productId": "com.turbocms.SimpleSpreadSheet.vipforever"
+    },
+    {
+      "id": 3,
+      "productId": "com.turbocms.SimpleSpreadSheet.member366"
+    },
+    {
+      "id": 4,
+      "productId": "com.turbocms.SimpleSpreadSheet"
+    },
+    {
+      "id": 5,
+      "productId": "com.turbocms.SimpleSpreadSheet.member92"
+    },
+    {
+      "id": 6,
+      "productId": "com.turbocms.SimpleSpreadSheet.memberforever"
+    }
+  ],
+  "updatedAt": "2025-03-29T04:50:56.863Z"
+}

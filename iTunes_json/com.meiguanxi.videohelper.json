@@ -1,0 +1,13 @@
+{
+  "name": "媒关系",
+  "appStoreLink": "",
+  "appId": "6447597315",
+  "bundleId": "com.meiguanxi.videohelper",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "vip_service"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:51:05.855Z"
+}

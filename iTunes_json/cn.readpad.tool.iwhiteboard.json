@@ -1,0 +1,37 @@
+{
+  "name": "Whiteboard Infinity Canvas",
+  "appStoreLink": "",
+  "appId": "496465537",
+  "bundleId": "cn.readpad.tool.iwhiteboard",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "cn.readpad.tool.iwhiteboard.monthtest1"
+    },
+    {
+      "id": 2,
+      "productId": "cn.readpad.tool.iwhiteboard.coffee004"
+    },
+    {
+      "id": 3,
+      "productId": "cn.readpad.tool.iwhiteboard.yeartest1"
+    },
+    {
+      "id": 4,
+      "productId": "cn.readpad.tool.iwhiteboard.coffee006"
+    },
+    {
+      "id": 5,
+      "productId": "cn.readpad.tool.iwhiteboard.coffee005"
+    },
+    {
+      "id": 6,
+      "productId": "cn.readpad.tool.iwhiteboard.tryconsumable"
+    },
+    {
+      "id": 7,
+      "productId": "cn.readpad.tool.iwhiteboard.consumable"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:57:48.435Z"
+}

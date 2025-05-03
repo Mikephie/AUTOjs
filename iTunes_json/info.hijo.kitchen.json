@@ -1,0 +1,13 @@
+{
+  "name": "ChicTimer",
+  "appStoreLink": "",
+  "appId": "896960377",
+  "bundleId": "info.hijo.kitchen",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "remove_Ads"
+    }
+  ],
+  "updatedAt": "2025-03-28T08:00:51.926Z"
+}

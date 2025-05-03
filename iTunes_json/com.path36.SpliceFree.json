@@ -1,0 +1,49 @@
+{
+  "name": "Splice Video Editor Maker",
+  "appStoreLink": "",
+  "appId": "409838725",
+  "bundleId": "com.path36.SpliceFree",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.path36.SpliceFree.1w_t6_1w"
+    },
+    {
+      "id": 2,
+      "productId": "com.path36.SpliceFree.1w_t6"
+    },
+    {
+      "id": 3,
+      "productId": "com.path36.SpliceFree.1w_t20_1w_bundle_2023"
+    },
+    {
+      "id": 4,
+      "productId": "com.path36.SpliceFree.1w_t20_bundle_2023"
+    },
+    {
+      "id": 5,
+      "productId": "com.path36.SpliceFree.1w_t10_2022"
+    },
+    {
+      "id": 6,
+      "productId": "com.path36.SpliceFree.1w_t6_2w"
+    },
+    {
+      "id": 7,
+      "productId": "com.path36.SpliceFree.1w_t10_segment_a"
+    },
+    {
+      "id": 8,
+      "productId": "com.path36.SpliceFree.1w_t20_1w_bundle"
+    },
+    {
+      "id": 9,
+      "productId": "com.path36.SpliceFree.1w_t10_1w_2022"
+    },
+    {
+      "id": 10,
+      "productId": "com.path36.SpliceFree.1w_t10"
+    }
+  ],
+  "updatedAt": "2025-03-31T13:34:55.431Z"
+}

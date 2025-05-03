@@ -1,0 +1,25 @@
+{
+  "name": "Global App Pocket-bookmark",
+  "appStoreLink": "",
+  "appId": "6743381599",
+  "bundleId": "top.xiadao.AppBox",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "GAB_Lifetime_VIP"
+    },
+    {
+      "id": 2,
+      "productId": "GAB_Weekly_VIP"
+    },
+    {
+      "id": 3,
+      "productId": "GAB_Monthly_VIP"
+    },
+    {
+      "id": 4,
+      "productId": "GAB_Yearly_VIP"
+    }
+  ],
+  "updatedAt": "2025-04-16T04:52:22.075Z"
+}

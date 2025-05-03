@@ -1,0 +1,21 @@
+{
+  "name": "AllMyBatteries",
+  "appStoreLink": "",
+  "appId": "1621263412",
+  "bundleId": "com.lagagggggg.MyBatteries",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "AllMyBatteries_Ultimate"
+    },
+    {
+      "id": 2,
+      "productId": "AllMyBatteries_Ultimate_Lite"
+    },
+    {
+      "id": 3,
+      "productId": "AllMyBatteries_Ultimate_Lite_Upgrade"
+    }
+  ],
+  "updatedAt": "2025-03-27T08:36:05.723Z"
+}

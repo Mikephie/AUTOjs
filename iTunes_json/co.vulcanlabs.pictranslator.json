@@ -1,0 +1,49 @@
+{
+  "name": "Camera Translator: Translate",
+  "appStoreLink": "",
+  "appId": "1268937966",
+  "bundleId": "co.vulcanlabs.pictranslator",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "co.vulcanlabs.pictranslator.weekly"
+    },
+    {
+      "id": 2,
+      "productId": "co.vulcanlabs.pictranslator.weekly7"
+    },
+    {
+      "id": 3,
+      "productId": "co.vulcanlabs.pictranslator.weekly3"
+    },
+    {
+      "id": 4,
+      "productId": "co.vulcanlabs.pictranslator.weekly8"
+    },
+    {
+      "id": 5,
+      "productId": "co.vulcanlabs.pictranslator.offlineweekly1"
+    },
+    {
+      "id": 6,
+      "productId": "co.vulcanlabs.pictranslator.monthly"
+    },
+    {
+      "id": 7,
+      "productId": "co.vulcanlabs.pictranslator.lifetime"
+    },
+    {
+      "id": 8,
+      "productId": "co.vulcanlabs.pictranslator.weekly2"
+    },
+    {
+      "id": 9,
+      "productId": "co.vulcanlabs.pictranslator.weekly6"
+    },
+    {
+      "id": 10,
+      "productId": "co.vulcanlabs.pictranslator.weekly5"
+    }
+  ],
+  "updatedAt": "2025-03-27T22:18:29.333Z"
+}

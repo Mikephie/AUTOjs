@@ -1,0 +1,21 @@
+{
+  "name": "vCard holder",
+  "appStoreLink": "",
+  "appId": "1477169012",
+  "bundleId": "com.ideack.BusinessCard",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "BusinessCardVipYear"
+    },
+    {
+      "id": 2,
+      "productId": "BusinessCardVipPerpetual"
+    },
+    {
+      "id": 3,
+      "productId": "BusinessCardVipMonth"
+    }
+  ],
+  "updatedAt": "2025-03-28T07:24:19.778Z"
+}

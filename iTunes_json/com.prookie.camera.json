@@ -1,0 +1,49 @@
+{
+  "name": "Prookie Al Hairstyle Try On",
+  "appStoreLink": "",
+  "appId": "1494448939",
+  "bundleId": "com.prookie.camera",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "prookie.week.trial"
+    },
+    {
+      "id": 2,
+      "productId": "prookie.week.notrial.1103"
+    },
+    {
+      "id": 3,
+      "productId": "prookie.month.free.trial"
+    },
+    {
+      "id": 4,
+      "productId": "prookie.vip.yearly"
+    },
+    {
+      "id": 5,
+      "productId": "prookie.week.newtrial.1016"
+    },
+    {
+      "id": 6,
+      "productId": "prookie.week.notrial.1016"
+    },
+    {
+      "id": 7,
+      "productId": "prookie.first.week"
+    },
+    {
+      "id": 8,
+      "productId": "prookie.month.withtrial.0615"
+    },
+    {
+      "id": 9,
+      "productId": "prookie.year.withtrial.0606"
+    },
+    {
+      "id": 10,
+      "productId": "prookie.notrial.yearly30"
+    }
+  ],
+  "updatedAt": "2025-03-29T05:22:30.705Z"
+}

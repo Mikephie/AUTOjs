@@ -1,0 +1,29 @@
+{
+  "name": "SpeakTranslator Traveler",
+  "appStoreLink": "",
+  "appId": "1457944721",
+  "bundleId": "com.geekapp.VoiceTranslation.1",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "VoiceTranslation_Subscibe_Auto_Year"
+    },
+    {
+      "id": 2,
+      "productId": "VoiceTranslation_Subscibe_Auto_Month"
+    },
+    {
+      "id": 3,
+      "productId": "VoiceTranslatorPerpetual"
+    },
+    {
+      "id": 4,
+      "productId": "VoiceTranslation_Subscibe_Auto_Week"
+    },
+    {
+      "id": 5,
+      "productId": "VoiceTranslation_Subscibe_Auto_ThreeMonth"
+    }
+  ],
+  "updatedAt": "2025-03-29T06:42:44.710Z"
+}

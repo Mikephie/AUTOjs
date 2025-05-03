@@ -1,0 +1,21 @@
+{
+  "name": "Scanner Document: PDF Scanner",
+  "appStoreLink": "",
+  "appId": "6443755247",
+  "bundleId": "com.palmmob.scanner2ios",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.palmmob.scanner2ios.year_free"
+    },
+    {
+      "id": 2,
+      "productId": "com.palmmob.scanner2ios.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.palmmob.scanner2ios.quarter"
+    }
+  ],
+  "updatedAt": "2025-03-27T21:47:36.701Z"
+}

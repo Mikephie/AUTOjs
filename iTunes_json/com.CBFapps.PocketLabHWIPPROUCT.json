@@ -1,0 +1,21 @@
+{
+  "name": "My Jump Lab(My Jump 3) App ID: 1554077178",
+  "appStoreLink": "",
+  "appId": "",
+  "bundleId": "com.CBFapps.PocketLabHWIPPROUCT",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "mjl_399_1m_1w0"
+    },
+    {
+      "id": 2,
+      "productId": "mjl_2999_1y_1w0"
+    },
+    {
+      "id": 3,
+      "productId": "mjl_forever"
+    }
+  ],
+  "updatedAt": "2025-04-26T14:28:26.544Z"
+}
