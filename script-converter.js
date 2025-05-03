@@ -603,6 +603,7 @@ function convertToLoon(input) {
 
   // 处理Script部分
   if (scriptInfo.scripts.length > 0) {
+    // 添加一个空行在[Script]之前
     config += "\n[Script]";
     
     let lastComment = "";
