@@ -6,7 +6,7 @@ const core = require('@actions/core');
 const converter = require('./script-converter');
 
 // 从环境变量获取配置
-const quantumultx_DIR = process.env.quantumultx_DIR || 'input';
+const INPUT_DIR = process.env.INPUT_DIR || 'input';
 // 支持多种输出格式
 const OUTPUT_FORMATS = (process.env.OUTPUT_FORMAT || 'loon,surge').split(',').map(f => f.trim().toLowerCase());
 
@@ -59,7 +59,7 @@ async function getAllFiles(dir) {
         // 返回文件信息
         return [{
           path: fullPath,
-          relativePath: path.relative(quantumultx_DIR, fullPath),
+          relativePath: path.relative(INPUT_DIR, fullPath),
           name: entry.name
         }];
       }
@@ -133,7 +133,7 @@ async function main() {
   try {
     console.log('======================================');
     console.log(`脚本转换开始`);
-    console.log(`配置: 输入目录=${quantumultx_DIR}, 输出格式=${OUTPUT_FORMATS.join(', ')}`);
+    console.log(`配置: 输入目录=${INPUT_DIR}, 输出格式=${OUTPUT_FORMATS.join(', ')}`);
     console.log('======================================');
     
     // 输出转换器中可用的方法
@@ -141,11 +141,11 @@ async function main() {
     
     // 确保输入目录存在
     try {
-      await fs.access(quantumultx_DIR);
+      await fs.access(INPUT_DIR);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        await fs.mkdir(quantumultx_DIR, { recursive: true });
-        console.log(`创建输入目录: ${quantumultx_DIR}`);
+        await fs.mkdir(INPUT_DIR, { recursive: true });
+        console.log(`创建输入目录: ${INPUT_DIR}`);
       }
     }
     
@@ -158,14 +158,14 @@ async function main() {
     // 获取输入目录中的所有文件（包括子目录）
     let files;
     try {
-      files = await getAllFiles(quantumultx_DIR);
+      files = await getAllFiles(INPUT_DIR);
       console.log(`找到 ${files.length} 个文件需要处理`);
       
       if (files.length === 0) {
-        console.log(`警告: 在 ${quantumultx_DIR} 目录中没有找到任何文件`);
+        console.log(`警告: 在 ${INPUT_DIR} 目录中没有找到任何文件`);
       }
     } catch (err) {
-      console.error(`读取输入目录(${quantumultx_DIR})失败:`, err);
+      console.error(`读取输入目录(${INPUT_DIR})失败:`, err);
       throw new Error(`无法读取输入目录: ${err.message}`);
     }
     
