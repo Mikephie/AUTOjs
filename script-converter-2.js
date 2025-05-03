@@ -4,6 +4,9 @@
  * 更新内容: 修复规则格式问题，将reject策略转为大写
  */
 
+const fs = require('fs').promises;
+const path = require('path');
+
 /**
  * 从文件内容中提取脚本内容
  * @param {string} content 文件内容
@@ -95,7 +98,7 @@ function extractMetadata(content, result) {
     author: /#!author\s*=\s*(.+?)($|\n)/i,
     icon: /#!icon\s*=\s*(.+?)($|\n)/i
   };
-
+  
   // 提取每个字段
   for (const [field, pattern] of Object.entries(metadataFields)) {
     const match = content.match(pattern);
@@ -103,43 +106,41 @@ function extractMetadata(content, result) {
       result.metadata[field] = match[1].trim();
     }
   }
-
-  // 补充缺失字段（name/desc/author）从注释提取
+  
+  // 如果没有找到标准元数据，尝试从QX格式提取
   if (!result.metadata.name) {
+    // 尝试从内容第一行或注释中提取
+    const titleMatch = content.match(/^\/\/\s*(.+?)(?:\n|$)/);
+    if (titleMatch) {
+      result.metadata.name = titleMatch[1].trim();
+    }
+    
+    // 尝试从@name属性提取
     const nameMatch = content.match(/\/\/\s*@name\s+(.+?)(?:\n|$)/i);
     if (nameMatch) {
       result.metadata.name = nameMatch[1].trim();
     }
-  }
-
-  if (!result.metadata.desc) {
+    
+    // 尝试从@desc属性提取
     const descMatch = content.match(/\/\/\s*@desc(?:ription)?\s+(.+?)(?:\n|$)/i);
     if (descMatch) {
       result.metadata.desc = descMatch[1].trim();
     }
-  }
-
-  if (!result.metadata.author) {
+    
+    // 尝试从@author属性提取
     const authorMatch = content.match(/\/\/\s*@author\s+(.+?)(?:\n|$)/i);
     if (authorMatch) {
       result.metadata.author = authorMatch[1].trim();
     }
   }
-
-  // 特殊处理：若 name 仍为空，尝试从首行提取视觉标题
+  
+  // 如果还是没找到名称，尝试从文件名或特征提取
   if (!result.metadata.name) {
-    const firstLine = content.trim().split('\n')[0].trim();
-    if (
-      firstLine &&
-      !firstLine.startsWith('//') &&
-      !firstLine.startsWith('#!') &&
-      firstLine.length <= 50 // 防止误抓长注释
-    ) {
-      result.metadata.name = firstLine;
+    const titleMatch = content.match(/(脚本|script|重写|rewrite)/i);
+    if (titleMatch) {
+      result.metadata.name = "Custom " + titleMatch[0].trim();
     } else {
-      // 最终兜底
-      const fallback = content.match(/(脚本|script|重写|rewrite)/i);
-      result.metadata.name = fallback ? `Custom ${fallback[0]}` : 'Converted Script';
+      result.metadata.name = "Converted Script";
     }
   }
 }
@@ -169,6 +170,7 @@ function extractHostname(loonMITM, qxMITM, result) {
     }
   }
 }
+
 /**
  * 解析带注释的节点
  * @param {string} sectionContent 节点内容
@@ -308,9 +310,10 @@ function parseQXRewrites(sectionContent, result) {
     }
   }
 }
+
 /**
  * 转换为Surge格式
- * @param {Object|string} input 脚本信息对象或字符串
+ * @param {Object} scriptInfo 脚本信息
  * @returns {string} Surge格式的脚本内容
  */
 function convertToSurge(input) {
@@ -327,12 +330,10 @@ function convertToSurge(input) {
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
   const author = scriptInfo.metadata.author || "Converter";
-  const category = scriptInfo.metadata.category || "工具";
   
   let config = `#!name=${name}
 #!desc=${desc}
 #!author=${author}
-#!category=${category}
 `;
 
   if (scriptInfo.metadata.homepage) {
@@ -501,9 +502,10 @@ function convertToSurge(input) {
   
   return config;
 }
+
 /**
  * 转换为Loon格式
- * @param {Object|string} input 脚本信息对象或字符串
+ * @param {Object} scriptInfo 脚本信息
  * @returns {string} Loon格式的脚本内容
  */
 function convertToLoon(input) {
@@ -520,12 +522,10 @@ function convertToLoon(input) {
   const name = scriptInfo.metadata.name || "Converted Script";
   const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
   const author = scriptInfo.metadata.author || "Converter";
-  const category = scriptInfo.metadata.category || "工具";
   
   let config = `#!name=${name}
 #!desc=${desc}
 #!author=${author}
-#!category=${category}
 `;
 
   if (scriptInfo.metadata.homepage) {
@@ -650,32 +650,12 @@ function detectScriptType(content) {
 }
 
 /**
- * 处理单个URL
- * @param {string} url URL链接
- * @param {string} targetFormat 目标格式 (loon, surge)
- * @returns {string} 转换后的格式
- */
-function handleSingleUrl(url, targetFormat) {
-  if (targetFormat === 'loon') {
-    return `http-request ${url} script-path=${url}`;
-  } else if (targetFormat === 'surge') {
-    return `script-request-header ${url} script-path=${url}`;
-  }
-  return url;
-}
-
-/**
  * 转换脚本格式
  * @param {string} content 原始脚本内容
- * @param {string} targetFormat 目标格式 (loon, surge)
+ * @param {string} targetFormat 目标格式 (loon, surge, quantumultx)
  * @returns {string} 转换后的脚本内容
  */
 function convertScript(content, targetFormat) {
-  // 检查是否是单个URL链接
-  if (content.trim().startsWith('http') && !content.includes('\n')) {
-    return handleSingleUrl(content, targetFormat);
-  }
-  
   // 提取脚本内容
   const extractedContent = extractScriptContent(content);
   
@@ -693,16 +673,15 @@ function convertScript(content, targetFormat) {
     return convertToSurge(scriptInfo);
   }
   
-  // 默认返回原内容
-  return content;
+  // 默认返回解析后的JSON（用于调试）
+  return JSON.stringify(scriptInfo, null, 2);
 }
 
-// 在浏览器环境中暴露转换函数
-if (typeof window !== 'undefined') {
-  window.scriptConverter = {
-    convertToLoon: convertToLoon,
-    convertToSurge: convertToSurge,
-    convertScript: convertScript,
-    detectScriptType: detectScriptType
-  };
-}
+module.exports = {
+  extractScriptContent,
+  parseScript,
+  convertToLoon,
+  convertToSurge,
+  convertScript,
+  detectScriptType
+};

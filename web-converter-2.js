@@ -95,7 +95,7 @@ function extractMetadata(content, result) {
     author: /#!author\s*=\s*(.+?)($|\n)/i,
     icon: /#!icon\s*=\s*(.+?)($|\n)/i
   };
-
+  
   // 提取每个字段
   for (const [field, pattern] of Object.entries(metadataFields)) {
     const match = content.match(pattern);
@@ -103,43 +103,41 @@ function extractMetadata(content, result) {
       result.metadata[field] = match[1].trim();
     }
   }
-
-  // 补充缺失字段（name/desc/author）从注释提取
+  
+  // 如果没有找到标准元数据，尝试从QX格式提取
   if (!result.metadata.name) {
+    // 尝试从内容第一行或注释中提取
+    const titleMatch = content.match(/^\/\/\s*(.+?)(?:\n|$)/);
+    if (titleMatch) {
+      result.metadata.name = titleMatch[1].trim();
+    }
+    
+    // 尝试从@name属性提取
     const nameMatch = content.match(/\/\/\s*@name\s+(.+?)(?:\n|$)/i);
     if (nameMatch) {
       result.metadata.name = nameMatch[1].trim();
     }
-  }
-
-  if (!result.metadata.desc) {
+    
+    // 尝试从@desc属性提取
     const descMatch = content.match(/\/\/\s*@desc(?:ription)?\s+(.+?)(?:\n|$)/i);
     if (descMatch) {
       result.metadata.desc = descMatch[1].trim();
     }
-  }
-
-  if (!result.metadata.author) {
+    
+    // 尝试从@author属性提取
     const authorMatch = content.match(/\/\/\s*@author\s+(.+?)(?:\n|$)/i);
     if (authorMatch) {
       result.metadata.author = authorMatch[1].trim();
     }
   }
-
-  // 特殊处理：若 name 仍为空，尝试从首行提取视觉标题
+  
+  // 如果还是没找到名称，尝试从文件名或特征提取
   if (!result.metadata.name) {
-    const firstLine = content.trim().split('\n')[0].trim();
-    if (
-      firstLine &&
-      !firstLine.startsWith('//') &&
-      !firstLine.startsWith('#!') &&
-      firstLine.length <= 50 // 防止误抓长注释
-    ) {
-      result.metadata.name = firstLine;
+    const titleMatch = content.match(/(脚本|script|重写|rewrite)/i);
+    if (titleMatch) {
+      result.metadata.name = "Custom " + titleMatch[0].trim();
     } else {
-      // 最终兜底
-      const fallback = content.match(/(脚本|script|重写|rewrite)/i);
-      result.metadata.name = fallback ? `Custom ${fallback[0]}` : 'Converted Script';
+      result.metadata.name = "Converted Script";
     }
   }
 }
