@@ -1,3 +1,4 @@
+ /*
 #!name= ✨ 彩云天气 ✨
 #!desc=天气预测
 #!category=🔐APP
