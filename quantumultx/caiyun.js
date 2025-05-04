@@ -1,4 +1,4 @@
- /*
+/*
 #!name= ✨ 彩云天气 ✨
 #!desc=天气预测
 #!category=🔐APP
@@ -56,7 +56,7 @@ host, gather.colorfulclouds.net ,reject
 [mitm]
 hostname = *.cyapi.cn
 ====================================
- */
+*/
 
 // -------- 通知（带冷却）逻辑开始 --------
 const cooldownMs = 10 * 60 * 1000;
