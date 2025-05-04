@@ -16,6 +16,7 @@ USER-AGENT,Example App*,DIRECT
 ^https?:\/\/api\.example\.com\/ads - REJECT
 ^https?:\/\/api\.example\.com\/banner - REJECT
 
+
 [Script]
 # 脚本处理
 http-response ^https?:\/\/api\.example\.com\/user\/profile script-path=https://example.com/scripts/profile.js, requires-body=true, timeout=60, tag=profile
