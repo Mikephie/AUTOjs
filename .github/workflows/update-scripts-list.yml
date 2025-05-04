@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'input/**'
+      - 'quantumultx/**'
       - 'loon/**'
       - 'surge/**'
   workflow_dispatch:  # 允许手动触发
