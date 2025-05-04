@@ -1,0 +1,62 @@
+#!name=广告拦截合集-规则
+#!desc=(F)针对部分APP和小程序广告进行拦截，某些APP要清除缓存或者重新安装APP，拦截广告才会生效！可以配置到规则或者插件
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/gif/naisi-01.gif
+#!raw-url=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/rules/rejectAd.list
+#!proxy-select=REJECT
+#############################################
+# "REJECT"        策略返回 HTTP 状态码 404,不附带任何额外内容
+# "REJECT-200"    策略返回 HTTP 状态码 200,不附带任何额外内容
+# "REJECT-img"    策略返回 HTTP 状态码 200,同时附带 1px gif
+# "REJECT-dict"   策略返回 HTTP 状态码 200,同时附带一个空的 JSON 对象
+# "REJECT-array"  策略返回 HTTP 状态码 200,同时附带一个空的 JSON 数组
+# 1.2.3.4/24      /24表示网络的子网掩码长度，即前24位是网络部分，后8位是主机部分。这种表示法常用于描述特定范围内的IP地址
+# 6.7.8.9/32      /32表示整个32位的IP地址都用于表示这一个地址，即单独的一个IP地址
+#############################################
+
+
+#[Rule]
+# >>>>>>>>>>>>>>> ✅ # ✅ <<<<<<<<<<<<<<
+# > 广告联盟
+DOMAIN-SUFFIX, miaozhen.com
+DOMAIN-KEYWORD, -ad-sign.byteimg.com
+DOMAIN-KEYWORD, -tos.pstatp.com
+DOMAIN-KEYWORD, asiad.byteactivity
+DOMAIN-KEYWORD, pangolin-sdk-toutiao
+DOMAIN-KEYWORD, pglstatp-toutiao
+DOMAIN-KEYWORD, pangolin.snssdk.com
+DOMAIN-KEYWORD, video-cn.snssdk.com
+DOMAIN-SUFFIX, getui.com
+DOMAIN-SUFFIX, getui.net
+DOMAIN-SUFFIX, gepush.com
+DOMAIN-SUFFIX, igexin.com
+DOMAIN-SUFFIX, log.aliyuncs.com
+DOMAIN-SUFFIX, zlsdk.1rtb.net
+# > 收集用户隐私联盟，若有问题自行设置白名单
+DOMAIN-KEYWORD, volc
+DOMAIN-KEYWORD, umeng
+
+# > 其他
+DOMAIN, api.liquidlink.cn
+
+# >>>>>>>>>>>>>>> ✅ 0 ✅ <<<<<<<<<<<<<<
+
+
+# >>>>>>>>>>>>>>> ✅ 1 ✅ <<<<<<<<<<<<<<
+# > 酷我音乐
+DOMAIN, mobilead.kuwo.cn
+DOMAIN, rich.kuwo.cn
+DOMAIN-KEYWORD,rich.kuwo.cn
+DOMAIN-KEYWORD,mobilead.kuwo.cn
+DOMAIN-SUFFIX,c.kuwo.cn
+DOMAIN-SUFFIX,deliver.kuwo.cn
+DOMAIN-SUFFIX,game.kuwo.cn
+DOMAIN-SUFFIX,kuwoyy.com
+DOMAIN-SUFFIX,kwmsg.kuwo.cn
+DOMAIN-SUFFIX,msclick2.kuwo.cn
+DOMAIN-SUFFIX,msphoneclick.kuwo.cn
+DOMAIN-SUFFIX,updatepage.kuwo.cn
+DOMAIN-SUFFIX,wa.kuwo.cn
+DOMAIN-SUFFIX,webstat.kuwo.cn
+DOMAIN-SUFFIX,mobilead.kuwo.cn
+DOMAIN-SUFFIX,rich.kuwo.cn
