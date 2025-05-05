@@ -21,11 +21,11 @@
     },
     {
       "id": 5,
-      "productId": "ios.1w_t14_1w_bundle"
+      "productId": "itranslate_translator_ios.1w_t14_1w_bundle"
     },
     {
       "id": 6,
-      "productId": "ios.1w_t10_1w"
+      "productId": "itranslate_translator_ios.1w_t10_1w"
     },
     {
       "id": 7,
@@ -33,16 +33,16 @@
     },
     {
       "id": 8,
-      "productId": "ios.1w_t20_1w_bundle"
+      "productId": "itranslate_translator_ios.1w_t20_1w_bundle"
     },
     {
       "id": 9,
-      "productId": "ios.1w_t14_bundle"
+      "productId": "itranslate_translator_ios.1w_t14_bundle"
     },
     {
       "id": 10,
-      "productId": "ios.1w_t10"
+      "productId": "itranslate_translator_ios.1w_t10"
     }
   ],
-  "updatedAt": "2025-05-05T12:20:47.639Z"
+  "updatedAt": "2025-05-05T12:26:06.168Z"
 }
