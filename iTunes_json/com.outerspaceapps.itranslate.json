@@ -5,24 +5,8 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "com.itranslate.pro.monthly 2"
-    },
-    {
-      "id": 2,
-      "productId": "com.itranslate.pro.yearlytrial 3"
-    },
-    {
-      "id": 3,
-      "productId": "com.itranslate.pro.01m 4"
-    },
-    {
-      "id": 4,
-      "productId": "com.itranslate.pro.twomonthly 5"
-    },
-    {
-      "id": 5,
       "productId": "itranslate_translator_ios.1w_t10"
     }
   ],
-  "updatedAt": "2025-05-05T03:46:35.250Z"
+  "updatedAt": "2025-05-05T03:49:58.508Z"
 }
