@@ -13,7 +13,7 @@
     },
     {
       "id": 3,
-      "productId": "com.vimosoft.EVERYTHING 4"
+      "productId": "com.vimosoft.EVERYTHING"
     },
     {
       "id": 4,
@@ -33,16 +33,16 @@
     },
     {
       "id": 8,
-      "productId": "com.darinsoft.vimo.sticker.garden 9"
+      "productId": "com.darinsoft.vimo.sticker.garden"
     },
     {
       "id": 9,
-      "productId": "com.darinsoft.vimo.sticker.travel 10"
+      "productId": "com.darinsoft.vimo.sticker.travel"
     },
     {
       "id": 10,
       "productId": "com.darinsoft.vimo.allfeatures"
     }
   ],
-  "updatedAt": "2025-05-05T03:13:11.008Z"
+  "updatedAt": "2025-05-05T03:18:27.282Z"
 }
