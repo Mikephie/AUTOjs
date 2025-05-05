@@ -17,8 +17,12 @@
     },
     {
       "id": 4,
-      "productId": "com.itranslate.pro.twomonthly"
+      "productId": "com.itranslate.pro.twomonthly 5"
+    },
+    {
+      "id": 5,
+      "productId": "itranslate_translator_ios.1w_t10"
     }
   ],
-  "updatedAt": "2025-05-05T03:33:59.239Z"
+  "updatedAt": "2025-05-05T03:46:35.250Z"
 }
