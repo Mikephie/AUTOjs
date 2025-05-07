@@ -14,7 +14,11 @@
     {
       "id": 3,
       "productId": "EpubReader_PasscodeLock"
+    },
+    {
+      "id": 4,
+      "productId": "autorenewable.professional.epubreader.year"
     }
   ],
-  "updatedAt": "2025-05-07T12:08:24.797Z"
+  "updatedAt": "2025-05-07T12:12:46.430Z"
 }
