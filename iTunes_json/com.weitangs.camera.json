@@ -5,16 +5,48 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "644377109928"
+      "productId": "Name"
     },
     {
       "id": 2,
-      "productId": "644377109922"
+      "productId": "Hello"
     },
     {
       "id": 3,
+      "productId": "World"
+    },
+    {
+      "id": 4,
+      "productId": "Telegram"
+    },
+    {
+      "id": 5,
+      "productId": "cam"
+    },
+    {
+      "id": 6,
+      "productId": "translator"
+    },
+    {
+      "id": 7,
+      "productId": "App"
+    },
+    {
+      "id": 8,
+      "productId": "Bundle"
+    },
+    {
+      "id": 9,
+      "productId": "644377109928"
+    },
+    {
+      "id": 10,
+      "productId": "644377109922"
+    },
+    {
+      "id": 11,
       "productId": "644377109930"
     }
   ],
-  "updatedAt": "2025-05-07T12:24:17.532Z"
+  "updatedAt": "2025-05-07T12:31:22.361Z"
 }
