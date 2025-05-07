@@ -1,5 +1,6 @@
 {
   "name": "Translate Translator",
+  "appStoreLink": "",
   "appId": "288113403",
   "bundleId": "com.outerspaceapps.itranslate",
   "subscriptions": [
@@ -21,28 +22,12 @@
     },
     {
       "id": 5,
-      "productId": "itranslate_translator_ios.1w_t14_1w_bundle"
+      "productId": "itranslate_translator_ios"
     },
     {
       "id": 6,
-      "productId": "itranslate_translator_ios.1w_t10_1w"
-    },
-    {
-      "id": 7,
       "productId": "com.itranslate.pro.69_99.yearly.7dtrial.groupe"
-    },
-    {
-      "id": 8,
-      "productId": "itranslate_translator_ios.1w_t20_1w_bundle"
-    },
-    {
-      "id": 9,
-      "productId": "itranslate_translator_ios.1w_t14_bundle"
-    },
-    {
-      "id": 10,
-      "productId": "itranslate_translator_ios.1w_t10"
     }
   ],
-  "updatedAt": "2025-05-07T12:35:02.832Z"
+  "updatedAt": "2025-05-07T13:04:50.080Z"
 }
