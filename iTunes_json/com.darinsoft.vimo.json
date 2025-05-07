@@ -5,80 +5,44 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "Name"
-    },
-    {
-      "id": 2,
-      "productId": "VLLO"
-    },
-    {
-      "id": 3,
-      "productId": "Video"
-    },
-    {
-      "id": 4,
-      "productId": "Editor"
-    },
-    {
-      "id": 5,
-      "productId": "Vlog"
-    },
-    {
-      "id": 6,
-      "productId": "Edits"
-    },
-    {
-      "id": 7,
-      "productId": "App"
-    },
-    {
-      "id": 8,
-      "productId": "Bundle"
-    },
-    {
-      "id": 9,
-      "productId": "OWDOP.PR"
-    },
-    {
-      "id": 10,
       "productId": "com.vimosoft.vllo.premium3_weekly_subscription"
     },
     {
-      "id": 11,
+      "id": 2,
       "productId": "com.vimosoft.vllo.premium3.annually_subscription"
     },
     {
-      "id": 12,
+      "id": 3,
       "productId": "com.vimosoft.EVERYTHING"
     },
     {
-      "id": 13,
+      "id": 4,
       "productId": "com.vimosoft.premium.annually.subscription"
     },
     {
-      "id": 14,
+      "id": 5,
       "productId": "com.vimosoft.vllo.premium3_monthly_subscription"
     },
     {
-      "id": 15,
+      "id": 6,
       "productId": "com.vimosoft.premium.monthly2.subscription"
     },
     {
-      "id": 16,
+      "id": 7,
       "productId": "com.vimosoft.premium.monthly.subscription"
     },
     {
-      "id": 17,
+      "id": 8,
       "productId": "com.darinsoft.vimo.sticker.garden"
     },
     {
-      "id": 18,
+      "id": 9,
       "productId": "com.darinsoft.vimo.sticker.travel"
     },
     {
-      "id": 19,
+      "id": 10,
       "productId": "com.darinsoft.vimo.allfeatures"
     }
   ],
-  "updatedAt": "2025-05-07T12:15:38.253Z"
+  "updatedAt": "2025-05-07T12:17:09.474Z"
 }
