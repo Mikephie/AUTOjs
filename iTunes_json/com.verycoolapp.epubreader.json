@@ -1,19 +1,11 @@
 {
-  "name": "Epub Reader -read epub,chm, txt",
+  "name": " ChmReader ",
   "appId": "1296870631",
   "bundleId": "com.verycoolapp.epubreader",
   "subscriptions": [
     {
       "id": 1,
       "productId": "EpubReader_ProVersion"
-    },
-    {
-      "id": 2,
-      "productId": "EpubReader_RemoveAds"
-    },
-    {
-      "id": 3,
-      "productId": "EpubReader_PasscodeLock"
     }
   ],
   "updatedAt": "2025-05-07T14:17:06.983Z"
