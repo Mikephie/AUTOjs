@@ -1,5 +1,6 @@
 {
   "name": "VLLO- Video Editor, Vlog Edits",
+  "appStoreLink": "",
   "appId": "952050883",
   "bundleId": "com.darinsoft.vimo",
   "subscriptions": [
@@ -48,5 +49,5 @@
       "productId": "com.darinsoft.vimo.allfeatures"
     }
   ],
-  "updatedAt": "2025-05-07T12:35:04.061Z"
+  "updatedAt": "2025-05-07T13:04:50.080Z"
 }
