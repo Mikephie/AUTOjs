@@ -5,44 +5,48 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "com.vimosoft.vllo.premium3_weekly_subscription"
+      "productId": "OWDOP.PR"
     },
     {
       "id": 2,
-      "productId": "com.vimosoft.vllo.premium3.annually_subscription"
+      "productId": "com.vimosoft.vllo.premium3_weekly_subscription"
     },
     {
       "id": 3,
-      "productId": "com.vimosoft.EVERYTHING"
+      "productId": "com.vimosoft.vllo.premium3.annually_subscription"
     },
     {
       "id": 4,
-      "productId": "com.vimosoft.premium.annually.subscription"
+      "productId": "com.vimosoft.EVERYTHING"
     },
     {
       "id": 5,
-      "productId": "com.vimosoft.vllo.premium3_monthly_subscription"
+      "productId": "com.vimosoft.premium.annually.subscription"
     },
     {
       "id": 6,
-      "productId": "com.vimosoft.premium.monthly2.subscription"
+      "productId": "com.vimosoft.vllo.premium3_monthly_subscription"
     },
     {
       "id": 7,
-      "productId": "com.vimosoft.premium.monthly.subscription"
+      "productId": "com.vimosoft.premium.monthly2.subscription"
     },
     {
       "id": 8,
-      "productId": "com.darinsoft.vimo.sticker.garden"
+      "productId": "com.vimosoft.premium.monthly.subscription"
     },
     {
       "id": 9,
-      "productId": "com.darinsoft.vimo.sticker.travel"
+      "productId": "com.darinsoft.vimo.sticker.garden"
     },
     {
       "id": 10,
+      "productId": "com.darinsoft.vimo.sticker.travel"
+    },
+    {
+      "id": 11,
       "productId": "com.darinsoft.vimo.allfeatures"
     }
   ],
-  "updatedAt": "2025-05-07T08:57:40.767Z"
+  "updatedAt": "2025-05-07T12:13:23.378Z"
 }
