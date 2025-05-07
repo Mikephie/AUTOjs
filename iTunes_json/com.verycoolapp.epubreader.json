@@ -1,5 +1,6 @@
 {
   "name": "Epub Reader -read epub,chm, txt",
+  "appStoreLink": "",
   "appId": "1296870631",
   "bundleId": "com.verycoolapp.epubreader",
   "subscriptions": [
@@ -18,15 +19,7 @@
     {
       "id": 4,
       "productId": "autorenewable.professional.epubreader.year"
-    },
-    {
-      "id": 5,
-      "productId": "apps.apple.com"
-    },
-    {
-      "id": 6,
-      "productId": "E7..."
     }
   ],
-  "updatedAt": "2025-05-07T12:35:00.356Z"
+  "updatedAt": "2025-05-07T13:01:50.717Z"
 }
