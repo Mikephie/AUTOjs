@@ -1,0 +1,24 @@
+{
+  "user_agent": "fengling",
+  "bundle_id": "com.nocmt.fengling",
+  "data": {
+    "com.nocmt.fengling.Annual": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.nocmt.fengling.Annual"
+    },
+    "com.nocmt.fengling.Monthly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.nocmt.fengling.Monthly"
+    },
+    "com.nocmt.fengling.NewLifetime": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.nocmt.fengling.NewLifetime"
+    }
+  }
+}
