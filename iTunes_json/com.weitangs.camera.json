@@ -5,16 +5,40 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "644377109928"
+      "productId": "Name"
     },
     {
       "id": 2,
-      "productId": "644377109922"
+      "productId": "644377109928"
     },
     {
       "id": 3,
+      "productId": "644377109922"
+    },
+    {
+      "id": 4,
       "productId": "644377109930"
+    },
+    {
+      "id": 5,
+      "productId": "Hello"
+    },
+    {
+      "id": 6,
+      "productId": "World"
+    },
+    {
+      "id": 7,
+      "productId": "Telegram"
+    },
+    {
+      "id": 8,
+      "productId": "cam"
+    },
+    {
+      "id": 9,
+      "productId": "translator"
     }
   ],
-  "updatedAt": "2025-05-07T08:55:30.437Z"
+  "updatedAt": "2025-05-07T12:13:20.664Z"
 }
