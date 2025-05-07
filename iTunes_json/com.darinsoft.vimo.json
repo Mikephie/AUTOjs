@@ -46,39 +46,7 @@
     {
       "id": 11,
       "productId": "com.darinsoft.vimo.allfeatures"
-    },
-    {
-      "id": 12,
-      "productId": "Name"
-    },
-    {
-      "id": 13,
-      "productId": "VLLO"
-    },
-    {
-      "id": 14,
-      "productId": "Video"
-    },
-    {
-      "id": 15,
-      "productId": "Editor"
-    },
-    {
-      "id": 16,
-      "productId": "Vlog"
-    },
-    {
-      "id": 17,
-      "productId": "Edits"
-    },
-    {
-      "id": 18,
-      "productId": "App"
-    },
-    {
-      "id": 19,
-      "productId": "Bundle"
     }
   ],
-  "updatedAt": "2025-05-07T12:31:25.026Z"
+  "updatedAt": "2025-05-07T12:35:04.061Z"
 }
