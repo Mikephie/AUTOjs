@@ -1,0 +1,24 @@
+{
+  "name": "Media Converter - video to mp3",
+  "appId": "1294207675",
+  "bundleId": "com.verycoolapp.mediaconvert",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "MediaConverter_ProVersion"
+    },
+    {
+      "id": 2,
+      "productId": "MediaConverter_Player"
+    },
+    {
+      "id": 3,
+      "productId": "MediaConverter_RemoveAds"
+    },
+    {
+      "id": 4,
+      "productId": "MediaConverter_PasscodeLock"
+    }
+  ],
+  "updatedAt": "2025-05-08T04:33:25.578Z"
+}
