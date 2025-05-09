@@ -5,48 +5,12 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "com.knockout.7daysplus"
-    },
-    {
-      "id": 2,
-      "productId": "com.knockout.halfyearplus"
-    },
-    {
-      "id": 3,
       "productId": "com.loveyouchenapps.knockout.highresolution"
     },
     {
-      "id": 4,
+      "id": 2,
       "productId": "com.loveyouchenapps.knockout.unlockallfeatures"
-    },
-    {
-      "id": 5,
-      "productId": "com.knockout.1monthplus"
-    },
-    {
-      "id": 6,
-      "productId": "com.loveyouchenapps.knockout.1y"
-    },
-    {
-      "id": 7,
-      "productId": "com.knockout.lyearplus"
-    },
-    {
-      "id": 8,
-      "productId": "com.knockout.morecoinstier1"
-    },
-    {
-      "id": 9,
-      "productId": "com.knockout.7daysplus.50off"
-    },
-    {
-      "id": 10,
-      "productId": "com.knockout.1monthplus.50off"
-    },
-    {
-      "id": 11,
-      "productId": "com.knockout.1yearplus"
     }
   ],
-  "updatedAt": "2025-05-08T21:38:13.952Z"
+  "updatedAt": "2025-05-09T05:57:42.512Z"
 }
