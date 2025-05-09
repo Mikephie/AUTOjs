@@ -4,17 +4,77 @@
   "bundleId": "com.darinsoft.vimo",
   "subscriptions": [
     {
-      "id": 1,
-      "productId": "com.darinsoft.vimo.sticker.garden"
+      "id": 5,
+      "productId": "com.vimosoft.premium.annually.subscription"
     },
     {
-      "id": 2,
+      "id": 6,
+      "productId": "com.vimosoft.premium.monthly2.subscription"
+    },
+    {
+      "id": 7,
+      "productId": "com.vimosoft.premium.monthly.subscription"
+    },
+    {
+      "id": 9,
       "productId": "com.darinsoft.vimo.sticker.travel"
     },
     {
-      "id": 3,
+      "id": 10,
       "productId": "com.darinsoft.vimo.allfeatures"
+    },
+    {
+      "id": 1,
+      "productId": "com.itranslate.pro.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.itranslate.pro.yearlytrial"
+    },
+    {
+      "id": 5,
+      "productId": "com.itranslate.pro.twomonthly"
+    },
+    {
+      "id": 6,
+      "productId": "itranslate_translator_ios.1w_t10_1w"
+    },
+    {
+      "id": 7,
+      "productId": "com.itranslate.pro.69_99.yearly.7dtrial.groupe"
+    },
+    {
+      "id": 9,
+      "productId": "itranslate_translator_ios.1w_t14_bundle"
+    },
+    {
+      "id": 10,
+      "productId": "itranslate_translator_ios.1w_t10"
+    },
+    {
+      "id": 1,
+      "productId": "644377109928"
+    },
+    {
+      "id": 2,
+      "productId": "644377109922"
+    },
+    {
+      "id": 1,
+      "productId": "me.imgbase.intolive.removead"
+    },
+    {
+      "id": 2,
+      "productId": "me.imgbase.intolive.proSubMonthly"
+    },
+    {
+      "id": 4,
+      "productId": "me.imgbase.intolive.proSubYearly"
+    },
+    {
+      "id": 5,
+      "productId": "me.imgbase.intolive.proSubYearly2024"
     }
   ],
-  "updatedAt": "2025-05-09T12:14:21.770Z"
+  "updatedAt": "2025-05-09T15:04:11.825Z"
 }
