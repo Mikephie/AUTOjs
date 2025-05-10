@@ -5,44 +5,8 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "com.chromatech.chroma.monthlyAutoRenewable Pro"
-    },
-    {
-      "id": 2,
-      "productId": "com.chromatech.chroma.weeklyAR"
-    },
-    {
-      "id": 3,
-      "productId": "com.chromatech.chroma.yearlyAR"
-    },
-    {
-      "id": 4,
-      "productId": "com.chromatech.chroma.annualNTO"
-    },
-    {
-      "id": 5,
-      "productId": "com.chromatech.chroma.monthlyAR"
-    },
-    {
-      "id": 6,
-      "productId": "com.chromatech.chroma.yearlyNT"
-    },
-    {
-      "id": 7,
-      "productId": "com.chromatech.chroma.nonConsumablePurchase"
-    },
-    {
-      "id": 8,
-      "productId": "com.chromatech.chroma.yearlyAutoRenewablePlus"
-    },
-    {
-      "id": 9,
-      "productId": "com.chromatech.chroma.weeklyNTO"
-    },
-    {
-      "id": 10,
-      "productId": "com.chromatech.chroma.yearlyAutoRenewable"
+      "productId": "com.purecollage.pro"
     }
   ],
-  "updatedAt": "2025-05-10T01:32:02.887Z"
+  "updatedAt": "2025-05-10T01:32:40.742Z"
 }
