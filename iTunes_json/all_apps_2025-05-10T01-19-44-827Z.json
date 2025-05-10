@@ -1,0 +1,97 @@
+[
+  {
+    "name": "Media Converter - video to mp3",
+    "appId": "1294207675",
+    "bundleId": "com.verycoolapp.mediaconvert",
+    "subscriptions": [],
+    "updatedAt": "2025-05-10T01:19:44.824Z"
+  },
+  {
+    "name": "ImgPlay: GIF Maker & Meme",
+    "appId": "989843523",
+    "bundleId": "me.imgbase.imgplay",
+    "subscriptions": [],
+    "updatedAt": "2025-05-10T01:19:44.824Z"
+  },
+  {
+    "name": "intoLive - Live Wallpapers",
+    "appId": "1061859052",
+    "bundleId": "me.imgbase.intolive",
+    "subscriptions": [],
+    "updatedAt": "2025-05-10T01:19:44.824Z"
+  },
+  {
+    "name": "Wallpapers -Selected HD Images",
+    "appId": "953753168",
+    "bundleId": "com.chowjoe.wp2free",
+    "subscriptions": [],
+    "updatedAt": "2025-05-10T01:19:44.824Z"
+  },
+  {
+    "name": "ProKnockOut-Cut Paste Photos",
+    "appId": "944665061",
+    "bundleId": "com.loveyouchenapps.knockout",
+    "subscriptions": [
+      {
+        "id": 1,
+        "productId": "com.knockout.7daysplus"
+      },
+      {
+        "id": 2,
+        "productId": "com.knockout.halfyearplus"
+      },
+      {
+        "id": 3,
+        "productId": "com.loveyouchenapps.knockout.highresolution"
+      },
+      {
+        "id": 4,
+        "productId": "com.loveyouchenapps.knockout.unlockallfeatures"
+      },
+      {
+        "id": 5,
+        "productId": "com.knockout.1monthplus"
+      },
+      {
+        "id": 6,
+        "productId": "com.loveyouchenapps.knockout.1y"
+      },
+      {
+        "id": 7,
+        "productId": "com.knockout.1yearplus"
+      },
+      {
+        "id": 8,
+        "productId": "com.knockout.morecoinstier1"
+      },
+      {
+        "id": 9,
+        "productId": "com.knockout.7daysplus.50off"
+      },
+      {
+        "id": 10,
+        "productId": "com.knockout.1monthplus.50off"
+      },
+      {
+        "id": 11,
+        "productId": "com.knockout.7daysplus"
+      },
+      {
+        "id": 12,
+        "productId": "com.knockout.halfyearplus"
+      },
+      {
+        "id": 13,
+        "productId": "com.knockout.1yearplus"
+      }
+    ],
+    "updatedAt": "2025-05-10T01:19:44.824Z"
+  },
+  {
+    "name": "Simple Spreadsheet: view & edit",
+    "appId": "1454075397",
+    "bundleId": "com.turbocms.SimpleSpreadSheet",
+    "subscriptions": [],
+    "updatedAt": "2025-05-10T01:19:44.824Z"
+  }
+]
