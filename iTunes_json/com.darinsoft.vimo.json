@@ -4,11 +4,11 @@
   "bundleId": "com.darinsoft.vimo",
   "subscriptions": [
     {
-      "id": 2,
+      "id": 1,
       "productId": "com.vimosoft.vllo.premium3_weekly_subscription"
     },
     {
-      "id": 3,
+      "id": 2,
       "productId": "com.vimosoft.vllo.premium3.annually_subscription"
     },
     {
@@ -16,19 +16,11 @@
       "productId": "com.vimosoft.EVERYTHING"
     },
     {
-      "id": 5,
-      "productId": "4"
-    },
-    {
-      "id": 6,
-      "productId": "5"
-    },
-    {
-      "id": 7,
+      "id": 4,
       "productId": "com.vimosoft.premium.annually.subscription"
     },
     {
-      "id": 8,
+      "id": 5,
       "productId": "com.vimosoft.vllo.premium3_monthly_subscription"
     },
     {
@@ -36,11 +28,7 @@
       "productId": "com.vimosoft.premium.monthly2.subscription"
     },
     {
-      "id": 10,
-      "productId": "7"
-    },
-    {
-      "id": 11,
+      "id": 7,
       "productId": "com.vimosoft.premium.monthly.subscription"
     },
     {
@@ -54,127 +42,7 @@
     {
       "id": 10,
       "productId": "com.darinsoft.vimo.allfeatures"
-    },
-    {
-      "id": 23,
-      "productId": "Telegram"
-    },
-    {
-      "id": 1,
-      "productId": "com.itranslate.pro.monthly"
-    },
-    {
-      "id": 2,
-      "productId": "com.itranslate.pro.yearlytrial"
-    },
-    {
-      "id": 3,
-      "productId": "com.itranslate.pro.01m"
-    },
-    {
-      "id": 31,
-      "productId": "4"
-    },
-    {
-      "id": 32,
-      "productId": "5"
-    },
-    {
-      "id": 33,
-      "productId": "com.itranslate.pro.twomonthly"
-    },
-    {
-      "id": 34,
-      "productId": "itranslate_translator_ios.1w_t14_1w_bundle"
-    },
-    {
-      "id": 6,
-      "productId": "itranslate_translator_ios.1w_t10_1w"
-    },
-    {
-      "id": 36,
-      "productId": "7"
-    },
-    {
-      "id": 37,
-      "productId": "com.itranslate.pro.69_99.yearly.7dtrial.groupe"
-    },
-    {
-      "id": 8,
-      "productId": "itranslate_translator_ios.1w_t20_1w_bundle"
-    },
-    {
-      "id": 39,
-      "productId": "9"
-    },
-    {
-      "id": 40,
-      "productId": "itranslate_translator_ios.1w_t14_bundle"
-    },
-    {
-      "id": 10,
-      "productId": "itranslate_translator_ios.1w_t10"
-    },
-    {
-      "id": 46,
-      "productId": "91"
-    },
-    {
-      "id": 47,
-      "productId": "Telegram"
-    },
-    {
-      "id": 51,
-      "productId": "."
-    },
-    {
-      "id": 55,
-      "productId": "HWVIP.PRODUCT"
-    },
-    {
-      "id": 1,
-      "productId": "644377109928"
-    },
-    {
-      "id": 2,
-      "productId": "644377109922"
-    },
-    {
-      "id": 3,
-      "productId": "644377109930"
-    },
-    {
-      "id": 64,
-      "productId": "Telegram"
-    },
-    {
-      "id": 1,
-      "productId": "me.imgbase.intolive.removead"
-    },
-    {
-      "id": 73,
-      "productId": "2"
-    },
-    {
-      "id": 74,
-      "productId": "me.imgbase.intolive.proSubMonthly"
-    },
-    {
-      "id": 3,
-      "productId": "me.imgbase.intolive.proSubWeekly"
-    },
-    {
-      "id": 4,
-      "productId": "me.imgbase.intolive.proSubYearly"
-    },
-    {
-      "id": 77,
-      "productId": "5"
-    },
-    {
-      "id": 78,
-      "productId": "me.imgbase.intolive.proSubYearly2024"
     }
   ],
-  "updatedAt": "2025-05-09T15:11:44.533Z"
+  "updatedAt": "2025-05-10T00:15:03.259Z"
 }
