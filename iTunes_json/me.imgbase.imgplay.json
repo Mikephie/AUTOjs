@@ -2,6 +2,27 @@
   "name": "ImgPlay: GIF Maker & Meme",
   "appId": "989843523",
   "bundleId": "me.imgbase.imgplay",
-  "subscriptions": [],
-  "updatedAt": "2025-05-10T05:24:07.655Z"
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "me.imgbase.imgplay.subscriptionWeekly"
+    },
+    {
+      "id": 2,
+      "productId": "me.imgbase.imgplay.profeatures2018"
+    },
+    {
+      "id": 3,
+      "productId": "me.imgbase.imgplay.subscriptionYearly"
+    },
+    {
+      "id": 4,
+      "productId": "me.imgbase.imgplay.subscription Monthly"
+    },
+    {
+      "id": 5,
+      "productId": "me.imgbase.imgplay.proUpgrade From Legacy"
+    }
+  ],
+  "updatedAt": "2025-05-10T05:37:42.078Z"
 }
