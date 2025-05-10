@@ -1,0 +1,48 @@
+{
+  "name": "iScreen - Widgets & Themes",
+  "appId": "1534704608",
+  "bundleId": "com.zerone.hidesktop",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.zerone.hidesktop.month"
+    },
+    {
+      "id": 2,
+      "productId": "com.zerone.hidesktop.year"
+    },
+    {
+      "id": 3,
+      "productId": "com.zerone.hidesktop.year2"
+    },
+    {
+      "id": 4,
+      "productId": "com.zerone.hidesktop.forever"
+    },
+    {
+      "id": 5,
+      "productId": "com.zerone.hidesktop.three month"
+    },
+    {
+      "id": 6,
+      "productId": "com.zerone.hidesktop.month3"
+    },
+    {
+      "id": 7,
+      "productId": "com.zerone.hidesktop.year3"
+    },
+    {
+      "id": 8,
+      "productId": "com.zerone.hidesktop.month4"
+    },
+    {
+      "id": 9,
+      "productId": "com.zerone.hidesktop.year4"
+    },
+    {
+      "id": 10,
+      "productId": "com.zerone.hidesktop.weekly"
+    }
+  ],
+  "updatedAt": "2025-05-10T01:22:12.351Z"
+}
