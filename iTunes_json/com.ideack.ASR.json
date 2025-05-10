@@ -1,0 +1,40 @@
+{
+  "name": "Record ToText - Speech to text",
+  "appId": "1474056031",
+  "bundleId": "com.ideack.ASR",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Audio2Text_Year_Plan"
+    },
+    {
+      "id": 2,
+      "productId": "ASR_Plan_OneMonth"
+    },
+    {
+      "id": 3,
+      "productId": "Audio2Text Month_Plan"
+    },
+    {
+      "id": 4,
+      "productId": "ASR_Plan_One Year"
+    },
+    {
+      "id": 5,
+      "productId": "ASR_Permanent_Plan"
+    },
+    {
+      "id": 6,
+      "productId": "Audio2Text Quarter_Plan"
+    },
+    {
+      "id": 7,
+      "productId": "Audio2Text_Year_Plan2"
+    },
+    {
+      "id": 8,
+      "productId": "Audio2Text_OneMonth"
+    }
+  ],
+  "updatedAt": "2025-05-10T01:22:12.351Z"
+}
