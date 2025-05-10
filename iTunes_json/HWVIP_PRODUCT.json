@@ -1,0 +1,32 @@
+{
+  "name": "Simple Spreadsheet:view & edit",
+  "appId": "1454075397",
+  "bundleId": "HWVIP PRODUCT",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.turbocms.Simple SpreadSheet.viponeyear"
+    },
+    {
+      "id": 2,
+      "productId": "com.turbocms. Simple SpreadSheet.vipforever"
+    },
+    {
+      "id": 3,
+      "productId": "com.turbocms. Simple SpreadSheet.member366"
+    },
+    {
+      "id": 4,
+      "productId": "com.turbocms. SimpleSpreadSheet.member31"
+    },
+    {
+      "id": 5,
+      "productId": "com.turbocms. SimpleSpreadSheet.member92"
+    },
+    {
+      "id": 6,
+      "productId": "com.turbocms. Simple SpreadSheet.memberforever"
+    }
+  ],
+  "updatedAt": "2025-05-10T06:22:23.661Z"
+}
