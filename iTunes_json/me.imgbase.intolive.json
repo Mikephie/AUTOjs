@@ -2,27 +2,6 @@
   "name": "intoLive - Live Wallpapers",
   "appId": "1061859052",
   "bundleId": "me.imgbase.intolive",
-  "subscriptions": [
-    {
-      "id": 1,
-      "productId": "me.imgbase.intolive.removead"
-    },
-    {
-      "id": 2,
-      "productId": "me.imgbase.intolive.proSubMonthly"
-    },
-    {
-      "id": 3,
-      "productId": "me.imgbase.intolive.proSubWeekly"
-    },
-    {
-      "id": 4,
-      "productId": "me.imgbase.intolive.proSubYearly"
-    },
-    {
-      "id": 5,
-      "productId": "me.imgbase.intolive.proSubYearly2024"
-    }
-  ],
-  "updatedAt": "2025-05-09T05:57:07.868Z"
+  "subscriptions": [],
+  "updatedAt": "2025-05-10T01:19:44.824Z"
 }
