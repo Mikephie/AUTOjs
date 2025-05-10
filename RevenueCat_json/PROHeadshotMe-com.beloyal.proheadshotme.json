@@ -1,0 +1,24 @@
+{
+  "user_agent": "PROHeadshotMe",
+  "bundle_id": "com.beloyal.proheadshotme",
+  "data": {
+    "com.proheadshotme.monthly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.proheadshotme.monthly"
+    },
+    "com.proheadshotme.weekly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.proheadshotme.weekly"
+    },
+    "prolifetime": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "prolifetime"
+    }
+  }
+}
