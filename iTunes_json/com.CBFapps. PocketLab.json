@@ -1,0 +1,20 @@
+{
+  "name": "My Jump Lab (My Jump 3)",
+  "appId": "1554077178",
+  "bundleId": "com.CBFapps. PocketLab",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "mjl_399_1m_1w0"
+    },
+    {
+      "id": 2,
+      "productId": "mjl_2999_1y_1w0"
+    },
+    {
+      "id": 3,
+      "productId": "mjl_forever"
+    }
+  ],
+  "updatedAt": "2025-05-10T01:21:02.330Z"
+}
