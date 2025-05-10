@@ -1,0 +1,40 @@
+{
+  "name": "Photomator - Photo Editor",
+  "appId": "1444636541",
+  "bundleId": "HWVIP.PRODUCT",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "pixelmator_photo_yearly_v1"
+    },
+    {
+      "id": 2,
+      "productId": "pixelmator_photo_monthly_v1"
+    },
+    {
+      "id": 3,
+      "productId": "pixelmator_photo_lifetime_v1_pro_offer"
+    },
+    {
+      "id": 4,
+      "productId": "pixelmator_photo_lifetime_v1"
+    },
+    {
+      "id": 5,
+      "productId": "pixelmator_photo_yearly_v1_sale"
+    },
+    {
+      "id": 6,
+      "productId": "pixelmator_photo_yearly_v1_ab"
+    },
+    {
+      "id": 7,
+      "productId": "pixelmator_photo_monthly_v1_ab"
+    },
+    {
+      "id": 8,
+      "productId": "pixelmator_photo_lifetime_v1_ab"
+    }
+  ],
+  "updatedAt": "2025-05-10T05:46:59.894Z"
+}
