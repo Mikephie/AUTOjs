@@ -1,0 +1,48 @@
+{
+  "name": "Breathe Sleep Focus Mindllama",
+  "appId": "6444920320",
+  "bundleId": "com.vitalii.mind",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.vitalii.mind.lifetime2"
+    },
+    {
+      "id": 2,
+      "productId": "com.vitalii.mind.annual5"
+    },
+    {
+      "id": 3,
+      "productId": "com.vitalii.mind.monthly4"
+    },
+    {
+      "id": 4,
+      "productId": "com.vitalii.mind.annual10"
+    },
+    {
+      "id": 5,
+      "productId": "com.vitalii.mind.lifetime1"
+    },
+    {
+      "id": 6,
+      "productId": "com.vitalii.mind.weekly2"
+    },
+    {
+      "id": 7,
+      "productId": "com.vitalii.mind.monthly2"
+    },
+    {
+      "id": 8,
+      "productId": "com.vitalii.mind.annual3"
+    },
+    {
+      "id": 9,
+      "productId": "com.vitalii.mind.annual6"
+    },
+    {
+      "id": 10,
+      "productId": "com.vitalii.mind.annual1"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:43:57.804Z"
+}
