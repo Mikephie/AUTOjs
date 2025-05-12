@@ -2,6 +2,11 @@
   "name": "Fotoz - 图片一键下载,批量下载网页图",
   "appId": "1090640183",
   "bundleId": "com.kiddy.fotoz",
-  "subscriptions": [],
-  "updatedAt": "2025-05-12T13:02:18.394Z"
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.kiddy.fotoz.ipa.pro"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:09:58.878Z"
 }
