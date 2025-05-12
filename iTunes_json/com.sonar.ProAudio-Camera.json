@@ -1,7 +1,7 @@
 {
   "name": "ProREC Camera & Audio Editor",
   "appId": "1612651294",
-  "bundleId": "com.sonar. ProAudio-Camera",
+  "bundleId": "com.sonar.ProAudio-Camera",
   "subscriptions": [
     {
       "id": 1,
