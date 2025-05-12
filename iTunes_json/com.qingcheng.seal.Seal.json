@@ -1,0 +1,20 @@
+{
+  "name": "印章制作-一键生成印章,轻松制作公章",
+  "appId": "1584991347",
+  "bundleId": "com.qingcheng.seal.Seal",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.qingcheng.seal.Seal.premium.yearly"
+    },
+    {
+      "id": 2,
+      "productId": "com.qingcheng.seal.Seal.premium.forever"
+    },
+    {
+      "id": 3,
+      "productId": "com.qingcheng.seal.Seal.premium.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:53:48.471Z"
+}
