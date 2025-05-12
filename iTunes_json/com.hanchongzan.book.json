@@ -1,0 +1,16 @@
+{
+  "name": "Flash Ledger - Expense Tracker",
+  "appId": "1456232229",
+  "bundleId": "com.hanchongzan.book",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.hanchongzan.book.vip"
+    },
+    {
+      "id": 2,
+      "productId": "com.hanchongzan.book.vipYear"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:12:01.688Z"
+}
