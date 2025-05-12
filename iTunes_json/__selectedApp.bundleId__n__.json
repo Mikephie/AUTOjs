@@ -3,5 +3,5 @@
   "appId": "${selectedApp.appId}\\n\\n`;",
   "bundleId": "${selectedApp.bundleId}\\n`;",
   "subscriptions": [],
-  "updatedAt": "2025-05-12T13:07:15.633Z"
+  "updatedAt": "2025-05-12T13:07:22.740Z"
 }
