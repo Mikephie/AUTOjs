@@ -5,11 +5,15 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "Remove_Ads_FlipClock_Lite"
+      "productId": "FlipClockProVersion"
     },
     {
       "id": 2,
       "productId": "FlipClockMoreSkins"
+    },
+    {
+      "id": 3,
+      "productId": "Remove_Ads_FlipClock_Lite"
     }
   ],
   "updatedAt": "2025-05-12T12:56:43.100Z"
