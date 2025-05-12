@@ -1,0 +1,20 @@
+{
+  "name": "Graphionica: Story Maker",
+  "appId": "1517422924",
+  "bundleId": "com.graphionica.ios",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "premium_year"
+    },
+    {
+      "id": 2,
+      "productId": "premium_year"
+    },
+    {
+      "id": 3,
+      "productId": "premium_month"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:56:43.100Z"
+}
