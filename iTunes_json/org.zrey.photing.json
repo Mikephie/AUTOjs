@@ -1,0 +1,20 @@
+{
+  "name": "PhotoWhite: Album & Camera",
+  "appId": "6736692721",
+  "bundleId": "org.zrey.photing",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "org.zrey.photowhite.yearly"
+    },
+    {
+      "id": 2,
+      "productId": "org.zrey.photowhite.flash_lifetime"
+    },
+    {
+      "id": 3,
+      "productId": "org.zrey.photowhite.lifetime"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:01:03.143Z"
+}
