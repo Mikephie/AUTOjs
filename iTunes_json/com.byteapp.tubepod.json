@@ -1,0 +1,16 @@
+{
+  "name": "TubePod-Video&Audio Streaming",
+  "appId": "6636469468",
+  "bundleId": "com.byteapp.tubepod",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.byteapp.tubepod.year"
+    },
+    {
+      "id": 2,
+      "productId": "com.byteapp.tubepod.lifetime"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:47:33.396Z"
+}
