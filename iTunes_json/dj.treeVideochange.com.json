@@ -1,0 +1,12 @@
+{
+  "name": "Video to text& Text extraction",
+  "appId": "6502915408",
+  "bundleId": "dj.treeVideochange.com",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.dj.videototext.forever"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:01:03.144Z"
+}
