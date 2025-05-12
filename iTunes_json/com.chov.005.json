@@ -1,0 +1,16 @@
+{
+  "name": "Wonderfind - Find Lost Devices",
+  "appId": "6547871399",
+  "bundleId": "com.chov.005",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.deviceTracker.weekly"
+    },
+    {
+      "id": 2,
+      "productId": "com.deviceTracker.monthly"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:56:43.100Z"
+}
