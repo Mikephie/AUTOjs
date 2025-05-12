@@ -1,0 +1,16 @@
+{
+  "name": "拦截",
+  "appId": "6547836606",
+  "bundleId": "com.messagehold.message",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.messagehold.forever"
+    },
+    {
+      "id": 2,
+      "productId": "com.messagehold.year"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:47:33.396Z"
+}
