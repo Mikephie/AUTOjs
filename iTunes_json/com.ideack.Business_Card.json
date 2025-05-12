@@ -1,0 +1,16 @@
+{
+  "name": "vCard holder",
+  "appId": "1477169012",
+  "bundleId": "com.ideack.Business Card",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "BusinessCard VipPerpetual"
+    },
+    {
+      "id": 2,
+      "productId": "BusinessCardVipMonth"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:02:18.394Z"
+}
