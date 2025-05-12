@@ -1,0 +1,44 @@
+{
+  "name": "SnoreLab: Record Your Snoring",
+  "appId": "529443604",
+  "bundleId": "com.revivasoftworks. Snore-Lab",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "12m_Subscription24_7d"
+    },
+    {
+      "id": 2,
+      "productId": "12m_Subscription12_7d"
+    },
+    {
+      "id": 3,
+      "productId": "1m_Subscription12_7d"
+    },
+    {
+      "id": 4,
+      "productId": "SnoreLabPremium"
+    },
+    {
+      "id": 5,
+      "productId": "1m_Subscription12"
+    },
+    {
+      "id": 6,
+      "productId": "12m_Subscription12"
+    },
+    {
+      "id": 7,
+      "productId": "3m_Subscription12"
+    },
+    {
+      "id": 8,
+      "productId": "SnoreLabPremium10"
+    },
+    {
+      "id": 9,
+      "productId": "12m_Subscription8"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:41:45.896Z"
+}
