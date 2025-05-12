@@ -5,20 +5,24 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "MagicAudioSubscribe OneMonth"
+      "productId": "MagicAudioSubscribe One Year"
     },
     {
       "id": 2,
-      "productId": "MagicAudioPermanent"
+      "productId": "MagicAudioSubscribe OneMonth"
     },
     {
       "id": 3,
-      "productId": "MagicAudio_Subscribe_Year1"
+      "productId": "MagicAudioPermanent"
     },
     {
       "id": 4,
+      "productId": "MagicAudio_Subscribe_Year1"
+    },
+    {
+      "id": 5,
       "productId": "MagicAudioSubscribeThreeMonth"
     }
   ],
-  "updatedAt": "2025-05-12T13:02:18.394Z"
+  "updatedAt": "2025-05-12T13:09:58.879Z"
 }
