@@ -5,12 +5,16 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "BusinessCard VipPerpetual"
+      "productId": "BusinessCardVipYear"
     },
     {
       "id": 2,
+      "productId": "BusinessCard VipPerpetual"
+    },
+    {
+      "id": 3,
       "productId": "BusinessCardVipMonth"
     }
   ],
-  "updatedAt": "2025-05-12T13:02:18.394Z"
+  "updatedAt": "2025-05-12T13:09:58.879Z"
 }
