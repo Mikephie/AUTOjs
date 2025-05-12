@@ -1,0 +1,16 @@
+{
+  "name": "Flip Clock - digital widgets",
+  "appId": "1181028777",
+  "bundleId": "com.cuilingshi.flipclock",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Remove_Ads_FlipClock_Lite"
+    },
+    {
+      "id": 2,
+      "productId": "FlipClockMoreSkins"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:56:43.100Z"
+}
