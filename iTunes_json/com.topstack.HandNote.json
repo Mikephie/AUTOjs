@@ -1,0 +1,44 @@
+{
+  "name": "Kilonotes-Notes & PDF reading",
+  "appId": "1514322479",
+  "bundleId": "com.topstack.HandNote",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "year_sub"
+    },
+    {
+      "id": 2,
+      "productId": "kip_Al_chat"
+    },
+    {
+      "id": 3,
+      "productId": "kilonotes_quarter_subscription"
+    },
+    {
+      "id": 4,
+      "productId": "kilonotes_monthly_subscription"
+    },
+    {
+      "id": 5,
+      "productId": "kilonotes_limitedtime_year_subscription"
+    },
+    {
+      "id": 6,
+      "productId": "Xiaofen_Diary_2022_Handbook"
+    },
+    {
+      "id": 7,
+      "productId": "cornell1_notebook"
+    },
+    {
+      "id": 8,
+      "productId": "Summer_Forest_2022_Handbook"
+    },
+    {
+      "id": 9,
+      "productId": "cartoon_mistake_notebook"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:53:48.471Z"
+}
