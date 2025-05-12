@@ -1,7 +1,7 @@
 {
   "name": "Music Clip - Ringtone Maker",
   "appId": "1467161113",
-  "bundleId": "com.ideack. MagicAudio",
+  "bundleId": "com.ideack.MagicAudio",
   "subscriptions": [
     {
       "id": 1,
