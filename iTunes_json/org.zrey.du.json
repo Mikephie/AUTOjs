@@ -2,6 +2,11 @@
   "name": "独创者-成为独当一面的人",
   "appId": "1596554647",
   "bundleId": "org.zrey.du",
-  "subscriptions": [],
-  "updatedAt": "2025-05-12T13:02:18.394Z"
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "org.zrey.du.main"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:09:58.879Z"
 }
