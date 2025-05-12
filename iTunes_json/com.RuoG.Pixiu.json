@@ -2,6 +2,11 @@
   "name": "貔貅记账-Pixiu",
   "appId": "1461452315",
   "bundleId": "com.RuoG.Pixiu",
-  "subscriptions": [],
-  "updatedAt": "2025-05-12T13:02:18.394Z"
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.RuoG.Pixiu.VIP Year"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:09:58.878Z"
 }
