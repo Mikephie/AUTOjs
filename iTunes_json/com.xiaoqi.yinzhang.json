@@ -1,0 +1,16 @@
+{
+  "name": "印章大师-印章制作与文件盖章",
+  "appId": "6504040083",
+  "bundleId": "com.xiaoqi.yinzhang",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.xiaoqi.seal.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.xiaoqi.seal.forever"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:53:48.471Z"
+}
