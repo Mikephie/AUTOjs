@@ -1,0 +1,28 @@
+{
+  "name": "Easy Period - Lite Tracker",
+  "appId": "1209759365",
+  "bundleId": "com.hanchongzan.period",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.hanchongzan.period.girl"
+    },
+    {
+      "id": 2,
+      "productId": "com.hanchongzan.period.girl Year"
+    },
+    {
+      "id": 3,
+      "productId": "com.hanchongzan.period.boy"
+    },
+    {
+      "id": 4,
+      "productId": "com.hanchongzan.period.boy Year"
+    },
+    {
+      "id": 5,
+      "productId": "com.hanchongzan.period.frog"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:12:01.688Z"
+}
