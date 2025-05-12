@@ -1,0 +1,52 @@
+{
+  "name": "Object Removal Al Retouch Fix",
+  "appId": "1457711961",
+  "bundleId": "com.skysoft.removalfree",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.skysoft.removalfree.subscription.weekly"
+    },
+    {
+      "id": 2,
+      "productId": "com.skysoft.removalfree.rooffer.weekly1"
+    },
+    {
+      "id": 3,
+      "productId": "com.skysoft.removalfree.discount.weekly"
+    },
+    {
+      "id": 4,
+      "productId": "com.skysoft.removalfree.introduction.yearly2"
+    },
+    {
+      "id": 5,
+      "productId": "com.skysoft.removalfree.rooffer.weekly9"
+    },
+    {
+      "id": 6,
+      "productId": "com.skysoft.removalfree.rooffer.weekly"
+    },
+    {
+      "id": 7,
+      "productId": "com.skysoft.removal free.introduction.weekly"
+    },
+    {
+      "id": 8,
+      "productId": "com.skysoft.removalfree.introduction.weekly4"
+    },
+    {
+      "id": 9,
+      "productId": "com.skysoft.removalfree.introduction.3months4"
+    },
+    {
+      "id": 10,
+      "productId": "com.skysoft.removalfree.subscription.yearly"
+    },
+    {
+      "id": 11,
+      "productId": "com.skysoft.removalfree.subscription.weekly"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:53:48.471Z"
+}
