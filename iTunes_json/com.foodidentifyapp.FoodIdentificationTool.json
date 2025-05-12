@@ -1,7 +1,7 @@
 {
   "name": "剂查查-食品添加剂查询",
   "appId": "6736932686",
-  "bundleId": "20003",
+  "bundleId": "com.foodidentifyapp.FoodIdentificationTool",
   "subscriptions": [
     {
       "id": 1,
