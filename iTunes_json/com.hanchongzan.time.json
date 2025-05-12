@@ -1,0 +1,16 @@
+{
+  "name": "Time Arrow - Countdown Tracker",
+  "appId": "1324869633",
+  "bundleId": "com.hanchongzan.time",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.hanchongzan.time.pro"
+    },
+    {
+      "id": 2,
+      "productId": "com.hanchongzan.time.proYear"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:13:05.134Z"
+}
