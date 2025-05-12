@@ -1,0 +1,24 @@
+{
+  "name": "TypeOn: Ai Keyboard Translator",
+  "appId": "1581676014",
+  "bundleId": "keyboard.translator",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "3002"
+    },
+    {
+      "id": 2,
+      "productId": "3003"
+    },
+    {
+      "id": 3,
+      "productId": "3004"
+    },
+    {
+      "id": 4,
+      "productId": "3001"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:41:45.896Z"
+}
