@@ -1,0 +1,48 @@
+{
+  "name": "MOLDIV Templates, Photo Editor",
+  "appId": "608188610",
+  "bundleId": "com.jellybus.Moldiv",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.jellybus.Moldiv.IAP.001"
+    },
+    {
+      "id": 2,
+      "productId": "com.jellybus.Moldiv.FULL"
+    },
+    {
+      "id": 3,
+      "productId": "com.jellybus.Moldiv.IAP.002"
+    },
+    {
+      "id": 4,
+      "productId": "com.jellybus.Moldiv.SUB.499"
+    },
+    {
+      "id": 5,
+      "productId": "com.jellybus.Moldiv.IAP.003"
+    },
+    {
+      "id": 6,
+      "productId": "com.jellybus.Moldiv.FULL2"
+    },
+    {
+      "id": 7,
+      "productId": "com.jellybus.Moldiv.SUB.699"
+    },
+    {
+      "id": 8,
+      "productId": "com.jellybus.Moldiv.SUB.1999"
+    },
+    {
+      "id": 9,
+      "productId": "com.jellybus.Moldiv.IAP.004"
+    },
+    {
+      "id": 10,
+      "productId": "com.jellybus.Moldiv.STAMP.002"
+    }
+  ],
+  "updatedAt": "2025-05-13T13:28:28.296Z"
+}
