@@ -5,56 +5,8 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "easycall_week13243Name: Wallpapers 17- Dynamic Island"
-    },
-    {
-      "id": 2,
-      "productId": "NotchweekvipName: CodeSnippet PRO: Code At Hand"
-    },
-    {
-      "id": 3,
-      "productId": "it.beatcode.codesnippetpro.lifetime"
-    },
-    {
-      "id": 4,
-      "productId": "it.beatcode.codesnippetpro.monthlySubscription"
-    },
-    {
-      "id": 5,
-      "productId": "it.beatcode.codesnippetpro.annualSubscriptionName: Natural Reader"
-    },
-    {
-      "id": 6,
-      "productId": "com.reader.lyear"
-    },
-    {
-      "id": 7,
-      "productId": "com.reader.1month"
-    },
-    {
-      "id": 8,
-      "productId": "com.reader.vipforever"
-    },
-    {
-      "id": 9,
-      "productId": "com.reader.1yearName: DForce - Safari Dark Extension"
-    },
-    {
-      "id": 10,
-      "productId": "dforce_unlock_all_functionsName：简谱大师-简谱作曲家写简谱作词，作曲，"
-    },
-    {
-      "id": 11,
-      "productId": "com.notation.weekly"
-    },
-    {
-      "id": 12,
-      "productId": "com.notation.monthly"
-    },
-    {
-      "id": 13,
-      "productId": "com.notation.once"
+      "productId": "easycall_week13243"
     }
   ],
-  "updatedAt": "2025-05-13T11:14:11.339Z"
+  "updatedAt": "2025-05-13T11:16:48.733Z"
 }
