@@ -1,0 +1,20 @@
+{
+  "name": "iVCam Webcam",
+  "appId": "1164464478",
+  "bundleId": "com.e2esoft.iVCam",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "ivcam.full"
+    },
+    {
+      "id": 2,
+      "productId": "ivcam.premium.year"
+    },
+    {
+      "id": 3,
+      "productId": "ivcam.basic.year"
+    }
+  ],
+  "updatedAt": "2025-05-13T13:21:39.749Z"
+}
