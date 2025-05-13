@@ -1,0 +1,64 @@
+{
+  "name": "Call Screen-Colorful Call Show",
+  "appId": "1670020102",
+  "bundleId": "com.mycall.cn",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "easycall_week13243"
+    },
+    {
+      "id": 2,
+      "productId": "Notchweekvip"
+    },
+    {
+      "id": 3,
+      "productId": "it.beatcode.codesnippetpro.lifetime"
+    },
+    {
+      "id": 4,
+      "productId": "it.beatcode.codesnippetpro.monthlySubscription"
+    },
+    {
+      "id": 5,
+      "productId": "it.beatcode.codesnippetpro.annualSubscription"
+    },
+    {
+      "id": 6,
+      "productId": "com.reader.lyear"
+    },
+    {
+      "id": 7,
+      "productId": "com.reader.1month"
+    },
+    {
+      "id": 8,
+      "productId": "com.reader.vipforever"
+    },
+    {
+      "id": 9,
+      "productId": "com.reader.1year"
+    },
+    {
+      "id": 10,
+      "productId": "dforce_unlock_all_functions"
+    },
+    {
+      "id": 11,
+      "productId": "Name：简谱大师-简谱作曲家写简谱作词，作曲，"
+    },
+    {
+      "id": 12,
+      "productId": "com.notation.weekly"
+    },
+    {
+      "id": 13,
+      "productId": "com.notation.monthly"
+    },
+    {
+      "id": 14,
+      "productId": "com.notation.once"
+    }
+  ],
+  "updatedAt": "2025-05-13T09:57:15.509Z"
+}
