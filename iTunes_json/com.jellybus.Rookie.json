@@ -1,0 +1,48 @@
+{
+  "name": "Rookie Cam - Photo Editor",
+  "appId": "799406905",
+  "bundleId": "com.jellybus.Rookie",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.jellybus.Rookie.IAP.001"
+    },
+    {
+      "id": 2,
+      "productId": "com.jellybus.Rookie.FULL"
+    },
+    {
+      "id": 3,
+      "productId": "com.jellybus.Rookie.IAP.002"
+    },
+    {
+      "id": 4,
+      "productId": "com.jellybus.Rookie.IAP.003"
+    },
+    {
+      "id": 5,
+      "productId": "com.jellybus.Rookie.FULL2"
+    },
+    {
+      "id": 6,
+      "productId": "com.jellybus.Rookie.SUB.499"
+    },
+    {
+      "id": 7,
+      "productId": "com.jellybus.Rookie.IAP.004"
+    },
+    {
+      "id": 8,
+      "productId": "com.jellybus.Rookie.SUB.599"
+    },
+    {
+      "id": 9,
+      "productId": "com.jellybus.Rookie.SUB.1999"
+    },
+    {
+      "id": 10,
+      "productId": "com.jellybus.Rookie.IAP.005"
+    }
+  ],
+  "updatedAt": "2025-05-13T13:21:39.749Z"
+}
