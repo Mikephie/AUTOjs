@@ -1,0 +1,24 @@
+{
+  "name": "Natural Reader",
+  "appId": "1645064944",
+  "bundleId": "com.xiaoshuoyuedu.appname",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.reader.lyear"
+    },
+    {
+      "id": 2,
+      "productId": "com.reader.1month"
+    },
+    {
+      "id": 3,
+      "productId": "com.reader.vipforever"
+    },
+    {
+      "id": 4,
+      "productId": "com.reader.1year"
+    }
+  ],
+  "updatedAt": "2025-05-13T11:00:10.221Z"
+}
