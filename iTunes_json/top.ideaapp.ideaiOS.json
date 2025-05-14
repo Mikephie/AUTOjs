@@ -1,0 +1,24 @@
+{
+  "name": "灵感 - 记录灵感和兴趣",
+  "appId": "6470180367",
+  "bundleId": "top.ideaapp.ideaiOS",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "top.ideaapp.ideaiOS.membership.onemonth"
+    },
+    {
+      "id": 2,
+      "productId": "top.ideaapp.ideaiOS.membership.oneyear"
+    },
+    {
+      "id": 3,
+      "productId": "top.ideaapp.ideaiOS.membership.lifetimeoriginal"
+    },
+    {
+      "id": 4,
+      "productId": "top.ideaapp.ideaiOS.membership.lifetime"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:26.588Z"
+}
