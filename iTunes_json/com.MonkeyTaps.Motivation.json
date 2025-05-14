@@ -1,0 +1,48 @@
+{
+  "name": "Motivation - Daily quotes",
+  "appId": "876080126",
+  "bundleId": "com.MonkeyTaps.Motivation",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.monkeytaps.motivation.premium.year3"
+    },
+    {
+      "id": 2,
+      "productId": "com.monkeytaps.motivation.premium.year2"
+    },
+    {
+      "id": 3,
+      "productId": "com.monkeytaps.motivation.premium.month2"
+    },
+    {
+      "id": 4,
+      "productId": "com.monkeytaps.motivation.premium.year"
+    },
+    {
+      "id": 5,
+      "productId": "com.monkeytaps.motivation.premium"
+    },
+    {
+      "id": 6,
+      "productId": "com.monkeytaps.motivation.premium.year.sale"
+    },
+    {
+      "id": 7,
+      "productId": "com.monkeytaps.motivation.premium.year4"
+    },
+    {
+      "id": 8,
+      "productId": "com.monkeytaps.motivation.premium.lifetime"
+    },
+    {
+      "id": 9,
+      "productId": "com.monkeytaps.motivation.premium.week"
+    },
+    {
+      "id": 10,
+      "productId": "com.monkeytaps.motivation.premium.offer.year"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:42:54.189Z"
+}
