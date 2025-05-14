@@ -1,0 +1,16 @@
+{
+  "name": "Zero-Wallpapers HD",
+  "appId": "1506224111",
+  "bundleId": "com.mwpro.ZeroTulmg",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "ZeroTulmgPlus"
+    },
+    {
+      "id": 2,
+      "productId": "Zero2020BuyPro"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:55.234Z"
+}
