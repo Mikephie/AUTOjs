@@ -1,0 +1,28 @@
+{
+  "name": "Cute pet: Self care pet widget",
+  "appId": "6443751681",
+  "bundleId": "com.cakex2.dynamic.island",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.cakex2.dynamic.island.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.cakex2.dynamic.island.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.cakex2.dynamic.island.lifetime"
+    },
+    {
+      "id": 4,
+      "productId": "com.cakex2.dynamic.island.yearlyfree"
+    },
+    {
+      "id": 5,
+      "productId": "com.cakex2.dynamic.island.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:02:16.549Z"
+}
