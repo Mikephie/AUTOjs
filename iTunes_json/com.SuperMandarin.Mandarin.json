@@ -1,0 +1,24 @@
+{
+  "name": "普通话水平测试",
+  "appId": "1586074821",
+  "bundleId": "com.SuperMandarin.Mandarin",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "pth_vip_exam2"
+    },
+    {
+      "id": 2,
+      "productId": "pth_vip_exam"
+    },
+    {
+      "id": 3,
+      "productId": "pth_vip_mouth"
+    },
+    {
+      "id": 4,
+      "productId": "pth_vip_year"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:26:21.847Z"
+}
