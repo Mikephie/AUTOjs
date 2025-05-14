@@ -1,0 +1,52 @@
+{
+  "name": "Intermittent Fasting Tracker •",
+  "appId": "1498018285",
+  "bundleId": "com.leapfitness.fasting",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.leapfitness.fasting.oneyear1"
+    },
+    {
+      "id": 2,
+      "productId": "com.leapfitness.fasting.onemonth1"
+    },
+    {
+      "id": 3,
+      "productId": "com.leapfitness.fasting.chinese.oneyear"
+    },
+    {
+      "id": 4,
+      "productId": "com.leapfitness.fasting.oneyear6"
+    },
+    {
+      "id": 5,
+      "productId": "com.leapfitness.fasting.oneyear"
+    },
+    {
+      "id": 6,
+      "productId": "com.leapfitness.fasting.oneyear2"
+    },
+    {
+      "id": 7,
+      "productId": "com.leapfitness.fasting.halfyear"
+    },
+    {
+      "id": 8,
+      "productId": "com.leapfitness.fasting.onemonth2"
+    },
+    {
+      "id": 9,
+      "productId": "com.leapfitness.fasting.removeads"
+    },
+    {
+      "id": 10,
+      "productId": "com.leapfitness.fasting.onemonth"
+    },
+    {
+      "id": 11,
+      "productId": "com.leapfitness.fasting.oneyear6"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:41:13.811Z"
+}
