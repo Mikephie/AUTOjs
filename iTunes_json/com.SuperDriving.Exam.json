@@ -1,0 +1,24 @@
+{
+  "name": "科目一",
+  "appId": "1558975224",
+  "bundleId": "com.SuperDriving.Exam",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "jiakao_vip_mouth_auto"
+    },
+    {
+      "id": 2,
+      "productId": "jiakao_vip_forever"
+    },
+    {
+      "id": 3,
+      "productId": "jiakao_vip_year_auto"
+    },
+    {
+      "id": 4,
+      "productId": "jiakao_vip_year"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:24:55.389Z"
+}
