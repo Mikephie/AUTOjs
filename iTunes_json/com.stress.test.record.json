@@ -1,0 +1,48 @@
+{
+  "name": "Destress Now - Stress monitor",
+  "appId": "6451831613",
+  "bundleId": "com.stress.test.record",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.stress.test.record.life.limit"
+    },
+    {
+      "id": 2,
+      "productId": "com.stress.test.record.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.stress.test.record.yearly"
+    },
+    {
+      "id": 4,
+      "productId": "com.stress.test.record.yearly.limit"
+    },
+    {
+      "id": 5,
+      "productId": "com.stress.test.record.life"
+    },
+    {
+      "id": 6,
+      "productId": "com.stress.test.record.yearly.limit2"
+    },
+    {
+      "id": 7,
+      "productId": "com.stress.test.record.yearlynew"
+    },
+    {
+      "id": 8,
+      "productId": "com.stress.test.record.lifetimeC"
+    },
+    {
+      "id": 9,
+      "productId": "com.stress.test.record.lifetimeB"
+    },
+    {
+      "id": 10,
+      "productId": "com.stress.test.record.newyear"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:19:24.893Z"
+}
