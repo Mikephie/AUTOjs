@@ -1,0 +1,44 @@
+{
+  "name": "CamScanning-count&scan",
+  "appId": "6451412773",
+  "bundleId": "com.alphaplus.greetingscaner",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.alphaplus.greetingscaner.w.i.b"
+    },
+    {
+      "id": 2,
+      "productId": "com.alphaplus.greetingscaner.w.pro"
+    },
+    {
+      "id": 3,
+      "productId": "com.alphaplus.greetingscaner.w.m"
+    },
+    {
+      "id": 4,
+      "productId": "com.alphaplus.greetingscaner.week.intro"
+    },
+    {
+      "id": 5,
+      "productId": "com.alphaplus.greetingscaner.w.b"
+    },
+    {
+      "id": 6,
+      "productId": "com.alphaplus.greetingscaner.single.m.a"
+    },
+    {
+      "id": 7,
+      "productId": "com.alphaplus.greetingscaner.m.b"
+    },
+    {
+      "id": 8,
+      "productId": "com.alphaplus.greetingscaner.y.pro"
+    },
+    {
+      "id": 9,
+      "productId": "com.alphaplus.greetingscaner.y.i.b"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:43:15.238Z"
+}
