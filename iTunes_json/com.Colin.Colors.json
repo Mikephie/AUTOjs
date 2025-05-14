@@ -1,0 +1,16 @@
+{
+  "name": "搜图 - 壁纸配色取色，传统色卡合集",
+  "appId": "1462574967",
+  "bundleId": "com.Colin.Colors",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.colin.colors.foreverVIP"
+    },
+    {
+      "id": 2,
+      "productId": "com.colin.colors.annualVIP"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:36:56.116Z"
+}
