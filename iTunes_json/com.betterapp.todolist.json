@@ -1,0 +1,48 @@
+{
+  "name": "To Do List - Todo Reminders",
+  "appId": "1640609657",
+  "bundleId": "com.betterapp.todolist",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "todolist.subscription.monthly.01"
+    },
+    {
+      "id": 2,
+      "productId": "todolist.subscription.yearly.01"
+    },
+    {
+      "id": 3,
+      "productId": "todolist.permanent.vip.01"
+    },
+    {
+      "id": 4,
+      "productId": "todolist.subscription.yearly.discount.01"
+    },
+    {
+      "id": 5,
+      "productId": "todolist.subscription.monthly.02"
+    },
+    {
+      "id": 6,
+      "productId": "todolist.permanent.vip.discount.01"
+    },
+    {
+      "id": 7,
+      "productId": "todolist.subscription.yearly.discount.03"
+    },
+    {
+      "id": 8,
+      "productId": "todolist.subscription.yearly.fullprice.01"
+    },
+    {
+      "id": 9,
+      "productId": "todolist.subscription.yearly.discount.02"
+    },
+    {
+      "id": 10,
+      "productId": "todolist.permanent.fullprice.vip.01"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:55.234Z"
+}
