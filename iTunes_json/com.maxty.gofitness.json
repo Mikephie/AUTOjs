@@ -1,0 +1,48 @@
+{
+  "name": "ProFit: Workout Planner",
+  "appId": "907081984",
+  "bundleId": "com.maxty.gofitness",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.maxty.gofitness.weeklyplan"
+    },
+    {
+      "id": 2,
+      "productId": "com.maxty.gofitness.weeklyplanonlynow"
+    },
+    {
+      "id": 3,
+      "productId": "com.maxty.gofitness.monthlyplan"
+    },
+    {
+      "id": 4,
+      "productId": "com.maxty.gofitness.3monthsplan"
+    },
+    {
+      "id": 5,
+      "productId": "com.maxty.gofitness.weeklyplanonetimeoffer"
+    },
+    {
+      "id": 6,
+      "productId": "com.maxty.gofitness.yearlyplan"
+    },
+    {
+      "id": 7,
+      "productId": "com.maxty.gofitness.3monthsplan1"
+    },
+    {
+      "id": 8,
+      "productId": "com.maxty.gofitness.weeklyplanonetimeoffer1"
+    },
+    {
+      "id": 9,
+      "productId": "com.maxty.gofitness.weeklyplan1"
+    },
+    {
+      "id": 10,
+      "productId": "com.maxty.gofitness.monthlyplan1"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:03:29.003Z"
+}
