@@ -1,0 +1,20 @@
+{
+  "name": "指南针定位",
+  "appId": "1644286528",
+  "bundleId": "com.SuperPointer.Location",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.SuperPointer.Location.Forever"
+    },
+    {
+      "id": 2,
+      "productId": "com.SuperPointer.Location.Month"
+    },
+    {
+      "id": 3,
+      "productId": "com.SuperPointer.Location.Year"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:24:04.415Z"
+}
