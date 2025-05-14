@@ -1,0 +1,24 @@
+{
+  "name": "SmartGym: Gym & Home Workouts",
+  "appId": "922744883",
+  "bundleId": "com.smartgymapp.smartgym",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.smartgymapp.smartgym.premiumusermonthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.smartgymapp.smartgym.premiumuseryearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.smartgymapp.smartgym.unlocklocalfeatures"
+    },
+    {
+      "id": 4,
+      "productId": "com.smartgymapp.smartgym.personalpremium10"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:18:33.007Z"
+}
