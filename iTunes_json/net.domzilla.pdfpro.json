@@ -1,0 +1,36 @@
+{
+  "name": "PDF Pro - Reader Editor Forms",
+  "appId": "454936656",
+  "bundleId": "net.domzilla.pdfpro",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "net.domzilla.pdfpro.iap.premium.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "net.domzilla.pdfpro.iap.premium.annual"
+    },
+    {
+      "id": 3,
+      "productId": "net.domzilla.pdfpro.iap.premium.annualoffer"
+    },
+    {
+      "id": 4,
+      "productId": "net.domzilla.pdfpro.iap.multiplatform.premium.annual"
+    },
+    {
+      "id": 5,
+      "productId": "net.domzilla.pdfpro.iap.macos.premium.annual"
+    },
+    {
+      "id": 6,
+      "productId": "net.domzilla.pdfpro.iap.premium.monthlyoffer"
+    },
+    {
+      "id": 7,
+      "productId": "net.domzilla.pdfpro.iap.macos.premium.monthly"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:24:55.389Z"
+}
