@@ -1,0 +1,20 @@
+{
+  "name": "Heart Rate Broadcast",
+  "appId": "6473728264",
+  "bundleId": "com.nk.xinlvguangbo",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "yongjiu"
+    },
+    {
+      "id": 2,
+      "productId": "anyue"
+    },
+    {
+      "id": 3,
+      "productId": "annian"
+    }
+  ],
+  "updatedAt": "2025-05-14T07:49:01.263Z"
+}
