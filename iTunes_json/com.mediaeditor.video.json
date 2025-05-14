@@ -1,0 +1,32 @@
+{
+  "name": "剪影 - 视频剪辑&卡点影集制作",
+  "appId": "1455720185",
+  "bundleId": "com.mediaeditor.video",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "monthautorenew"
+    },
+    {
+      "id": 2,
+      "productId": "yearautorenew"
+    },
+    {
+      "id": 3,
+      "productId": "alwaysowner"
+    },
+    {
+      "id": 4,
+      "productId": "com.mediaeditor.video.halfyear"
+    },
+    {
+      "id": 5,
+      "productId": "vip.yearautorenew"
+    },
+    {
+      "id": 6,
+      "productId": "yearautorenew"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:19:24.893Z"
+}
