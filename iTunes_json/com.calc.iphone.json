@@ -1,0 +1,12 @@
+{
+  "name": "Calculator with History +",
+  "appId": "1458583388",
+  "bundleId": "com.calc.iphone",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "calc_Unlock_1"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:18:33.007Z"
+}
