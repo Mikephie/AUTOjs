@@ -1,0 +1,20 @@
+{
+  "name": "Umemi: Smart Personal Finance",
+  "appId": "1498426607",
+  "bundleId": "com.ryukie.sama.ledger.Ledger",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "KameePro"
+    },
+    {
+      "id": 2,
+      "productId": "KameeProEndless"
+    },
+    {
+      "id": 3,
+      "productId": "KameeCoinB"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:26.233Z"
+}
