@@ -1,0 +1,24 @@
+{
+  "name": "Body Tune - Photo Editor",
+  "appId": "1222515036",
+  "bundleId": "com.fitnesslabs.airtag",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "monthlypro"
+    },
+    {
+      "id": 2,
+      "productId": "Bodypro1"
+    },
+    {
+      "id": 3,
+      "productId": "bodyweek1"
+    },
+    {
+      "id": 4,
+      "productId": "BodyTunePro"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:26.233Z"
+}
