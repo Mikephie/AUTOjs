@@ -1,0 +1,36 @@
+{
+  "name": "Ptime - Photo Jigsaw Artifact",
+  "appId": "1503443162",
+  "bundleId": "com.ptime",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.subscribe.pro.year"
+    },
+    {
+      "id": 2,
+      "productId": "com.iap.subscription.plus.season"
+    },
+    {
+      "id": 3,
+      "productId": "com.subscribe.pro.perpetual"
+    },
+    {
+      "id": 4,
+      "productId": "com.subscribe.pro.season"
+    },
+    {
+      "id": 5,
+      "productId": "com.iap.subscription.plus.month"
+    },
+    {
+      "id": 6,
+      "productId": "com.iap.subscription.plus.year"
+    },
+    {
+      "id": 7,
+      "productId": "com.subscribe.pro.year"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:52.192Z"
+}
