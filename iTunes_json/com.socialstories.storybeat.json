@@ -1,0 +1,48 @@
+{
+  "name": "Reels & Story Maker: Storybeat",
+  "appId": "1381520124",
+  "bundleId": "com.socialstories.storybeat",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.socialstories.storybeat.onemonth"
+    },
+    {
+      "id": 2,
+      "productId": "com.socialstories.storybeat.oneyear"
+    },
+    {
+      "id": 3,
+      "productId": "yearly_2"
+    },
+    {
+      "id": 4,
+      "productId": "yearly_1"
+    },
+    {
+      "id": 5,
+      "productId": "monthly_1"
+    },
+    {
+      "id": 6,
+      "productId": "monthly_2"
+    },
+    {
+      "id": 7,
+      "productId": "weekly_2"
+    },
+    {
+      "id": 8,
+      "productId": "tokens.100"
+    },
+    {
+      "id": 9,
+      "productId": "tokens.25"
+    },
+    {
+      "id": 10,
+      "productId": "tokens.50"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:18:33.007Z"
+}
