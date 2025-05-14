@@ -1,0 +1,20 @@
+{
+  "name": "MWeb - Markdown Writing, Notes",
+  "appId": "1183407767",
+  "bundleId": "com.coderforart.iOS.MWeb",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "10001"
+    },
+    {
+      "id": 2,
+      "productId": "10002"
+    },
+    {
+      "id": 3,
+      "productId": "MWebSubscription2024"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:52.192Z"
+}
