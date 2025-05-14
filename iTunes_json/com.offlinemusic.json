@@ -1,0 +1,36 @@
+{
+  "name": "Offline Music Player",
+  "appId": "1259949354",
+  "bundleId": "com.offlinemusic",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.offlinemusic.pro"
+    },
+    {
+      "id": 2,
+      "productId": "com.offlinemusic.weeklyPro"
+    },
+    {
+      "id": 3,
+      "productId": "com.offlinemusic.lifetime"
+    },
+    {
+      "id": 4,
+      "productId": "com.offlinemusic.onetime"
+    },
+    {
+      "id": 5,
+      "productId": "com.offlinemusic.monthlyPremium"
+    },
+    {
+      "id": 6,
+      "productId": "com.offlinemusic.weeklyPremium"
+    },
+    {
+      "id": 7,
+      "productId": "com.offlinemusic.pro"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:52.192Z"
+}
