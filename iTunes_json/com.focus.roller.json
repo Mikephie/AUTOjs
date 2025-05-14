@@ -1,0 +1,20 @@
+{
+  "name": "Focus Video - Video Compressor",
+  "appId": "1669034660",
+  "bundleId": "com.focus.roller",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.focus.roller.nonconsum.permanentpro"
+    },
+    {
+      "id": 2,
+      "productId": "com.focus.roller.autorenew.monthlypro"
+    },
+    {
+      "id": 3,
+      "productId": "com.focus.roller.autorenew.yearlypro"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:42:54.189Z"
+}
