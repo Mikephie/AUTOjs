@@ -1,0 +1,12 @@
+{
+  "name": "开卷阅读-TXT 阅读&听书",
+  "appId": "1664170766",
+  "bundleId": "com.lyran.SnakeReader",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.lyran.snakescanner.premium18"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:24:04.415Z"
+}
