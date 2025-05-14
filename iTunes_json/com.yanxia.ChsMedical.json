@@ -1,0 +1,20 @@
+{
+  "name": "中医精华-人体穴位针灸中药方剂大全药",
+  "appId": "1571615121",
+  "bundleId": "com.yanxia.ChsMedical",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "VIPUser"
+    },
+    {
+      "id": 2,
+      "productId": "ChsMedicalSubscriptionOneMonth"
+    },
+    {
+      "id": 3,
+      "productId": "ChsMedicalSubscriptionHalfYear"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:24:55.389Z"
+}
