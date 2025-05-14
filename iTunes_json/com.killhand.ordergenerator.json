@@ -1,0 +1,20 @@
+{
+  "name": "订单生成器",
+  "appId": "1573380300",
+  "bundleId": "com.killhand.ordergenerator",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "oder_pay_month"
+    },
+    {
+      "id": 2,
+      "productId": "oder_pay_forever"
+    },
+    {
+      "id": 3,
+      "productId": "oder_pay_year"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:55.234Z"
+}
