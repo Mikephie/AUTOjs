@@ -1,0 +1,20 @@
+{
+  "name": "ColorMax - Aesthetic Palettes",
+  "appId": "1476875328",
+  "bundleId": "com.sixiaobo.xcolor",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "colormax.pro"
+    },
+    {
+      "id": 2,
+      "productId": "max.pro.oneMonth"
+    },
+    {
+      "id": 3,
+      "productId": "max.pro.oneYear"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:48:38.234Z"
+}
