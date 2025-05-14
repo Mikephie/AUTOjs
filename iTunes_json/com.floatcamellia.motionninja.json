@@ -1,0 +1,48 @@
+{
+  "name": "Motion Ninja Video Editor",
+  "appId": "1546795392",
+  "bundleId": "com.floatcamellia.motionninja",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.floatcamellia.motionninja.monthvipwithfreetrial"
+    },
+    {
+      "id": 2,
+      "productId": "com.floatcamellia.motionninja.monthvip"
+    },
+    {
+      "id": 3,
+      "productId": "com.floatcamellia.motionninja.monthly"
+    },
+    {
+      "id": 4,
+      "productId": "com.floatcamellia.motionninja.yearlyvip"
+    },
+    {
+      "id": 5,
+      "productId": "com.floatcamellia.motionninja.removewatermark"
+    },
+    {
+      "id": 6,
+      "productId": "com.floatcamellia.motionninja.forevervip20220629"
+    },
+    {
+      "id": 7,
+      "productId": "com.floatcamellia.motionninja.yearly"
+    },
+    {
+      "id": 8,
+      "productId": "com.floatcamellia.motionninja.onetimepurchase"
+    },
+    {
+      "id": 9,
+      "productId": "com.floatcamellia.motionninja.yearvip"
+    },
+    {
+      "id": 10,
+      "productId": "ZERO"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:55.234Z"
+}
