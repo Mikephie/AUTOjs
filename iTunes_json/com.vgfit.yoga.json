@@ -1,0 +1,40 @@
+{
+  "name": "Yoga - Poses & Classes at Home",
+  "appId": "1122658784",
+  "bundleId": "com.vgfit.yoga",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.vgfit.yoga.special.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.vgfit.yoga.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.vgfit.yoga.yearly"
+    },
+    {
+      "id": 4,
+      "productId": "com.vgfit.yoga.premium"
+    },
+    {
+      "id": 5,
+      "productId": "com.vgfit.yoga.week"
+    },
+    {
+      "id": 6,
+      "productId": "com.vgfit.yoga.monthlylimited"
+    },
+    {
+      "id": 7,
+      "productId": "W"
+    },
+    {
+      "id": 8,
+      "productId": "E"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:03:29.003Z"
+}
