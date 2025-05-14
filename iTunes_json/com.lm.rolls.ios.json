@@ -1,0 +1,52 @@
+{
+  "name": "Film Cam - Vintage Roll Camera",
+  "appId": "1607306777",
+  "bundleId": "com.lm.rolls.ios",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "pro_auto_subscribe_week_ovs_trial"
+    },
+    {
+      "id": 2,
+      "productId": "pro_auto_subscribe_week_ovs"
+    },
+    {
+      "id": 3,
+      "productId": "pro_auto_subscribe_year_ovs"
+    },
+    {
+      "id": 4,
+      "productId": "pro_auto_subscribe_year_ovs_trial"
+    },
+    {
+      "id": 5,
+      "productId": "pro_always_88HKD"
+    },
+    {
+      "id": 6,
+      "productId": "pro_auto_subscribe_quarter_ovs"
+    },
+    {
+      "id": 7,
+      "productId": "pro_auto_subscribe_overseas"
+    },
+    {
+      "id": 8,
+      "productId": "pro_auto_subscribe_quarter_ovs_trial"
+    },
+    {
+      "id": 9,
+      "productId": "pro_auto_subscribe"
+    },
+    {
+      "id": 10,
+      "productId": "pro_auto_subscribe_year_cn"
+    },
+    {
+      "id": 11,
+      "productId": "pro_auto_subscribe_week_cn"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:48:38.233Z"
+}
