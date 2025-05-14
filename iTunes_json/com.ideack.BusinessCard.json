@@ -1,7 +1,7 @@
 {
   "name": "vCard holder",
   "appId": "1477169012",
-  "bundleId": "com.ideack.Business Card",
+  "bundleId": "com.ideack.BusinessCard",
   "subscriptions": [
     {
       "id": 1,
