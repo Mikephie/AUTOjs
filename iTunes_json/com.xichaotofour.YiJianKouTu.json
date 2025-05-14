@@ -1,0 +1,20 @@
+{
+  "name": "Photo Retouch-erase background",
+  "appId": "1585551922",
+  "bundleId": "com.xichaotofour.YiJianKouTu",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "XiChaoYiJianKouTuPlus"
+    },
+    {
+      "id": 2,
+      "productId": "XiChaoYiJianKouTuQuarterlyPlus"
+    },
+    {
+      "id": 3,
+      "productId": "XiChaoYiJianKouTuPro"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:42:54.189Z"
+}
