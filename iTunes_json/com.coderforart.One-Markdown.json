@@ -1,0 +1,20 @@
+{
+  "name": "One Markdown",
+  "appId": "1507139439",
+  "bundleId": "com.coderforart.One-Markdown",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "10011"
+    },
+    {
+      "id": 2,
+      "productId": "10012"
+    },
+    {
+      "id": 3,
+      "productId": "OneMarkdownSubscription2024"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:52.192Z"
+}
