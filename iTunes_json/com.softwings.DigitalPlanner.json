@@ -1,0 +1,32 @@
+{
+  "name": "Digital Planner - Task Journal",
+  "appId": "1632352471",
+  "bundleId": "com.softwings.DigitalPlanner",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.softwings.DigitalPlanner.2months"
+    },
+    {
+      "id": 2,
+      "productId": "com.softwings.DigitalPlanner.1week"
+    },
+    {
+      "id": 3,
+      "productId": "com.softwings.DigitalPlanner.3months"
+    },
+    {
+      "id": 4,
+      "productId": "com.softwings.DigitalPlanner.1month"
+    },
+    {
+      "id": 5,
+      "productId": "com.softwings.DigitalPlanner.1year"
+    },
+    {
+      "id": 6,
+      "productId": "com.softwings.DigitalPlanner.1week"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:24:04.415Z"
+}
