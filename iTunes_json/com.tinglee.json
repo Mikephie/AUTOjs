@@ -1,0 +1,56 @@
+{
+  "name": "Tinglee - Movie TED TV English",
+  "appId": "1486738485",
+  "bundleId": "com.tinglee",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "vip.monthly.tinglee"
+    },
+    {
+      "id": 2,
+      "productId": "vip.quarterly.tinglee"
+    },
+    {
+      "id": 3,
+      "productId": "vip.yearly.tinglee"
+    },
+    {
+      "id": 4,
+      "productId": "vip.forever.tinglee"
+    },
+    {
+      "id": 5,
+      "productId": "vip.3years.tinglee"
+    },
+    {
+      "id": 6,
+      "productId": "vip.onemonth.tinglee"
+    },
+    {
+      "id": 7,
+      "productId": "vip.5year.tinglee"
+    },
+    {
+      "id": 8,
+      "productId": "Donation01ID"
+    },
+    {
+      "id": 9,
+      "productId": "Donation06ID"
+    },
+    {
+      "id": 10,
+      "productId": "Donation05ID"
+    },
+    {
+      "id": 11,
+      "productId": "vip.yearly.tinglee"
+    },
+    {
+      "id": 12,
+      "productId": "vip.quarterly.tinglee"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:26:21.847Z"
+}
