@@ -1,0 +1,16 @@
+{
+  "name": "答案精灵-对作业答案",
+  "appId": "1592424054",
+  "bundleId": "com.SuperElves.Answer",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.SuperElves.Answer.Year"
+    },
+    {
+      "id": 2,
+      "productId": "com.SuperElves.Answer.Forever"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:24:55.389Z"
+}
