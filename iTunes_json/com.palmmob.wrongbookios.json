@@ -1,0 +1,32 @@
+{
+  "name": "错题宝-错题整理打印，试卷还原",
+  "appId": "1581554996",
+  "bundleId": "com.palmmob.wrongbookios",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.palmmob.wrongbookios.forever"
+    },
+    {
+      "id": 2,
+      "productId": "com.palmmob.wrongbookios.year_onsale_v2"
+    },
+    {
+      "id": 3,
+      "productId": "com.palmmob.wrongbookios.month"
+    },
+    {
+      "id": 4,
+      "productId": "com.palmmob.wrongbookios.quarter_double"
+    },
+    {
+      "id": 5,
+      "productId": "com.palmmob.wrongbookios.year_onsale"
+    },
+    {
+      "id": 6,
+      "productId": "com.palmmob.wrongbookios.year"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:03:29.003Z"
+}
