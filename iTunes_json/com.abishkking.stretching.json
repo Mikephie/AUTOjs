@@ -1,0 +1,36 @@
+{
+  "name": "Stretching at Home, Mobility",
+  "appId": "1412615103",
+  "bundleId": "com.abishkking.stretching",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.abishkking.premiumYearStretch"
+    },
+    {
+      "id": 2,
+      "productId": "com.abishkking.premiumMonthStretch"
+    },
+    {
+      "id": 3,
+      "productId": "com.abishkking.discountYearStretch"
+    },
+    {
+      "id": 4,
+      "productId": "com.abishkking.premiumYearStretchB"
+    },
+    {
+      "id": 5,
+      "productId": "com.abishkking.premiumMonthStretchB"
+    },
+    {
+      "id": 6,
+      "productId": "com.abishkking.discountYearStretchB"
+    },
+    {
+      "id": 7,
+      "productId": "com.abishkking.threeMonthStretch"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:56:06.378Z"
+}
