@@ -1,0 +1,20 @@
+{
+  "name": "Manual Camera, Pro DSLR | RAW+",
+  "appId": "1152205153",
+  "bundleId": "com.dynamicappdesign.rawplus",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.dynamicappdesign.rawplus.upgrade"
+    },
+    {
+      "id": 2,
+      "productId": "com.dynamicappdesign.rawplus.yearlysubscription"
+    },
+    {
+      "id": 3,
+      "productId": "com.dynamicappdesign.rawplus.monthlysubscription"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:55.234Z"
+}
