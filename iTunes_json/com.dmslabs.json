@@ -1,0 +1,24 @@
+{
+  "name": "Songsterr Tabs & Chords",
+  "appId": "399211291",
+  "bundleId": "com.dmslabs",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.dmslabs.subscription.oneMonth"
+    },
+    {
+      "id": 2,
+      "productId": "com.songsterr.plus"
+    },
+    {
+      "id": 3,
+      "productId": "com.dmslabs.subscription.oneMonth.WithoutTrial"
+    },
+    {
+      "id": 4,
+      "productId": "com.dmslabs.subscription.oneMonth.WithTrial"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:48:38.234Z"
+}
