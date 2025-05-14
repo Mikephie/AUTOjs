@@ -1,0 +1,20 @@
+{
+  "name": "Morse:Code training to CW guru",
+  "appId": "923315129",
+  "bundleId": "ru.at.Morse-Keyboard",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "ru.at.Morse.unlimited.subscribe.month"
+    },
+    {
+      "id": 2,
+      "productId": "ru.at.Morse.unlimited.subscribe.year"
+    },
+    {
+      "id": 3,
+      "productId": "ru.at.Morse.unlimited.full"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:43:15.237Z"
+}
