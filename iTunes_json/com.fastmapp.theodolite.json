@@ -1,0 +1,20 @@
+{
+  "name": "compass-latitude and longitude",
+  "appId": "1597253813",
+  "bundleId": "com.fastmapp.theodolite",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "theodolite_vip_year"
+    },
+    {
+      "id": 2,
+      "productId": "theodolite_vip_month"
+    },
+    {
+      "id": 3,
+      "productId": "W"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:03:29.003Z"
+}
