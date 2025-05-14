@@ -1,0 +1,16 @@
+{
+  "name": "Pic Collage Maker Perfectlmage",
+  "appId": "464660903",
+  "bundleId": "Focus",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Perfect_Image_VIP_Yearly"
+    },
+    {
+      "id": 2,
+      "productId": "Perfect_Image_VIP_Month"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:59.495Z"
+}
