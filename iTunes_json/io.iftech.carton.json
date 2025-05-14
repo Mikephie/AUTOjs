@@ -1,0 +1,48 @@
+{
+  "name": "Widget Lab - Standby Themes",
+  "appId": "1574611121",
+  "bundleId": "io.iftech.carton",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "widgetlab.subscription.1week.trial"
+    },
+    {
+      "id": 2,
+      "productId": "widgetlab.subscription.1month"
+    },
+    {
+      "id": 3,
+      "productId": "widgetlab.subscription.12month"
+    },
+    {
+      "id": 4,
+      "productId": "widgetlab.subscription.1week"
+    },
+    {
+      "id": 5,
+      "productId": "widgetlab005"
+    },
+    {
+      "id": 6,
+      "productId": "widgetlab001"
+    },
+    {
+      "id": 7,
+      "productId": "widgetlab010"
+    },
+    {
+      "id": 8,
+      "productId": "widgetlab006"
+    },
+    {
+      "id": 9,
+      "productId": "widgetlab.subscription.3month"
+    },
+    {
+      "id": 10,
+      "productId": "widgetlab008"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:41:13.811Z"
+}
