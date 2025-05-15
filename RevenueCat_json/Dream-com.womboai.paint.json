@@ -1,0 +1,210 @@
+{
+  "user_agent": "Dream",
+  "bundle_id": "com.womboai.paint",
+  "data": {
+    "dream_lifetime": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_lifetime"
+    },
+    "dream_lifetime_v3_b_13999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_lifetime_v3_b_13999"
+    },
+    "dream_lifetime_v3_c_19999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_lifetime_v3_c_19999"
+    },
+    "dream_lifetime_v3_d_29999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_lifetime_v3_d_29999"
+    },
+    "dream_lifetime_v3_e_23999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_lifetime_v3_e_23999"
+    },
+    "dream_monthly": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly"
+    },
+    "dream_monthly_a": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_a"
+    },
+    "dream_monthly_gen2_v1_a": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_gen2_v1_a"
+    },
+    "dream_monthly_gen2_v1_b": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_gen2_v1_b"
+    },
+    "dream_monthly_gen2_v1_c": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_gen2_v1_c"
+    },
+    "dream_monthly_gen2_v1_d": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_gen2_v1_d"
+    },
+    "dream_monthly_gen2_v1_e": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_gen2_v1_e"
+    },
+    "dream_monthly_v3_b_699": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_v3_b_699"
+    },
+    "dream_monthly_v3_c_999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_v3_c_999"
+    },
+    "dream_monthly_v3_d_1499": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_v3_d_1499"
+    },
+    "dream_monthly_v3_e_1099": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_monthly_v3_e_1099"
+    },
+    "dream_weekly_gen2_v1_a": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_weekly_gen2_v1_a"
+    },
+    "dream_weekly_gen2_v1_b": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_weekly_gen2_v1_b"
+    },
+    "dream_weekly_gen2_v1_c": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_weekly_gen2_v1_c"
+    },
+    "dream_weekly_gen2_v1_d": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_weekly_gen2_v1_d"
+    },
+    "dream_weekly_gen2_v1_e": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_weekly_gen2_v1_e"
+    },
+    "dream_weekly_jan_2024_699": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_weekly_jan_2024_699"
+    },
+    "dream_yearly": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly"
+    },
+    "dream_yearly_discounted_upsell_feb_2024_1999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_discounted_upsell_feb_2024_1999"
+    },
+    "dream_yearly_gen2_v1_a": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_gen2_v1_a"
+    },
+    "dream_yearly_gen2_v1_b": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_gen2_v1_b"
+    },
+    "dream_yearly_gen2_v1_c": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_gen2_v1_c"
+    },
+    "dream_yearly_gen2_v1_d": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_gen2_v1_d"
+    },
+    "dream_yearly_gen2_v1_e": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_gen2_v1_e"
+    },
+    "dream_yearly_jan_2024_3999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_jan_2024_3999"
+    },
+    "dream_yearly_v3_b_4199": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_v3_b_4199"
+    },
+    "dream_yearly_v3_c_5999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_v3_c_5999"
+    },
+    "dream_yearly_v3_d_8999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_v3_d_8999"
+    },
+    "dream_yearly_v3_e_8999": {
+      "entitlements": [
+        "dreampremium"
+      ],
+      "product_identifier": "dream_yearly_v3_e_8999"
+    }
+  }
+}
