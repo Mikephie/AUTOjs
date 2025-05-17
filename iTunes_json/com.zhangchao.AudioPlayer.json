@@ -5,31 +5,7 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "com.zhangchao.AudioPlayer.subscription.oneYear"
-    },
-    {
-      "id": 2,
       "productId": "om.zhangchao.AudioPlayer.subscription.oneWeek"
-    },
-    {
-      "id": 3,
-      "productId": "om.zhangchao.AudioPlayer.subscription.oneMonth"
-    },
-    {
-      "id": 4,
-      "productId": "com.zhangchao.AudioPlayer.purchaseFullFunction"
-    },
-    {
-      "id": 5,
-      "productId": "om.zhangchao.AudioPlayer.subscription.halfYear"
-    },
-    {
-      "id": 6,
-      "productId": "om.zhangchao.AudioPlayer.subscription.threeMonths"
-    },
-    {
-      "id": 7,
-      "productId": "om.zhangchao.AudioPlayer.subscription.twoMonths"
     }
   ],
   "updatedAt": "2025-05-14T07:42:44.813Z"
