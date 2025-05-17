@@ -1,0 +1,30 @@
+{
+  "user_agent": "WordConnectPuzzle",
+  "bundle_id": "com.games.fun.puzzle.endless.swipe.words.ai",
+  "data": {
+    "wordconnect.1000coins": {
+      "entitlements": [],
+      "product_identifier": "wordconnect.1000coins"
+    },
+    "wordconnect.brilliantbundle": {
+      "entitlements": [],
+      "product_identifier": "wordconnect.brilliantbundle"
+    },
+    "wordconnect.lifetime": {
+      "entitlements": [],
+      "product_identifier": "wordconnect.lifetime"
+    },
+    "wordconnect.megabundle": {
+      "entitlements": [],
+      "product_identifier": "wordconnect.megabundle"
+    },
+    "wordconnect.removeads": {
+      "entitlements": [],
+      "product_identifier": "wordconnect.removeads"
+    },
+    "wordconnect.superbundle": {
+      "entitlements": [],
+      "product_identifier": "wordconnect.superbundle"
+    }
+  }
+}

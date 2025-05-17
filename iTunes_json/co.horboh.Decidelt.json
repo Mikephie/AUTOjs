@@ -1,0 +1,32 @@
+{
+  "name": "Spin the Wheel: Decision Buddy",
+  "appId": "6670761036",
+  "bundleId": "co.horboh.Decidelt",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "co.horboh.decisionbuddy.lifetime"
+    },
+    {
+      "id": 2,
+      "productId": "co.horboh.decisionbuddy.yearly.twelve"
+    },
+    {
+      "id": 3,
+      "productId": "co.horboh.decisionbuddy.monthly.three"
+    },
+    {
+      "id": 4,
+      "productId": "co.horboh.decisionbuddy.weekly"
+    },
+    {
+      "id": 5,
+      "productId": "co.horboh.decisionbuddy.monthly.two"
+    },
+    {
+      "id": 6,
+      "productId": "co.horboh.decisionbuddy.yearly.fifteen"
+    }
+  ],
+  "updatedAt": "2025-05-16T23:40:54.142Z"
+}

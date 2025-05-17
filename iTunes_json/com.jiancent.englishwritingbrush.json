@@ -1,0 +1,20 @@
+{
+  "name": "Calligraphy Master: Cursive",
+  "appId": "1598691036",
+  "bundleId": "com.jiancent.englishwritingbrush",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.goodplay.calligraphymaster.lifetime"
+    },
+    {
+      "id": 2,
+      "productId": "com.goodplay.calligraphymaster.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.goodplay.calligraphymaster.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-16T23:40:54.142Z"
+}
