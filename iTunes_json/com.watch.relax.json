@@ -5,14 +5,10 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "relaxweek"
-    },
-    {
-      "id": 2,
       "productId": "relaxyear_ebp"
     },
     {
-      "id": 3,
+      "id": 2,
       "productId": "relaxyear"
     }
   ],
