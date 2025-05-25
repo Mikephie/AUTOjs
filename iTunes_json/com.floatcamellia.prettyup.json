@@ -5,7 +5,7 @@
   "subscriptions": [
     {
       "id": 1,
-      "productId": "com.floatcamellia.prettyup.monthlysubscription"
+      "productId": "com.floatcamellia.prettyup.onetimepurchase"
     },
     {
       "id": 2,
@@ -29,19 +29,11 @@
     },
     {
       "id": 7,
-      "productId": "com.floatcamellia.prettyup.onetimepurchase"
+      "productId": "com.floatcamellia.prettyup.restorationpurchase"
     },
     {
       "id": 8,
       "productId": "com.floatcamellia.prettyup.prettyupaicoinpurchase"
-    },
-    {
-      "id": 9,
-      "productId": "com.floatcamellia.prettyup.restorationpurchase"
-    },
-    {
-      "id": 10,
-      "productId": "com.floatcamellia.prettyup.freetrial yearlysubscription"
     }
   ],
   "updatedAt": "2025-05-10T06:29:03.001Z"
