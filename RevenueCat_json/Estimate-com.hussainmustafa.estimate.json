@@ -1,0 +1,30 @@
+{
+  "user_agent": "Estimate",
+  "bundle_id": "com.hussainmustafa.estimate",
+  "data": {
+    "estimate_premium_lifetime": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "estimate_premium_lifetime"
+    },
+    "estimate_premium_monthly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "estimate_premium_monthly"
+    },
+    "estimate_premium_weekly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "estimate_premium_weekly"
+    },
+    "estimate_premium_yearly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "estimate_premium_yearly"
+    }
+  }
+}
