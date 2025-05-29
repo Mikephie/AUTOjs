@@ -1,0 +1,12 @@
+{
+  "name": "视频转live-批量视频转实况",
+  "appId": "6744908188",
+  "bundleId": "VideoBianyin.VideoBianyin",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "vb18"
+    }
+  ],
+  "updatedAt": "2025-05-29T12:53:37.878Z"
+}
