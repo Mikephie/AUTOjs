@@ -1430,6 +1430,16 @@
       ],
       "product_identifier": "test"
     },
+    "year_sale_25_tier_c_int": {
+      "entitlements": [],
+      "product_identifier": "year_sale_25_tier_c_int"
+    },
+    "year_sale_30_tier_c_int": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "year_sale_30_tier_c_int"
+    },
     "yearly_tier_0_free_trial_3_int": {
       "entitlements": [
         "premium"
