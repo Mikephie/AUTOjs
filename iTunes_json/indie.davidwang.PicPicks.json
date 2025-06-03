@@ -1,0 +1,12 @@
+{
+  "name": "PicPicks - Al Photo Organizer",
+  "appId": "6477322295",
+  "bundleId": "indie.davidwang.PicPicks",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "indie.davidwang.PicPicks.membership.lifetime"
+    }
+  ],
+  "updatedAt": "2025-06-03T12:11:26.105Z"
+}
