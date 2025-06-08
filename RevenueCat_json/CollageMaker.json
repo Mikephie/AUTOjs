@@ -1,0 +1,42 @@
+{
+  "user_agent": "CollageMaker",
+  "bundle_id": null,
+  "data": {
+    "com.livintis.collagemakerplus.monthly.1": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.livintis.collagemakerplus.monthly.1"
+    },
+    "com.livintis.collagemakerplus.monthly.2": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.livintis.collagemakerplus.monthly.2"
+    },
+    "com.livintis.collagemakerplus.weekly.1": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.livintis.collagemakerplus.weekly.1"
+    },
+    "com.livintis.collagemakerplus.weekly.2": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.livintis.collagemakerplus.weekly.2"
+    },
+    "com.livintis.collagemakerplus.yearly.1": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.livintis.collagemakerplus.yearly.1"
+    },
+    "com.livintis.collagemakerplus.yearly.2": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.livintis.collagemakerplus.yearly.2"
+    }
+  }
+}
