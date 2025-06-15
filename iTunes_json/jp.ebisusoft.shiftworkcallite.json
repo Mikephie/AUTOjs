@@ -1,0 +1,32 @@
+{
+  "name": "Shift Work Calendar",
+  "appId": "381672587",
+  "bundleId": "jp.ebisusoft.shiftworkcallite",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "shiftworkcal_premium_30_days_auto"
+    },
+    {
+      "id": 2,
+      "productId": "shiftworkcal_premium_365_days_auto"
+    },
+    {
+      "id": 3,
+      "productId": "shiftworkcal_no_ad_1_year_auto"
+    },
+    {
+      "id": 4,
+      "productId": "shiftworkcal_premium_180_days_auto"
+    },
+    {
+      "id": 5,
+      "productId": "shiftworkcal_no_ad_30_days_auto"
+    },
+    {
+      "id": 6,
+      "productId": "shiftworkcal_no_ad_180_days_auto"
+    }
+  ],
+  "updatedAt": "2025-06-15T11:17:52.823Z"
+}
