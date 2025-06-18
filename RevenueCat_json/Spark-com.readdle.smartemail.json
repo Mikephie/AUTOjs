@@ -6,6 +6,18 @@
       "entitlements": [],
       "product_identifier": "com.readdle.smartemail.test.premium.year"
     },
+    "spark_120_1y_1w0": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "spark_120_1y_1w0"
+    },
+    "spark_12_1m_1w0": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "spark_12_1m_1w0"
+    },
     "spark_5999_1y_1w0": {
       "entitlements": [
         "premium"
