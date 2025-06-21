@@ -1,0 +1,24 @@
+{
+  "user_agent": "ai_colorizer",
+  "bundle_id": "com.solo.aicolorizer",
+  "data": {
+    "annual_colorizer": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "annual_colorizer"
+    },
+    "colorizer_lifetime": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "colorizer_lifetime"
+    },
+    "weekly_colorizer": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "weekly_colorizer"
+    }
+  }
+}
