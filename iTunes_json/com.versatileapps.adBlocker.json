@@ -1,0 +1,28 @@
+{
+  "name": "No Ads - AdBlocker",
+  "appId": "6740397660",
+  "bundleId": "com.versatileapps.adBlocker",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.va.adBlocker.lifeTimefree"
+    },
+    {
+      "id": 2,
+      "productId": "com.va.adBlocker.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.va.adBlocker.monthly"
+    },
+    {
+      "id": 4,
+      "productId": "com.va.adBlocker.yearlypromo"
+    },
+    {
+      "id": 5,
+      "productId": "com.va.adBlocker.lifeTime"
+    }
+  ],
+  "updatedAt": "2025-06-22T08:42:05.567Z"
+}
