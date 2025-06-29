@@ -1,0 +1,42 @@
+{
+  "user_agent": "StayOff",
+  "bundle_id": "com.shane.indie.StayOff",
+  "data": {
+    "so_annual_0999": {
+      "entitlements": [
+        "Plus"
+      ],
+      "product_identifier": "so_annual_0999"
+    },
+    "so_lt_0000": {
+      "entitlements": [
+        "Plus"
+      ],
+      "product_identifier": "so_lt_0000"
+    },
+    "so_lt_0649": {
+      "entitlements": [
+        "Plus"
+      ],
+      "product_identifier": "so_lt_0649"
+    },
+    "so_lt_0899": {
+      "entitlements": [
+        "Plus"
+      ],
+      "product_identifier": "so_lt_0899"
+    },
+    "so_lt_1299": {
+      "entitlements": [
+        "Plus"
+      ],
+      "product_identifier": "so_lt_1299"
+    },
+    "st_monthly_0199": {
+      "entitlements": [
+        "Plus"
+      ],
+      "product_identifier": "st_monthly_0199"
+    }
+  }
+}
