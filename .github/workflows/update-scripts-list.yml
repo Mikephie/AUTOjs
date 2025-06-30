@@ -14,7 +14,6 @@ jobs:
 update-scripts-list:
 runs-on: ubuntu-latest
 
-```
 steps:
   - name: Checkout repository
     uses: actions/checkout@v3
@@ -64,4 +63,3 @@ steps:
         git commit -m "Update scripts list" || echo "No changes to commit"
         git push origin gh-pages
       fi
-```
