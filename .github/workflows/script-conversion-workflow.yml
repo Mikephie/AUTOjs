@@ -29,7 +29,6 @@ steps:
 with:
 fetch-depth: 0
 
-```
   - uses: actions/setup-node@v3
     with:
       node-version: '18'
@@ -89,4 +88,3 @@ fetch-depth: 0
       
       # 推送更改
       git push || echo "推送失败，可能需要手动解决冲突"
-```
