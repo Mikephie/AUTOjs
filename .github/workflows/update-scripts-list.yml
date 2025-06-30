@@ -1,0 +1,110 @@
+name: Update Scripts List
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'quantumultx/**'
+      - 'loon/**'
+      - 'surge/**'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  update-scripts-list:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4  # Updated to v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  # Updated to v4
+        with:
+          node-version: '18'  # Updated to more recent LTS version
+          
+      - name: Generate scripts list
+        run: |
+          mkdir -p scripts
+          node scripts/generate-script-list.js
+          
+      - name: Check if docs directory exists
+        id: check-docs
+        run: |
+          if [ -d "docs" ]; then
+            echo "use_docs=true" >> $GITHUB_OUTPUT
+            echo "Using docs directory for GitHub Pages"
+          else
+            echo "use_docs=false" >> $GITHUB_OUTPUT
+            echo "Using gh-pages branch for GitHub Pages"
+          fi
+          
+      - name: Deploy to docs directory (if exists)
+        if: steps.check-docs.outputs.use_docs == 'true'
+        run: |
+          mkdir -p docs
+          cp scripts.json docs/
+          
+      - name: Deploy to gh-pages branch (if no docs directory)
+        if: steps.check-docs.outputs.use_docs == 'false'
+        run: |
+          # Configure git
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Check if gh-pages branch exists remotely
+          if git ls-remote --heads origin gh-pages | grep -q gh-pages; then
+            echo "gh-pages branch exists, checking it out"
+            git fetch origin gh-pages
+            git checkout gh-pages
+            
+            # Configure pull strategy to handle divergent branches
+            git config pull.rebase false
+            
+            # Try to pull latest changes, handle conflicts gracefully
+            if ! git pull origin gh-pages; then
+              echo "Pull failed, likely due to divergent branches. Resetting to remote state."
+              git reset --hard origin/gh-pages
+            fi
+          else
+            echo "Creating new gh-pages branch"
+            git checkout --orphan gh-pages
+            git rm -rf . || true  # Remove all files from the new orphan branch
+          fi
+          
+          # Copy the generated file
+          cp scripts.json . || echo "scripts.json not found in root, checking if it exists..."
+          
+          # Verify file exists before proceeding
+          if [ ! -f "scripts.json" ]; then
+            echo "Error: scripts.json not found!"
+            exit 1
+          fi
+          
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          if [ "${{ steps.check-docs.outputs.use_docs }}" == "true" ]; then
+            # Using docs directory - push to main branch
+            git add docs/scripts.json
+            if git diff --staged --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "Update scripts list [skip ci]"
+              git push origin main
+            fi
+          else
+            # Using gh-pages branch
+            git add scripts.json
+            if git diff --staged --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "Update scripts list [skip ci]"
+              git push origin gh-pages
+            fi
+          fi
