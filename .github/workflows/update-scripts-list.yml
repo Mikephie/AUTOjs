@@ -1,65 +1,67 @@
 name: Update Scripts List
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'quantumultx/**'
-      - 'loon/**'
-      - 'surge/**'
-  workflow_dispatch:  # 允许手动触发
+push:
+branches:
+- main
+paths:
+- ‘quantumultx/**’
+- ’loon/**’
+- ‘surge/**’
+workflow_dispatch:  # 允许手动触发
 
 jobs:
-  update-scripts-list:
-    runs-on: ubuntu-latest
+update-scripts-list:
+runs-on: ubuntu-latest
+
+```
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
     
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          
-      - name: Determine GitHub Pages path
-        id: pages-path
-        run: |
-          if [ -d "docs" ]; then
-            echo "GITHUB_PAGES_PATH=docs" >> $GITHUB_ENV
-          else
-            echo "GITHUB_PAGES_PATH=." >> $GITHUB_ENV
-          fi
-          
-      - name: Generate scripts list
-        run: |
-          mkdir -p scripts
-          node scripts/generate-script-list.js
-          
-      - name: Setup GitHub Pages branch
-        run: |
-          if [ -d "docs" ]; then
-            mkdir -p docs
-            cp scripts.json docs/
-          else
-            git checkout -b gh-pages || git checkout gh-pages
-            git pull origin gh-pages || true
-            # 保留现有的 index.html 文件
-            cp scripts.json .
-          fi
-          
-      - name: Commit and push changes
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          if [ -d "docs" ]; then
-            git add docs/scripts.json
-            git commit -m "Update scripts list" || echo "No changes to commit"
-            git push origin main
-          else
-            git add scripts.json
-            git commit -m "Update scripts list" || echo "No changes to commit"
-            git push origin gh-pages
-          fi
+  - name: Setup Node.js
+    uses: actions/setup-node@v3
+    with:
+      node-version: '16'
+      
+  - name: Determine GitHub Pages path
+    id: pages-path
+    run: |
+      if [ -d "docs" ]; then
+        echo "GITHUB_PAGES_PATH=docs" >> $GITHUB_ENV
+      else
+        echo "GITHUB_PAGES_PATH=." >> $GITHUB_ENV
+      fi
+      
+  - name: Generate scripts list
+    run: |
+      mkdir -p scripts
+      node scripts/generate-script-list.js
+      
+  - name: Setup GitHub Pages branch
+    run: |
+      if [ -d "docs" ]; then
+        mkdir -p docs
+        cp scripts.json docs/
+      else
+        git checkout -b gh-pages || git checkout gh-pages
+        git pull origin gh-pages || true
+        # 保留现有的 index.html 文件
+        cp scripts.json .
+      fi
+      
+  - name: Commit and push changes
+    run: |
+      git config --global user.name 'github-actions[bot]'
+      git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      
+      if [ -d "docs" ]; then
+        git add docs/scripts.json
+        git commit -m "Update scripts list" || echo "No changes to commit"
+        git push origin main
+      else
+        git add scripts.json
+        git commit -m "Update scripts list" || echo "No changes to commit"
+        git push origin gh-pages
+      fi
+```
