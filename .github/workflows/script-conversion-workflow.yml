@@ -13,10 +13,10 @@ on:
           - surge
   push:
     paths:
-      - 'quantumultx/**'
+      - 'input/**'
   pull_request:
     paths:
-      - 'quantumultx/**'
+      - 'input/**'
   schedule:
     - cron: '0 0 * * 0'
 jobs:
@@ -35,7 +35,7 @@ jobs:
           
       - name: 准备环境
         run: |
-          mkdir -p quantumultx
+          mkdir -p input
           mkdir -p loon
           mkdir -p surge
           npm install @actions/core
@@ -43,7 +43,7 @@ jobs:
       - name: 运行转换
         run: node index.js
         env:
-          INPUT_DIR: 'quantumultx'
+          INPUT_DIR: 'input'
           OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
           
       - name: 打包转换结果

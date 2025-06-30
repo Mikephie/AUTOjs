@@ -1,0 +1,24 @@
+{
+  "name": "IPTV Smart Player: Smarters",
+  "appId": "6746213493",
+  "bundleId": "com.iptvflixana",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "iptv_flixana_lifetime_sub"
+    },
+    {
+      "id": 2,
+      "productId": "iptv_flixana_yearly_sub"
+    },
+    {
+      "id": 3,
+      "productId": "iptv_flixana_monthly_sub"
+    },
+    {
+      "id": 4,
+      "productId": "iptv_flixana_weekly_sub"
+    }
+  ],
+  "updatedAt": "2025-06-30T11:00:11.898Z"
+}

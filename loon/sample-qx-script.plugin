@@ -1,0 +1,26 @@
+#!name=样例QX脚本
+#!desc=用于测试转换功能的样例脚本
+#!category=示例
+#!author=Converter
+
+[Rule]
+# 规则设置
+DOMAIN,ad.example.com,REJECT
+DOMAIN-SUFFIX,stats.example.com,REJECT
+DOMAIN-KEYWORD,tracker,REJECT
+ip-cidr,10.10.10.10/24,DIRECT
+USER-AGENT,Example App*,DIRECT
+
+[Rewrite]
+# 广告拦截
+^https?:\/\/api\.example\.com\/ads - REJECT
+^https?:\/\/api\.example\.com\/banner - REJECT
+
+
+[Script]
+# 脚本处理
+http-response ^https?:\/\/api\.example\.com\/user\/profile script-path=https://example.com/scripts/profile.js, requires-body=true, timeout=60, tag=profile
+http-request ^https?:\/\/api\.example\.com\/check_in script-path=https://example.com/scripts/checkin.js, requires-body=false, timeout=60, tag=checkin
+
+[MITM]
+hostname = api.example.com, *.example.net, stats.example.org
