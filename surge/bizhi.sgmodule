@@ -2,6 +2,6 @@
 #!desc=图像壁纸
 #!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
-#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/bizhi.png
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/bizhi.js
 [MITM]
 hostname = %APPEND% leancloud.emotionwp.com
