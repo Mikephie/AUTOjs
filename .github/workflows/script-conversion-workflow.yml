@@ -1,4 +1,5 @@
 name: Script Conversion Workflow
+
 on:
   workflow_dispatch:
     inputs:
@@ -20,183 +21,56 @@ on:
   schedule:
     - cron: '0 0 * * 0'
 
+permissions:
+  contents: write
+  pull-requests: read
+
 jobs:
   convert:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4  # 升级到 v4
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Setup Node.js
-        uses: actions/setup-node@v4  # 升级到 v4
+
+      - uses: actions/setup-node@v3
         with:
           node-version: '18'
-          
+
       - name: 准备环境
         run: |
           mkdir -p quantumultx
           mkdir -p loon
           mkdir -p surge
-          npm install @actions/core
-          
-      - name: 配置 Git
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git config --global pull.rebase false  # 设置合并策略
-          
-      - name: 检查远程变更
-        run: |
-          echo "检查远程仓库状态..."
-          git fetch origin
-          
-          # 检查是否有远程变更
-          if [ "$(git rev-list HEAD..origin/main --count)" -gt 0 ]; then
-            echo "发现远程变更，正在同步..."
-            git pull origin main --no-rebase
-          else
-            echo "没有远程变更"
-          fi
-          
+
       - name: 运行转换
         run: node index.js
         env:
           INPUT_DIR: 'quantumultx'
-          OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
-          
-      - name: 检查转换结果
-        id: check-results
-        run: |
-          loon_files=0
-          surge_files=0
-          
-          if [ -d "loon" ]; then
-            loon_files=$(find loon -type f 2>/dev/null | wc -l)
-          fi
-          
-          if [ -d "surge" ]; then
-            surge_files=$(find surge -type f 2>/dev/null | wc -l)
-          fi
-          
-          echo "loon_files=$loon_files" >> $GITHUB_OUTPUT
-          echo "surge_files=$surge_files" >> $GITHUB_OUTPUT
-          
-          echo "Loon 文件数量: $loon_files"
-          echo "Surge 文件数量: $surge_files"
-          
-          # 检查是否有变更需要提交
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "检测到文件变更:"
-            git status --short
-          else
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "没有检测到文件变更"
-          fi
-          
+          OUTPUT_FORMAT: ${{ github.event.inputs.output_format != '' && github.event.inputs.output_format || 'loon,surge' }}
+
       - name: 打包转换结果
-        if: steps.check-results.outputs.has_changes == 'true'
         run: |
-          # 为每种格式创建单独的压缩包
-          if [ "${{ steps.check-results.outputs.loon_files }}" -gt 0 ]; then
+          if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
             tar -czvf loon-scripts.tar.gz loon/
-            echo "✅ Loon脚本已打包为 loon-scripts.tar.gz"
-          else
-            echo "⏭️ 跳过 Loon 打包 - 没有文件"
           fi
-          
-          if [ "${{ steps.check-results.outputs.surge_files }}" -gt 0 ]; then
+
+          if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
             tar -czvf surge-scripts.tar.gz surge/
-            echo "✅ Surge脚本已打包为 surge-scripts.tar.gz"
-          else
-            echo "⏭️ 跳过 Surge 打包 - 没有文件"
           fi
-          
+
       - name: 提交并推送结果
-        if: steps.check-results.outputs.has_changes == 'true'
         run: |
-          echo "准备提交变更..."
-          
-          # 添加所有变更的文件
-          git add loon/ surge/ 2>/dev/null || echo "没有 loon/ 或 surge/ 目录变更"
-          
-          # 添加压缩包文件（如果存在）
-          if [ -f "loon-scripts.tar.gz" ]; then
-            git add loon-scripts.tar.gz
-            echo "添加了 loon-scripts.tar.gz"
-          fi
-          
-          if [ -f "surge-scripts.tar.gz" ]; then
-            git add surge-scripts.tar.gz
-            echo "添加了 surge-scripts.tar.gz"
-          fi
-          
-          # 生成提交信息
-          commit_msg="🤖 自动转换脚本"
-          
-          if [ "${{ steps.check-results.outputs.loon_files }}" -gt 0 ]; then
-            commit_msg="$commit_msg - Loon: ${{ steps.check-results.outputs.loon_files }} 文件"
-          fi
-          
-          if [ "${{ steps.check-results.outputs.surge_files }}" -gt 0 ]; then
-            commit_msg="$commit_msg - Surge: ${{ steps.check-results.outputs.surge_files }} 文件"
-          fi
-          
-          commit_msg="$commit_msg [skip ci]"
-          
-          # 尝试提交
-          if git commit -m "$commit_msg"; then
-            echo "✅ 提交成功: $commit_msg"
-            
-            # 推送前再次检查远程变更
-            git fetch origin
-            
-            if [ "$(git rev-list HEAD..origin/main --count)" -gt 0 ]; then
-              echo "发现新的远程变更，正在合并..."
-              git pull origin main --no-rebase
-            fi
-            
-            # 推送变更
-            if git push origin main; then
-              echo "✅ 推送成功"
-            else
-              echo "❌ 推送失败，可能需要手动解决冲突"
-              exit 1
-            fi
-          else
-            echo "ℹ️ 没有变更需要提交"
-          fi
-          
-      - name: 输出工作流摘要
-        if: always()
-        run: |
-          echo "## 🔄 脚本转换工作流摘要" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**转换格式**: ${{ github.event.inputs.output_format || 'loon,surge' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Loon 文件**: ${{ steps.check-results.outputs.loon_files || '0' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Surge 文件**: ${{ steps.check-results.outputs.surge_files || '0' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**是否有变更**: ${{ steps.check-results.outputs.has_changes || 'false' }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ steps.check-results.outputs.has_changes }}" == "true" ]; then
-            echo "✅ **状态**: 转换完成并已提交" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "ℹ️ **状态**: 没有检测到变更" >> $GITHUB_STEP_SUMMARY
-          fi
-          
-      - name: 上传构件（可选）
-        if: steps.check-results.outputs.has_changes == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: converted-scripts
-          path: |
-            loon-scripts.tar.gz
-            surge-scripts.tar.gz
-          retention-days: 30
-          if-no-files-found: ignore
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+
+          git add -A
+          git commit -m "准备自动转换脚本" || echo "没有需要提交的更改"
+
+          git add loon/ surge/ || echo "没有 loon/ 或 surge/ 目录"
+
+          [ -f "loon-scripts.tar.gz" ] && git add loon-scripts.tar.gz
+          [ -f "surge-scripts.tar.gz" ] && git add surge-scripts.tar.gz
+
+          git commit -m "自动转换脚本" || echo "没有需要提交的更改"
+          git push || echo "推送失败，可能需要手动解决冲突"
