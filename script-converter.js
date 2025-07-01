@@ -1,10 +1,10 @@
 /**
- * 优化版脚本转换器模块 - 浏览器兼容版 v1.3
- * 最后更新: 2025-04-12
- * 更新内容: 增强错误处理与调试功能，修复多个[rewrite_local]块解析问题
+ * 优化版脚本转换器模块 - 浏览器兼容版 v1.2
+ * 最后更新: 2025-04-10
+ * 更新内容: 修复规则格式问题，将reject策略转为大写
  */
 
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 /**
@@ -22,31 +22,7 @@ function extractScriptContent(content) {
   // 如果不是被注释包裹，则直接返回，但去掉多余的空行
   return content.replace(/\n{3,}/g, "\n\n").trim();
 }
-```
 
-```javascript
-/**
- * 获取内容中所有指定类型的节块
- * @param {string} content 完整内容
- * @param {string} sectionName 节块名称
- * @returns {Array} 所有匹配的节块内容
- */
-function getAllSections(content, sectionName) {
-  const results = [];
-  const regex = new RegExp(`\\[${sectionName}\\]([\\s\\S]*?)(?=\\[|$)`, 'gi');
-  
-  let match;
-  while ((match = regex.exec(content)) !== null) {
-    if (match[1] && match[1].trim()) {
-      results.push(match[1]);
-    }
-  }
-  
-  return results;
-}
-```
-
-```javascript
 /**
  * 解析脚本内容
  * @param {string} content 脚本内容
@@ -72,6 +48,13 @@ function parseScript(content) {
     "MITM": content.match(/\[MITM\]([\s\S]*?)(?=\[|$|$)/i)
   };
   
+  // 处理QX格式作为备选
+  const qxSections = {
+    "filter_local": content.match(/\[filter_local\]([\s\S]*?)(?=\[|$)/i),
+    "rewrite_local": content.match(/\[rewrite_local\]([\s\S]*?)(?=\[|$)/i),
+    "mitm": content.match(/\[mitm\]([\s\S]*?)(?=\[|$|$)/i)
+  };
+  
   // 解析Loon格式
   if (loonSections.Rule && loonSections.Rule[1]) {
     parseSectionWithComments(loonSections.Rule[1], result.rules);
@@ -85,44 +68,22 @@ function parseScript(content) {
     parseSectionWithComments(loonSections.Script[1], result.scripts);
   }
   
-  // 处理QX格式 - 使用增强的检测逻辑
-  // 查找所有 [rewrite_local] 块
-  const rewriteLocalBlocks = getAllSections(content, 'rewrite_local');
-  if (rewriteLocalBlocks.length > 0) {
-    for (const block of rewriteLocalBlocks) {
-      parseQXRewrites(block, result);
-    }
-  } else {
-    // 备用方法：查找单个 [rewrite_local] 块
-    const singleRewriteBlock = content.match(/\[rewrite_local\]([\s\S]*?)(?=\[|$)/i);
-    if (singleRewriteBlock && singleRewriteBlock[1]) {
-      parseQXRewrites(singleRewriteBlock[1], result);
-    }
+  // 处理QX格式 - 如果Loon格式为空
+  if (result.rules.length === 0 && qxSections.filter_local && qxSections.filter_local[1]) {
+    parseQXRules(qxSections.filter_local[1], result);
   }
   
-  // 查找所有 [filter_local] 块
-  const filterLocalBlocks = getAllSections(content, 'filter_local');
-  if (filterLocalBlocks.length > 0) {
-    for (const block of filterLocalBlocks) {
-      parseQXRules(block, result);
-    }
-  } else if (result.rules.length === 0) {
-    // 备用方法：查找单个 [filter_local] 块
-    const singleFilterBlock = content.match(/\[filter_local\]([\s\S]*?)(?=\[|$)/i);
-    if (singleFilterBlock && singleFilterBlock[1]) {
-      parseQXRules(singleFilterBlock[1], result);
-    }
+  if (result.rewrites.length === 0 && result.scripts.length === 0 && 
+      qxSections.rewrite_local && qxSections.rewrite_local[1]) {
+    parseQXRewrites(qxSections.rewrite_local[1], result);
   }
   
   // 提取hostname
-  const qxMitm = content.match(/\[mitm\]([\s\S]*?)(?=\[|$|$)/i);
-  extractHostname(loonSections.MITM, qxMitm, result);
+  extractHostname(loonSections.MITM, qxSections.mitm, result);
   
   return result;
 }
-```
 
-```javascript
 /**
  * 提取元数据
  * @param {string} content 脚本内容
@@ -183,9 +144,7 @@ function extractMetadata(content, result) {
     }
   }
 }
-```
 
-```javascript
 /**
  * 提取hostname
  * @param {Array} loonMITM Loon MITM匹配结果
@@ -211,9 +170,7 @@ function extractHostname(loonMITM, qxMITM, result) {
     }
   }
 }
-```
 
-```javascript
 /**
  * 解析带注释的节点
  * @param {string} sectionContent 节点内容
@@ -242,9 +199,7 @@ function parseSectionWithComments(sectionContent, targetArray) {
     }
   }
 }
-```
 
-```javascript
 /**
  * 解析QX规则
  * @param {string} sectionContent 节点内容
@@ -287,9 +242,7 @@ function parseQXRules(sectionContent, result) {
     }
   }
 }
-```
 
-```javascript
 /**
  * 解析QX重写
  * @param {string} sectionContent 节点内容
@@ -357,9 +310,7 @@ function parseQXRewrites(sectionContent, result) {
     }
   }
 }
-```
 
-```javascript
 /**
  * 转换为Surge格式
  * @param {Object} scriptInfo 脚本信息
@@ -462,7 +413,9 @@ function convertToSurge(input) {
       }
       
       // 添加 status-code=200 参数
+      console.log('处理 reject 规则:', pattern, rejectType);
       config += `\n${pattern} data-type=text data="${data}" status-code=200`;
+      console.log('生成的配置行:', `${pattern} data-type=text data="${data}" status-code=200`);
     }
     
     config += "\n";
@@ -554,9 +507,7 @@ function convertToSurge(input) {
   
   return config;
 }
-```
 
-```javascript
 /**
  * 转换为Loon格式
  * @param {Object} scriptInfo 脚本信息
@@ -677,9 +628,7 @@ function convertToLoon(input) {
   
   return config;
 }
-```
 
-```javascript
 /**
  * 检测脚本类型
  * @param {string} content 脚本内容
@@ -710,9 +659,7 @@ function detectScriptType(content) {
   // 如果无法确定，返回unknown
   return 'unknown';
 }
-```
 
-```javascript
 /**
  * 转换脚本格式
  * @param {string} content 原始脚本内容
@@ -720,10 +667,6 @@ function detectScriptType(content) {
  * @returns {string} 转换后的脚本内容
  */
 function convertScript(content, targetFormat) {
-  // 预处理：清理BOM和规范化换行符
-  content = content.replace(/^\uFEFF/, '');
-  content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-  
   // 提取脚本内容
   const extractedContent = extractScriptContent(content);
   
@@ -745,13 +688,11 @@ function convertScript(content, targetFormat) {
   return JSON.stringify(scriptInfo, null, 2);
 }
 
-// 导出模块函数
 module.exports = {
   extractScriptContent,
   parseScript,
   convertToLoon,
   convertToSurge,
   convertScript,
-  detectScriptType,
-  getAllSections
+  detectScriptType
 };

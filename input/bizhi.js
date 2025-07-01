@@ -8,7 +8,7 @@
 [rewrite_local]
 ^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_[a-z]+ url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/bizhi.js
 
-[MITM]
+[mitm]
 hostname = leancloud.emotionwp.com
 
 */
