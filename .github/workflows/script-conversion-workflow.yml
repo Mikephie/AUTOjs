@@ -1,198 +1,333 @@
 name: Script Conversion Workflow
 on:
-  workflow_dispatch:
-    inputs:
-      output_format:
-        description: '转换输出格式'
-        required: true
-        default: 'loon,surge'
-        type: choice
-        options:
-          - loon,surge
-          - loon
-          - surge
-      process_qx_urls:
-        description: '处理QuantumultX URL (将单独运行)'
-        required: false
-        default: true
-        type: boolean
-      old_base_url:
-        description: 'QX URL - 旧的基础URL'
-        required: false
-        default: 'https://raw.githubusercontent.com/Mikephie/Script/main/qx'
-      new_base_url:
-        description: 'QX URL - 新的基础URL'
-        required: false
-        default: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
-      use_local_paths:
-        description: 'QX URL - 使用本地路径'
-        required: false
-        default: true
-        type: boolean
-  push:
-    paths:
-      - 'input/**'
-  pull_request:
-    paths:
-      - 'input/**'
-  schedule:
-    - cron: '0 0 * * 0'
+workflow_dispatch:
+inputs:
+output_format:
+description: ‘转换输出格式’
+required: true
+default: ‘loon,surge’
+type: choice
+options:
+- loon,surge,quantumultx
+- loon,surge
+- loon
+- surge
+- quantumultx
+process_qx_urls:
+description: ‘处理QuantumultX URL (将单独运行)’
+required: false
+default: true
+type: boolean
+old_base_url:
+description: ‘QX URL - 旧的基础URL’
+required: false
+default: ‘https://raw.githubusercontent.com/Mikephie/Script/main/qx’
+new_base_url:
+description: ‘QX URL - 新的基础URL’
+required: false
+default: ‘https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx’
+use_local_paths:
+description: ‘QX URL - 使用本地路径’
+required: false
+default: true
+type: boolean
+debug:
+description: ‘启用调试模式’
+required: false
+default: false
+type: boolean
+push:
+paths:
+- ‘input/**’
+pull_request:
+paths:
+- ’input/**’
+schedule:
+- cron: ‘0 0 * * 0’
 jobs:
-  # 主要脚本转换任务 - 保持原样
-  convert:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          
-      - name: 准备环境
-        run: |
-          mkdir -p input
-          mkdir -p loon
-          mkdir -p surge
-          npm install @actions/core
-          
-      - name: 运行转换
-        run: node index.js
-        env:
-          INPUT_DIR: 'input'
-          OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
-          
-      - name: 打包转换结果
-        run: |
-          # 为每种格式创建单独的压缩包
-          if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
-            tar -czvf loon-scripts.tar.gz loon/
-            echo "Loon脚本已打包为 loon-scripts.tar.gz"
-          fi
-          
-          if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
-            tar -czvf surge-scripts.tar.gz surge/
-            echo "Surge脚本已打包为 surge-scripts.tar.gz"
-          fi
-          
-      - name: 提交并推送结果
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          
-          # 设置Git合并策略
-          git config pull.rebase false
-          
-          # 暂存所有更改
-          git add -A
-          
-          # 尝试提交当前更改
-          git commit -m "准备自动转换脚本" || echo "没有需要提交的更改"
-          
-          # 拉取远程更改(使用merge策略)
-          git pull --no-edit origin ${{ github.ref_name }} || echo "拉取失败，继续执行"
-          
-          # 再次暂存变更的文件并提交
-          git add loon/ surge/ || echo "没有目录需要添加"
-          
-          if [ -f "loon-scripts.tar.gz" ]; then
-            git add loon-scripts.tar.gz
-          fi
-          
-          if [ -f "surge-scripts.tar.gz" ]; then
-            git add surge-scripts.tar.gz
-          fi
-          
-          git commit -m "自动转换脚本" || echo "没有需要提交的更改"
-          
-          # 推送更改
-          git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
 
-  # 完全独立的QuantumultX URL处理任务
-  process_qx_urls:
-    needs: convert
-    if: github.event.inputs.process_qx_urls == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          
-      - name: 准备环境
-        run: |
-          mkdir -p input
-          mkdir -p quantumultx
-          
-      - name: 处理QuantumultX URL
-        run: |
-          echo "开始处理QuantumultX URL..."
-          
-          # 检查qx-process.js文件是否存在
-          if [ ! -f "qx-process.js" ]; then
-            echo "Error: qx-process.js 文件不存在"
-            exit 1
-          fi
-          
-          # 检查qx-url-processor.js文件是否存在
-          if [ ! -f "qx-url-processor.js" ]; then
-            echo "Error: qx-url-processor.js 文件不存在"
-            exit 1
-          fi
-          
-          # 检查input目录是否存在且包含文件
-          if [ -d "input" ] && [ "$(ls -A input 2>/dev/null)" ]; then
-            # 运行URL处理工具
-            node qx-process.js input/ \
-              --old-url=${{ github.event.inputs.old_base_url || 'https://raw.githubusercontent.com/Mikephie/Script/main/qx' }} \
-              --new-url=${{ github.event.inputs.new_base_url || 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx' }} \
-              ${{ github.event.inputs.use_local_paths != 'false' && '--local' || '--no-local' }} \
-              --output=quantumultx
-            
-            echo "QuantumultX URL处理完成"
-          else
-            echo "input目录为空或不存在，跳过处理"
-            exit 0
-          fi
-          
-      - name: 打包QuantumultX脚本
-        run: |
-          if [ -d "quantumultx" ] && [ "$(find quantumultx -type f | wc -l)" -gt 0 ]; then
-            tar -czvf quantumultx-scripts.tar.gz quantumultx/
-            echo "QuantumultX脚本已打包为 quantumultx-scripts.tar.gz"
-          else
-            echo "quantumultx目录为空或不存在，跳过打包"
-            exit 0
-          fi
-          
-      - name: 提交并推送结果
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          
-          # 设置Git合并策略
-          git config pull.rebase false
-          
-          # 暂存所有更改
-          git add quantumultx/ || echo "quantumultx目录不存在"
-          
-          if [ -f "quantumultx-scripts.tar.gz" ]; then
-            git add quantumultx-scripts.tar.gz
-          fi
-          
-          # 尝试提交
-          git commit -m "处理QuantumultX URL" || echo "没有需要提交的更改"
-          
-          # 拉取远程更改
-          git pull --no-edit origin ${{ github.ref_name }} || echo "拉取失败，继续执行"
-          
-          # 推送更改
-          git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
+# 主要脚本转换任务 - 保持原样
+
+convert:
+runs-on: ubuntu-latest
+permissions:
+contents: write
+steps:
+- uses: actions/checkout@v2
+with:
+fetch-depth: 0
+
+```
+  - uses: actions/setup-node@v3
+    with:
+      node-version: '18'
+      
+  - name: 准备环境
+    run: |
+      mkdir -p input
+      mkdir -p loon
+      mkdir -p surge
+      mkdir -p quantumultx
+      npm install @actions/core
+      
+  - name: 运行转换
+    run: node index.js
+    env:
+      INPUT_DIR: 'input'
+      OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
+      
+  - name: 打包转换结果
+    run: |
+      # 为每种格式创建单独的压缩包
+      if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
+        tar -czvf loon-scripts.tar.gz loon/
+        echo "Loon脚本已打包为 loon-scripts.tar.gz"
+      fi
+      
+      if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
+        tar -czvf surge-scripts.tar.gz surge/
+        echo "Surge脚本已打包为 surge-scripts.tar.gz"
+      fi
+      
+  - name: 提交并推送结果
+    run: |
+      git config --local user.email "actions@github.com"
+      git config --local user.name "GitHub Actions"
+      
+      # 设置Git合并策略
+      git config pull.rebase false
+      
+      # 暂存所有更改
+      git add -A
+      
+      # 尝试提交当前更改
+      git commit -m "准备自动转换脚本" || echo "没有需要提交的更改"
+      
+      # 拉取远程更改(使用merge策略)
+      git pull --no-edit origin ${{ github.ref_name }} || echo "拉取失败，继续执行"
+      
+      # 再次暂存变更的文件并提交
+      git add loon/ surge/ || echo "没有目录需要添加"
+      
+      if [ -f "loon-scripts.tar.gz" ]; then
+        git add loon-scripts.tar.gz
+      fi
+      
+      if [ -f "surge-scripts.tar.gz" ]; then
+        git add surge-scripts.tar.gz
+      fi
+      
+      git commit -m "自动转换脚本" || echo "没有需要提交的更改"
+      
+      # 推送更改
+      git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
+```
+
+# 完全独立的QuantumultX URL处理任务
+
+process_qx_urls:
+needs: convert
+if: github.event.inputs.process_qx_urls == ‘true’ || github.event_name == ‘push’ || github.event_name == ‘schedule’
+runs-on: ubuntu-latest
+permissions:
+contents: write
+steps:
+- uses: actions/checkout@v2
+with:
+fetch-depth: 0
+
+```
+  - uses: actions/setup-node@v3
+    with:
+      node-version: '18'
+      
+  - name: 准备环境
+    run: |
+      mkdir -p input
+      mkdir -p quantumultx
+      npm install node-fetch  # 如果qx-process.js使用了node-fetch
+      
+  - name: 处理QuantumultX URL
+    run: |
+      echo "开始处理QuantumultX URL..."
+      
+      # 检查qx-process.js文件是否存在
+      if [ ! -f "qx-process.js" ]; then
+        echo "Error: qx-process.js 文件不存在"
+        exit 1
+      fi
+      
+      # 检查qx-url-processor.js文件是否存在
+      if [ ! -f "qx-url-processor.js" ]; then
+        echo "Error: qx-url-processor.js 文件不存在"
+        exit 1
+      fi
+      
+      # 检查input目录是否存在且包含文件
+      if [ -d "input" ] && [ "$(ls -A input 2>/dev/null)" ]; then
+        # 运行URL处理工具
+        node qx-process.js input/ \
+          --old-url=${{ github.event.inputs.old_base_url || 'https://raw.githubusercontent.com/Mikephie/Script/main/qx' }} \
+          --new-url=${{ github.event.inputs.new_base_url || 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx' }} \
+          ${{ github.event.inputs.use_local_paths != 'false' && '--local' || '--no-local' }} \
+          --output=quantumultx \
+          ${{ github.event.inputs.debug == 'true' && '--debug' || '' }}
+        
+        echo "QuantumultX URL处理完成"
+      else
+        echo "input目录为空或不存在，跳过处理"
+        exit 0
+      fi
+      
+  - name: 打包QuantumultX脚本
+    run: |
+      if [ -d "quantumultx" ] && [ "$(find quantumultx -type f | wc -l)" -gt 0 ]; then
+        tar -czvf quantumultx-scripts.tar.gz quantumultx/
+        echo "QuantumultX脚本已打包为 quantumultx-scripts.tar.gz"
+      else
+        echo "quantumultx目录为空或不存在，跳过打包"
+        exit 0
+      fi
+      
+  - name: 提交并推送结果
+    run: |
+      git config --local user.email "actions@github.com"
+      git config --local user.name "GitHub Actions"
+      
+      # 设置Git合并策略
+      git config pull.rebase false
+      
+      # 暂存所有更改
+      git add quantumultx/ || echo "quantumultx目录不存在"
+      
+      if [ -f "quantumultx-scripts.tar.gz" ]; then
+        git add quantumultx-scripts.tar.gz
+      fi
+      
+      # 尝试提交
+      git commit -m "处理QuantumultX URL" || echo "没有需要提交的更改"
+      
+      # 拉取远程更改
+      git pull --no-edit origin ${{ github.ref_name }} || echo "拉取失败，继续执行"
+      
+      # 推送更改
+      git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
+      
+  - name: 更新网页版本信息 (如果在gh-pages分支)
+    if: github.ref == 'refs/heads/gh-pages'
+    run: |
+      echo "当前在 gh-pages 分支，更新页面内容"
+      
+      mkdir -p docs
+      cp -r quantumultx/* docs/ 2>/dev/null || echo "没有QuantumultX脚本可复制"
+      
+      git add docs/ || echo "docs目录不存在"
+      git commit -m "更新GitHub Pages" || echo "没有更改需要提交"
+      git push origin ${{ github.ref_name }} || echo "推送失败"
+      
+  - name: 准备合并到 gh-pages 分支
+    if: github.ref != 'refs/heads/gh-pages'
+    run: |
+      echo "将脚本发布到 GitHub Pages"
+      
+      # 创建docs目录（如果不存在）
+      mkdir -p docs
+      
+      # 复制脚本到docs目录
+      cp -r quantumultx/* docs/ 2>/dev/null || echo "没有QuantumultX脚本可复制"
+      
+      # 创建索引文件（如果不存在）
+      if [ ! -f "docs/index.html" ]; then
+        cat > docs/index.html <<EOF
+        <!DOCTYPE html>
+        <html lang="zh-CN">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>脚本仓库</title>
+          <style>
+            body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+            h1 { color: #333; }
+            .script-list { margin-top: 20px; }
+            .script-item { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+            .script-name { font-weight: bold; }
+            .script-desc { color: #666; margin-top: 5px; }
+            .script-link { display: inline-block; margin-top: 5px; color: #0366d6; text-decoration: none; }
+            .script-link:hover { text-decoration: underline; }
+            .updated { color: #888; font-size: 0.8em; margin-top: 10px; }
+          </style>
+        </head>
+        <body>
+          <h1>脚本仓库</h1>
+          <p>这里收集了各种格式的脚本文件</p>
+          <div class="script-list">
+            <h2>可用脚本</h2>
+            <div id="scripts"></div>
+          </div>
+          <p class="updated">最后更新: $(date)</p>
+          <script>
+            // 简单脚本列表生成器
+            document.addEventListener('DOMContentLoaded', function() {
+              const scriptsDiv = document.getElementById('scripts');
+              
+              // 获取所有.js和.conf文件
+              fetch('/')
+                .then(response => response.text())
+                .then(html => {
+                  const parser = new DOMParser();
+                  const doc = parser.parseFromString(html, 'text/html');
+                  const links = Array.from(doc.querySelectorAll('a'));
+                  
+                  const scriptLinks = links.filter(link => {
+                    const href = link.getAttribute('href');
+                    return href && (href.endsWith('.js') || href.endsWith('.conf') || 
+                           href.endsWith('.plugin') || href.endsWith('.sgmodule'));
+                  });
+                  
+                  if (scriptLinks.length === 0) {
+                    scriptsDiv.innerHTML = '<p>暂无可用脚本</p>';
+                    return;
+                  }
+                  
+                  scriptLinks.forEach(link => {
+                    const name = link.textContent;
+                    const href = link.getAttribute('href');
+                    
+                    const div = document.createElement('div');
+                    div.className = 'script-item';
+                    div.innerHTML = \`
+                      <div class="script-name">\${name}</div>
+                      <a class="script-link" href="\${href}" download>下载</a>
+                    \`;
+                    
+                    scriptsDiv.appendChild(div);
+                  });
+                })
+                .catch(error => {
+                  scriptsDiv.innerHTML = '<p>加载脚本列表失败</p>';
+                  console.error('Error:', error);
+                });
+            });
+          </script>
+        </body>
+        </html>
+        EOF
+      fi
+      
+      # 添加并提交
+      git add docs/
+      git commit -m "更新GitHub Pages内容" || echo "没有更改需要提交"
+      
+      # 切换到gh-pages分支
+      git checkout -b gh-pages-temp
+      
+      # 拉取远程gh-pages分支并合并（使用merge策略）
+      git config pull.rebase false
+      git pull -X ours --no-edit origin gh-pages || echo "拉取gh-pages失败，继续执行"
+      
+      # 推送到gh-pages分支
+      git push -f origin gh-pages-temp:gh-pages || echo "推送到gh-pages失败"
+      
+      # 返回原分支
+      git checkout ${{ github.ref_name }}
+```
