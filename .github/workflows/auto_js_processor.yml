@@ -12,12 +12,12 @@ on:
         description: '处理所有文件(包括非JS文件)'
         required: false
         default: 'false'
-  
+
   push:  # 当有推送时
     paths:
       - '**.js'  # 只关注 .js 文件
-      - 'input/**'
-  
+      - 'input/**'  # 只关注input目录的文件
+
   schedule:  # 定期运行
     - cron: '0 3 * * *'  # 每天凌晨3点
 
@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      
+
       - name: 设置参数
         run: |
           # 如果是手动触发，使用手动设置的参数
@@ -56,25 +56,24 @@ jobs:
         run: |
           echo "查找和复制 JS 脚本文件..."
           
-          # 找出所有可能是脚本文件的 JS 文件
-          find . -name "*.js" -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./quantumultx/*" > js_files.txt
+          # 只从input目录复制JS文件
+          find input -name "*.js" -not -path "./node_modules/*" -not -path "./.git/*" > js_files.txt
           
           if [ ! -s js_files.txt ]; then
-            echo "没有找到任何 JS 文件"
-            exit 0
+            echo "input目录中没有找到任何 JS 文件"
+          else
+            echo "找到以下 JS 文件:"
+            cat js_files.txt
+            
+            # 复制所有找到的 JS 文件到 quantumultx 目录
+            while read js_file; do
+              filename=$(basename "$js_file")
+              echo "复制: $js_file -> quantumultx/$filename"
+              cp "$js_file" "quantumultx/$filename"
+            done < js_files.txt
+            
+            echo "JS 文件复制完成"
           fi
-          
-          echo "找到以下 JS 文件:"
-          cat js_files.txt
-          
-          # 复制所有 JS 文件到 quantumultx 目录
-          while read js_file; do
-            filename=$(basename "$js_file")
-            echo "复制: $js_file -> quantumultx/$filename"
-            cp "$js_file" "quantumultx/$filename"
-          done < js_files.txt
-          
-          echo "JS 文件复制完成"
       
       - name: 查找配置文件
         run: |
@@ -83,22 +82,11 @@ jobs:
           # 清空配置文件列表
           > config_files.txt
           
-          # 查找可能包含脚本引用的文件
-          if [ "$PROCESS_ALL" = "true" ]; then
-            # 查找所有可能的配置文件
-            find . -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./quantumultx/*" > config_files.txt
-          else
-            # 只查找输入目录中的配置文件
-            find input -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) > config_files.txt
-            
-            # 如果没有找到，尝试查找根目录中的特定文件
-            if [ ! -s config_files.txt ]; then
-              find . -maxdepth 1 -type f \( -name "*.conf" -o -name "*.txt" \) >> config_files.txt
-            fi
-          fi
+          # 只查找input目录中的配置文件
+          find input -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) > config_files.txt
           
           if [ ! -s config_files.txt ]; then
-            echo "没有找到任何配置文件"
+            echo "input目录中没有找到任何配置文件"
           else
             echo "找到以下可能的配置文件:"
             cat config_files.txt
