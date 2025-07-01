@@ -1,0 +1,172 @@
+name: 自动JS文件处理 (Input → Quantumultx)
+
+# 触发条件: 手动触发、推送到input目录、定期运行
+on:
+  workflow_dispatch:  # 手动触发
+    inputs:
+      process_configs:
+        description: '处理配置文件中的URL引用'
+        required: false
+        default: true
+        type: boolean
+      remote_base_url:
+        description: '远程基础URL'
+        required: false
+        default: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
+  
+  push:  # 当有推送到input目录时
+    paths:
+      - 'input/**'
+  
+  schedule:  # 定期运行 (每天凌晨3点)
+    - cron: '0 3 * * *'
+
+# 环境变量
+env:
+  REMOTE_BASE_URL: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
+  PROCESS_CONFIGS: 'true'
+
+# 任务
+jobs:
+  process_js_files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: 设置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: 设置环境变量
+        run: |
+          # 如果是手动触发，使用手动设置的参数
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "REMOTE_BASE_URL=${{ github.event.inputs.remote_base_url }}" >> $GITHUB_ENV
+            echo "PROCESS_CONFIGS=${{ github.event.inputs.process_configs }}" >> $GITHUB_ENV
+          fi
+          
+          echo "使用以下参数:"
+          echo "远程基础URL: $REMOTE_BASE_URL"
+          echo "处理配置文件: $PROCESS_CONFIGS"
+      
+      # 复制 JS 文件
+      - name: 复制 JS 文件从 input 到 quantumultx
+        run: |
+          echo "开始复制 JS 文件..."
+          
+          # 确保目录存在
+          mkdir -p input quantumultx
+          
+          # 查找所有 JS 文件
+          find input -name "*.js" > js_files.txt
+          
+          if [ ! -s js_files.txt ]; then
+            echo "input 目录中没有找到 JS 文件"
+          else
+            echo "找到以下 JS 文件:"
+            cat js_files.txt
+            
+            # 复制所有 JS 文件到 quantumultx 目录
+            while read js_file; do
+              filename=$(basename "$js_file")
+              echo "复制: $js_file -> quantumultx/$filename"
+              cp "$js_file" "quantumultx/$filename"
+            done < js_files.txt
+            
+            echo "JS 文件复制完成"
+          fi
+      
+      # 如果需要，处理配置文件中的 URL 引用
+      - name: 处理配置文件中的 URL 引用
+        if: ${{ env.PROCESS_CONFIGS == 'true' }}
+        run: |
+          echo "开始处理配置文件..."
+          
+          # 查找所有配置文件 (.conf 和 .txt)
+          find input -type f \( -name "*.conf" -o -name "*.txt" \) > config_files.txt
+          
+          if [ ! -s config_files.txt ]; then
+            echo "input 目录中没有找到配置文件"
+          else
+            echo "找到以下配置文件:"
+            cat config_files.txt
+            
+            # 处理每个配置文件
+            while read config_file; do
+              filename=$(basename "$config_file")
+              output_file="quantumultx/$filename"
+              
+              echo "处理配置文件: $config_file -> $output_file"
+              
+              # 复制文件
+              cp "$config_file" "$output_file"
+              
+              # 查找配置文件中的所有 JS 文件引用
+              js_refs=$(grep -o "script-[^[:space:]]*-body[[:space:]]\+[^[:space:]]\+" "$output_file" || echo "")
+              
+              if [ -n "$js_refs" ]; then
+                echo "找到以下脚本引用:"
+                echo "$js_refs"
+                
+                # 对于每个找到的引用
+                echo "$js_refs" | while read -r ref; do
+                  # 分离前缀和路径
+                  prefix=$(echo "$ref" | grep -o "script-[^[:space:]]*-body[[:space:]]\+")
+                  path=$(echo "$ref" | sed "s|$prefix||")
+                  
+                  # 提取脚本文件名
+                  js_name=$(basename "$path")
+                  
+                  # 构建新的远程URL引用
+                  new_ref="$prefix$REMOTE_BASE_URL/$js_name"
+                  
+                  echo "替换: $ref -> $new_ref"
+                  
+                  # 替换文件中的引用
+                  sed -i "s|$ref|$new_ref|g" "$output_file"
+                done
+                
+                echo "配置文件已更新"
+              else
+                echo "配置文件中没有找到脚本引用"
+              fi
+            done < config_files.txt
+          fi
+      
+      - name: 显示处理结果
+        run: |
+          echo "===== 处理结果 ====="
+          
+          echo "quantumultx 目录内容:"
+          ls -la quantumultx/
+          
+          # 检查脚本引用
+          if [ "$PROCESS_CONFIGS" = "true" ]; then
+            echo "脚本引用:"
+            grep -r "script-" quantumultx/ || echo "未找到脚本引用"
+          fi
+      
+      - name: 提交更改
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          
+          # 添加更改的文件
+          git add quantumultx/
+          
+          # 提交更改
+          git commit -m "自动处理: 复制JS文件并更新URL引用" || echo "没有更改需要提交"
+          
+          # 推送更改
+          git push || echo "推送失败，可能需要先拉取更改"
+          
+          # 如果推送失败，尝试拉取并再次推送
+          if [ $? -ne 0 ]; then
+            echo "尝试拉取更改并重新推送..."
+            git pull --rebase
+            git push
+          fi
