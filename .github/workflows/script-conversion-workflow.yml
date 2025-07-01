@@ -1,149 +1,90 @@
 name: Script Conversion Workflow
 on:
-workflow_dispatch:
-inputs:
-output_format:
-description: ‘转换输出格式’
-required: true
-default: ‘loon,surge’
-type: choice
-options:
-- loon,surge,quantumultx
-- loon,surge
-- loon
-- surge
-- quantumultx
-old_base_url:
-description: ‘旧的基础URL’
-required: false
-default: ‘https://raw.githubusercontent.com/Mikephie/Script/main/qx’
-new_base_url:
-description: ‘新的基础URL’
-required: false
-default: ‘https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx’
-use_local_paths:
-description: ‘使用本地路径替换URL’
-required: false
-default: ‘true’
-type: boolean
-debug:
-description: ‘启用调试模式’
-required: false
-default: ‘false’
-type: boolean
-push:
-paths:
-- ‘input/**’
-pull_request:
-paths:
-- ’input/**’
-schedule:
-- cron: ‘0 0 * * 0’
+  workflow_dispatch:
+    inputs:
+      output_format:
+        description: '转换输出格式'
+        required: true
+        default: 'loon,surge'
+        type: choice
+        options:
+          - loon,surge
+          - loon
+          - surge
+  push:
+    paths:
+      - 'input/**'
+  pull_request:
+    paths:
+      - 'input/**'
+  schedule:
+    - cron: '0 0 * * 0'
 jobs:
-convert:
-runs-on: ubuntu-latest
-permissions:
-contents: write
-steps:
-- uses: actions/checkout@v2
-with:
-fetch-depth: 0
-
-```
-  - uses: actions/setup-node@v3
-    with:
-      node-version: '18'
-      
-  - name: 准备环境
-    run: |
-      mkdir -p input
-      mkdir -p loon
-      mkdir -p surge
-      mkdir -p quantumultx
-      npm install @actions/core
-      
-  - name: 预处理 QuantumultX 脚本
-    if: contains(github.event.inputs.output_format, 'quantumultx') || github.event.inputs.output_format == ''
-    run: |
-      echo "开始预处理 QuantumultX 脚本..."
-      
-      # 如果输入目录存在且包含文件
-      if [ -d "input" ] && [ "$(ls -A input 2>/dev/null)" ]; then
-        # 运行预处理工具
-        node qx-process.js input/ \
-          --old-url=${{ github.event.inputs.old_base_url || 'https://raw.githubusercontent.com/Mikephie/Script/main/qx' }} \
-          --new-url=${{ github.event.inputs.new_base_url || 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx' }} \
-          ${{ github.event.inputs.use_local_paths != 'false' && '--local' || '--no-local' }} \
-          --output=quantumultx \
-          ${{ github.event.inputs.debug == 'true' && '--debug' || '' }}
-        
-        echo "QuantumultX 脚本预处理完成"
-      else
-        echo "输入目录为空或不存在，跳过预处理"
-      fi
-      
-  - name: 运行脚本转换
-    run: node index.js
-    env:
-      INPUT_DIR: 'input'
-      OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
-      OLD_BASE_URL: ${{ github.event.inputs.old_base_url || 'https://raw.githubusercontent.com/Mikephie/Script/main/qx' }}
-      NEW_BASE_URL: ${{ github.event.inputs.new_base_url || 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx' }}
-      USE_LOCAL_PATHS: ${{ github.event.inputs.use_local_paths || 'true' }}
-      DEBUG: ${{ github.event.inputs.debug || 'false' }}
-      
-  - name: 打包转换结果
-    run: |
-      # 为每种格式创建单独的压缩包
-      if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
-        tar -czvf loon-scripts.tar.gz loon/
-        echo "Loon脚本已打包为 loon-scripts.tar.gz"
-      fi
-      
-      if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
-        tar -czvf surge-scripts.tar.gz surge/
-        echo "Surge脚本已打包为 surge-scripts.tar.gz"
-      fi
-      
-      if [ -d "quantumultx" ] && [ "$(find quantumultx -type f | wc -l)" -gt 0 ]; then
-        tar -czvf quantumultx-scripts.tar.gz quantumultx/
-        echo "QuantumultX脚本已打包为 quantumultx-scripts.tar.gz"
-      fi
-      
-  - name: 提交并推送结果
-    run: |
-      git config --local user.email "actions@github.com"
-      git config --local user.name "GitHub Actions"
-      
-      # 设置Git合并策略
-      git config pull.rebase false
-      
-      # 暂存所有更改
-      git add -A
-      
-      # 尝试提交当前更改
-      git commit -m "准备自动转换脚本" || echo "没有需要提交的更改"
-      
-      # 拉取远程更改(使用merge策略)
-      git pull --no-edit origin ${{ github.ref_name }} || echo "拉取失败，继续执行"
-      
-      # 再次暂存变更的文件并提交
-      git add loon/ surge/ quantumultx/ || echo "没有目录需要添加"
-      
-      if [ -f "loon-scripts.tar.gz" ]; then
-        git add loon-scripts.tar.gz
-      fi
-      
-      if [ -f "surge-scripts.tar.gz" ]; then
-        git add surge-scripts.tar.gz
-      fi
-      
-      if [ -f "quantumultx-scripts.tar.gz" ]; then
-        git add quantumultx-scripts.tar.gz
-      fi
-      
-      git commit -m "自动转换脚本" || echo "没有需要提交的更改"
-      
-      # 推送更改
-      git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
-```
+  convert:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: 准备环境
+        run: |
+          mkdir -p input
+          mkdir -p loon
+          mkdir -p surge
+          npm install @actions/core
+          
+      - name: 运行转换
+        run: node index.js
+        env:
+          INPUT_DIR: 'input'
+          OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
+          
+      - name: 打包转换结果
+        run: |
+          # 为每种格式创建单独的压缩包
+          if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
+            tar -czvf loon-scripts.tar.gz loon/
+            echo "Loon脚本已打包为 loon-scripts.tar.gz"
+          fi
+          
+          if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
+            tar -czvf surge-scripts.tar.gz surge/
+            echo "Surge脚本已打包为 surge-scripts.tar.gz"
+          fi
+          
+      - name: 提交并推送结果
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          
+          # 暂存所有更改
+          git add -A
+          
+          # 尝试提交当前更改
+          git commit -m "准备自动转换脚本" || echo "没有需要提交的更改"
+          
+          # 拉取远程更改(不使用rebase)
+          git pull --no-rebase || echo "拉取失败，继续执行"
+          
+          # 再次暂存变更的文件并提交
+          git add loon/ surge/ || echo "没有 loon/ 或 surge/ 目录"
+          
+          if [ -f "loon-scripts.tar.gz" ]; then
+            git add loon-scripts.tar.gz
+          fi
+          
+          if [ -f "surge-scripts.tar.gz" ]; then
+            git add surge-scripts.tar.gz
+          fi
+          
+          git commit -m "自动转换脚本" || echo "没有需要提交的更改"
+          
+          # 推送更改
+          git push || echo "推送失败，可能需要手动解决冲突"
