@@ -1,30 +1,25 @@
-name: 自动JS文件处理 (Input → Quantumultx)
+name: JS文件处理专用工作流
 
-# 触发条件: 手动触发、推送到input目录、定期运行
+# 触发条件
 on:
   workflow_dispatch:  # 手动触发
     inputs:
-      process_configs:
-        description: '处理配置文件中的URL引用'
-        required: false
-        default: true
-        type: boolean
       remote_base_url:
         description: '远程基础URL'
         required: false
         default: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
   
-  push:  # 当有推送到input目录时
+  push:  # 当有推送时
     paths:
+      - '**.js'  # 只关注 .js 文件
       - 'input/**'
   
-  schedule:  # 定期运行 (每天凌晨3点)
-    - cron: '0 3 * * *'
+  schedule:  # 定期运行
+    - cron: '0 3 * * *'  # 每天凌晨3点
 
 # 环境变量
 env:
   REMOTE_BASE_URL: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
-  PROCESS_CONFIGS: 'true'
 
 # 任务
 jobs:
@@ -36,65 +31,77 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: 设置 Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      
-      - name: 设置环境变量
+      - name: 设置参数
         run: |
           # 如果是手动触发，使用手动设置的参数
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "REMOTE_BASE_URL=${{ github.event.inputs.remote_base_url }}" >> $GITHUB_ENV
-            echo "PROCESS_CONFIGS=${{ github.event.inputs.process_configs }}" >> $GITHUB_ENV
           fi
           
           echo "使用以下参数:"
           echo "远程基础URL: $REMOTE_BASE_URL"
-          echo "处理配置文件: $PROCESS_CONFIGS"
       
-      # 复制 JS 文件
-      - name: 复制 JS 文件从 input 到 quantumultx
+      - name: 准备目录
         run: |
-          echo "开始复制 JS 文件..."
+          mkdir -p quantumultx input
+      
+      - name: 查找所有 JS 文件
+        run: |
+          echo "查找所有 JS 文件..."
           
-          # 确保目录存在
-          mkdir -p input quantumultx
+          # 查找所有 JS 文件 (不包括 node_modules 和 .git 目录)
+          find . -name "*.js" -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./quantumultx/*" > all_js_files.txt
           
-          # 查找所有 JS 文件
-          find input -name "*.js" > js_files.txt
+          if [ ! -s all_js_files.txt ]; then
+            echo "没有找到任何 JS 文件"
+            exit 0
+          fi
           
-          if [ ! -s js_files.txt ]; then
-            echo "input 目录中没有找到 JS 文件"
+          echo "找到以下 JS 文件:"
+          cat all_js_files.txt
+          
+          # 将 JS 文件分类
+          > js_scripts.txt  # 脚本文件
+          > js_configs.txt  # 配置文件
+          
+          # 检查每个 JS 文件的内容和名称
+          while read js_file; do
+            # 检查文件是否包含脚本标识符或特定结构
+            if grep -q "\[rewrite_local\]" "$js_file" || grep -q "script-" "$js_file"; then
+              # 这可能是配置文件
+              echo "$js_file" >> js_configs.txt
+              echo "识别为配置文件: $js_file"
+            else
+              # 默认作为脚本文件处理
+              echo "$js_file" >> js_scripts.txt
+              echo "识别为脚本文件: $js_file"
+            fi
+          done < all_js_files.txt
+      
+      - name: 复制脚本文件
+        run: |
+          echo "复制脚本文件到 quantumultx 目录..."
+          
+          if [ ! -s js_scripts.txt ]; then
+            echo "没有找到脚本文件"
           else
-            echo "找到以下 JS 文件:"
-            cat js_files.txt
-            
-            # 复制所有 JS 文件到 quantumultx 目录
+            # 复制脚本文件到 quantumultx 目录
             while read js_file; do
               filename=$(basename "$js_file")
               echo "复制: $js_file -> quantumultx/$filename"
               cp "$js_file" "quantumultx/$filename"
-            done < js_files.txt
+            done < js_scripts.txt
             
-            echo "JS 文件复制完成"
+            echo "脚本文件复制完成"
           fi
       
-      # 如果需要，处理配置文件中的 URL 引用
-      - name: 处理配置文件中的 URL 引用
-        if: ${{ env.PROCESS_CONFIGS == 'true' }}
+      - name: 处理配置文件
         run: |
-          echo "开始处理配置文件..."
+          echo "处理配置文件..."
           
-          # 查找所有配置文件 (.conf 和 .txt)
-          find input -type f \( -name "*.conf" -o -name "*.txt" \) > config_files.txt
-          
-          if [ ! -s config_files.txt ]; then
-            echo "input 目录中没有找到配置文件"
+          if [ ! -s js_configs.txt ]; then
+            echo "没有找到配置文件"
           else
-            echo "找到以下配置文件:"
-            cat config_files.txt
-            
             # 处理每个配置文件
             while read config_file; do
               filename=$(basename "$config_file")
@@ -105,36 +112,41 @@ jobs:
               # 复制文件
               cp "$config_file" "$output_file"
               
-              # 查找配置文件中的所有 JS 文件引用
-              js_refs=$(grep -o "script-[^[:space:]]*-body[[:space:]]\+[^[:space:]]\+" "$output_file" || echo "")
-              
-              if [ -n "$js_refs" ]; then
-                echo "找到以下脚本引用:"
-                echo "$js_refs"
+              # 查找文件中的脚本引用
+              if grep -q "script-.*-body" "$output_file"; then
+                echo "找到脚本引用，进行处理..."
                 
-                # 对于每个找到的引用
-                echo "$js_refs" | while read -r ref; do
-                  # 分离前缀和路径
-                  prefix=$(echo "$ref" | grep -o "script-[^[:space:]]*-body[[:space:]]\+")
-                  path=$(echo "$ref" | sed "s|$prefix||")
-                  
-                  # 提取脚本文件名
-                  js_name=$(basename "$path")
-                  
-                  # 构建新的远程URL引用
-                  new_ref="$prefix$REMOTE_BASE_URL/$js_name"
-                  
-                  echo "替换: $ref -> $new_ref"
-                  
-                  # 替换文件中的引用
-                  sed -i "s|$ref|$new_ref|g" "$output_file"
-                done
+                # 处理脚本引用行
+                grep -n "script-.*-body" "$output_file" > script_lines.txt
                 
-                echo "配置文件已更新"
+                while read line_info; do
+                  line_num=$(echo "$line_info" | cut -d':' -f1)
+                  line_content=$(echo "$line_info" | cut -d':' -f2-)
+                  
+                  echo "处理第 $line_num 行: $line_content"
+                  
+                  # 尝试提取脚本路径和文件名
+                  script_path=$(echo "$line_content" | grep -o "script-[^[:space:]]*-body[[:space:]]\+[^[:space:]]\+" | sed "s|script-[^[:space:]]*-body[[:space:]]\+||")
+                  
+                  if [ -n "$script_path" ]; then
+                    # 提取脚本文件名
+                    script_name=$(basename "$script_path")
+                    
+                    # 构建新的远程URL
+                    remote_url="$REMOTE_BASE_URL/$script_name"
+                    
+                    echo "替换: $script_path -> $remote_url"
+                    
+                    # 替换脚本路径
+                    sed -i "${line_num}s|$script_path|$remote_url|" "$output_file"
+                  fi
+                done < script_lines.txt
+                
+                echo "配置文件处理完成"
               else
-                echo "配置文件中没有找到脚本引用"
+                echo "文件不包含脚本引用"
               fi
-            done < config_files.txt
+            done < js_configs.txt
           fi
       
       - name: 显示处理结果
@@ -144,11 +156,73 @@ jobs:
           echo "quantumultx 目录内容:"
           ls -la quantumultx/
           
-          # 检查脚本引用
-          if [ "$PROCESS_CONFIGS" = "true" ]; then
-            echo "脚本引用:"
-            grep -r "script-" quantumultx/ || echo "未找到脚本引用"
+          echo "脚本引用:"
+          grep -r "script-.*-body" quantumultx/ || echo "未找到脚本引用"
+          
+          echo "远程URL引用:"
+          grep -r "$REMOTE_BASE_URL" quantumultx/ || echo "未找到远程URL引用"
+      
+      - name: 处理常见的配置格式
+        run: |
+          echo "处理常见的配置格式..."
+          
+          # 查找 quantumultx 目录中所有包含 script-response-body 的文件
+          grep -l "script-response-body" quantumultx/* > response_files.txt || true
+          
+          if [ -s response_files.txt ]; then
+            echo "找到以下包含 script-response-body 的文件:"
+            cat response_files.txt
+            
+            # 处理每个文件
+            while read file; do
+              echo "处理文件: $file"
+              
+              # 直接替换所有本地路径为远程URL
+              sed -i 's|\(script-response-body \)\./quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
+              sed -i 's|\(script-response-body \)quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
+              sed -i 's|\(script-response-body \)\.\.\/quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
+              
+              # 显示处理后的内容
+              echo "处理后的内容:"
+              grep "script-response-body" "$file" || echo "没有找到匹配内容"
+            done < response_files.txt
+          else
+            echo "没有找到包含 script-response-body 的文件"
           fi
+          
+          # 同样处理 script-request-body
+          grep -l "script-request-body" quantumultx/* > request_files.txt || true
+          
+          if [ -s request_files.txt ]; then
+            echo "找到以下包含 script-request-body 的文件:"
+            cat request_files.txt
+            
+            # 处理每个文件
+            while read file; do
+              echo "处理文件: $file"
+              
+              # 直接替换所有本地路径为远程URL
+              sed -i 's|\(script-request-body \)\./quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
+              sed -i 's|\(script-request-body \)quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
+              sed -i 's|\(script-request-body \)\.\.\/quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
+              
+              # 显示处理后的内容
+              echo "处理后的内容:"
+              grep "script-request-body" "$file" || echo "没有找到匹配内容"
+            done < request_files.txt
+          else
+            echo "没有找到包含 script-request-body 的文件"
+          fi
+      
+      - name: 最终检查
+        run: |
+          echo "最终检查 quantumultx 目录中的文件..."
+          
+          # 检查是否有文件包含本地路径引用
+          grep -r "\./quantumultx/" quantumultx/ && echo "警告: 仍有文件包含本地路径引用" || echo "没有找到本地路径引用，处理成功"
+          
+          # 检查远程URL引用
+          grep -r "$REMOTE_BASE_URL" quantumultx/ && echo "成功找到远程URL引用" || echo "警告: 没有找到远程URL引用"
       
       - name: 提交更改
         run: |
@@ -159,14 +233,8 @@ jobs:
           git add quantumultx/
           
           # 提交更改
-          git commit -m "自动处理: 复制JS文件并更新URL引用" || echo "没有更改需要提交"
+          git commit -m "自动处理: JS文件和脚本引用" || echo "没有更改需要提交"
           
-          # 推送更改
-          git push || echo "推送失败，可能需要先拉取更改"
-          
-          # 如果推送失败，尝试拉取并再次推送
-          if [ $? -ne 0 ]; then
-            echo "尝试拉取更改并重新推送..."
-            git pull --rebase
-            git push
-          fi
+          # 拉取并推送更改
+          git pull --rebase
+          git push
