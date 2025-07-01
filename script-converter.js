@@ -17,6 +17,212 @@ const BASE_DIRS = {
 quantumultx: ‘./quantumultx’,
 loon: ‘./loon’,
 surge: ‘./surge’
+/**
+
+- 转换为Loon格式
+- @param {Object/**
+- 转义正则表达式中的特殊字符
+- @param {string} string 需要转义的字符串
+- @returns {string} 转义后的字符串
+  */
+  function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[]\]/g, ‘\$&’);
+  }
+
+/**
+
+- 示例使用方法
+  */
+  async function main() {
+  try {
+  // 获取命令行参数
+  const args = process.argv.slice(2);
+  
+  if (args.length === 0) {
+  console.log(‘用法: node script_converter.js <文件路径> [选项]’);
+  console.log(‘选项:’);
+  console.log(’  –old-url=URL     旧的基础URL’);
+  console.log(’  –new-url=URL     新的基础URL’);
+  console.log(’  –local-only      仅使用本地路径’);
+  console.log(’  –no-loon         不转换为Loon’);
+  console.log(’  –no-surge        不转换为Surge’);
+  console.log(‘示例: node script_converter.js my_script.conf –old-url=https://old.com –new-url=https://new.com’);
+  return;
+  }
+  
+  const filePath = args[0];
+  
+  // 解析选项
+  const options = {};
+  for (let i = 1; i < args.length; i++) {
+  const arg = args[i];
+  
+  if (arg.startsWith(’–old-url=’)) {
+  options.oldBaseUrl = arg.split(’=’)[1];
+  } else if (arg.startsWith(’–new-url=’)) {
+  options.newBaseUrl = arg.split(’=’)[1];
+  } else if (arg === ‘–local-only’) {
+  options.useLocalPaths = true;
+  options.newBaseUrl = null;
+  } else if (arg === ‘–no-loon’) {
+  options.convertLoon = false;
+  } else if (arg === ‘–no-surge’) {
+  options.convertSurge = false;
+  }
+  }
+  
+  // 处理脚本
+  const result = await processScript(filePath, options);
+  console.log(‘处理完成！生成的文件:’);
+  Object.entries(result).forEach(([type, path]) => {
+  console.log(`- ${type}: ${path}`);
+  });
+
+} catch (error) {
+console.error(‘出错:’, error);
+process.exit(1);
+}
+}
+
+// 如果直接运行此脚本
+if (require.main === module) {
+main();
+}
+
+module.exports = {
+processScript,
+extractScriptContent,
+parseScript,
+convertToLoon,
+convertToSurge,
+detectScriptType,
+processQXScript
+}; scriptInfo 脚本信息
+
+- @returns {string} Loon格式的脚本内容
+  */
+  function convertToLoon(input) {
+  // 如果输入是字符串，先处理它
+  let scriptInfo;
+  if (typeof input === ‘string’) {
+  const extractedContent = extractScriptContent(input);
+  scriptInfo = parseScript(extractedContent);
+  } else {
+  scriptInfo = input;
+  }
+
+// 使用元数据
+const name = scriptInfo.metadata.name || "Converted Script";
+const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
+const author = scriptInfo.metadata.author || "Converter";
+
+let config = `#!name=${name} #!desc=${desc}`;
+
+// 添加category字段（如果存在）
+if (scriptInfo.metadata.category) {
+config += `\n#!category=${scriptInfo.metadata.category}`;
+}
+
+config += `\n#!author=${author}`;
+
+if (scriptInfo.metadata.homepage) {
+config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
+}
+
+if (scriptInfo.metadata.icon) {
+config += `\n#!icon=${scriptInfo.metadata.icon}`;
+}
+
+// 处理Rule部分
+if (scriptInfo.rules.length > 0) {
+config += "\n\n[Rule]";
+
+```
+let lastComment = "";
+for (const rule of scriptInfo.rules) {
+  // 如果有新注释，添加它
+  if (rule.comment && rule.comment !== lastComment) {
+    config += `\n${rule.comment}`;
+    lastComment = rule.comment;
+  }
+  
+  // 修复规则格式
+  let loonRule = rule.content;
+  
+  // 移除逗号周围的额外空格
+  loonRule = loonRule.replace(/\s*,\s*/g, ',');
+  
+  // 将最后一个逗号后的策略名转为大写
+  loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
+    return ',' + policy.trim().toUpperCase();
+  });
+  
+  config += `\n${loonRule}`;
+}
+
+config += "\n";
+```
+
+}
+
+// 处理Rewrite部分
+if (scriptInfo.rewrites.length > 0) {
+config += "\n[Rewrite]";
+
+```
+let lastComment = "";
+for (const rule of scriptInfo.rewrites) {
+  // 如果有新注释，添加它
+  if (rule.comment && rule.comment !== lastComment) {
+    config += `\n${rule.comment}`;
+    lastComment = rule.comment;
+  }
+  
+  // 转换QX格式为Loon格式
+  let loonRewrite = rule.content;
+  
+  // 将QX pattern - reject-dict 等转为 Loon pattern - REJECT (大写)
+  loonRewrite = loonRewrite.replace(/ - reject($| )/g, ' - REJECT$1');
+  loonRewrite = loonRewrite.replace(/ - reject-dict($| )/g, ' - REJECT$1');
+  loonRewrite = loonRewrite.replace(/ - reject-img($| )/g, ' - REJECT$1');
+  
+  config += `\n${loonRewrite}`;
+}
+
+config += "\n";
+```
+
+}
+
+// 处理Script部分
+if (scriptInfo.scripts.length > 0) {
+// 添加一个空行在[Script]之前
+config += "\n\n[Script]";
+
+```
+let lastComment = "";
+for (const rule of scriptInfo.scripts) {
+  // 如果有新注释，添加它
+  if (rule.comment && rule.comment !== lastComment) {
+    config += `\n${rule.comment}`;
+    lastComment = rule.comment;
+  }
+  
+  config += `\n${rule.content}`;
+}
+
+config += "\n";
+```
+
+}
+
+// MITM部分
+if (scriptInfo.hostname) {
+config += "\n[MITM]\n";
+config += `hostname = ${scriptInfo.hostname}\n`;
+}
+
+return config;
 };
 
 /**
@@ -744,7 +950,11 @@ for (const rule of scriptInfo.rules) {
   
   config += `\n${surgeRule}`;
 }
+
+config += "\n";
 ```
+
+}
 
 // 处理Map Local部分 - 用于reject规则
 const rejectRules = scriptInfo.rewrites.filter(r =>
@@ -881,209 +1091,5 @@ config += "\n[MITM]\n";
 config += `hostname = %APPEND% ${scriptInfo.hostname}\n`;
 }
 
-/**
-
-- 转换为Loon格式
-- @param {Object} scriptInfo 脚本信息
-- @returns {string} Loon格式的脚本内容
-  */
-  function convertToLoon(input) {
-  // 如果输入是字符串，先处理它
-  let scriptInfo;
-  if (typeof input === ‘string’) {
-  const extractedContent = extractScriptContent(input);
-  scriptInfo = parseScript(extractedContent);
-  } else {
-  scriptInfo = input;
-  }
-
-// 使用元数据
-const name = scriptInfo.metadata.name || "Converted Script";
-const desc = scriptInfo.metadata.desc || scriptInfo.metadata.description || "配置信息";
-const author = scriptInfo.metadata.author || "Converter";
-
-let config = `#!name=${name} #!desc=${desc}`;
-
-// 添加category字段（如果存在）
-if (scriptInfo.metadata.category) {
-config += `\n#!category=${scriptInfo.metadata.category}`;
+return config;
 }
-
-config += `\n#!author=${author}`;
-
-if (scriptInfo.metadata.homepage) {
-config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
-}
-
-if (scriptInfo.metadata.icon) {
-config += `\n#!icon=${scriptInfo.metadata.icon}`;
-}
-
-// 处理Rule部分
-if (scriptInfo.rules.length > 0) {
-config += "\n\n[Rule]";
-
-```
-let lastComment = "";
-for (const rule of scriptInfo.rules) {
-  // 如果有新注释，添加它
-  if (rule.comment && rule.comment !== lastComment) {
-    config += `\n${rule.comment}`;
-    lastComment = rule.comment;
-  }
-  
-  // 修复规则格式
-  let loonRule = rule.content;
-  
-  // 移除逗号周围的额外空格
-  loonRule = loonRule.replace(/\s*,\s*/g, ',');
-  
-  // 将最后一个逗号后的策略名转为大写
-  loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
-    return ',' + policy.trim().toUpperCase();
-  });
-  
-  config += `\n${loonRule}`;
-}
-
-config += "\n";
-```
-
-}
-
-// 处理Rewrite部分
-if (scriptInfo.rewrites.length > 0) {
-config += "\n[Rewrite]";
-
-```
-let lastComment = "";
-for (const rule of scriptInfo.rewrites) {
-  // 如果有新注释，添加它
-  if (rule.comment && rule.comment !== lastComment) {
-    config += `\n${rule.comment}`;
-    lastComment = rule.comment;
-  }
-  
-  // 转换QX格式为Loon格式
-  let loonRewrite = rule.content;
-  
-  // 将QX pattern - reject-dict 等转为 Loon pattern - REJECT (大写)
-  loonRewrite = loonRewrite.replace(/ - reject($| )/g, ' - REJECT$1');
-  loonRewrite = loonRewrite.replace(/ - reject-dict($| )/g, ' - REJECT$1');
-  loonRewrite = loonRewrite.replace(/ - reject-img($| )/g, ' - REJECT$1');
-  
-  config += `\n${loonRewrite}`;
-}
-
-config += "\n";
-```
-
-}
-
-// 处理Script部分
-if (scriptInfo.scripts.length > 0) {
-// 添加一个空行在[Script]之前
-config += "\n\n[Script]";
-
-```
-let lastComment = "";
-for (const rule of scriptInfo.scripts) {
-  // 如果有新注释，添加它
-  if (rule.comment && rule.comment !== lastComment) {
-    config += `\n${rule.comment}`;
-    lastComment = rule.comment;
-  }
-  
-  config += `\n${rule.content}`;
-}
-
-config += "\n";
-```
-
-}
-
-// MITM部分
-if (scriptInfo.hostname) {
-config += "\n[MITM]\n";
-config += `hostname = ${scriptInfo.hostname}\n`;
-}
-
-/**
-
-- 转义正则表达式中的特殊字符
-- @param {string} string 需要转义的字符串
-- @returns {string} 转义后的字符串
-  */
-  function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[]\]/g, ‘\$&’);
-  }
-
-/**
-
-- 示例使用方法
-  */
-  async function main() {
-  try {
-  // 获取命令行参数
-  const args = process.argv.slice(2);
-  
-  if (args.length === 0) {
-  console.log(‘用法: node script_converter.js <文件路径> [选项]’);
-  console.log(‘选项:’);
-  console.log(’  –old-url=URL     旧的基础URL’);
-  console.log(’  –new-url=URL     新的基础URL’);
-  console.log(’  –local-only      仅使用本地路径’);
-  console.log(’  –no-loon         不转换为Loon’);
-  console.log(’  –no-surge        不转换为Surge’);
-  console.log(‘示例: node script_converter.js my_script.conf –old-url=https://old.com –new-url=https://new.com’);
-  return;
-  }
-  
-  const filePath = args[0];
-  
-  // 解析选项
-  const options = {};
-  for (let i = 1; i < args.length; i++) {
-  const arg = args[i];
-  
-  if (arg.startsWith(’–old-url=’)) {
-  options.oldBaseUrl = arg.split(’=’)[1];
-  } else if (arg.startsWith(’–new-url=’)) {
-  options.newBaseUrl = arg.split(’=’)[1];
-  } else if (arg === ‘–local-only’) {
-  options.useLocalPaths = true;
-  options.newBaseUrl = null;
-  } else if (arg === ‘–no-loon’) {
-  options.convertLoon = false;
-  } else if (arg === ‘–no-surge’) {
-  options.convertSurge = false;
-  }
-  }
-  
-  // 处理脚本
-  const result = await processScript(filePath, options);
-  console.log(‘处理完成！生成的文件:’);
-  Object.entries(result).forEach(([type, path]) => {
-  console.log(`- ${type}: ${path}`);
-  });
-
-} catch (error) {
-console.error(‘出错:’, error);
-process.exit(1);
-}
-}
-
-// 如果直接运行此脚本
-if (require.main === module) {
-main();
-}
-
-module.exports = {
-processScript,
-extractScriptContent,
-parseScript,
-convertToLoon,
-convertToSurge,
-detectScriptType,
-processQXScript
-};
