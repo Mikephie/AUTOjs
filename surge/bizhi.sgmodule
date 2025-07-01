@@ -3,9 +3,5 @@
 #!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/bizhi.png
-
-[Script]
-axs = type=http-response, pattern=^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/axs.js, timeout=60
-
 [MITM]
 hostname = %APPEND% leancloud.emotionwp.com
