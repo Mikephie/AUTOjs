@@ -10,7 +10,7 @@ url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace,r
 url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight,reject
 
 [rewrite_local]
-^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*$ url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx/axs.js
+^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*$ url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/axs.js
 
 [mitm]
 hostname = m-station2.axs.com.sg
