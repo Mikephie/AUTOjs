@@ -11,6 +11,24 @@ on:
           - loon,surge
           - loon
           - surge
+      process_qx_urls:
+        description: '处理QuantumultX URL (将单独运行)'
+        required: false
+        default: false
+        type: boolean
+      old_base_url:
+        description: 'QX URL - 旧的基础URL'
+        required: false
+        default: 'https://raw.githubusercontent.com/Mikephie/Script/main/qx'
+      new_base_url:
+        description: 'QX URL - 新的基础URL'
+        required: false
+        default: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
+      use_local_paths:
+        description: 'QX URL - 使用本地路径'
+        required: false
+        default: true
+        type: boolean
   push:
     paths:
       - 'input/**'
@@ -20,6 +38,7 @@ on:
   schedule:
     - cron: '0 0 * * 0'
 jobs:
+  # 主要脚本转换任务 - 保持原样
   convert:
     runs-on: ubuntu-latest
     permissions:
@@ -64,17 +83,20 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           
+          # 设置Git合并策略
+          git config pull.rebase false
+          
           # 暂存所有更改
           git add -A
           
           # 尝试提交当前更改
           git commit -m "准备自动转换脚本" || echo "没有需要提交的更改"
           
-          # 拉取远程更改(不使用rebase)
-          git pull --no-rebase || echo "拉取失败，继续执行"
+          # 拉取远程更改(使用merge策略)
+          git pull --no-edit origin ${{ github.ref_name }} || echo "拉取失败，继续执行"
           
           # 再次暂存变更的文件并提交
-          git add loon/ surge/ || echo "没有 loon/ 或 surge/ 目录"
+          git add loon/ surge/ || echo "没有目录需要添加"
           
           if [ -f "loon-scripts.tar.gz" ]; then
             git add loon-scripts.tar.gz
@@ -87,4 +109,90 @@ jobs:
           git commit -m "自动转换脚本" || echo "没有需要提交的更改"
           
           # 推送更改
-          git push || echo "推送失败，可能需要手动解决冲突"
+          git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
+
+  # 完全独立的QuantumultX URL处理任务
+  process_qx_urls:
+    needs: convert
+    if: github.event.inputs.process_qx_urls == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: 准备环境
+        run: |
+          mkdir -p input
+          mkdir -p quantumultx
+          
+      - name: 处理QuantumultX URL
+        run: |
+          echo "开始处理QuantumultX URL..."
+          
+          # 检查qx-process.js文件是否存在
+          if [ ! -f "qx-process.js" ]; then
+            echo "Error: qx-process.js 文件不存在"
+            exit 1
+          fi
+          
+          # 检查qx-url-processor.js文件是否存在
+          if [ ! -f "qx-url-processor.js" ]; then
+            echo "Error: qx-url-processor.js 文件不存在"
+            exit 1
+          fi
+          
+          # 检查input目录是否存在且包含文件
+          if [ -d "input" ] && [ "$(ls -A input 2>/dev/null)" ]; then
+            # 运行URL处理工具
+            node qx-process.js input/ \
+              --old-url=${{ github.event.inputs.old_base_url || 'https://raw.githubusercontent.com/Mikephie/Script/main/qx' }} \
+              --new-url=${{ github.event.inputs.new_base_url || 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx' }} \
+              ${{ github.event.inputs.use_local_paths != 'false' && '--local' || '--no-local' }} \
+              --output=quantumultx
+            
+            echo "QuantumultX URL处理完成"
+          else
+            echo "input目录为空或不存在，跳过处理"
+            exit 0
+          fi
+          
+      - name: 打包QuantumultX脚本
+        run: |
+          if [ -d "quantumultx" ] && [ "$(find quantumultx -type f | wc -l)" -gt 0 ]; then
+            tar -czvf quantumultx-scripts.tar.gz quantumultx/
+            echo "QuantumultX脚本已打包为 quantumultx-scripts.tar.gz"
+          else
+            echo "quantumultx目录为空或不存在，跳过打包"
+            exit 0
+          fi
+          
+      - name: 提交并推送结果
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          
+          # 设置Git合并策略
+          git config pull.rebase false
+          
+          # 暂存所有更改
+          git add quantumultx/ || echo "quantumultx目录不存在"
+          
+          if [ -f "quantumultx-scripts.tar.gz" ]; then
+            git add quantumultx-scripts.tar.gz
+          fi
+          
+          # 尝试提交
+          git commit -m "处理QuantumultX URL" || echo "没有需要提交的更改"
+          
+          # 拉取远程更改
+          git pull --no-edit origin ${{ github.ref_name }} || echo "拉取失败，继续执行"
+          
+          # 推送更改
+          git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
