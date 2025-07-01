@@ -1,4 +1,4 @@
-name: JS文件处理专用工作流
+name: 安全的JS文件处理工作流
 
 # 触发条件
 on:
@@ -8,6 +8,10 @@ on:
         description: '远程基础URL'
         required: false
         default: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
+      process_all:
+        description: '处理所有文件(包括非JS文件)'
+        required: false
+        default: 'false'
   
   push:  # 当有推送时
     paths:
@@ -20,6 +24,7 @@ on:
 # 环境变量
 env:
   REMOTE_BASE_URL: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
+  PROCESS_ALL: 'false'
 
 # 任务
 jobs:
@@ -36,117 +41,176 @@ jobs:
           # 如果是手动触发，使用手动设置的参数
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "REMOTE_BASE_URL=${{ github.event.inputs.remote_base_url }}" >> $GITHUB_ENV
+            echo "PROCESS_ALL=${{ github.event.inputs.process_all }}" >> $GITHUB_ENV
           fi
           
           echo "使用以下参数:"
           echo "远程基础URL: $REMOTE_BASE_URL"
+          echo "处理所有文件: $PROCESS_ALL"
       
       - name: 准备目录
         run: |
           mkdir -p quantumultx input
       
-      - name: 查找所有 JS 文件
+      - name: 复制 JS 脚本文件
         run: |
-          echo "查找所有 JS 文件..."
+          echo "查找和复制 JS 脚本文件..."
           
-          # 查找所有 JS 文件 (不包括 node_modules 和 .git 目录)
-          find . -name "*.js" -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./quantumultx/*" > all_js_files.txt
+          # 找出所有可能是脚本文件的 JS 文件
+          find . -name "*.js" -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./quantumultx/*" > js_files.txt
           
-          if [ ! -s all_js_files.txt ]; then
+          if [ ! -s js_files.txt ]; then
             echo "没有找到任何 JS 文件"
             exit 0
           fi
           
           echo "找到以下 JS 文件:"
-          cat all_js_files.txt
+          cat js_files.txt
           
-          # 将 JS 文件分类
-          > js_scripts.txt  # 脚本文件
-          > js_configs.txt  # 配置文件
-          
-          # 检查每个 JS 文件的内容和名称
+          # 复制所有 JS 文件到 quantumultx 目录
           while read js_file; do
-            # 检查文件是否包含脚本标识符或特定结构
-            if grep -q "\[rewrite_local\]" "$js_file" || grep -q "script-" "$js_file"; then
-              # 这可能是配置文件
-              echo "$js_file" >> js_configs.txt
-              echo "识别为配置文件: $js_file"
-            else
-              # 默认作为脚本文件处理
-              echo "$js_file" >> js_scripts.txt
-              echo "识别为脚本文件: $js_file"
-            fi
-          done < all_js_files.txt
-      
-      - name: 复制脚本文件
-        run: |
-          echo "复制脚本文件到 quantumultx 目录..."
+            filename=$(basename "$js_file")
+            echo "复制: $js_file -> quantumultx/$filename"
+            cp "$js_file" "quantumultx/$filename"
+          done < js_files.txt
           
-          if [ ! -s js_scripts.txt ]; then
-            echo "没有找到脚本文件"
+          echo "JS 文件复制完成"
+      
+      - name: 查找配置文件
+        run: |
+          echo "查找配置文件..."
+          
+          # 清空配置文件列表
+          > config_files.txt
+          
+          # 查找可能包含脚本引用的文件
+          if [ "$PROCESS_ALL" = "true" ]; then
+            # 查找所有可能的配置文件
+            find . -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./quantumultx/*" > config_files.txt
           else
-            # 复制脚本文件到 quantumultx 目录
-            while read js_file; do
-              filename=$(basename "$js_file")
-              echo "复制: $js_file -> quantumultx/$filename"
-              cp "$js_file" "quantumultx/$filename"
-            done < js_scripts.txt
+            # 只查找输入目录中的配置文件
+            find input -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) > config_files.txt
             
-            echo "脚本文件复制完成"
+            # 如果没有找到，尝试查找根目录中的特定文件
+            if [ ! -s config_files.txt ]; then
+              find . -maxdepth 1 -type f \( -name "*.conf" -o -name "*.txt" \) >> config_files.txt
+            fi
+          fi
+          
+          if [ ! -s config_files.txt ]; then
+            echo "没有找到任何配置文件"
+          else
+            echo "找到以下可能的配置文件:"
+            cat config_files.txt
           fi
       
-      - name: 处理配置文件
+      - name: 安全处理配置文件
         run: |
-          echo "处理配置文件..."
+          echo "安全处理配置文件..."
           
-          if [ ! -s js_configs.txt ]; then
-            echo "没有找到配置文件"
-          else
-            # 处理每个配置文件
-            while read config_file; do
-              filename=$(basename "$config_file")
-              output_file="quantumultx/$filename"
-              
-              echo "处理配置文件: $config_file -> $output_file"
+          if [ ! -s config_files.txt ]; then
+            echo "没有配置文件需要处理"
+            exit 0
+          fi
+          
+          # 处理每个配置文件
+          while read config_file; do
+            filename=$(basename "$config_file")
+            output_file="quantumultx/$filename"
+            
+            echo "检查配置文件: $config_file"
+            
+            # 检查文件是否包含关键字
+            if grep -q "\[rewrite_local\]" "$config_file"; then
+              echo "找到 QuantumultX 配置文件: $config_file"
               
               # 复制文件
               cp "$config_file" "$output_file"
               
-              # 查找文件中的脚本引用
-              if grep -q "script-.*-body" "$output_file"; then
-                echo "找到脚本引用，进行处理..."
-                
-                # 处理脚本引用行
-                grep -n "script-.*-body" "$output_file" > script_lines.txt
-                
-                while read line_info; do
-                  line_num=$(echo "$line_info" | cut -d':' -f1)
-                  line_content=$(echo "$line_info" | cut -d':' -f2-)
+              echo "处理 script-response-body 和 script-request-body 引用..."
+              
+              # 使用 awk 处理文件，这比 sed 更安全
+              awk '
+              # 检查是否包含脚本引用
+              /script-(response|request)-body/ {
+                # 提取前缀和路径
+                match($0, /(script-(response|request)-body[[:space:]]+)([^[:space:]]+)/, parts);
+                if (parts[3]) {
+                  # 获取脚本文件名
+                  split(parts[3], path_parts, "/");
+                  script_name = path_parts[length(path_parts)];
                   
-                  echo "处理第 $line_num 行: $line_content"
+                  # 构建新的远程URL
+                  remote_url = "'"$REMOTE_BASE_URL"'/" script_name;
                   
-                  # 尝试提取脚本路径和文件名
-                  script_path=$(echo "$line_content" | grep -o "script-[^[:space:]]*-body[[:space:]]\+[^[:space:]]\+" | sed "s|script-[^[:space:]]*-body[[:space:]]\+||")
+                  # 替换路径部分
+                  sub(parts[3], remote_url);
                   
-                  if [ -n "$script_path" ]; then
-                    # 提取脚本文件名
-                    script_name=$(basename "$script_path")
+                  # 输出处理后的行
+                  print "已替换: " parts[3] " -> " remote_url > "/dev/stderr";
+                }
+              }
+              # 输出所有行
+              { print }
+              ' "$output_file" > "$output_file.tmp" && mv "$output_file.tmp" "$output_file"
+              
+              echo "配置文件处理完成: $output_file"
+              
+              # 显示处理后的引用
+              echo "处理后的脚本引用:"
+              grep -n "script-.*-body" "$output_file" || echo "没有找到脚本引用"
+            else
+              echo "不是 QuantumultX 配置文件，跳过"
+            fi
+          done < config_files.txt
+      
+      - name: 处理 quantumultx 目录中的配置文件
+        run: |
+          echo "处理 quantumultx 目录中的配置文件..."
+          
+          # 查找 quantumultx 目录中的配置文件
+          find quantumultx -type f \( -name "*.conf" -o -name "*.txt" \) > qx_configs.txt
+          
+          if [ ! -s qx_configs.txt ]; then
+            echo "quantumultx 目录中没有找到配置文件"
+          else
+            echo "找到以下配置文件:"
+            cat qx_configs.txt
+            
+            # 处理每个配置文件
+            while read config_file; do
+              echo "处理配置文件: $config_file"
+              
+              # 使用 awk 处理文件
+              awk '
+              # 检查是否包含脚本引用
+              /script-(response|request)-body/ {
+                # 提取前缀和路径
+                match($0, /(script-(response|request)-body[[:space:]]+)([^[:space:]]+)/, parts);
+                if (parts[3]) {
+                  # 检查路径是否是本地路径
+                  if (parts[3] ~ /^\.\/|^\/|^[^\/]+\//) {
+                    # 获取脚本文件名
+                    split(parts[3], path_parts, "/");
+                    script_name = path_parts[length(path_parts)];
                     
                     # 构建新的远程URL
-                    remote_url="$REMOTE_BASE_URL/$script_name"
+                    remote_url = "'"$REMOTE_BASE_URL"'/" script_name;
                     
-                    echo "替换: $script_path -> $remote_url"
+                    # 替换路径部分
+                    sub(parts[3], remote_url);
                     
-                    # 替换脚本路径
-                    sed -i "${line_num}s|$script_path|$remote_url|" "$output_file"
-                  fi
-                done < script_lines.txt
-                
-                echo "配置文件处理完成"
-              else
-                echo "文件不包含脚本引用"
-              fi
-            done < js_configs.txt
+                    # 输出处理后的行
+                    print "已替换: " parts[3] " -> " remote_url > "/dev/stderr";
+                  }
+                }
+              }
+              # 输出所有行
+              { print }
+              ' "$config_file" > "$config_file.tmp" && mv "$config_file.tmp" "$config_file"
+              
+              echo "配置文件处理完成: $config_file"
+            done < qx_configs.txt
           fi
       
       - name: 显示处理结果
@@ -161,68 +225,6 @@ jobs:
           
           echo "远程URL引用:"
           grep -r "$REMOTE_BASE_URL" quantumultx/ || echo "未找到远程URL引用"
-      
-      - name: 处理常见的配置格式
-        run: |
-          echo "处理常见的配置格式..."
-          
-          # 查找 quantumultx 目录中所有包含 script-response-body 的文件
-          grep -l "script-response-body" quantumultx/* > response_files.txt || true
-          
-          if [ -s response_files.txt ]; then
-            echo "找到以下包含 script-response-body 的文件:"
-            cat response_files.txt
-            
-            # 处理每个文件
-            while read file; do
-              echo "处理文件: $file"
-              
-              # 直接替换所有本地路径为远程URL
-              sed -i 's|\(script-response-body \)\./quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
-              sed -i 's|\(script-response-body \)quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
-              sed -i 's|\(script-response-body \)\.\.\/quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
-              
-              # 显示处理后的内容
-              echo "处理后的内容:"
-              grep "script-response-body" "$file" || echo "没有找到匹配内容"
-            done < response_files.txt
-          else
-            echo "没有找到包含 script-response-body 的文件"
-          fi
-          
-          # 同样处理 script-request-body
-          grep -l "script-request-body" quantumultx/* > request_files.txt || true
-          
-          if [ -s request_files.txt ]; then
-            echo "找到以下包含 script-request-body 的文件:"
-            cat request_files.txt
-            
-            # 处理每个文件
-            while read file; do
-              echo "处理文件: $file"
-              
-              # 直接替换所有本地路径为远程URL
-              sed -i 's|\(script-request-body \)\./quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
-              sed -i 's|\(script-request-body \)quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
-              sed -i 's|\(script-request-body \)\.\.\/quantumultx/|\1'"$REMOTE_BASE_URL/"'|g' "$file"
-              
-              # 显示处理后的内容
-              echo "处理后的内容:"
-              grep "script-request-body" "$file" || echo "没有找到匹配内容"
-            done < request_files.txt
-          else
-            echo "没有找到包含 script-request-body 的文件"
-          fi
-      
-      - name: 最终检查
-        run: |
-          echo "最终检查 quantumultx 目录中的文件..."
-          
-          # 检查是否有文件包含本地路径引用
-          grep -r "\./quantumultx/" quantumultx/ && echo "警告: 仍有文件包含本地路径引用" || echo "没有找到本地路径引用，处理成功"
-          
-          # 检查远程URL引用
-          grep -r "$REMOTE_BASE_URL" quantumultx/ && echo "成功找到远程URL引用" || echo "警告: 没有找到远程URL引用"
       
       - name: 提交更改
         run: |
