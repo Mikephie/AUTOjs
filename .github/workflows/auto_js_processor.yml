@@ -1,4 +1,4 @@
-name: 仅处理 input 目录的 JS 文件
+name: 安全的JS文件处理工作流
 
 # 触发条件
 on:
@@ -8,9 +8,14 @@ on:
         description: '远程基础URL'
         required: false
         default: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
+      process_all:
+        description: '处理所有文件(包括非JS文件)'
+        required: false
+        default: 'false'
   
-  push:  # 当有推送到 input 目录时
+  push:  # 当有推送时
     paths:
+      - '**.js'  # 只关注 .js 文件
       - 'input/**'
   
   schedule:  # 定期运行
@@ -19,11 +24,11 @@ on:
 # 环境变量
 env:
   REMOTE_BASE_URL: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx'
-  INPUT_DIR: 'input'
+  PROCESS_ALL: 'false'
 
 # 任务
 jobs:
-  process_input_files:
+  process_js_files:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
@@ -36,63 +41,130 @@ jobs:
           # 如果是手动触发，使用手动设置的参数
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "REMOTE_BASE_URL=${{ github.event.inputs.remote_base_url }}" >> $GITHUB_ENV
+            echo "PROCESS_ALL=${{ github.event.inputs.process_all }}" >> $GITHUB_ENV
           fi
           
           echo "使用以下参数:"
-          echo "输入目录: $INPUT_DIR"
           echo "远程基础URL: $REMOTE_BASE_URL"
+          echo "处理所有文件: $PROCESS_ALL"
       
       - name: 准备目录
         run: |
-          mkdir -p "$INPUT_DIR" quantumultx
+          mkdir -p quantumultx input
       
-      - name: 复制 input 目录中的 JS 文件
+      - name: 复制 JS 脚本文件
         run: |
-          echo "复制 input 目录中的 JS 文件到 quantumultx 目录..."
+          echo "查找和复制 JS 脚本文件..."
           
-          # 查找 input 目录中的所有 JS 文件
-          find "$INPUT_DIR" -name "*.js" > js_files.txt
+          # 找出所有可能是脚本文件的 JS 文件
+          find . -name "*.js" -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./quantumultx/*" > js_files.txt
           
           if [ ! -s js_files.txt ]; then
-            echo "input 目录中没有找到 JS 文件"
-          else
-            echo "找到以下 JS 文件:"
-            cat js_files.txt
-            
-            # 复制所有 JS 文件到 quantumultx 目录
-            while read js_file; do
-              filename=$(basename "$js_file")
-              echo "复制: $js_file -> quantumultx/$filename"
-              cp "$js_file" "quantumultx/$filename"
-            done < js_files.txt
-            
-            echo "JS 文件复制完成"
+            echo "没有找到任何 JS 文件"
+            exit 0
           fi
-      
-      - name: 查找 input 目录中的配置文件
-        run: |
-          echo "查找 input 目录中的配置文件..."
           
-          # 查找 input 目录中的配置文件
-          find "$INPUT_DIR" -type f \( -name "*.conf" -o -name "*.txt" \) > config_files.txt
+          echo "找到以下 JS 文件:"
+          cat js_files.txt
+          
+          # 复制所有 JS 文件到 quantumultx 目录
+          while read js_file; do
+            filename=$(basename "$js_file")
+            echo "复制: $js_file -> quantumultx/$filename"
+            cp "$js_file" "quantumultx/$filename"
+          done < js_files.txt
+          
+          echo "JS 文件复制完成"
+      
+      - name: 查找配置文件
+        run: |
+          echo "查找配置文件..."
+          
+          # 清空配置文件列表
+          > config_files.txt
+          
+          # 查找可能包含脚本引用的文件
+          if [ "$PROCESS_ALL" = "true" ]; then
+            # 查找所有可能的配置文件
+            find . -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) -not -path "./node_modules/*" -not -path "./.git/*" -not -path "./quantumultx/*" > config_files.txt
+          else
+            # 只查找输入目录中的配置文件
+            find input -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) > config_files.txt
+            
+            # 如果没有找到，尝试查找根目录中的特定文件
+            if [ ! -s config_files.txt ]; then
+              find . -maxdepth 1 -type f \( -name "*.conf" -o -name "*.txt" \) >> config_files.txt
+            fi
+          fi
           
           if [ ! -s config_files.txt ]; then
-            echo "input 目录中没有找到配置文件"
+            echo "没有找到任何配置文件"
           else
-            echo "找到以下配置文件:"
+            echo "找到以下可能的配置文件:"
             cat config_files.txt
-            
-            # 复制所有配置文件到 quantumultx 目录
-            while read config_file; do
-              filename=$(basename "$config_file")
-              echo "复制: $config_file -> quantumultx/$filename"
-              cp "$config_file" "quantumultx/$filename"
-            done < config_files.txt
-            
-            echo "配置文件复制完成"
           fi
       
-      - name: 处理配置文件中的脚本引用
+      - name: 安全处理配置文件
+        run: |
+          echo "安全处理配置文件..."
+          
+          if [ ! -s config_files.txt ]; then
+            echo "没有配置文件需要处理"
+            exit 0
+          fi
+          
+          # 处理每个配置文件
+          while read config_file; do
+            filename=$(basename "$config_file")
+            output_file="quantumultx/$filename"
+            
+            echo "检查配置文件: $config_file"
+            
+            # 检查文件是否包含关键字
+            if grep -q "\[rewrite_local\]" "$config_file"; then
+              echo "找到 QuantumultX 配置文件: $config_file"
+              
+              # 复制文件
+              cp "$config_file" "$output_file"
+              
+              echo "处理 script-response-body 和 script-request-body 引用..."
+              
+              # 使用 awk 处理文件，这比 sed 更安全
+              awk '
+              # 检查是否包含脚本引用
+              /script-(response|request)-body/ {
+                # 提取前缀和路径
+                match($0, /(script-(response|request)-body[[:space:]]+)([^[:space:]]+)/, parts);
+                if (parts[3]) {
+                  # 获取脚本文件名
+                  split(parts[3], path_parts, "/");
+                  script_name = path_parts[length(path_parts)];
+                  
+                  # 构建新的远程URL
+                  remote_url = "'"$REMOTE_BASE_URL"'/" script_name;
+                  
+                  # 替换路径部分
+                  sub(parts[3], remote_url);
+                  
+                  # 输出处理后的行
+                  print "已替换: " parts[3] " -> " remote_url > "/dev/stderr";
+                }
+              }
+              # 输出所有行
+              { print }
+              ' "$output_file" > "$output_file.tmp" && mv "$output_file.tmp" "$output_file"
+              
+              echo "配置文件处理完成: $output_file"
+              
+              # 显示处理后的引用
+              echo "处理后的脚本引用:"
+              grep -n "script-.*-body" "$output_file" || echo "没有找到脚本引用"
+            else
+              echo "不是 QuantumultX 配置文件，跳过"
+            fi
+          done < config_files.txt
+      
+      - name: 处理 quantumultx 目录中的配置文件
         run: |
           echo "处理 quantumultx 目录中的配置文件..."
           
@@ -109,21 +181,15 @@ jobs:
             while read config_file; do
               echo "处理配置文件: $config_file"
               
-              # 检查文件是否包含 [rewrite_local] 部分
-              if grep -q "\[rewrite_local\]" "$config_file"; then
-                echo "找到 QuantumultX 配置文件"
-                
-                # 使用 awk 处理文件
-                awk '
-                # 标记是否在 [rewrite_local] 部分
-                /\[rewrite_local\]/ { in_rewrite = 1 }
-                /\[.*\]/ && !/\[rewrite_local\]/ { in_rewrite = 0 }
-                
-                # 只处理 [rewrite_local] 部分中的脚本引用
-                in_rewrite && /script-(response|request)-body/ {
-                  # 提取前缀和路径
-                  match($0, /(script-(response|request)-body[[:space:]]+)([^[:space:]]+)/, parts);
-                  if (parts[3]) {
+              # 使用 awk 处理文件
+              awk '
+              # 检查是否包含脚本引用
+              /script-(response|request)-body/ {
+                # 提取前缀和路径
+                match($0, /(script-(response|request)-body[[:space:]]+)([^[:space:]]+)/, parts);
+                if (parts[3]) {
+                  # 检查路径是否是本地路径
+                  if (parts[3] ~ /^\.\/|^\/|^[^\/]+\//) {
                     # 获取脚本文件名
                     split(parts[3], path_parts, "/");
                     script_name = path_parts[length(path_parts)];
@@ -138,19 +204,12 @@ jobs:
                     print "已替换: " parts[3] " -> " remote_url > "/dev/stderr";
                   }
                 }
-                
-                # 输出所有行
-                { print }
-                ' "$config_file" > "$config_file.tmp" && mv "$config_file.tmp" "$config_file"
-                
-                echo "配置文件处理完成: $config_file"
-                
-                # 显示处理后的引用
-                echo "处理后的脚本引用:"
-                grep -n "script-.*-body" "$config_file" || echo "没有找到脚本引用"
-              else
-                echo "不是 QuantumultX 配置文件，跳过"
-              fi
+              }
+              # 输出所有行
+              { print }
+              ' "$config_file" > "$config_file.tmp" && mv "$config_file.tmp" "$config_file"
+              
+              echo "配置文件处理完成: $config_file"
             done < qx_configs.txt
           fi
       
@@ -176,7 +235,7 @@ jobs:
           git add quantumultx/
           
           # 提交更改
-          git commit -m "自动处理: input目录中的JS文件和配置文件" || echo "没有更改需要提交"
+          git commit -m "自动处理: JS文件和脚本引用" || echo "没有更改需要提交"
           
           # 拉取并推送更改
           git pull --rebase
