@@ -29,7 +29,7 @@ on:
       use_local_paths:
         description: 'QX URL - 使用本地路径'
         required: false
-        default: true
+        default: false
         type: boolean
       debug:
         description: '启用调试模式'
