@@ -121,7 +121,6 @@ fetch-depth: 0
       
       # 推送更改
       git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
-```
 
 # 完全独立的QuantumultX URL处理任务
 
@@ -330,4 +329,3 @@ fetch-depth: 0
       
       # 返回原分支
       git checkout ${{ github.ref_name }}
-```
