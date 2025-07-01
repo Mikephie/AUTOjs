@@ -38,9 +38,7 @@ jobs:
           mkdir -p input
           mkdir -p loon
           mkdir -p surge
-          mkdir -p quantumultx
           npm install @actions/core
-          npm install node-fetch
           
       - name: 运行转换
         run: node index.js
@@ -61,18 +59,10 @@ jobs:
             echo "Surge脚本已打包为 surge-scripts.tar.gz"
           fi
           
-          if [ -d "quantumultx" ] && [ "$(find quantumultx -type f | wc -l)" -gt 0 ]; then
-            tar -czvf quantumultx-scripts.tar.gz quantumultx/
-            echo "QuantumultX脚本已打包为 quantumultx-scripts.tar.gz"
-          fi
-          
       - name: 提交并推送结果
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          
-          # 设置Git合并策略
-          git config pull.rebase false
           
           # 暂存所有更改
           git add -A
@@ -80,11 +70,11 @@ jobs:
           # 尝试提交当前更改
           git commit -m "准备自动转换脚本" || echo "没有需要提交的更改"
           
-          # 拉取远程更改(使用merge策略)
-          git pull --no-edit origin ${{ github.ref_name }} || echo "拉取失败，继续执行"
+          # 拉取远程更改(不使用rebase)
+          git pull --no-rebase || echo "拉取失败，继续执行"
           
           # 再次暂存变更的文件并提交
-          git add loon/ surge/ quantumultx/ || echo "没有目录需要添加"
+          git add loon/ surge/ || echo "没有 loon/ 或 surge/ 目录"
           
           if [ -f "loon-scripts.tar.gz" ]; then
             git add loon-scripts.tar.gz
@@ -94,11 +84,7 @@ jobs:
             git add surge-scripts.tar.gz
           fi
           
-          if [ -f "quantumultx-scripts.tar.gz" ]; then
-            git add quantumultx-scripts.tar.gz
-          fi
-          
           git commit -m "自动转换脚本" || echo "没有需要提交的更改"
           
           # 推送更改
-          git push origin ${{ github.ref_name }} || echo "推送失败，可能需要手动解决冲突"
+          git push || echo "推送失败，可能需要手动解决冲突"

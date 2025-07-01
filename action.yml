@@ -1,29 +1,47 @@
-name: 'Script Format Converter'
-description: '自动将QX/Loon脚本转换为Surge/Loon格式'
-author: 'Your Name'
+name: ‘Script Format Converter’
+description: ‘自动将QX/Loon脚本转换为Surge/Loon格式并支持QuantumultX URL替换’
+author: ‘Your Name’
 
 inputs:
-  INPUT_DIR:
-    description: '输入脚本目录路径'
-    required: false
-    default: 'input'
-  OUTPUT_DIR:
-    description: '输出脚本目录路径'
-    required: false
-    default: 'output'
-  OUTPUT_FORMAT:
-    description: '输出格式 (surge 或 loon)'
-    required: false
-    default: 'loon'
+INPUT_DIR:
+description: ‘输入脚本目录路径’
+required: false
+default: ‘input’
+OUTPUT_DIR:
+description: ‘输出脚本目录路径’
+required: false
+default: ‘output’
+OUTPUT_FORMAT:
+description: ‘输出格式 (surge, loon, quantumultx 或组合，用逗号分隔)’
+required: false
+default: ‘loon,surge’
+OLD_BASE_URL:
+description: ‘QuantumultX脚本中需要替换的旧URL基础路径’
+required: false
+default: ‘https://raw.githubusercontent.com/Mikephie/Script/main/qx’
+NEW_BASE_URL:
+description: ‘QuantumultX脚本中替换为的新URL基础路径’
+required: false
+default: ‘https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx’
+USE_LOCAL_PATHS:
+description: ‘是否使用本地路径替换URL并下载脚本’
+required: false
+default: ‘true’
+DEBUG:
+description: ‘是否启用调试模式’
+required: false
+default: ‘false’
 
 outputs:
-  success_count:
-    description: '成功转换的脚本数量'
-  fail_count:
-    description: '转换失败的脚本数量'
-  total_count:
-    description: '总共处理的脚本数量'
+success_count:
+description: ‘成功转换的脚本数量’
+fail_count:
+description: ‘转换失败的脚本数量’
+total_count:
+description: ‘总共处理的脚本数量’
+downloaded_count:
+description: ‘下载的QuantumultX脚本数量’
 
 runs:
-  using: 'node16'
-  main: 'index.js'  # 改为直接使用index.js而不是dist/index.js
+using: ‘node16’
+main: ‘index.js’
