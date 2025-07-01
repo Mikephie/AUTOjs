@@ -14,7 +14,7 @@ on:
       process_qx_urls:
         description: '处理QuantumultX URL (将单独运行)'
         required: false
-        default: false
+        default: true
         type: boolean
       old_base_url:
         description: 'QX URL - 旧的基础URL'
