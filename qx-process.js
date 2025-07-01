@@ -3,6 +3,7 @@
 /**
  * QuantumultX URL 处理工具
  * 基于原始脚本开发，保持相同的风格和兼容性
+ * 修复了连接地址问题
  */
 
 // 使用原始脚本的导入风格
@@ -122,51 +123,97 @@ async function processQXScriptUrl(filePath, options = {}) {
       }
       
       // 检查是否包含脚本URL
-      if (line.includes(' url script-') && line.includes(oldBaseUrl)) {
-        const urlMatch = line.match(/(https?:\/\/[^\s]+)/);
-        if (urlMatch && urlMatch[1]) {
-          const scriptUrl = urlMatch[1];
-          const scriptName = scriptUrl.split('/').pop();
-          
-          console.log(`发现脚本URL: ${scriptUrl}`);
-          processedCount++;
-          
-          if (useLocalPaths) {
-            // 下载脚本并替换URL为本地路径
-            const downloadPromise = (async () => {
-              try {
-                console.log(`下载脚本: ${scriptUrl}`);
-                const scriptContent = await httpGet(scriptUrl);
-                
-                // 保存到本地
-                const localPath = path.join(outputDir, scriptName);
-                await fs.writeFile(localPath, scriptContent);
-                console.log(`脚本已保存到: ${localPath}`);
-                
-                // 替换URL为本地相对路径
-                const relativePath = `./${path.relative('.', localPath).replace(/\\/g, '/')}`;
-                return line.replace(scriptUrl, relativePath);
-              } catch (err) {
-                console.error(`下载脚本失败 ${scriptUrl}: ${err.message}`);
-                
-                // 下载失败时使用新的远程URL
-                if (newBaseUrl) {
-                  const newUrl = `${newBaseUrl}/${scriptName}`;
-                  console.log(`替换为新的远程URL: ${newUrl}`);
-                  return line.replace(scriptUrl, newUrl);
-                }
-                
-                return line; // 保持原始URL
-              }
-            })();
+      if (line.includes(' url script-')) {
+        // 首先检查是否包含旧的基础URL
+        if (line.includes(oldBaseUrl)) {
+          const urlMatch = line.match(/(https?:\/\/[^\s]+)/);
+          if (urlMatch && urlMatch[1]) {
+            const scriptUrl = urlMatch[1];
+            const scriptName = scriptUrl.split('/').pop();
             
-            downloadPromises.push(downloadPromise);
-            updatedLines.push(downloadPromise);
+            console.log(`发现脚本URL: ${scriptUrl}`);
+            processedCount++;
+            
+            if (useLocalPaths) {
+              // 下载脚本并替换URL为本地路径
+              const downloadPromise = (async () => {
+                try {
+                  console.log(`下载脚本: ${scriptUrl}`);
+                  const scriptContent = await httpGet(scriptUrl);
+                  
+                  // 保存到本地
+                  const localPath = path.join(outputDir, scriptName);
+                  await fs.writeFile(localPath, scriptContent);
+                  console.log(`脚本已保存到: ${localPath}`);
+                  
+                  // 替换URL为本地相对路径 - 修复格式问题
+                  // 使用完整路径格式 ./quantumultx/scriptname.js
+                  return line.replace(scriptUrl, `./${outputDir}/${scriptName}`);
+                } catch (err) {
+                  console.error(`下载脚本失败 ${scriptUrl}: ${err.message}`);
+                  
+                  // 下载失败时使用新的远程URL
+                  if (newBaseUrl) {
+                    const newUrl = `${newBaseUrl}/${scriptName}`;
+                    console.log(`替换为新的远程URL: ${newUrl}`);
+                    return line.replace(scriptUrl, newUrl);
+                  }
+                  
+                  return line; // 保持原始URL
+                }
+              })();
+              
+              downloadPromises.push(downloadPromise);
+              updatedLines.push(downloadPromise);
+            } else {
+              // 直接替换为新的远程URL
+              const newUrl = `${newBaseUrl}/${scriptName}`;
+              console.log(`替换URL: ${scriptUrl} -> ${newUrl}`);
+              updatedLines.push(line.replace(scriptUrl, newUrl));
+            }
           } else {
-            // 直接替换为新的远程URL
-            const newUrl = `${newBaseUrl}/${scriptName}`;
-            console.log(`替换URL: ${scriptUrl} -> ${newUrl}`);
-            updatedLines.push(line.replace(scriptUrl, newUrl));
+            updatedLines.push(line);
+          }
+        } else if (useLocalPaths) {
+          // 处理可能已经是本地路径或其他URL的情况
+          // 检查是否包含 script-response-body 或 script-request-body 后跟一个URL或路径
+          const scriptPathMatch = line.match(/script-(?:response|request)-body\s+([^\s]+)/);
+          if (scriptPathMatch && scriptPathMatch[1]) {
+            const scriptPath = scriptPathMatch[1];
+            
+            // 如果不是本地路径（以./或/开头），且是远程URL，则下载
+            if (!scriptPath.startsWith('./') && !scriptPath.startsWith('/') && scriptPath.match(/^https?:\/\//)) {
+              const scriptUrl = scriptPath;
+              const scriptName = scriptUrl.split('/').pop();
+              
+              console.log(`发现其他脚本URL: ${scriptUrl}`);
+              processedCount++;
+              
+              const downloadPromise = (async () => {
+                try {
+                  console.log(`下载脚本: ${scriptUrl}`);
+                  const scriptContent = await httpGet(scriptUrl);
+                  
+                  // 保存到本地
+                  const localPath = path.join(outputDir, scriptName);
+                  await fs.writeFile(localPath, scriptContent);
+                  console.log(`脚本已保存到: ${localPath}`);
+                  
+                  // 替换URL为本地相对路径
+                  return line.replace(scriptUrl, `./${outputDir}/${scriptName}`);
+                } catch (err) {
+                  console.error(`下载脚本失败 ${scriptUrl}: ${err.message}`);
+                  return line; // 保持原始URL
+                }
+              })();
+              
+              downloadPromises.push(downloadPromise);
+              updatedLines.push(downloadPromise);
+            } else {
+              updatedLines.push(line);
+            }
+          } else {
+            updatedLines.push(line);
           }
         } else {
           updatedLines.push(line);
