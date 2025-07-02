@@ -42,16 +42,16 @@ function parseScript(content) {
   
   // 处理节点 - 优先考虑标准Loon格式
   const loonSections = {
-    "Rule": content.match(/\[Rule\]([\s\S]*?)(?=\[|$)/i),
-    "Rewrite": content.match(/\[Rewrite\]([\s\S]*?)(?=\[|$)/i),
-    "Script": content.match(/\[Script\]([\s\S]*?)(?=\[|$)/i),
+    "Rule": content.match(/\[Rule\]([\s\S]*?)(?=\n\s*\[|$)/i),
+    "Rewrite": content.match(/\[Rewrite\]([\s\S]*?)(?=\n\s*\[|$)/i),
+    "Script": content.match(/\[Script\]([\s\S]*?)(?=\n\s*\[|$)/i),
     "MITM": content.match(/\[MITM\]([\s\S]*?)(?=\[|$|$)/i)
   };
   
   // 处理QX格式作为备选
   const qxSections = {
-    "filter_local": content.match(/\[filter_local\]([\s\S]*?)(?=\[|$)/i),
-    "rewrite_local": content.match(/\[rewrite_local\]([\s\S]*?)(?=\[|$)/i),
+    "filter_local": content.match(/\[filter_local\]([\s\S]*?)(?=\n\s*\[|$)/i),
+    "rewrite_local": content.match(/\[rewrite_local\]([\s\S]*?)(?=\n\s*\[|$)/i),
     "mitm": content.match(/\[mitm\]([\s\S]*?)(?=\[|$|$)/i)
   };
   
