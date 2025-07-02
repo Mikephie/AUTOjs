@@ -1,0 +1,11 @@
+#!name=✨ Bizhi壁纸 ✨
+#!desc=图像壁纸
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/bizhi.png
+
+[Script]
+bizhi = type=http-response, pattern=^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_[a-z]+, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/bizhi.js, timeout=60
+
+[MITM]
+hostname = %APPEND% leancloud.emotionwp.com
