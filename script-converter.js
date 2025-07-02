@@ -251,61 +251,36 @@ function parseQXRules(sectionContent, result) {
 function parseQXRewrites(sectionContent, result) {
   const lines = sectionContent.split('\n');
   let currentComment = "";
-  
+
   for (let line of lines) {
     line = line.trim();
     if (!line) continue;
-    
+
     if (line.startsWith('#')) {
-      // 收集注释
       currentComment = line;
     } else if (line.includes(' - ')) {
-      // 处理常规重写（例如 reject）
       result.rewrites.push({
         content: line,
         comment: currentComment
       });
-      
-      // 重置注释
       currentComment = "";
-    } else if (line.includes(' url ')) {
-      // 处理脚本重写
-      const parts = line.split(' url ');
-      if (parts.length === 2) {
-        const pattern = parts[0].trim();
-        const action = parts[1].trim();
-        
-        if (action.startsWith('reject')) {
-          // reject规则
-          result.rewrites.push({
-            content: `${pattern} - ${action}`,
-            comment: currentComment
-          });
-        } else if (action.startsWith('script-')) {
-          // 脚本规则
-          const scriptType = action.split(' ')[0];
-          let scriptPath = action.split(' ')[1] || '';
-          
-          // 确定HTTP类型
-          const httpType = scriptType.includes('response') ? 'http-response' : 'http-request';
-          const requiresBody = scriptType.includes('body') ? 'true' : 'false';
-          
-          // 提取脚本名称作为tag
-          let tag = "script";
-          if (scriptPath && scriptPath.includes('/')) {
-            const scriptName = scriptPath.split('/').pop().split('.')[0];
-            if (scriptName) tag = scriptName;
-          }
-          
-          // 构建Loon格式脚本规则
-          result.scripts.push({
-            content: `${httpType} ${pattern} script-path=${scriptPath}, requires-body=${requiresBody}, timeout=60, tag=${tag}`,
-            comment: currentComment
-          });
-        }
+    } else if (/url script-(response|request)-body/i.test(line)) {
+      // 修复 Bizhi 这类脚本
+      const match = line.match(/^(.+?)\s+url\s+script-(response|request)-body\s+(https?:\/\/\S+)/i);
+      if (match) {
+        const pattern = match[1].trim();
+        const type = match[2].toLowerCase(); // response/request
+        const scriptPath = match[3].trim();
+        const httpType = type === 'response' ? 'http-response' : 'http-request';
+        const requiresBody = 'true';
+        const tag = scriptPath.split('/').pop().replace(/\.js$/, '');
+
+        result.scripts.push({
+          content: `${httpType} ${pattern} script-path=${scriptPath}, requires-body=${requiresBody}, timeout=60, tag=${tag}`,
+          comment: currentComment
+        });
       }
-      
-      // 重置注释
+
       currentComment = "";
     }
   }
