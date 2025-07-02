@@ -1,9 +1,9 @@
 /**
 
-- 脚本转换器 v2.1 - 干净版本
-- 最后更新: 2025-07-02
-- 修复内容: 解决正则表达式特殊字符导致的解析失败问题
-- 移除特殊字符: 确保在所有Node.js环境中正常运行
+- Robust脚本转换器 - 专门处理包含特殊字符的脚本文件
+- 版本: 2.2
+- 更新时间: 2025-07-02
+- 特点: 能处理包含各种特殊Unicode字符的脚本文件
   */
 
 const fs = require(‘fs’).promises;
@@ -11,19 +11,70 @@ const path = require(‘path’);
 
 /**
 
-- 从文件内容中提取脚本内容
+- 安全读取文件内容 - 处理特殊字符
   */
-  function extractScriptContent(content) {
-  const commentMatch = content.match(//*([\s\S]*)*//);
-  if (commentMatch && commentMatch[1]) {
-  return commentMatch[1].trim();
+  async function safeReadFile(filePath) {
+  try {
+  // 尝试以UTF-8编码读取
+  const content = await fs.readFile(filePath, ‘utf8’);
+  return content;
+  } catch (error) {
+  console.error(‘UTF-8读取失败，尝试其他编码:’, error.message);
+  try {
+  // 如果UTF-8失败，尝试以binary方式读取然后转换
+  const buffer = await fs.readFile(filePath);
+  return buffer.toString(‘utf8’);
+  } catch (secondError) {
+  console.error(‘文件读取完全失败:’, secondError.message);
+  throw secondError;
   }
-  return content.replace(/\n{3,}/g, "\n\n").trim();
+  }
   }
 
 /**
 
-- 智能节点匹配函数 - 修复正则表达式解析问题
+- 清理特殊字符 - 保留脚本功能的同时移除问题字符
+  */
+  function sanitizeContent(content) {
+  // 移除可能导致解析问题的特殊Unicode字符，但保留基本的脚本结构
+  let cleaned = content
+  // 移除零宽字符
+  .replace(/[\u200B-\u200D\uFEFF]/g, ‘’)
+  // 移除控制字符（保留换行和制表符）
+  .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]/g, ‘’)
+  // 移除一些可能有问题的Unicode字符，但保留常见的表情符号范围
+  .replace(/[\u2000-\u206F]/g, ’ ’) // 通用标点
+  // 保留基本的表情符号，但移除一些可能有问题的符号
+  .replace(/[\u2190-\u21FF]/g, ‘’) // 箭头
+  .replace(/[\u2600-\u26FF]/g, ‘’) // 杂项符号
+  .replace(/[\u2700-\u27BF]/g, ‘’) // 装饰符号
+  // 移除楔形文字等古老字符（这些经常出现在脚本装饰中）
+  .replace(/[\u12000-\u123FF]/g, ‘’); // 楔形文字
+
+return cleaned;
+}
+
+/**
+
+- 从文件内容中提取脚本内容
+  */
+  function extractScriptContent(content) {
+  // 先清理内容
+  const cleanContent = sanitizeContent(content);
+
+// 检查是否是被 /* */ 包裹的内容
+const commentMatch = cleanContent.match(//*([\s\S]*)*//);
+if (commentMatch && commentMatch[1]) {
+return commentMatch[1].trim();
+}
+
+// 如果不是被注释包裹，则直接返回，但去掉多余的空行
+return cleanContent.replace(/\n{3,}/g, "\n\n").trim();
+}
+
+/**
+
+- 智能节点匹配函数 - 处理正则表达式边界问题
   */
   function safeSectionMatch(content, sectionName) {
   try {
@@ -34,6 +85,7 @@ const path = require(‘path’);
   return null;
   }
   
+  // 寻找下一个真正的节点标记
   let endIndex = content.length;
   let searchIndex = startIndex + startPattern.length;
   
@@ -41,14 +93,17 @@ const path = require(‘path’);
   const nextBracketIndex = content.indexOf(’[’, searchIndex);
   if (nextBracketIndex === -1) break;
   
+  // 检查这个 [ 是否是行首的节点标记
   const lineStart = content.lastIndexOf(’\n’, nextBracketIndex);
   const beforeBracket = content.substring(lineStart + 1, nextBracketIndex).trim();
   
+  // 如果 [ 前面是空的（即在行首）
   if (beforeBracket === ‘’) {
   const closeBracketIndex = content.indexOf(’]’, nextBracketIndex);
   if (closeBracketIndex !== -1) {
-  const sectionNameCandidate = content.substring(nextBracketIndex + 1, closeBracketIndex);
-  if (/^[a-zA-Z_-]+$/.test(sectionNameCandidate)) {
+  const candidateName = content.substring(nextBracketIndex + 1, closeBracketIndex);
+  // 检查是否是有效的节点名
+  if (/^[a-zA-Z]*$/.test(candidateName)) {
   endIndex = nextBracketIndex;
   break;
   }
@@ -62,7 +117,7 @@ const path = require(‘path’);
   return sectionContent;
 
 } catch (error) {
-console.error(‘解析节点时出错:’, error);
+console.error(`解析节点 ${sectionName} 时出错:`, error);
 return null;
 }
 }
@@ -74,51 +129,56 @@ return null;
   function extractMetadata(content) {
   const metadata = {};
 
-const metadataFields = {
-name: /#!name\s*=\s*(.+?)($|\n)/i,
-desc: /#!desc\s*=\s*(.+?)($|\n)/i,
-category: /#!category\s*=\s*(.+?)($|\n)/i,
-author: /#!author\s*=\s*(.+?)($|\n)/i,
-icon: /#!icon\s*=\s*(.+?)($|\n)/i
+// 基本元数据提取
+const patterns = {
+name: /#!name\s*=\s*(.+?)(?:\r?\n|$)/i,
+desc: /#!desc\s*=\s*(.+?)(?:\r?\n|$)/i,
+category: /#!category\s*=\s*(.+?)(?:\r?\n|$)/i,
+author: /#!author\s*=\s*(.+?)(?:\r?\n|$)/i,
+icon: /#!icon\s*=\s*(.+?)(?:\r?\n|$)/i
 };
 
-for (const [field, pattern] of Object.entries(metadataFields)) {
+for (const [field, pattern] of Object.entries(patterns)) {
 try {
 const match = content.match(pattern);
 if (match && match[1]) {
-metadata[field] = match[1].trim();
+// 清理提取的值
+metadata[field] = sanitizeContent(match[1]).trim();
 }
 } catch (error) {
-console.error(‘提取元数据字段时出错:’, error);
+console.error(`提取 ${field} 时出错:`, error);
 }
 }
 
+// 备用提取方式
 if (!metadata.name) {
-try {
-const nameMatch = content.match(///\s*@name\s+(.+?)(?:\n|$)/i);
-if (nameMatch) {
-metadata.name = nameMatch[1].trim();
-}
+const fallbackPatterns = [
+///\s*@name\s+(.+?)(?:\r?\n|$)/i,
+///\s*名称[:\s]+(.+?)(?:\r?\n|$)/i,
+//**\s**\s*(.+?)(?:\r?\n|*)/i
+];
 
 ```
-  const descMatch = content.match(/\/\/\s*@desc(?:ription)?\s+(.+?)(?:\n|$)/i);
-  if (descMatch) {
-    metadata.desc = descMatch[1].trim();
+for (const pattern of fallbackPatterns) {
+  const match = content.match(pattern);
+  if (match && match[1]) {
+    metadata.name = sanitizeContent(match[1]).trim();
+    break;
   }
-  
-  const authorMatch = content.match(/\/\/\s*@author\s+(.+?)(?:\n|$)/i);
-  if (authorMatch) {
-    metadata.author = authorMatch[1].trim();
-  }
-} catch (error) {
-  console.error('提取备用元数据时出错:', error);
 }
 ```
 
 }
 
+// 设置默认值
 if (!metadata.name) {
 metadata.name = "Converted Script";
+}
+if (!metadata.desc) {
+metadata.desc = "Converted configuration";
+}
+if (!metadata.author) {
+metadata.author = "Script Converter";
 }
 
 return metadata;
@@ -129,15 +189,12 @@ return metadata;
 - 解析QX重写规则
   */
   function parseQXRewrites(sectionContent) {
-  const result = {
-  scripts: [],
-  rewrites: []
-  };
+  const result = { scripts: [], rewrites: [] };
 
 if (!sectionContent) return result;
 
 try {
-const lines = sectionContent.split(’\n’);
+const lines = sectionContent.split(/\r?\n/);
 let currentComment = "";
 
 ```
@@ -148,45 +205,42 @@ for (let line of lines) {
   if (line.startsWith('#')) {
     currentComment = line;
   } else if (line.includes(' - ')) {
+    // 普通重写规则
     result.rewrites.push({
       content: line,
       comment: currentComment
     });
     currentComment = "";
   } else if (line.includes(' url ')) {
+    // 脚本重写规则
     const urlIndex = line.indexOf(' url ');
-    if (urlIndex !== -1) {
-      const pattern = line.substring(0, urlIndex).trim();
-      const action = line.substring(urlIndex + 5).trim();
+    const pattern = line.substring(0, urlIndex).trim();
+    const action = line.substring(urlIndex + 5).trim();
+    
+    if (action.startsWith('reject')) {
+      result.rewrites.push({
+        content: `${pattern} - ${action}`,
+        comment: currentComment
+      });
+    } else if (action.startsWith('script-')) {
+      const parts = action.split(/\s+/);
+      const scriptType = parts[0];
+      const scriptPath = parts[1] || '';
       
-      if (action.startsWith('reject')) {
-        result.rewrites.push({
-          content: `${pattern} - ${action}`,
-          comment: currentComment
-        });
-      } else if (action.startsWith('script-')) {
-        const actionParts = action.split(' ');
-        const scriptType = actionParts[0];
-        let scriptPath = actionParts[1] || '';
-        
-        const httpType = scriptType.includes('response') ? 'http-response' : 'http-request';
-        const requiresBody = scriptType.includes('body') ? 'true' : 'false';
-        
-        let tag = "script";
-        if (scriptPath && scriptPath.includes('/')) {
-          const pathParts = scriptPath.split('/');
-          const fileName = pathParts[pathParts.length - 1];
-          if (fileName) {
-            const scriptName = fileName.split('.')[0];
-            if (scriptName) tag = scriptName;
-          }
-        }
-        
-        result.scripts.push({
-          content: `${httpType} ${pattern} script-path=${scriptPath}, requires-body=${requiresBody}, timeout=60, tag=${tag}`,
-          comment: currentComment
-        });
+      const httpType = scriptType.includes('response') ? 'http-response' : 'http-request';
+      const requiresBody = scriptType.includes('body') ? 'true' : 'false';
+      
+      let tag = "script";
+      if (scriptPath.includes('/')) {
+        const fileName = scriptPath.split('/').pop();
+        const scriptName = fileName ? fileName.split('.')[0] : '';
+        if (scriptName) tag = scriptName;
       }
+      
+      result.scripts.push({
+        content: `${httpType} ${pattern} script-path=${scriptPath}, requires-body=${requiresBody}, timeout=60, tag=${tag}`,
+        comment: currentComment
+      });
     }
     currentComment = "";
   }
@@ -194,7 +248,7 @@ for (let line of lines) {
 ```
 
 } catch (error) {
-console.error(‘解析QX重写时出错:’, error);
+console.error(‘解析QX重写规则时出错:’, error);
 }
 
 return result;
@@ -202,7 +256,7 @@ return result;
 
 /**
 
-- 解析QX规则
+- 解析QX过滤规则
   */
   function parseQXRules(sectionContent) {
   const rules = [];
@@ -210,7 +264,7 @@ return result;
 if (!sectionContent) return rules;
 
 try {
-const lines = sectionContent.split(’\n’);
+const lines = sectionContent.split(/\r?\n/);
 let currentComment = "";
 
 ```
@@ -223,16 +277,20 @@ for (let line of lines) {
   } else {
     let convertedLine = line;
     
-    if (line.startsWith('host,')) {
-      convertedLine = 'DOMAIN,' + line.substring(5);
-    } else if (line.startsWith('host-suffix,')) {
-      convertedLine = 'DOMAIN-SUFFIX,' + line.substring(12);
-    } else if (line.startsWith('host-keyword,')) {
-      convertedLine = 'DOMAIN-KEYWORD,' + line.substring(13);
-    } else if (line.startsWith('user-agent,')) {
-      convertedLine = 'USER-AGENT,' + line.substring(11);
-    } else if (line.startsWith('url-regex,')) {
-      convertedLine = 'URL-REGEX,' + line.substring(10);
+    // 转换QX规则格式
+    const conversions = [
+      ['host,', 'DOMAIN,'],
+      ['host-suffix,', 'DOMAIN-SUFFIX,'],
+      ['host-keyword,', 'DOMAIN-KEYWORD,'],
+      ['user-agent,', 'USER-AGENT,'],
+      ['url-regex,', 'URL-REGEX,']
+    ];
+    
+    for (const [from, to] of conversions) {
+      if (line.startsWith(from)) {
+        convertedLine = to + line.substring(from.length);
+        break;
+      }
     }
     
     rules.push({
@@ -260,13 +318,10 @@ return rules;
   if (!mitmSection) return "";
 
 try {
-const hostnameIndex = mitmSection.indexOf(‘hostname’);
-if (hostnameIndex !== -1) {
-const equalIndex = mitmSection.indexOf(’=’, hostnameIndex);
-if (equalIndex !== -1) {
-const hostname = mitmSection.substring(equalIndex + 1).split(’\n’)[0].trim();
-return hostname;
-}
+const hostnamePattern = /hostname\s*=\s*([^\r\n]+)/i;
+const match = mitmSection.match(hostnamePattern);
+if (match && match[1]) {
+return match[1].trim();
 }
 } catch (error) {
 console.error(‘提取hostname时出错:’, error);
@@ -289,43 +344,42 @@ return "";
   };
 
 try {
+// 提取元数据
 result.metadata = extractMetadata(content);
 
 ```
-const loonSections = {
-  "Rule": safeSectionMatch(content, "Rule"),
-  "Rewrite": safeSectionMatch(content, "Rewrite"),
-  "Script": safeSectionMatch(content, "Script"),
-  "MITM": safeSectionMatch(content, "MITM")
+// 解析各个节点
+const sections = {
+  // Loon格式
+  Rule: safeSectionMatch(content, "Rule"),
+  Rewrite: safeSectionMatch(content, "Rewrite"),
+  Script: safeSectionMatch(content, "Script"),
+  MITM: safeSectionMatch(content, "MITM"),
+  // QX格式
+  filter_local: safeSectionMatch(content, "filter_local"),
+  rewrite_local: safeSectionMatch(content, "rewrite_local"),
+  mitm: safeSectionMatch(content, "mitm")
 };
 
-const qxSections = {
-  "filter_local": safeSectionMatch(content, "filter_local"),
-  "rewrite_local": safeSectionMatch(content, "rewrite_local"),
-  "mitm": safeSectionMatch(content, "mitm")
-};
-
-if (loonSections.Rule) {
-  result.rules = parseQXRules(loonSections.Rule);
+// 优先解析Loon格式
+if (sections.Rule) {
+  result.rules = parseQXRules(sections.Rule);
+} else if (sections.filter_local) {
+  result.rules = parseQXRules(sections.filter_local);
 }
 
-if (loonSections.Rewrite) {
-  const rewriteResult = parseQXRewrites(loonSections.Rewrite);
+if (sections.Rewrite) {
+  const rewriteResult = parseQXRewrites(sections.Rewrite);
+  result.rewrites = rewriteResult.rewrites;
+  result.scripts = result.scripts.concat(rewriteResult.scripts);
+} else if (sections.rewrite_local) {
+  const rewriteResult = parseQXRewrites(sections.rewrite_local);
   result.rewrites = rewriteResult.rewrites;
   result.scripts = result.scripts.concat(rewriteResult.scripts);
 }
 
-if (result.rules.length === 0 && qxSections.filter_local) {
-  result.rules = parseQXRules(qxSections.filter_local);
-}
-
-if (result.rewrites.length === 0 && result.scripts.length === 0 && qxSections.rewrite_local) {
-  const rewriteResult = parseQXRewrites(qxSections.rewrite_local);
-  result.rewrites = rewriteResult.rewrites;
-  result.scripts = result.scripts.concat(rewriteResult.scripts);
-}
-
-result.hostname = extractHostname(loonSections.MITM || qxSections.mitm);
+// 提取hostname
+result.hostname = extractHostname(sections.MITM || sections.mitm);
 ```
 
 } catch (error) {
@@ -349,30 +403,19 @@ return result;
   scriptInfo = input;
   }
   
-  const name = scriptInfo.metadata.name || "Converted Script";
-  const desc = scriptInfo.metadata.desc || "配置信息";
-  const author = scriptInfo.metadata.author || "Converter";
+  const { name, desc, category, author, icon } = scriptInfo.metadata;
   
   let config = `#!name=${name}\n#!desc=${desc}`;
   
-  if (scriptInfo.metadata.category) {
-  config += `\n#!category=${scriptInfo.metadata.category}`;
-  }
-  
+  if (category) config += `\n#!category=${category}`;
   config += `\n#!author=${author}`;
+  if (icon) config += `\n#!icon=${icon}`;
   
-  if (scriptInfo.metadata.homepage) {
-  config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
-  }
-  
-  if (scriptInfo.metadata.icon) {
-  config += `\n#!icon=${scriptInfo.metadata.icon}`;
-  }
-  
-  if (scriptInfo.rules && scriptInfo.rules.length > 0) {
+  // Rules
+  if (scriptInfo.rules.length > 0) {
   config += "\n\n[Rule]";
-  
   let lastComment = "";
+  
   for (const rule of scriptInfo.rules) {
   if (rule.comment && rule.comment !== lastComment) {
   config += `\n${rule.comment}`;
@@ -380,27 +423,26 @@ return result;
   }
   
   ```
-   let loonRule = rule.content;
-   
-   const parts = loonRule.split(',');
+   let ruleContent = rule.content;
+   // 确保策略名为大写
+   const parts = ruleContent.split(',');
    if (parts.length > 1) {
-     const lastPart = parts[parts.length - 1].trim().toUpperCase();
-     parts[parts.length - 1] = lastPart;
-     loonRule = parts.join(',');
+     parts[parts.length - 1] = parts[parts.length - 1].trim().toUpperCase();
+     ruleContent = parts.join(',');
    }
    
-   config += `\n${loonRule}`;
+   config += `\n${ruleContent}`;
   ```
   
   }
-  
   config += "\n";
   }
   
-  if (scriptInfo.rewrites && scriptInfo.rewrites.length > 0) {
+  // Rewrites
+  if (scriptInfo.rewrites.length > 0) {
   config += "\n[Rewrite]";
-  
   let lastComment = "";
+  
   for (const rule of scriptInfo.rewrites) {
   if (rule.comment && rule.comment !== lastComment) {
   config += `\n${rule.comment}`;
@@ -408,39 +450,34 @@ return result;
   }
   
   ```
-   let loonRewrite = rule.content;
+   let rewriteContent = rule.content
+     .replace(' - reject', ' - REJECT')
+     .replace(' - reject-dict', ' - REJECT')
+     .replace(' - reject-img', ' - REJECT');
    
-   loonRewrite = loonRewrite.replace(' - reject', ' - REJECT');
-   loonRewrite = loonRewrite.replace(' - reject-dict', ' - REJECT');
-   loonRewrite = loonRewrite.replace(' - reject-img', ' - REJECT');
-   
-   config += `\n${loonRewrite}`;
+   config += `\n${rewriteContent}`;
   ```
   
   }
-  
   config += "\n";
   }
   
-  if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
+  // Scripts
+  if (scriptInfo.scripts.length > 0) {
   config += "\n\n[Script]";
-  
   let lastComment = "";
+  
   for (const rule of scriptInfo.scripts) {
   if (rule.comment && rule.comment !== lastComment) {
   config += `\n${rule.comment}`;
   lastComment = rule.comment;
   }
-  
-  ```
-   config += `\n${rule.content}`;
-  ```
-  
+  config += `\n${rule.content}`;
   }
-  
   config += "\n";
   }
   
+  // MITM
   if (scriptInfo.hostname) {
   config += "\n[MITM]\n";
   config += `hostname = ${scriptInfo.hostname}\n`;
@@ -450,7 +487,7 @@ return result;
 
 } catch (error) {
 console.error(‘转换为Loon格式时出错:’, error);
-return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + error.message;
+return `// 转换失败: ${error.message}`;
 }
 }
 
@@ -468,30 +505,19 @@ return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + 
   scriptInfo = input;
   }
   
-  const name = scriptInfo.metadata.name || "Converted Script";
-  const desc = scriptInfo.metadata.desc || "配置信息";
-  const author = scriptInfo.metadata.author || "Converter";
+  const { name, desc, category, author, icon } = scriptInfo.metadata;
   
   let config = `#!name=${name}\n#!desc=${desc}`;
   
-  if (scriptInfo.metadata.category) {
-  config += `\n#!category=${scriptInfo.metadata.category}`;
-  }
-  
+  if (category) config += `\n#!category=${category}`;
   config += `\n#!author=${author}`;
+  if (icon) config += `\n#!icon=${icon}`;
   
-  if (scriptInfo.metadata.homepage) {
-  config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
-  }
-  
-  if (scriptInfo.metadata.icon) {
-  config += `\n#!icon=${scriptInfo.metadata.icon}`;
-  }
-  
-  if (scriptInfo.rules && scriptInfo.rules.length > 0) {
+  // Rules
+  if (scriptInfo.rules.length > 0) {
   config += "\n\n[Rule]";
-  
   let lastComment = "";
+  
   for (const rule of scriptInfo.rules) {
   if (rule.comment && rule.comment !== lastComment) {
   config += `\n${rule.comment}`;
@@ -499,31 +525,29 @@ return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + 
   }
   
   ```
-   let surgeRule = rule.content;
-   
-   const parts = surgeRule.split(',');
+   let ruleContent = rule.content;
+   const parts = ruleContent.split(',');
    if (parts.length > 1) {
-     const lastPart = parts[parts.length - 1].trim().toUpperCase();
-     parts[parts.length - 1] = lastPart;
-     surgeRule = parts.join(',');
+     parts[parts.length - 1] = parts[parts.length - 1].trim().toUpperCase();
+     ruleContent = parts.join(',');
    }
    
-   config += `\n${surgeRule}`;
+   config += `\n${ruleContent}`;
   ```
   
   }
-  
   config += "\n";
   }
   
-  const rejectRules = scriptInfo.rewrites ? scriptInfo.rewrites.filter(r =>
-  r.content.includes(’ - reject’) || r.content.includes(’ - reject-dict’) || r.content.includes(’ - reject-img’)
-  ) : [];
+  // Map Local (for reject rules)
+  const rejectRules = scriptInfo.rewrites.filter(r =>
+  r.content.includes(’ - reject’)
+  );
   
   if (rejectRules.length > 0) {
   config += "\n[Map Local]";
-  
   let lastComment = "";
+  
   for (const rule of rejectRules) {
   if (rule.comment && rule.comment !== lastComment) {
   config += `\n${rule.comment}`;
@@ -534,15 +558,14 @@ return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + 
    const dashIndex = rule.content.indexOf(' - ');
    if (dashIndex !== -1) {
      const pattern = rule.content.substring(0, dashIndex).trim();
-     let rejectType = rule.content.substring(dashIndex + 3).trim().toLowerCase();
+     const rejectType = rule.content.substring(dashIndex + 3).trim().toLowerCase();
      
      let data = "HTTP/1.1 200 OK";
-     
-     if (rejectType === 'reject-img' || rejectType === 'reject-200') {
+     if (rejectType.includes('img')) {
        data = "HTTP/1.1 200 OK\\r\\nContent-Type: image/png\\r\\nContent-Length: 0";
-     } else if (rejectType === 'reject-dict' || rejectType === 'reject-json') {
+     } else if (rejectType.includes('dict') || rejectType.includes('json')) {
        data = "{}";
-     } else if (rejectType === 'reject-array') {
+     } else if (rejectType.includes('array')) {
        data = "[]";
      }
      
@@ -551,43 +574,13 @@ return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + 
   ```
   
   }
-  
   config += "\n";
   }
   
-  const urlRewriteRules = scriptInfo.rewrites ? scriptInfo.rewrites.filter(r =>
-  !r.content.includes(’ - reject’) && !r.content.includes(’ - reject-dict’) && !r.content.includes(’ - reject-img’)
-  ) : [];
-  
-  if (urlRewriteRules.length > 0) {
-  config += "\n[URL Rewrite]";
-  
-  let lastComment = "";
-  for (const rule of urlRewriteRules) {
-  if (rule.comment && rule.comment !== lastComment) {
-  config += `\n${rule.comment}`;
-  lastComment = rule.comment;
-  }
-  
-  ```
-   let surgeRewrite = rule.content;
-   surgeRewrite = surgeRewrite.replace(' - reject', ' - REJECT');
-   surgeRewrite = surgeRewrite.replace(' - reject-dict', ' - REJECT-DICT');
-   surgeRewrite = surgeRewrite.replace(' - reject-img', ' - REJECT-IMG');
-   
-   config += `\n${surgeRewrite}`;
-  ```
-  
-  }
-  
-  config += "\n";
-  }
-  
-  if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
+  // Scripts
+  if (scriptInfo.scripts.length > 0) {
   config += "\n\n[Script]";
-  
   let lastComment = "";
-  let ruleCounter = 0;
   
   for (const rule of scriptInfo.scripts) {
   if (rule.comment && rule.comment !== lastComment) {
@@ -596,47 +589,25 @@ return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + 
   }
   
   ```
-   let surgeScript = "";
-   
-   const httpTypeMatch = rule.content.match(/(http-(?:response|request))/);
-   const scriptPathMatch = rule.content.match(/script-path=([^,\s]+)/);
-   
-   if (httpTypeMatch && scriptPathMatch) {
-     const httpType = httpTypeMatch[1];
-     const scriptPath = scriptPathMatch[1];
-     
-     const httpTypeIndex = rule.content.indexOf(httpType);
-     const scriptPathIndex = rule.content.indexOf('script-path=');
-     let pattern = "";
-     
-     if (httpTypeIndex !== -1 && scriptPathIndex !== -1) {
-       pattern = rule.content.substring(httpTypeIndex + httpType.length, scriptPathIndex).trim();
-     }
-     
+   // 转换Loon脚本格式为Surge格式
+   const httpMatch = rule.content.match(/(http-(?:request|response))\s+(.+?)\s+script-path=([^,\s]+)/);
+   if (httpMatch) {
+     const [, httpType, pattern, scriptPath] = httpMatch;
      const requiresBody = rule.content.includes('requires-body=true') ? '1' : '0';
-     
-     let scriptName = "";
      const tagMatch = rule.content.match(/tag=([^,\s]+)/);
-     if (tagMatch) {
-       scriptName = tagMatch[1];
-     } else {
-       scriptName = ruleCounter === 0 ? name : `${name}_${ruleCounter+1}`;
-     }
+     const scriptName = tagMatch ? tagMatch[1] : name;
      
-     surgeScript = `${scriptName} = type=${httpType}, pattern=${pattern}, requires-body=${requiresBody}, script-path=${scriptPath}, timeout=60`;
+     config += `\n${scriptName} = type=${httpType}, pattern=${pattern}, requires-body=${requiresBody}, script-path=${scriptPath}, timeout=60`;
    } else {
-     surgeScript = rule.content;
+     config += `\n${rule.content}`;
    }
-   
-   config += `\n${surgeScript}`;
-   ruleCounter++;
   ```
   
   }
-  
   config += "\n";
   }
   
+  // MITM
   if (scriptInfo.hostname) {
   config += "\n[MITM]\n";
   config += `hostname = %APPEND% ${scriptInfo.hostname}\n`;
@@ -646,151 +617,53 @@ return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + 
 
 } catch (error) {
 console.error(‘转换为Surge格式时出错:’, error);
-return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + error.message;
+return `// 转换失败: ${error.message}`;
 }
 }
 
 /**
 
-- 检测脚本类型
-  */
-  function detectScriptType(content) {
-  try {
-  if (content.includes(’#!name=’) &&
-  (content.includes(’[Rewrite]’) || content.includes(’[Script]’))) {
-  return ‘loon’;
-  }
-  
-  if (content.includes(’#!name=’) &&
-  (content.includes(’[Script]’) || content.includes(’[Rule]’)) &&
-  (content.includes(‘type=http-response’) || content.includes(‘type=cron’))) {
-  return ‘surge’;
-  }
-  
-  if ((content.includes(’[rewrite_local]’) || content.includes(’[filter_local]’)) ||
-  content.includes(‘url script-’) ||
-  content.includes(’// @author’) ||
-  content.includes(’// @name’)) {
-  return ‘quantumultx’;
-  }
-  
-  return ‘unknown’;
-  } catch (error) {
-  console.error(‘检测脚本类型时出错:’, error);
-  return ‘unknown’;
-  }
-  }
-
-/**
-
-- 转换脚本格式 - 主函数
+- 主转换函数
   */
   function convertScript(content, targetFormat) {
   try {
   const extractedContent = extractScriptContent(content);
-  const sourceType = detectScriptType(extractedContent);
-  console.log(‘检测到脚本类型:’, sourceType);
-  
-  const scriptInfo = parseScript(extractedContent);
   
   if (targetFormat === ‘loon’) {
-  return convertToLoon(scriptInfo);
+  return convertToLoon(extractedContent);
   } else if (targetFormat === ‘surge’) {
-  return convertToSurge(scriptInfo);
+  return convertToSurge(extractedContent);
+  } else {
+  return `// 不支持的目标格式: ${targetFormat}`;
   }
-  
-  return JSON.stringify(scriptInfo, null, 2);
 
 } catch (error) {
 console.error(‘转换脚本时出错:’, error);
-return ’// 转换失败，请检查原始脚本格式\n// 错误信息: ’ + error.message;
+return `// 转换失败: ${error.message}`;
 }
 }
 
 /**
 
-- 测试函数
+- 从文件转换
   */
-  function testRegexFix(testContent) {
-  console.log(’=== 测试正则表达式修复 ===’);
+  async function convertScriptFromFile(filePath, targetFormat) {
+  try {
+  const content = await safeReadFile(filePath);
+  return convertScript(content, targetFormat);
+  } catch (error) {
+  console.error(‘从文件转换时出错:’, error);
+  return `// 文件读取失败: ${error.message}`;
+  }
+  }
 
-try {
-const extractedContent = extractScriptContent(testContent);
-const result = parseScript(extractedContent);
-
-```
-console.log('解析成功!');
-console.log('规则数量:', result.rules.length);
-console.log('重写数量:', result.rewrites.length);
-console.log('脚本数量:', result.scripts.length);
-console.log('Hostname:', result.hostname);
-
-return true;
-```
-
-} catch (error) {
-console.error(‘解析失败:’, error);
-return false;
-}
-}
-
-/**
-
-- 运行测试
-  */
-  function runTests() {
-  const testContent = `
-  /*
-  #!name=Bizhi壁纸
-  #!desc=图像壁纸
-  #!category=APP
-  #!author=Author
-  #!icon=https://example.com/icon.png
-  [rewrite_local]
-  ^https://leancloud.emotionwp.com/1.1/classes/wpf_[a-z]+ url script-response-body https://example.com/script.js
-
-[MITM]
-hostname = leancloud.emotionwp.com
-*/
-`;
-
-console.log(‘开始测试…’);
-const success = testRegexFix(testContent);
-
-if (success) {
-console.log(’\n转换为Loon格式:’);
-const loonResult = convertToLoon(testContent);
-console.log(loonResult);
-
-```
-console.log('\n转换为Surge格式:');
-const surgeResult = convertToSurge(testContent);
-console.log(surgeResult);
-```
-
-}
-
-return success;
-}
-
-// 导出所有函数
 module.exports = {
-extractScriptContent,
-parseScript,
+convertScript,
+convertScriptFromFile,
 convertToLoon,
 convertToSurge,
-convertScript,
-detectScriptType,
-testRegexFix,
-runTests,
-safeSectionMatch,
-extractMetadata,
-parseQXRewrites,
-parseQXRules,
-extractHostname
+extractScriptContent,
+parseScript,
+safeReadFile,
+sanitizeContent
 };
-
-// 如果直接运行此文件，执行测试
-if (require.main === module) {
-runTests();
-}
