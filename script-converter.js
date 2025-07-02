@@ -257,19 +257,14 @@ function parseQXRewrites(sectionContent, result) {
     if (!line) continue;
 
     if (line.startsWith('#')) {
+      // 收集注释
       currentComment = line;
-    } else if (line.includes(' - ')) {
-      result.rewrites.push({
-        content: line,
-        comment: currentComment
-      });
-      currentComment = "";
     } else if (/url script-(response|request)-body/i.test(line)) {
-      // 修复 Bizhi 这类脚本
-      const match = line.match(/^(.+?)\s+url\s+script-(response|request)-body\s+(https?:\/\/\S+)/i);
+      // 处理 QuantumultX 脚本型 rewrite
+      const match = line.match(/^([^\s]+)\s+url\s+script-(response|request)-body\s+(\S+)/i);
       if (match) {
         const pattern = match[1].trim();
-        const type = match[2].toLowerCase(); // response/request
+        const type = match[2].toLowerCase();
         const scriptPath = match[3].trim();
         const httpType = type === 'response' ? 'http-response' : 'http-request';
         const requiresBody = 'true';
@@ -281,7 +276,15 @@ function parseQXRewrites(sectionContent, result) {
         });
       }
 
-      currentComment = "";
+      currentComment = '';
+    } else if (line.includes(' - ')) {
+      // 处理 reject、其他 rewrite 类型
+      result.rewrites.push({
+        content: line,
+        comment: currentComment
+      });
+
+      currentComment = '';
     }
   }
 }
