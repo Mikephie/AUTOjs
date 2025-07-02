@@ -5,8 +5,8 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/axs.png
 
 [Rule]
-url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace,REJECT
-url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight,REJECT
+URL-REGEX,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace,REJECT
+URL-REGEX,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight,REJECT
 
 
 [Script]
