@@ -24,7 +24,7 @@ function extractScriptContent(content) {
 }
 
 /**
- * 解析脚本内容 - 修复正则表达式匹配问题
+ * 解析脚本内容
  * @param {string} content 脚本内容
  * @returns {Object} 解析结果
  */
@@ -40,95 +40,48 @@ function parseScript(content) {
   // 提取元数据
   extractMetadata(content, result);
   
-  // 修复：使用字符串查找替代正则表达式匹配
+  // 处理节点 - 优先考虑标准Loon格式
   const loonSections = {
-    "Rule": findSection(content, "Rule"),
-    "Rewrite": findSection(content, "Rewrite"),
-    "Script": findSection(content, "Script"),
-    "MITM": findSection(content, "MITM")
+    "Rule": content.match(/\[Rule\]([\s\S]*?)(?=\[|$)/i),
+    "Rewrite": content.match(/\[Rewrite\]([\s\S]*?)(?=\[|$)/i),
+    "Script": content.match(/\[Script\]([\s\S]*?)(?=\[|$)/i),
+    "MITM": content.match(/\[MITM\]([\s\S]*?)(?=\[|$|$)/i)
   };
   
   // 处理QX格式作为备选
   const qxSections = {
-    "filter_local": findSection(content, "filter_local"),
-    "rewrite_local": findSection(content, "rewrite_local"),
-    "mitm": findSection(content, "mitm")
+    "filter_local": content.match(/\[filter_local\]([\s\S]*?)(?=\[|$)/i),
+    "rewrite_local": content.match(/\[rewrite_local\]([\s\S]*?)(?=\[|$)/i),
+    "mitm": content.match(/\[mitm\]([\s\S]*?)(?=\[|$|$)/i)
   };
   
   // 解析Loon格式
-  if (loonSections.Rule) {
-    parseSectionWithComments(loonSections.Rule, result.rules);
+  if (loonSections.Rule && loonSections.Rule[1]) {
+    parseSectionWithComments(loonSections.Rule[1], result.rules);
   }
   
-  if (loonSections.Rewrite) {
-    parseSectionWithComments(loonSections.Rewrite, result.rewrites);
+  if (loonSections.Rewrite && loonSections.Rewrite[1]) {
+    parseSectionWithComments(loonSections.Rewrite[1], result.rewrites);
   }
   
-  if (loonSections.Script) {
-    parseSectionWithComments(loonSections.Script, result.scripts);
+  if (loonSections.Script && loonSections.Script[1]) {
+    parseSectionWithComments(loonSections.Script[1], result.scripts);
   }
   
   // 处理QX格式 - 如果Loon格式为空
-  if (result.rules.length === 0 && qxSections.filter_local) {
-    parseQXRules(qxSections.filter_local, result);
+  if (result.rules.length === 0 && qxSections.filter_local && qxSections.filter_local[1]) {
+    parseQXRules(qxSections.filter_local[1], result);
   }
   
   if (result.rewrites.length === 0 && result.scripts.length === 0 && 
-      qxSections.rewrite_local) {
-    parseQXRewrites(qxSections.rewrite_local, result);
+      qxSections.rewrite_local && qxSections.rewrite_local[1]) {
+    parseQXRewrites(qxSections.rewrite_local[1], result);
   }
   
   // 提取hostname
   extractHostname(loonSections.MITM, qxSections.mitm, result);
   
   return result;
-}}
-
-/**
- * 安全的节点查找函数 - 避免正则表达式问题
- * @param {string} content 内容
- * @param {string} sectionName 节点名
- * @returns {string|null} 节点内容
- */
-function findSection(content, sectionName) {
-  const startTag = `[${sectionName}]`;
-  const startIndex = content.indexOf(startTag);
-  
-  if (startIndex === -1) {
-    return null;
-  }
-  
-  // 查找下一个节点的开始位置
-  let endIndex = content.length;
-  let searchPos = startIndex + startTag.length;
-  
-  // 安全查找下一个节点标记
-  while (searchPos < content.length) {
-    const nextBracket = content.indexOf('[', searchPos);
-    if (nextBracket === -1) break;
-    
-    // 确保这是一个真正的节点标记（在行首）
-    const lineStart = content.lastIndexOf('\n', nextBracket);
-    const beforeBracket = content.substring(lineStart + 1, nextBracket);
-    
-    if (beforeBracket.trim() === '') {
-      // 检查是否是有效的节点名
-      const closeBracket = content.indexOf(']', nextBracket);
-      if (closeBracket !== -1) {
-        const nodeName = content.substring(nextBracket + 1, closeBracket);
-        // 只匹配有效的节点名（字母开头，可包含字母数字下划线）
-        if (/^[a-zA-Z][a-zA-Z0-9_]*$/.test(nodeName)) {
-          endIndex = nextBracket;
-          break;
-        }
-      }
-    }
-    
-    searchPos = nextBracket + 1;
-  }
-  
-  const sectionContent = content.substring(startIndex + startTag.length, endIndex);
-  return sectionContent.trim();
 }
 
 /**
