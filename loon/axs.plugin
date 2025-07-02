@@ -1,16 +1,18 @@
 #!name=✨ AXS Payment ✨
-#!desc=缴费账单
+#!desc=完全替换广告页面内容，避免任何白框闪现
 #!category=🚫广告
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/axs.png
 
 [Rule]
-url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace,REJECT
-url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight,REJECT
+# Backup rules in case the specific rules don't catch everything
+URL-REGEX,"^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage",REJECT
+#URL-REGEX,^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace,REJECT
+URL-REGEX,"^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight",REJECT
 
-
-[Script]
-http-response ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/axs.js, requires-body=true, timeout=60, tag=axs
+[Rewrite]
+# 完全替换广告页面
+^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*\/whatsnew\.php.* mock-response-body data-type=file data="https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx/instant_close.html"
 
 [MITM]
 hostname = m-station2.axs.com.sg
