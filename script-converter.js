@@ -40,20 +40,51 @@ function parseScript(content) {
   // 提取元数据
   extractMetadata(content, result);
   
-  // 处理节点 - 优先考虑标准Loon格式
-  const loonSections = {
-    "Rule": content.match(/\[Rule\]([\s\S]*?)(?=\[|$)/i),
-    "Rewrite": content.match(/\[Rewrite\]([\s\S]*?)(?=\[|$)/i),
-    "Script": content.match(/\[Script\]([\s\S]*?)(?=\[|$)/i),
-    "MITM": content.match(/\[MITM\]([\s\S]*?)(?=\[|$|$)/i)
-  };
+  // 改成字符串查找：
+function findSectionContent(content, sectionName) {
+  const startTag = `[${sectionName}]`;
+  const startIndex = content.indexOf(startTag);
   
-  // 处理QX格式作为备选
-  const qxSections = {
-    "filter_local": content.match(/\[filter_local\]([\s\S]*?)(?=\[|$)/i),
-    "rewrite_local": content.match(/\[rewrite_local\]([\s\S]*?)(?=\[|$)/i),
-    "mitm": content.match(/\[mitm\]([\s\S]*?)(?=\[|$|$)/i)
-  };
+  if (startIndex === -1) {
+    return null;
+  }
+  
+  let endIndex = content.length;
+  let searchPos = startIndex + startTag.length;
+  
+  // 查找下一个在行首的节点标记
+  while (searchPos < content.length) {
+    const nextBracket = content.indexOf('\n[', searchPos);
+    if (nextBracket === -1) break;
+    
+    const closeBracket = content.indexOf(']', nextBracket + 2);
+    if (closeBracket !== -1) {
+      const nodeName = content.substring(nextBracket + 2, closeBracket);
+      if (/^[a-zA-Z][a-zA-Z0-9_]*$/.test(nodeName)) {
+        endIndex = nextBracket;
+        break;
+      }
+    }
+    
+    searchPos = nextBracket + 1;
+  }
+  
+  const sectionContent = content.substring(startIndex + startTag.length, endIndex).trim();
+  return [null, sectionContent];
+}
+
+const loonSections = {
+  "Rule": findSectionContent(content, "Rule"),
+  "Rewrite": findSectionContent(content, "Rewrite"),
+  "Script": findSectionContent(content, "Script"),
+  "MITM": findSectionContent(content, "MITM")
+};
+
+const qxSections = {
+  "filter_local": findSectionContent(content, "filter_local"),
+  "rewrite_local": findSectionContent(content, "rewrite_local"),
+  "mitm": findSectionContent(content, "mitm")
+};
   
   // 解析Loon格式
   if (loonSections.Rule && loonSections.Rule[1]) {
