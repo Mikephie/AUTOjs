@@ -46,7 +46,7 @@ function findSectionContent(content, sectionName) {
   const startIndex = content.indexOf(startTag);
   
   if (startIndex === -1) {
-    return null;
+    return null;  // 与原来的 match() 返回 null 保持一致
   }
   
   let endIndex = content.length;
@@ -70,7 +70,8 @@ function findSectionContent(content, sectionName) {
   }
   
   const sectionContent = content.substring(startIndex + startTag.length, endIndex).trim();
-  return [null, sectionContent];
+  // 重要：返回与 match() 相同的格式 [完整匹配, 捕获组1]
+  return [startTag + sectionContent, sectionContent];
 }
 
 const loonSections = {
