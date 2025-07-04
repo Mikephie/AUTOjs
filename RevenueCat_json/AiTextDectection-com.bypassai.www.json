@@ -1,0 +1,48 @@
+{
+  "user_agent": "AiTextDectection",
+  "bundle_id": "com.bypassai.www",
+  "data": {
+    "sub_lifetime_detector": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "sub_lifetime_detector"
+    },
+    "sub_monthly_aidetector": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "sub_monthly_aidetector"
+    },
+    "sub_monthly_silver_aidetector": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "sub_monthly_silver_aidetector"
+    },
+    "sub_weekly_aidetector": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "sub_weekly_aidetector"
+    },
+    "sub_weekly_silver_aidetector": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "sub_weekly_silver_aidetector"
+    },
+    "sub_yearly_aidetector": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "sub_yearly_aidetector"
+    },
+    "sub_yearly_silver_aidetector": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "sub_yearly_silver_aidetector"
+    }
+  }
+}
