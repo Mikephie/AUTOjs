@@ -1,79 +1,66 @@
-const fs = require('fs');
-const path = require('path');
+name: Update Scripts List
 
-// 配置目录
-const CONFIG = {
-  inputDir: 'input',
-  quantumultxDir: 'quantumultx',
-  loonDir: 'loon',
-  surgeDir: 'surge',
-  outputFile: process.env.GITHUB_PAGES_PATH ? 
-    path.join(process.env.GITHUB_PAGES_PATH, 'scripts.json') : 
-    'scripts.json'
-};
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'input/**'
+      - 'loon/**'
+      - 'quantumultx/**'
+      - 'surge/**'
+  workflow_dispatch:  # 允许手动触发
 
-// 读取目录中的脚本文件
-function getScriptFiles(dir) {
-  try {
-    return fs.readdirSync(dir)
-      .filter(file => file.endsWith('.js'))
-      .map(file => ({
-        name: file,
-        path: `${dir}/${file}`,
-        updateTime: fs.statSync(`${dir}/${file}`).mtime.toISOString()
-      }));
-  } catch (error) {
-    console.error(`读取 ${dir} 目录失败:`, error);
-    return [];
-  }
-}
-
-// 主函数
-function generateScriptList() {
-  // 获取原始脚本
-  const originalScripts = getScriptFiles(CONFIG.inputDir);
-  
-  if (originalScripts.length === 0) {
-    console.error('没有找到原始脚本文件');
-    process.exit(1);
-  }
-  
-  // 创建脚本列表
-  const scriptsList = originalScripts.map(script => {
-    const scriptName = script.name;
-    const scriptNameWithoutExt = scriptName.replace('.js', '');
+jobs:
+  update-scripts-list:
+    runs-on: ubuntu-latest
     
-    // 检查对应的 QuantumultX、Loon 和 Surge 脚本是否存在
-    const quantumultxPath = `${CONFIG.quantumultxDir}/${scriptName}`;
-    const loonPath = `${CONFIG.loonDir}/${scriptName}`;
-    const surgePath = `${CONFIG.surgeDir}/${scriptName}`;
-    
-    const hasQuantumultx = fs.existsSync(quantumultxPath);
-    const hasLoon = fs.existsSync(loonPath);
-    const hasSurge = fs.existsSync(surgePath);
-    
-    return {
-      name: scriptNameWithoutExt,
-      filename: scriptName,
-      updateTime: script.updateTime,
-      formats: {
-        original: `${CONFIG.inputDir}/${scriptName}`,
-        quantumultx: hasQuantumultx ? `${CONFIG.quantumultxDir}/${scriptName}` : null,
-        loon: hasLoon ? `${CONFIG.loonDir}/${scriptName}` : null,
-        surge: hasSurge ? `${CONFIG.surgeDir}/${scriptName}` : null
-      }
-    };
-  });
-  
-  // 保存为 JSON 文件
-  fs.writeFileSync(CONFIG.outputFile, JSON.stringify({
-    generatedTime: new Date().toISOString(),
-    scripts: scriptsList
-  }, null, 2));
-  
-  console.log(`成功生成脚本列表，共 ${scriptsList.length} 个脚本。`);
-  console.log(`脚本列表已保存至：${CONFIG.outputFile}`);
-}
-
-// 执行
-generateScriptList();
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Determine GitHub Pages path
+        id: pages-path
+        run: |
+          if [ -d "docs" ]; then
+            echo "GITHUB_PAGES_PATH=docs" >> $GITHUB_ENV
+          else
+            echo "GITHUB_PAGES_PATH=." >> $GITHUB_ENV
+          fi
+          
+      - name: Generate scripts list
+        run: |
+          mkdir -p scripts
+          node scripts/generate-script-list.js
+          
+      - name: Setup GitHub Pages branch
+        run: |
+          if [ -d "docs" ]; then
+            mkdir -p docs
+            cp scripts.json docs/
+          else
+            git checkout -b gh-pages || git checkout gh-pages
+            git pull origin gh-pages || true
+            # 保留现有的 index.html 文件
+            cp scripts.json .
+          fi
+          
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          if [ -d "docs" ]; then
+            git add docs/scripts.json
+            git commit -m "Update scripts list" || echo "No changes to commit"
+            git push origin main
+          else
+            git add scripts.json
+            git commit -m "Update scripts list" || echo "No changes to commit"
+            git push origin gh-pages
+          fi
