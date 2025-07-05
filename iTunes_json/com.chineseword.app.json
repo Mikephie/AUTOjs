@@ -1,0 +1,20 @@
+{
+  "name": "Chinese Characters-mandarin",
+  "appId": "1576661299",
+  "bundleId": "com.chineseword.app",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "chinesewordvip"
+    },
+    {
+      "id": 2,
+      "productId": "chineseword_one_year"
+    },
+    {
+      "id": 3,
+      "productId": "chineseword_one_month"
+    }
+  ],
+  "updatedAt": "2025-07-03T04:40:05.150Z"
+}

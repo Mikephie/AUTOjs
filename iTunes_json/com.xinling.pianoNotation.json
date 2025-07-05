@@ -1,0 +1,20 @@
+{
+  "name": "Piano Notes: Sheet Music Maker",
+  "appId": "6504094515",
+  "bundleId": "com.xinling.pianoNotation",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.pianoNumber.once"
+    },
+    {
+      "id": 2,
+      "productId": "com.notationNumber.weekly"
+    },
+    {
+      "id": 3,
+      "productId": "com.piano.notation.weekly"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:47:33.396Z"
+}

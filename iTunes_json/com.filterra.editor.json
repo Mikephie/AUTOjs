@@ -1,0 +1,56 @@
+{
+  "name": "Filterra- Filters for Pictures",
+  "appId": "951704333",
+  "bundleId": "com.filterra.editor",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.filterra.editor.premium01t"
+    },
+    {
+      "id": 2,
+      "productId": "com.filterra.editor.virtual.portrait"
+    },
+    {
+      "id": 3,
+      "productId": "com.filterra.editor.virtual.showroom"
+    },
+    {
+      "id": 4,
+      "productId": "com.filterra.editor.virtual.prolab"
+    },
+    {
+      "id": 5,
+      "productId": "com.filterra.editor.filter.arkitektur"
+    },
+    {
+      "id": 6,
+      "productId": "com.filterra.editor.feellikefilm.revivedfilm"
+    },
+    {
+      "id": 7,
+      "productId": "com.filterra.editor.lights.bokeh"
+    },
+    {
+      "id": 8,
+      "productId": "com.filterra.editor.bw.bw"
+    },
+    {
+      "id": 9,
+      "productId": "com.filterra.editor.feellikefilm.filmix"
+    },
+    {
+      "id": 10,
+      "productId": "com.filterra.editor.food.food"
+    },
+    {
+      "id": 11,
+      "productId": "com.filterra.editor.premium12"
+    },
+    {
+      "id": 12,
+      "productId": "com.filterra.editor.premium01"
+    }
+  ],
+  "updatedAt": "2025-05-13T13:21:39.749Z"
+}

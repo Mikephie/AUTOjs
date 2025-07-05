@@ -1,0 +1,44 @@
+{
+  "name": "Ghost Lens AR Fun Movie Maker",
+  "appId": "860011430",
+  "bundleId": "com.bestimage.ghostlens",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.bestimage.ghostlens.unlockallfeatures"
+    },
+    {
+      "id": 2,
+      "productId": "com.bestimage.ghostlens.stickers"
+    },
+    {
+      "id": 3,
+      "productId": "com.ghostlens.premium1month"
+    },
+    {
+      "id": 4,
+      "productId": "com.bestimage.ghostlens.prolayouts"
+    },
+    {
+      "id": 5,
+      "productId": "com.ghostlens.premium1year"
+    },
+    {
+      "id": 6,
+      "productId": "com.bestimage.ghostlens.profilters"
+    },
+    {
+      "id": 7,
+      "productId": "com.bestimage.ghostlens.noads"
+    },
+    {
+      "id": 8,
+      "productId": "com.bestimage.ghostlens.morebackground"
+    },
+    {
+      "id": 9,
+      "productId": "com.bestimage.ghostlens.aviary.effectpack.88"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:26.588Z"
+}

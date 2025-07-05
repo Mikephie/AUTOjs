@@ -1,0 +1,40 @@
+{
+  "name": "Boom: Bass Booster & Equalizer",
+  "appId": "1065511007",
+  "bundleId": "com.globaldelight.iBoom",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.globaldelight.iBoom.7DayFree1YearIntroPack"
+    },
+    {
+      "id": 2,
+      "productId": "com.globaldelight.iBoomMagicalSurroundSound"
+    },
+    {
+      "id": 3,
+      "productId": "com.globaldelight.iBoom1MonthPackDiscount"
+    },
+    {
+      "id": 4,
+      "productId": "com.globaldelight.iBoom6MonthPackDiscount"
+    },
+    {
+      "id": 5,
+      "productId": "com.globaldelight.iBoom1YearPackDiscount"
+    },
+    {
+      "id": 6,
+      "productId": "com.globaldelight.iBoom.LifetimeOfferPack"
+    },
+    {
+      "id": 7,
+      "productId": "com.globaldelight.iBoom.LifetimeOfferPack60"
+    },
+    {
+      "id": 8,
+      "productId": "com.globaldelight.iBoom1YearPackDiscount.OldUser"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:24:04.415Z"
+}

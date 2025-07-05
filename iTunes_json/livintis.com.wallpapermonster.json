@@ -1,0 +1,48 @@
+{
+  "name": "Wallpaper Tree: 4K Wallpapers",
+  "appId": "1352034630",
+  "bundleId": "livintis.com.wallpapermonster",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "wallpaperworld.subscription.monthly.7.notrial"
+    },
+    {
+      "id": 2,
+      "productId": "wallpaperworld.subscription.monthly.9.notrial"
+    },
+    {
+      "id": 3,
+      "productId": "wallpaperworld.subscription.monthly.1.notrial"
+    },
+    {
+      "id": 4,
+      "productId": "wallpaperworld.subscription.weekly.11.notrial"
+    },
+    {
+      "id": 5,
+      "productId": "wallpaperworld.subscription.weekly.10.notrial"
+    },
+    {
+      "id": 6,
+      "productId": "wallpaperworld.subscription.monthly.8.notrial"
+    },
+    {
+      "id": 7,
+      "productId": "wallpaperworld.subscription.monthly.2.freetrial"
+    },
+    {
+      "id": 8,
+      "productId": "wallpaperworld.subscription.yearly.12.notrial"
+    },
+    {
+      "id": 9,
+      "productId": "wallpaperworld.subscription.monthly.5.notrial"
+    },
+    {
+      "id": 10,
+      "productId": "wallpaperworld.subscription.monthly.3.notrial"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:21:08.627Z"
+}

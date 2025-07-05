@@ -1,0 +1,28 @@
+{
+  "name": "Fast Player - video player",
+  "appId": "1320554555",
+  "bundleId": "com.funsapps.videoplayer",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "VideoPlayer_ProVersion"
+    },
+    {
+      "id": 2,
+      "productId": "VideoPlayer_CompressUnzip"
+    },
+    {
+      "id": 3,
+      "productId": "VideoPlayer_RemoveAds"
+    },
+    {
+      "id": 4,
+      "productId": "autorenewable.professional.fastplayer.year"
+    },
+    {
+      "id": 5,
+      "productId": "VideoPlayer_PasscodeLock"
+    }
+  ],
+  "updatedAt": "2025-05-13T13:21:39.749Z"
+}

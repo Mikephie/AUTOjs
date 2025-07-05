@@ -1,0 +1,52 @@
+{
+  "name": "BodyApp- Best Body Editor",
+  "appId": "1413690783",
+  "bundleId": "com.alphamobiletech.bodyApp",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Bodyapp_1M"
+    },
+    {
+      "id": 2,
+      "productId": "Bodyapp_1W_int"
+    },
+    {
+      "id": 3,
+      "productId": "Bodyapp_1Y_D"
+    },
+    {
+      "id": 4,
+      "productId": "Bodyapp_1Y_E"
+    },
+    {
+      "id": 5,
+      "productId": "Bodyapp_1M_B"
+    },
+    {
+      "id": 6,
+      "productId": "Bodyapp_1Y"
+    },
+    {
+      "id": 7,
+      "productId": "Bodyapp_1Y_C"
+    },
+    {
+      "id": 8,
+      "productId": "Bodyapp_1Y_B"
+    },
+    {
+      "id": 9,
+      "productId": "Bodyapp_Forever"
+    },
+    {
+      "id": 10,
+      "productId": "Bodyapp_1M"
+    },
+    {
+      "id": 11,
+      "productId": "Bodyapp_1Y_D"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:41:45.897Z"
+}

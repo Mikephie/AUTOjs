@@ -1,0 +1,20 @@
+{
+  "name": "Hype Text - YT Intro Maker",
+  "appId": "1540048469",
+  "bundleId": "com.floatcamellia.motiok",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.floatcamellia.motiok.vipmonthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.floatcamellia.motiok.vipforever"
+    },
+    {
+      "id": 3,
+      "productId": "com.floatcamellia.motiok.vipyearly"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:43:15.238Z"
+}

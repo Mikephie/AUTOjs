@@ -1,0 +1,48 @@
+{
+  "name": "Facey: Face Editor & Makeup Cam",
+  "appId": "1387741890",
+  "bundleId": "com.alphamobiletech.facey",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Facey_SP_1M"
+    },
+    {
+      "id": 2,
+      "productId": "Facey_1W_no_trial"
+    },
+    {
+      "id": 3,
+      "productId": "Facey_1M"
+    },
+    {
+      "id": 4,
+      "productId": "Facey_1M_B"
+    },
+    {
+      "id": 5,
+      "productId": "Facey_1Y_D"
+    },
+    {
+      "id": 6,
+      "productId": "Facey_SP_1Y"
+    },
+    {
+      "id": 7,
+      "productId": "Facey_SP_K_1Y_B"
+    },
+    {
+      "id": 8,
+      "productId": "Facey_1M_Discount"
+    },
+    {
+      "id": 9,
+      "productId": "Facey_SP_K_1Y"
+    },
+    {
+      "id": 10,
+      "productId": "Facey_SP_K_1Y_B"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:41:45.897Z"
+}

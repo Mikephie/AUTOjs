@@ -1,0 +1,18 @@
+{
+  "user_agent": "VidMerger",
+  "bundle_id": null,
+  "data": {
+    "vidmerger_lifetime": {
+      "entitlements": [
+        "vidmerger-premium"
+      ],
+      "product_identifier": "vidmerger_lifetime"
+    },
+    "vidmerger_monthly_subscription": {
+      "entitlements": [
+        "vidmerger-premium"
+      ],
+      "product_identifier": "vidmerger_monthly_subscription"
+    }
+  }
+}

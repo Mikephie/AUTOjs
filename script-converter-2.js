@@ -42,16 +42,16 @@ function parseScript(content) {
   
   // 处理节点 - 优先考虑标准Loon格式
   const loonSections = {
-    "Rule": content.match(/\[Rule\]([\s\S]*?)(?=\[|$)/i),
-    "Rewrite": content.match(/\[Rewrite\]([\s\S]*?)(?=\[|$)/i),
-    "Script": content.match(/\[Script\]([\s\S]*?)(?=\[|$)/i),
+    "Rule": content.match(/\[Rule\]([\s\S]*?)(?=\n\s*\[|$)/i),
+    "Rewrite": content.match(/\[Rewrite\]([\s\S]*?)(?=\n\s*\[|$)/i),
+    "Script": content.match(/\[Script\]([\s\S]*?)(?=\n\s*\[|$)/i),
     "MITM": content.match(/\[MITM\]([\s\S]*?)(?=\[|$|$)/i)
   };
   
   // 处理QX格式作为备选
   const qxSections = {
-    "filter_local": content.match(/\[filter_local\]([\s\S]*?)(?=\[|$)/i),
-    "rewrite_local": content.match(/\[rewrite_local\]([\s\S]*?)(?=\[|$)/i),
+    "filter_local": content.match(/\[filter_local\]([\s\S]*?)(?=\n\s*\[|$)/i),
+    "rewrite_local": content.match(/\[rewrite_local\]([\s\S]*?)(?=\n\s*\[|$)/i),
     "mitm": content.match(/\[mitm\]([\s\S]*?)(?=\[|$|$)/i)
   };
   
@@ -332,21 +332,26 @@ function convertToSurge(input) {
   const author = scriptInfo.metadata.author || "Converter";
   
   let config = `#!name=${name}
-#!desc=${desc}
-#!author=${author}
-`;
+#!desc=${desc}`;
+
+  // 添加category字段（如果存在）
+  if (scriptInfo.metadata.category) {
+    config += `\n#!category=${scriptInfo.metadata.category}`;
+  }
+
+  config += `\n#!author=${author}`;
 
   if (scriptInfo.metadata.homepage) {
-    config += `#!homepage=${scriptInfo.metadata.homepage}\n`;
+    config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
   }
   
   if (scriptInfo.metadata.icon) {
-    config += `#!icon=${scriptInfo.metadata.icon}\n`;
+    config += `\n#!icon=${scriptInfo.metadata.icon}`;
   }
 
   // 处理Rule部分 - 修复格式
   if (scriptInfo.rules && scriptInfo.rules.length > 0) {
-    config += "\n[Rule]";
+    config += "\n\n[Rule]";
     
     let lastComment = "";
     for (const rule of scriptInfo.rules) {
@@ -446,7 +451,7 @@ function convertToSurge(input) {
 
   // 处理Script部分
   if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
-    config += "\n[Script]";
+    config += "\n\n[Script]";
     
     let lastComment = "";
     let ruleCounter = 0;
@@ -524,21 +529,26 @@ function convertToLoon(input) {
   const author = scriptInfo.metadata.author || "Converter";
   
   let config = `#!name=${name}
-#!desc=${desc}
-#!author=${author}
-`;
+#!desc=${desc}`;
+
+  // 添加category字段（如果存在）
+  if (scriptInfo.metadata.category) {
+    config += `\n#!category=${scriptInfo.metadata.category}`;
+  }
+
+  config += `\n#!author=${author}`;
 
   if (scriptInfo.metadata.homepage) {
-    config += `#!homepage=${scriptInfo.metadata.homepage}\n`;
+    config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
   }
   
   if (scriptInfo.metadata.icon) {
-    config += `#!icon=${scriptInfo.metadata.icon}\n`;
+    config += `\n#!icon=${scriptInfo.metadata.icon}`;
   }
 
   // 处理Rule部分
   if (scriptInfo.rules.length > 0) {
-    config += "\n[Rule]";
+    config += "\n\n[Rule]";
     
     let lastComment = "";
     for (const rule of scriptInfo.rules) {
@@ -593,7 +603,8 @@ function convertToLoon(input) {
 
   // 处理Script部分
   if (scriptInfo.scripts.length > 0) {
-    config += "\n[Script]";
+    // 添加一个空行在[Script]之前
+    config += "\n\n[Script]";
     
     let lastComment = "";
     for (const rule of scriptInfo.scripts) {

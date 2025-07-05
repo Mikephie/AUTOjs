@@ -1,0 +1,16 @@
+{
+  "name": "奇门遁甲-从真版：带断法提示、案例实",
+  "appId": "1635309476",
+  "bundleId": "cn.congzhen.CongZhenQiMen",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "qimen_yongjiu_198_yuan"
+    },
+    {
+      "id": 2,
+      "productId": "qimen_yongjiu_78_yuan"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:58:04.396Z"
+}

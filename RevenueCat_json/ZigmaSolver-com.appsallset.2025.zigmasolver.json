@@ -1,0 +1,42 @@
+{
+  "user_agent": "ZigmaSolver",
+  "bundle_id": "com.appsallset.2025.zigmasolver",
+  "data": {
+    "com.appsallset.2025.zigmasolver.lifetime89": {
+      "entitlements": [
+        "default"
+      ],
+      "product_identifier": "com.appsallset.2025.zigmasolver.lifetime89"
+    },
+    "com.appsallset.2025.zigmasolver.lifetimegift": {
+      "entitlements": [
+        "default"
+      ],
+      "product_identifier": "com.appsallset.2025.zigmasolver.lifetimegift"
+    },
+    "com.appsallset.2025.zigmasolver.weekly": {
+      "entitlements": [
+        "default"
+      ],
+      "product_identifier": "com.appsallset.2025.zigmasolver.weekly"
+    },
+    "com.appsallset.2025.zigmasolver.yearly": {
+      "entitlements": [
+        "default"
+      ],
+      "product_identifier": "com.appsallset.2025.zigmasolver.yearly"
+    },
+    "com.appsallset.2025.zigmasolver.yearly.discount": {
+      "entitlements": [
+        "default"
+      ],
+      "product_identifier": "com.appsallset.2025.zigmasolver.yearly.discount"
+    },
+    "com.appsallset.2025.zigmasolver.yearly.discount19": {
+      "entitlements": [
+        "default"
+      ],
+      "product_identifier": "com.appsallset.2025.zigmasolver.yearly.discount19"
+    }
+  }
+}

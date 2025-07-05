@@ -1,0 +1,36 @@
+{
+  "name": "Night Sky",
+  "appId": "475772902",
+  "bundleId": "com.icandiapps.nightsky",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.icandiapps.ns4.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.icandiapps.ns4.annual"
+    },
+    {
+      "id": 3,
+      "productId": "MonthlyRetention"
+    },
+    {
+      "id": 4,
+      "productId": "AnnualRetention"
+    },
+    {
+      "id": 5,
+      "productId": "com.nightsky.nightskyforlife"
+    },
+    {
+      "id": 6,
+      "productId": "com.icandiapps.ns4.annual"
+    },
+    {
+      "id": 7,
+      "productId": "com.icandiapps.ns4.monthly"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:18:33.007Z"
+}

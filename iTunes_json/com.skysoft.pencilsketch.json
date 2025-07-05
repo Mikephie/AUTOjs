@@ -1,0 +1,52 @@
+{
+  "name": "Outline: Photo to Sketch",
+  "appId": "1466744353",
+  "bundleId": "com.skysoft.pencilsketch",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.skysoft.pencilsketch.introduction.yearly"
+    },
+    {
+      "id": 2,
+      "productId": "com.skysoft.pencilsketch.subscription.weekly"
+    },
+    {
+      "id": 3,
+      "productId": "com.skysoft.pencilsketch.subscription.yearly"
+    },
+    {
+      "id": 4,
+      "productId": "com.skysoft.pencilsketch.subscription.weekly2"
+    },
+    {
+      "id": 5,
+      "productId": "com.skysoft.pencilsketch.subscription.weekly4"
+    },
+    {
+      "id": 6,
+      "productId": "com.skysoft.pencilsketch.unlimitedaccess"
+    },
+    {
+      "id": 7,
+      "productId": "com.skysoft.pencilsketch.introduction.weekly"
+    },
+    {
+      "id": 8,
+      "productId": "com.skysoft.pencilsketch.discount.weekly"
+    },
+    {
+      "id": 9,
+      "productId": "com.skysoft.pencilsketch.introduction.yearly2"
+    },
+    {
+      "id": 10,
+      "productId": "com.skysoft.pencilsketch.subscription.weekly3"
+    },
+    {
+      "id": 11,
+      "productId": "com.skysoft.pencilsketch.subscription.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:26.588Z"
+}

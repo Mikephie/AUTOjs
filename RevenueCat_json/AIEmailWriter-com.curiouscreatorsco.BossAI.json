@@ -1,0 +1,42 @@
+{
+  "user_agent": "AIEmailWriter",
+  "bundle_id": "com.curiouscreatorsco.BossAI",
+  "data": {
+    "com.curiouscreatorsco.BossAI.pro.1week.3daytrial.6_99": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.curiouscreatorsco.BossAI.pro.1week.3daytrial.6_99"
+    },
+    "com.curiouscreatorsco.BossAI.pro.1week.notrial.6_99": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.curiouscreatorsco.BossAI.pro.1week.notrial.6_99"
+    },
+    "com.curiouscreatorsco.BossAI.pro.1year.3daytrial.49_99": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.curiouscreatorsco.BossAI.pro.1year.3daytrial.49_99"
+    },
+    "com.curiouscreatorsco.BossAI.pro.1year.notrial.24_99": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.curiouscreatorsco.BossAI.pro.1year.notrial.24_99"
+    },
+    "com.curiouscreatorsco.BossAI.pro.1year.notrial.49_99": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.curiouscreatorsco.BossAI.pro.1year.notrial.49_99"
+    },
+    "com.curiouscreatorsco.BossAI.pro.lifetime.notrial.69_99": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.curiouscreatorsco.BossAI.pro.lifetime.notrial.69_99"
+    }
+  }
+}

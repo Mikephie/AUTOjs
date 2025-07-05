@@ -1,0 +1,56 @@
+{
+  "name": "Planner Pro - Daily Planner",
+  "appId": "571588936",
+  "bundleId": "com.btgs.plannerfree",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Planner_YearlAP"
+    },
+    {
+      "id": 2,
+      "productId": "Planner_Yearly_171212"
+    },
+    {
+      "id": 3,
+      "productId": "planner_ars_monthly_t"
+    },
+    {
+      "id": 4,
+      "productId": "planner_ars_monthly_t2"
+    },
+    {
+      "id": 5,
+      "productId": "Planner_Yearly_Discount"
+    },
+    {
+      "id": 6,
+      "productId": "planner_ars_monthly_t"
+    },
+    {
+      "id": 7,
+      "productId": "BS_PP_LT_T30"
+    },
+    {
+      "id": 8,
+      "productId": "BS_PP_LT_SALE_T21"
+    },
+    {
+      "id": 9,
+      "productId": "planner_ars_yearly_limited"
+    },
+    {
+      "id": 10,
+      "productId": "planner_ars_quarterly_t"
+    },
+    {
+      "id": 11,
+      "productId": "Planner_Yearly_171212"
+    },
+    {
+      "id": 12,
+      "productId": "planner_ars_monthly_t4"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:59.495Z"
+}

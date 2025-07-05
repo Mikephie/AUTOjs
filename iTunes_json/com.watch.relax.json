@@ -1,0 +1,16 @@
+{
+  "name": "RelaxWatch: Stress&HRV Tracker",
+  "appId": "6743308707",
+  "bundleId": "com.watch.relax",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "relaxyear_ebp"
+    },
+    {
+      "id": 2,
+      "productId": "relaxyear"
+    }
+  ],
+  "updatedAt": "2025-05-19T12:16:53.755Z"
+}

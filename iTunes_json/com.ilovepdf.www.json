@@ -1,0 +1,24 @@
+{
+  "name": "iLovePDF - PDF Editor & Scan",
+  "appId": "1207332399",
+  "bundleId": "com.ilovepdf.www",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.ilovepdf.www.premium.freetrial.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.ilovepdf.www.premium.freetrial.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.ilovepdf.www.premium.allaccess.monthly"
+    },
+    {
+      "id": 4,
+      "productId": "com.ilovepdf.www.premium.allaccess.anual"
+    }
+  ],
+  "updatedAt": "2025-06-10T07:49:32.254Z"
+}

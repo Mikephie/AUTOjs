@@ -1,0 +1,12 @@
+{
+  "name": "Chinese Hanzi Dictionary",
+  "appId": "1514800989",
+  "bundleId": "com.yodesoft.ios.hanzi-handwriting",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "hanzi_handwriting_paid"
+    }
+  ],
+  "updatedAt": "2025-07-03T04:10:34.389Z"
+}

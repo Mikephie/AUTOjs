@@ -1,0 +1,24 @@
+{
+  "name": "WeeklyNote: Fast Daily Note",
+  "appId": "1661527708",
+  "bundleId": "org.zrey.weeklynote",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "org.zrey.weeklynote.yearly"
+    },
+    {
+      "id": 2,
+      "productId": "org.zrey.weeklynote.flash_lifetime"
+    },
+    {
+      "id": 3,
+      "productId": "org.zrey.weeklynote.lifetime"
+    },
+    {
+      "id": 4,
+      "productId": "org.zrey.weeklynote.monthly"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:24:55.389Z"
+}

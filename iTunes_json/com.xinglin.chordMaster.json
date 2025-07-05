@@ -1,0 +1,24 @@
+{
+  "name": "Music Tutor- How to read music",
+  "appId": "6472578918",
+  "bundleId": "com.xinglin.chordMaster",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.chordMaster.week"
+    },
+    {
+      "id": 2,
+      "productId": "com.chordMaster.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.chordMaster.once"
+    },
+    {
+      "id": 4,
+      "productId": "com.chordMaster.weekly"
+    }
+  ],
+  "updatedAt": "2025-05-13T13:21:39.749Z"
+}

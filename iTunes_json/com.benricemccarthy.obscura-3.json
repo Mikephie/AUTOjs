@@ -1,0 +1,12 @@
+{
+  "name": "Obscura - Pro Camera",
+  "appId": "1579306989",
+  "bundleId": "com.benricemccarthy.obscura-3",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.benricemccarthy.obscura4.obscura_ultra_lifetime"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:25.948Z"
+}

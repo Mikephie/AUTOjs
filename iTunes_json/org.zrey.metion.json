@@ -1,0 +1,20 @@
+{
+  "name": "Metion: Markdown Notes",
+  "appId": "1530965242",
+  "bundleId": "org.zrey.metion",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "org.zrey.metion.main"
+    },
+    {
+      "id": 2,
+      "productId": "org.zrey.metion.wechat"
+    },
+    {
+      "id": 3,
+      "productId": "org.zrey.metion.pro"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:25.948Z"
+}

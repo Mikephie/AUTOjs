@@ -1,0 +1,12 @@
+{
+  "name": "八字排盘-从真版：四柱排盘八字排盘工具",
+  "appId": "1659589660",
+  "bundleId": "cn.congzhen.CongZhenBaZi",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "vip_forever_78"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:58:04.396Z"
+}

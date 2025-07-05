@@ -1,0 +1,48 @@
+{
+  "user_agent": "einano_deluxe",
+  "bundle_id": "cutboss.einano.deluxe",
+  "data": {
+    "einano_premium_upgrade_half_year": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "einano_premium_upgrade_half_year"
+    },
+    "einano_premium_upgrade_lifetime": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "einano_premium_upgrade_lifetime"
+    },
+    "einano_premium_upgrade_monthly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "einano_premium_upgrade_monthly"
+    },
+    "einano_premium_upgrade_three_months": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "einano_premium_upgrade_three_months"
+    },
+    "einano_premium_upgrade_two_months": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "einano_premium_upgrade_two_months"
+    },
+    "einano_premium_upgrade_weekly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "einano_premium_upgrade_weekly"
+    },
+    "einano_premium_upgrade_yearly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "einano_premium_upgrade_yearly"
+    }
+  }
+}

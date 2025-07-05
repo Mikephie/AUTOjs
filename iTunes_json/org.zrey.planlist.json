@@ -1,0 +1,24 @@
+{
+  "name": "Planist - Planner & Check List",
+  "appId": "6468330574",
+  "bundleId": "org.zrey.planlist",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "org.zrey.planist.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "org.zrey.planist.lifetime"
+    },
+    {
+      "id": 3,
+      "productId": "org.zrey.planist.yearly"
+    },
+    {
+      "id": 4,
+      "productId": "org.zrey.planist.flash_lifetime"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:58:04.396Z"
+}

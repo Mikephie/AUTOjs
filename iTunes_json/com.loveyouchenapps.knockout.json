@@ -1,0 +1,60 @@
+{
+  "name": "ProKnockOut-Cut Paste Photos",
+  "appId": "944665061",
+  "bundleId": "com.loveyouchenapps.knockout",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.knockout.SVIP.50off"
+    },
+    {
+      "id": 2,
+      "productId": "com.knockout.halfyearplus"
+    },
+    {
+      "id": 3,
+      "productId": "com.loveyouchenapps.knockout.highresolution"
+    },
+    {
+      "id": 4,
+      "productId": "com.loveyouchenapps.knockout.unlockallfeatures"
+    },
+    {
+      "id": 5,
+      "productId": "com.knockout.1monthplus"
+    },
+    {
+      "id": 6,
+      "productId": "com.loveyouchenapps.knockout.1y"
+    },
+    {
+      "id": 7,
+      "productId": "com.knockout.1yearplus"
+    },
+    {
+      "id": 8,
+      "productId": "com.knockout.morecoinstier1"
+    },
+    {
+      "id": 9,
+      "productId": "com.knockout.7daysplus.50off"
+    },
+    {
+      "id": 10,
+      "productId": "com.knockout.1monthplus.50off"
+    },
+    {
+      "id": 11,
+      "productId": "com.knockout.7daysplus"
+    },
+    {
+      "id": 12,
+      "productId": "com.knockout.halfyearplus"
+    },
+    {
+      "id": 13,
+      "productId": "com.knockout.1yearplus"
+    }
+  ],
+  "updatedAt": "2025-05-10T05:37:42.079Z"
+}

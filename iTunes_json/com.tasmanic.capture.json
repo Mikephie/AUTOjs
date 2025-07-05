@@ -1,0 +1,12 @@
+{
+  "name": "CamToPlan - 3D Scanner & LiDAR",
+  "appId": "1547594886",
+  "bundleId": "com.tasmanic.capture",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "CTPCAPTUREYEARLY"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:58:04.396Z"
+}

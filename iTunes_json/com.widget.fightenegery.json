@@ -1,0 +1,48 @@
+{
+  "name": "Wallpaper - Live Wallpapers",
+  "appId": "1666532374",
+  "bundleId": "com.widget.fightenegery",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.widget.fightenegery.weekly"
+    },
+    {
+      "id": 2,
+      "productId": "com.widget.fightenegery.weeklypromote"
+    },
+    {
+      "id": 3,
+      "productId": "com.widget.fightenegery.weekly.7daystrial"
+    },
+    {
+      "id": 4,
+      "productId": "com.widget.fightenegery.weeklydiscount"
+    },
+    {
+      "id": 5,
+      "productId": "com.widget.fightenegery.weekly.notrial"
+    },
+    {
+      "id": 6,
+      "productId": "com.widget.fightenegery.single.purchase"
+    },
+    {
+      "id": 7,
+      "productId": "com.widget.fightenegery.yearly"
+    },
+    {
+      "id": 8,
+      "productId": "com.widget.fightenegery.yearly.notrial"
+    },
+    {
+      "id": 9,
+      "productId": "com.widget.fightenegery.monthly"
+    },
+    {
+      "id": 10,
+      "productId": "com.widget.fightenegery.life.488"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:43:15.238Z"
+}

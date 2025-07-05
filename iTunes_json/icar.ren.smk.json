@@ -1,0 +1,52 @@
+{
+  "name": "Smoke - Quit smoking assistant",
+  "appId": "1475065570",
+  "bundleId": "icar.ren.smk",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "icar.ren.smk.month_1"
+    },
+    {
+      "id": 2,
+      "productId": "animal_0"
+    },
+    {
+      "id": 3,
+      "productId": "smoke19870727"
+    },
+    {
+      "id": 4,
+      "productId": "coin_18"
+    },
+    {
+      "id": 5,
+      "productId": "icar.ren.smk.month_3"
+    },
+    {
+      "id": 6,
+      "productId": "coin_100"
+    },
+    {
+      "id": 7,
+      "productId": "coin_50"
+    },
+    {
+      "id": 8,
+      "productId": "coin_200"
+    },
+    {
+      "id": 9,
+      "productId": "coin_500"
+    },
+    {
+      "id": 10,
+      "productId": "coin_1000"
+    },
+    {
+      "id": 11,
+      "productId": "icar.ren.smk.month_1"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:26:21.847Z"
+}

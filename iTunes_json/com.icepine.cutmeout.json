@@ -1,0 +1,20 @@
+{
+  "name": "Photo Cut Out Editor",
+  "appId": "1055593695",
+  "bundleId": "com.icepine.cutmeout",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.icepine.cutmeout.in"
+    },
+    {
+      "id": 2,
+      "productId": "com.icepine.all"
+    },
+    {
+      "id": 3,
+      "productId": "com.icepine.allyear"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:54:04.414Z"
+}

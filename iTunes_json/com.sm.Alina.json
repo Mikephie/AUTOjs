@@ -1,0 +1,44 @@
+{
+  "name": "Mico Widget & Wallpaper",
+  "appId": "1640653011",
+  "bundleId": "com.sm.Alina",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "mw_year_7_4.2.0"
+    },
+    {
+      "id": 2,
+      "productId": "mw_month_0_6.0.0"
+    },
+    {
+      "id": 3,
+      "productId": "mw_week_0_8.5.5"
+    },
+    {
+      "id": 4,
+      "productId": "mw_year_0_4.2.0"
+    },
+    {
+      "id": 5,
+      "productId": "mw_month_0_7.7.0"
+    },
+    {
+      "id": 6,
+      "productId": "mw_year_7_2.1.0"
+    },
+    {
+      "id": 7,
+      "productId": "mw_month_7_6.0.0"
+    },
+    {
+      "id": 8,
+      "productId": "mw_month_0_1.1.0"
+    },
+    {
+      "id": 9,
+      "productId": "mw_forever_0_2.1.0"
+    }
+  ],
+  "updatedAt": "2025-05-12T03:36:27.210Z"
+}

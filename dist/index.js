@@ -8,7 +8,7 @@ const converter = require('../script-converter');
 async function run() {
   try {
     // 获取输入参数
-    const inputDir = process.env.INPUT_DIR || 'input';
+    const inputDir = process.env.INPUT_DIR || 'quantumultx';
     const outputDir = process.env.OUTPUT_DIR || 'output';
     const outputFormat = process.env.OUTPUT_FORMAT || 'loon';
     

@@ -1,0 +1,40 @@
+{
+  "user_agent": "Flashcard",
+  "bundle_id": "app.kirillsekretev.lingopic",
+  "data": {
+    "ios.lingopic.lifetime": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "ios.lingopic.lifetime"
+    },
+    "ios_lingopic_month": {
+      "entitlements": [],
+      "product_identifier": "ios_lingopic_month"
+    },
+    "lingopic.month": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "lingopic.month"
+    },
+    "lingopic.week": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "lingopic.week"
+    },
+    "lingopic.year": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "lingopic.year"
+    },
+    "lingopic.year.50off": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "lingopic.year.50off"
+    }
+  }
+}

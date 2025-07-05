@@ -1,0 +1,44 @@
+{
+  "name": "Chat Al - Ask Anything",
+  "appId": "1660877567",
+  "bundleId": "com.eleven.chatgpt",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "WPR"
+    },
+    {
+      "id": 2,
+      "productId": "com.chatgpt.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.chatgpt.monthly"
+    },
+    {
+      "id": 4,
+      "productId": "1YP"
+    },
+    {
+      "id": 5,
+      "productId": "YAB1"
+    },
+    {
+      "id": 6,
+      "productId": "WABT"
+    },
+    {
+      "id": 7,
+      "productId": "VO1"
+    },
+    {
+      "id": 8,
+      "productId": "VO3"
+    },
+    {
+      "id": 9,
+      "productId": "WPN"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:45:23.908Z"
+}

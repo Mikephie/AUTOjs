@@ -1,0 +1,48 @@
+{
+  "name": "StandBy Us: WidgetSnap Moments",
+  "appId": "6463835704",
+  "bundleId": "com.standby.idream",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.standby.idream.week.599.trial"
+    },
+    {
+      "id": 2,
+      "productId": "com.standby.idream.first.a"
+    },
+    {
+      "id": 3,
+      "productId": "com.standby.idream.month.8.trial"
+    },
+    {
+      "id": 4,
+      "productId": "com.standby.idream.week.6"
+    },
+    {
+      "id": 5,
+      "productId": "com.standby.idream.year.68"
+    },
+    {
+      "id": 6,
+      "productId": "com.standby.idream.week.599"
+    },
+    {
+      "id": 7,
+      "productId": "standbyus.nonconsume.missingyou.dc"
+    },
+    {
+      "id": 8,
+      "productId": "com.standby.idream.lifetime.218"
+    },
+    {
+      "id": 9,
+      "productId": "com.standby.idream.week.8"
+    },
+    {
+      "id": 10,
+      "productId": "com.standby.idream.month.8"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:54:04.414Z"
+}

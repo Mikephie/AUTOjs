@@ -1,0 +1,40 @@
+{
+  "name": "Find Air - My Device Tracker",
+  "appId": "1507917112",
+  "bundleId": "co.airapps.finderbot",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "co.airapps.find.week2"
+    },
+    {
+      "id": 2,
+      "productId": "co.airapps.find.week1"
+    },
+    {
+      "id": 3,
+      "productId": "co.airapps.find.week3"
+    },
+    {
+      "id": 4,
+      "productId": "co.airapps.finderbot.month"
+    },
+    {
+      "id": 5,
+      "productId": "co.airapps.finderbot.year"
+    },
+    {
+      "id": 6,
+      "productId": "co.airapps.find.year1"
+    },
+    {
+      "id": 7,
+      "productId": "co.airapps.find.month1"
+    },
+    {
+      "id": 8,
+      "productId": "co.airapps.find.week1"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:45:23.908Z"
+}

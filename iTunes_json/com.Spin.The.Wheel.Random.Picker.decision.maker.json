@@ -1,0 +1,12 @@
+{
+  "name": "Wheel Spinner: Spin the Wheel",
+  "appId": "6473255179",
+  "bundleId": "com.Spin.The.Wheel.Random.Picker.decision.maker",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.Spin.The.Wheel.Random.Picker.decision.maker.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-16T23:41:18.606Z"
+}

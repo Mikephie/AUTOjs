@@ -1,0 +1,36 @@
+{
+  "user_agent": "Shiftdays",
+  "bundle_id": "com.dw.Shiftdays",
+  "data": {
+    "NurseGridOneMonthSub": {
+      "entitlements": [
+        "shiftday_premium"
+      ],
+      "product_identifier": "NurseGridOneMonthSub"
+    },
+    "NurseGridOneYearSub": {
+      "entitlements": [
+        "shiftday_premium"
+      ],
+      "product_identifier": "NurseGridOneYearSub"
+    },
+    "NurseGridSixMonthsSub": {
+      "entitlements": [
+        "shiftday_premium"
+      ],
+      "product_identifier": "NurseGridSixMonthsSub"
+    },
+    "NurseGridThreeMonthsSub": {
+      "entitlements": [
+        "shiftday_premium"
+      ],
+      "product_identifier": "NurseGridThreeMonthsSub"
+    },
+    "com.dw.Shiftdays.firstpack": {
+      "entitlements": [
+        "shiftday_premium"
+      ],
+      "product_identifier": "com.dw.Shiftdays.firstpack"
+    }
+  }
+}

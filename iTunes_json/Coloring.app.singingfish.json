@@ -1,0 +1,16 @@
+{
+  "name": "Coloring book - No ads",
+  "appId": "1522242303",
+  "bundleId": "Coloring.app.singingfish",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Coloring.vip.oneMonth.v2"
+    },
+    {
+      "id": 2,
+      "productId": "Coloring.vip.oneYear"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:25.949Z"
+}

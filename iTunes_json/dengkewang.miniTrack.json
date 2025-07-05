@@ -1,0 +1,12 @@
+{
+  "name": "Becord",
+  "appId": "1608773156",
+  "bundleId": "dengkewang.miniTrack",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.dk. lifetracker.yearplan"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:42:25.104Z"
+}

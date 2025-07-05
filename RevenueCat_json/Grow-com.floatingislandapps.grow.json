@@ -1,0 +1,94 @@
+{
+  "user_agent": "Grow",
+  "bundle_id": "com.floatingislandapps.grow",
+  "data": {
+    "grow_1599_lifetime": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_1599_lifetime"
+    },
+    "grow_1mo_norenew": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_1mo_norenew"
+    },
+    "grow_1wk_norenew": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_1wk_norenew"
+    },
+    "grow_1y_128": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_1y_128"
+    },
+    "grow_1yr_discount": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_1yr_discount"
+    },
+    "grow_1yr_norenew": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_1yr_norenew"
+    },
+    "grow_299_1m": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_299_1m"
+    },
+    "grow_2wkstrial_monthly": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_2wkstrial_monthly"
+    },
+    "grow_2wkstrial_yearly": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_2wkstrial_yearly"
+    },
+    "grow_3699_lifetime": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_3699_lifetime"
+    },
+    "grow_lifetime": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_lifetime"
+    },
+    "grow_lifetime_family": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_lifetime_family"
+    },
+    "grow_lifetime_original": {
+      "entitlements": [],
+      "product_identifier": "grow_lifetime_original"
+    },
+    "grow_weekly": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_weekly"
+    },
+    "grow_yearly_discount": {
+      "entitlements": [
+        "grow.pro"
+      ],
+      "product_identifier": "grow_yearly_discount"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "Walbum: Watch Faces Gallery",
+  "appId": "1454621179",
+  "bundleId": "indie.davidwang.WatchWallpaper",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "indie.davidwang.WatchWallpaper.monthsubscripte"
+    },
+    {
+      "id": 2,
+      "productId": "indie.davidwang.WatchWallpaper.yearsubscripte"
+    },
+    {
+      "id": 3,
+      "productId": "indie.davidwang.WatchWallpaper.monthsubscriptegold"
+    },
+    {
+      "id": 4,
+      "productId": "indie.davidwang.WatchWallpaper.monthsubscripteplus"
+    },
+    {
+      "id": 5,
+      "productId": "indie.davidwang.WatchWallpaper.yearsubscriptegold"
+    },
+    {
+      "id": 6,
+      "productId": "indie.davidwang.WatchWallpaper.yearsubscriptegold.b"
+    },
+    {
+      "id": 7,
+      "productId": "indie.davidwang.WatchWallpaper.yearsubscripteplus.b"
+    },
+    {
+      "id": 8,
+      "productId": "indie.davidwang.WatchWallpaper.yearsubscripteplus"
+    },
+    {
+      "id": 9,
+      "productId": "indie.davidwang.WatchWallpaper.monthsubscripte"
+    }
+  ],
+  "updatedAt": "2025-06-01T00:54:39.319Z"
+}

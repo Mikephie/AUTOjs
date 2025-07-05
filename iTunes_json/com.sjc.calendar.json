@@ -1,0 +1,20 @@
+{
+  "name": "简约日历",
+  "appId": "1597303116",
+  "bundleId": "com.sjc.calendar",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.sjc.calendar.vip.lifelong"
+    },
+    {
+      "id": 2,
+      "productId": "com.sjc.calendar.vip.limited2.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.sjc.calendar.vip.limited2.monthly"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:24:04.415Z"
+}

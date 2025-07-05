@@ -1,0 +1,48 @@
+{
+  "name": "ShineDay - Habit Tracker",
+  "appId": "1263789061",
+  "bundleId": "com.dandelion.Routine",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "membership"
+    },
+    {
+      "id": 2,
+      "productId": "season_subscription"
+    },
+    {
+      "id": 3,
+      "productId": "year_subscription"
+    },
+    {
+      "id": 4,
+      "productId": "basic_membership"
+    },
+    {
+      "id": 5,
+      "productId": "half_year_subscription"
+    },
+    {
+      "id": 6,
+      "productId": "gezi"
+    },
+    {
+      "id": 7,
+      "productId": "her"
+    },
+    {
+      "id": 8,
+      "productId": "ging"
+    },
+    {
+      "id": 9,
+      "productId": "donate_2"
+    },
+    {
+      "id": 10,
+      "productId": "donate_1"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:25.948Z"
+}

@@ -1,0 +1,40 @@
+{
+  "name": "500 Photo Filters - PicsLeap",
+  "appId": "1490057568",
+  "bundleId": "com.yumiteam.Kuki.ID",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.yumiteam.Kuki.ID.8"
+    },
+    {
+      "id": 2,
+      "productId": "com.yumiteam.Kuki.ID.6"
+    },
+    {
+      "id": 3,
+      "productId": "com.yumiteam.Kuki.ID.2"
+    },
+    {
+      "id": 4,
+      "productId": "com.yumiteam.Kuki.ID.4"
+    },
+    {
+      "id": 5,
+      "productId": "com.yumiteam.Kuki.ID.9"
+    },
+    {
+      "id": 6,
+      "productId": "com.yumiteam.Kuki.ID.7"
+    },
+    {
+      "id": 7,
+      "productId": "com.yumiteam.Kuki.ID.5"
+    },
+    {
+      "id": 8,
+      "productId": "com.yumiteam.Kuki.ID.1"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:18:33.007Z"
+}

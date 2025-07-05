@@ -1,0 +1,52 @@
+{
+  "name": "NYMF: Art Nude Female Beauty",
+  "appId": "1495951015",
+  "bundleId": "com.nymf.app",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.nymf.app.premium_month"
+    },
+    {
+      "id": 2,
+      "productId": "com.nymf.app.special_yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.nymf.app.premium_month_essential"
+    },
+    {
+      "id": 4,
+      "productId": "com.nymf.app.premium_year"
+    },
+    {
+      "id": 5,
+      "productId": "com.nymf.app.special_monthly"
+    },
+    {
+      "id": 6,
+      "productId": "com.nymf.app.premium_year_essential"
+    },
+    {
+      "id": 7,
+      "productId": "com.nymf.app.premium_special"
+    },
+    {
+      "id": 8,
+      "productId": "com.nymf.app.special_monthly_trial"
+    },
+    {
+      "id": 9,
+      "productId": "com.nymf.app.special_yearly_trial"
+    },
+    {
+      "id": 10,
+      "productId": "com.nymf.app.photo"
+    },
+    {
+      "id": 11,
+      "productId": "com.nymf.app.premium_year"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:52.192Z"
+}

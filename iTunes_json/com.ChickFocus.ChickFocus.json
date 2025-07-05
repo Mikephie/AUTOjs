@@ -1,0 +1,44 @@
+{
+  "name": "ChickFocus: Pomodoro Timer",
+  "appId": "1627691759",
+  "bundleId": "com.ChickFocus.ChickFocus",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Pro_M01"
+    },
+    {
+      "id": 2,
+      "productId": "permanent_99"
+    },
+    {
+      "id": 3,
+      "productId": "kitty"
+    },
+    {
+      "id": 4,
+      "productId": "loong"
+    },
+    {
+      "id": 5,
+      "productId": "boomboom"
+    },
+    {
+      "id": 6,
+      "productId": "pixel"
+    },
+    {
+      "id": 7,
+      "productId": "cluck"
+    },
+    {
+      "id": 8,
+      "productId": "permanent_99_y"
+    },
+    {
+      "id": 9,
+      "productId": "Lifetime_Promotion"
+    }
+  ],
+  "updatedAt": "2025-05-12T03:36:27.210Z"
+}

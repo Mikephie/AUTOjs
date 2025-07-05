@@ -1,0 +1,40 @@
+{
+  "name": "Overdrop - Weather & Widgets",
+  "appId": "1459855011",
+  "bundleId": "com.weather.overdrop",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.weather.overdrop.one_month"
+    },
+    {
+      "id": 2,
+      "productId": "com.weather.overdrop.one_year_sub"
+    },
+    {
+      "id": 3,
+      "productId": "com.weather.overdrop.forever"
+    },
+    {
+      "id": 4,
+      "productId": "com.weather.overdrop.three_months"
+    },
+    {
+      "id": 5,
+      "productId": "app.overdrop.one_month_2"
+    },
+    {
+      "id": 6,
+      "productId": "app.overdrop.one_week"
+    },
+    {
+      "id": 7,
+      "productId": "app.overdrop.one_year_2"
+    },
+    {
+      "id": 8,
+      "productId": "app.overdrop.lifetime"
+    }
+  ],
+  "updatedAt": "2025-05-14T07:59:31.762Z"
+}

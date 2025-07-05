@@ -1,0 +1,30 @@
+{
+  "user_agent": "Image%20Resizer",
+  "bundle_id": "com.kociapp.Image-Resizer",
+  "data": {
+    "image_resizer_1w": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "image_resizer_1w"
+    },
+    "image_resizer_1y": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "image_resizer_1y"
+    },
+    "image_resizer_purchased": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "image_resizer_purchased"
+    },
+    "image_resizer_purchased_offer": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "image_resizer_purchased_offer"
+    }
+  }
+}

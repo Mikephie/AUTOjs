@@ -1,0 +1,28 @@
+{
+  "name": "习惯点点-日常打卡记录与提醒，自律学",
+  "appId": "6473467524",
+  "bundleId": "com.habitdot",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "habitdots_pro_month"
+    },
+    {
+      "id": 2,
+      "productId": "habitdots_pro_year"
+    },
+    {
+      "id": 3,
+      "productId": "habitdots_pro_forever"
+    },
+    {
+      "id": 4,
+      "productId": "habitdots_pro_forever_limited"
+    },
+    {
+      "id": 5,
+      "productId": "habitdots_pro_quarter"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:58:04.396Z"
+}

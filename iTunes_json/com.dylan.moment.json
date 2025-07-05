@@ -1,0 +1,24 @@
+{
+  "name": "片羽集照片日记软件",
+  "appId": "6446111623",
+  "bundleId": "com.dylan.moment",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "PYJMoment1"
+    },
+    {
+      "id": 2,
+      "productId": "PYJMoment2"
+    },
+    {
+      "id": 3,
+      "productId": "PYJMoment4"
+    },
+    {
+      "id": 4,
+      "productId": "PYJMoment2"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:59.495Z"
+}

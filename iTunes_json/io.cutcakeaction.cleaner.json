@@ -1,0 +1,24 @@
+{
+  "name": "爱机清理-手机垃圾清理优化大师",
+  "appId": "1581938981",
+  "bundleId": "io.cutcakeaction.cleaner",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.cleaner.forever"
+    },
+    {
+      "id": 2,
+      "productId": "com.cleaner.month"
+    },
+    {
+      "id": 3,
+      "productId": "com.clean.year"
+    },
+    {
+      "id": 4,
+      "productId": "com.cleaner.week"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:54:04.414Z"
+}

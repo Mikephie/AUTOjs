@@ -1,0 +1,54 @@
+{
+  "user_agent": "passwallet",
+  "bundle_id": "com.astrumcomputing.passwallet",
+  "data": {
+    "pw_1999_1y_1xl": {
+      "entitlements": [
+        "pass_wallet_pro"
+      ],
+      "product_identifier": "pw_1999_1y_1xl"
+    },
+    "pw_1999_1y_7d0": {
+      "entitlements": [
+        "pass_wallet_pro"
+      ],
+      "product_identifier": "pw_1999_1y_7d0"
+    },
+    "pw_999_1m_1xl": {
+      "entitlements": [
+        "pass_wallet_pro"
+      ],
+      "product_identifier": "pw_999_1m_1xl"
+    },
+    "pw_999_1w_0d0": {
+      "entitlements": [
+        "pass_wallet_pro"
+      ],
+      "product_identifier": "pw_999_1w_0d0"
+    },
+    "pw_999_1y_7d0": {
+      "entitlements": [
+        "pass_wallet_pro"
+      ],
+      "product_identifier": "pw_999_1y_7d0"
+    },
+    "pw_unlimited_no_ads": {
+      "entitlements": [
+        "pass_wallet_pro"
+      ],
+      "product_identifier": "pw_unlimited_no_ads"
+    },
+    "pw_unlimited_special_offer": {
+      "entitlements": [
+        "pass_wallet_pro"
+      ],
+      "product_identifier": "pw_unlimited_special_offer"
+    },
+    "pw_x99_1m_0d0": {
+      "entitlements": [
+        "pass_wallet_pro"
+      ],
+      "product_identifier": "pw_x99_1m_0d0"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Universal Remote TV Samsung +",
+  "appId": "6470742162",
+  "bundleId": "com.gap.remotelg",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.gap.remotelg.lifetime"
+    },
+    {
+      "id": 2,
+      "productId": "com.gqp.remotelg.week"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:47:24.055Z"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Al Face Photo Editor PicQueen",
+  "appId": "1630902081",
+  "bundleId": "com.skysoft.picsqueen",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.skysoft.picsqueen.Introduction.yearly"
+    },
+    {
+      "id": 2,
+      "productId": "com.skysoft.picsqueen.introduction.3months"
+    },
+    {
+      "id": 3,
+      "productId": "com.skysoft.picsqueen.subscription.yearly"
+    },
+    {
+      "id": 4,
+      "productId": "com.skysoft.picsqueen.subscription.3months"
+    },
+    {
+      "id": 5,
+      "productId": "com.skysoft.picsqueen.unlimitedaccess"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:26.233Z"
+}

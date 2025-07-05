@@ -1,0 +1,16 @@
+{
+  "name": "Lover List - Love Task Tracker",
+  "appId": "1135324035",
+  "bundleId": "com.hanchongzan.loverlist",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.hanchongzan.loverlist.01"
+    },
+    {
+      "id": 2,
+      "productId": "com.hanchongzan.loverlist.vipYear"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:13:05.134Z"
+}

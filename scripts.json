@@ -1,42 +1,13 @@
 {
-  "generatedTime": "2025-06-30T12:56:05.913Z",
+  "generatedTime": "2025-07-05T12:21:09.403Z",
   "scripts": [
-    {
-      "name": "adblockpro",
-      "filename": "adblockpro.js",
-      "updateTime": "2025-06-30T12:56:05.242Z",
-      "formats": {
-        "quantumultx": "input/adblockpro.js",
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "ads",
-      "filename": "ads.js",
-      "updateTime": "2025-06-30T12:56:05.242Z",
-      "formats": {
-        "quantumultx": "input/ads.js",
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "aloha",
-      "filename": "aloha.js",
-      "updateTime": "2025-06-30T12:56:05.243Z",
-      "formats": {
-        "quantumultx": "input/aloha.js",
-        "loon": null,
-        "surge": null
-      }
-    },
     {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-06-30T12:56:05.243Z",
+      "updateTime": "2025-07-05T12:21:08.744Z",
       "formats": {
-        "quantumultx": "input/axs.js",
+        "original": "input/axs.js",
+        "quantumultx": "quantumultx/axs.js",
         "loon": null,
         "surge": null
       }
@@ -44,9 +15,10 @@
     {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-06-30T12:56:05.243Z",
+      "updateTime": "2025-07-05T12:21:08.744Z",
       "formats": {
-        "quantumultx": "input/bizhi.js",
+        "original": "input/bizhi.js",
+        "quantumultx": "quantumultx/bizhi.js",
         "loon": null,
         "surge": null
       }
@@ -54,49 +26,10 @@
     {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-06-30T12:56:05.243Z",
+      "updateTime": "2025-07-05T12:21:08.744Z",
       "formats": {
-        "quantumultx": "input/caiyun.js",
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "ime",
-      "filename": "ime.js",
-      "updateTime": "2025-06-30T12:56:05.243Z",
-      "formats": {
-        "quantumultx": "input/ime.js",
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "sample-loon-script",
-      "filename": "sample-loon-script.js",
-      "updateTime": "2025-06-30T12:56:05.243Z",
-      "formats": {
-        "quantumultx": "input/sample-loon-script.js",
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "sample-qx-script",
-      "filename": "sample-qx-script.js",
-      "updateTime": "2025-06-30T12:56:05.243Z",
-      "formats": {
-        "quantumultx": "input/sample-qx-script.js",
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "testwall",
-      "filename": "testwall.js",
-      "updateTime": "2025-06-30T12:56:05.243Z",
-      "formats": {
-        "quantumultx": "input/testwall.js",
+        "original": "input/caiyun.js",
+        "quantumultx": "quantumultx/caiyun.js",
         "loon": null,
         "surge": null
       }

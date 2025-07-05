@@ -1,0 +1,12 @@
+{
+  "name": "PDF Reader Pro - Lite Edition",
+  "appId": "919472509",
+  "bundleId": "com.brother.pdfreaderprofree",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.pdfreaderpro.ios_free.member.ai_pack_12_month"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:26:21.847Z"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Fashion Illustration: Design",
+  "appId": "1624421627",
+  "bundleId": "com.skyapps.Fashionlllustration",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.skyapps.FashionIllustration.lweek"
+    },
+    {
+      "id": 2,
+      "productId": "com.skyapps.Fashionlllustration.year"
+    },
+    {
+      "id": 3,
+      "productId": "com.skyapps.Fashionlllustration.monthtrial"
+    },
+    {
+      "id": 4,
+      "productId": "com.skyapps.Fashionlllustration.2months"
+    },
+    {
+      "id": 5,
+      "productId": "com.skyapps.Fashionlllustration.3months"
+    },
+    {
+      "id": 6,
+      "productId": "com.skyapps.Fashionlllustration.12months"
+    },
+    {
+      "id": 7,
+      "productId": "com.skyapps.Fashionlllustration.6months"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:24:04.415Z"
+}

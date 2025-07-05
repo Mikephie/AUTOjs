@@ -1,5 +1,6 @@
-#!name=📜 ✨ 彩云天气 ✨
-#!desc=天气预测报告
+#!name=✨ 彩云天气 ✨
+#!desc=天气预测
+#!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/caiyun.png
 
@@ -24,6 +25,7 @@ DOMAIN,gather.colorfulclouds.net,REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ data-type=text data="{}" status-code=200
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ data-type=text data="{}" status-code=200
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ data-type=text data="{}" status-code=200
+
 
 [Script]
 # 赏叶赏花模块

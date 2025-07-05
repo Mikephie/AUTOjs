@@ -1,0 +1,32 @@
+{
+  "name": "Impresso - Al Logo Generator",
+  "appId": "1330592794",
+  "bundleId": "com.avcr.impresso",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.avcr.impresso. Auto RenewProSubscription.yearly.d"
+    },
+    {
+      "id": 2,
+      "productId": "com.avcr.impresso. Auto RenewProSubscription.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.avcr.impresso. AutoRenewProSubscription.yearly.c"
+    },
+    {
+      "id": 4,
+      "productId": "com.avcr.impresso.creditPack3"
+    },
+    {
+      "id": 5,
+      "productId": "com.avcr.impresso.credit Pack1"
+    },
+    {
+      "id": 6,
+      "productId": "com.avcr.impresso.Auto RenewProSubscription.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:56:43.100Z"
+}

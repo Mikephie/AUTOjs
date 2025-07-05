@@ -1,0 +1,48 @@
+{
+  "name": "Learn Japanese: Kana & Kanji",
+  "appId": "1572852037",
+  "bundleId": "ru.poas.englishwords.jaen",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "sub_ja_en_12_600"
+    },
+    {
+      "id": 2,
+      "productId": "sub_ja_en_1_200"
+    },
+    {
+      "id": 3,
+      "productId": "sub_ja_en_12_400"
+    },
+    {
+      "id": 4,
+      "productId": "sub_ja_en_12_1200"
+    },
+    {
+      "id": 5,
+      "productId": "sub_ja_en_3_400"
+    },
+    {
+      "id": 6,
+      "productId": "premium_ja_en_tier_4"
+    },
+    {
+      "id": 7,
+      "productId": "sub_ja_en_3_200"
+    },
+    {
+      "id": 8,
+      "productId": "sub_ja_en_12_800"
+    },
+    {
+      "id": 9,
+      "productId": "premium_ja_en_tier_10"
+    },
+    {
+      "id": 10,
+      "productId": "premium_ja_en_tier_7"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:26:21.847Z"
+}

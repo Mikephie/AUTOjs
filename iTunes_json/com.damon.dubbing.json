@@ -1,0 +1,20 @@
+{
+  "name": "Audio Dubbing",
+  "appId": "6443786818",
+  "bundleId": "com.damon.dubbing",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.damon.dubbing.vip12"
+    },
+    {
+      "id": 2,
+      "productId": "com.damon.dubbing.vip6"
+    },
+    {
+      "id": 3,
+      "productId": "com.damon.dubbing.vip1"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:47:24.055Z"
+}

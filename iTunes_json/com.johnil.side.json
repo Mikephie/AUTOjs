@@ -1,0 +1,20 @@
+{
+  "name": "Side - Hide Photos",
+  "appId": "1532395263",
+  "bundleId": "com.johnil.side",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.johnil.side.month"
+    },
+    {
+      "id": 2,
+      "productId": "com.johnil.side.year"
+    },
+    {
+      "id": 3,
+      "productId": "com.johnil.side.forever"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:47:24.055Z"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "SoundLab - Audio Editor",
+  "appId": "1450417400",
+  "bundleId": "com.castpeer.audioroom.ios",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "8900"
+    },
+    {
+      "id": 2,
+      "productId": "8800"
+    },
+    {
+      "id": 3,
+      "productId": "8001"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:12:01.688Z"
+}

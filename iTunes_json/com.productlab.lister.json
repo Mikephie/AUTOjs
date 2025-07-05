@@ -1,0 +1,20 @@
+{
+  "name": "Lister- To Do List &Widget",
+  "appId": "6451389254",
+  "bundleId": "com.productlab.lister",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.productlab.lister.permanent"
+    },
+    {
+      "id": 2,
+      "productId": "com.productlab.lister.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.productlab.lister.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:43:25.949Z"
+}

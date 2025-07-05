@@ -1,0 +1,12 @@
+{
+  "name": "Al Background - Pokecut Studio",
+  "appId": "1581369944",
+  "bundleId": "com.seawardhyacinth.pokecut",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.seawardhyacinth.pokecut.yearly20210922"
+    }
+  ],
+  "updatedAt": "2025-05-10T01:21:02.330Z"
+}

@@ -40,20 +40,52 @@ function parseScript(content) {
   // 提取元数据
   extractMetadata(content, result);
   
-  // 处理节点 - 优先考虑标准Loon格式
-  const loonSections = {
-    "Rule": content.match(/\[Rule\]([\s\S]*?)(?=\[|$)/i),
-    "Rewrite": content.match(/\[Rewrite\]([\s\S]*?)(?=\[|$)/i),
-    "Script": content.match(/\[Script\]([\s\S]*?)(?=\[|$)/i),
-    "MITM": content.match(/\[MITM\]([\s\S]*?)(?=\[|$|$)/i)
-  };
+  // 改成字符串查找：
+function findSectionContent(content, sectionName) {
+  const startTag = `[${sectionName}]`;
+  const startIndex = content.indexOf(startTag);
   
-  // 处理QX格式作为备选
-  const qxSections = {
-    "filter_local": content.match(/\[filter_local\]([\s\S]*?)(?=\[|$)/i),
-    "rewrite_local": content.match(/\[rewrite_local\]([\s\S]*?)(?=\[|$)/i),
-    "mitm": content.match(/\[mitm\]([\s\S]*?)(?=\[|$|$)/i)
-  };
+  if (startIndex === -1) {
+    return null;  // 与原来的 match() 返回 null 保持一致
+  }
+  
+  let endIndex = content.length;
+  let searchPos = startIndex + startTag.length;
+  
+  // 查找下一个在行首的节点标记
+  while (searchPos < content.length) {
+    const nextBracket = content.indexOf('\n[', searchPos);
+    if (nextBracket === -1) break;
+    
+    const closeBracket = content.indexOf(']', nextBracket + 2);
+    if (closeBracket !== -1) {
+      const nodeName = content.substring(nextBracket + 2, closeBracket);
+      if (/^[a-zA-Z][a-zA-Z0-9_]*$/.test(nodeName)) {
+        endIndex = nextBracket;
+        break;
+      }
+    }
+    
+    searchPos = nextBracket + 1;
+  }
+  
+  const sectionContent = content.substring(startIndex + startTag.length, endIndex).trim();
+  // 重要：返回与 match() 相同的格式 [完整匹配, 捕获组1]
+  return [startTag + sectionContent, sectionContent];
+}
+
+const loonSections = {
+  "Rule": findSectionContent(content, "Rule"),
+  "Rewrite": findSectionContent(content, "Rewrite"),
+  "Script": findSectionContent(content, "Script"),
+  "MITM": findSectionContent(content, "MITM")
+};
+
+const qxSections = {
+  "filter_local": findSectionContent(content, "filter_local"),
+  "rewrite_local": findSectionContent(content, "rewrite_local"),
+  "mitm": findSectionContent(content, "mitm")
+};
   
   // 解析Loon格式
   if (loonSections.Rule && loonSections.Rule[1]) {
@@ -98,7 +130,7 @@ function extractMetadata(content, result) {
     author: /#!author\s*=\s*(.+?)($|\n)/i,
     icon: /#!icon\s*=\s*(.+?)($|\n)/i
   };
-
+  
   // 提取每个字段
   for (const [field, pattern] of Object.entries(metadataFields)) {
     const match = content.match(pattern);
@@ -106,43 +138,41 @@ function extractMetadata(content, result) {
       result.metadata[field] = match[1].trim();
     }
   }
-
-  // 补充缺失字段（name/desc/author）从注释提取
+  
+  // 如果没有找到标准元数据，尝试从QX格式提取
   if (!result.metadata.name) {
+    // 尝试从内容第一行或注释中提取
+    const titleMatch = content.match(/^\/\/\s*(.+?)(?:\n|$)/);
+    if (titleMatch) {
+      result.metadata.name = titleMatch[1].trim();
+    }
+    
+    // 尝试从@name属性提取
     const nameMatch = content.match(/\/\/\s*@name\s+(.+?)(?:\n|$)/i);
     if (nameMatch) {
       result.metadata.name = nameMatch[1].trim();
     }
-  }
-
-  if (!result.metadata.desc) {
+    
+    // 尝试从@desc属性提取
     const descMatch = content.match(/\/\/\s*@desc(?:ription)?\s+(.+?)(?:\n|$)/i);
     if (descMatch) {
       result.metadata.desc = descMatch[1].trim();
     }
-  }
-
-  if (!result.metadata.author) {
+    
+    // 尝试从@author属性提取
     const authorMatch = content.match(/\/\/\s*@author\s+(.+?)(?:\n|$)/i);
     if (authorMatch) {
       result.metadata.author = authorMatch[1].trim();
     }
   }
-
-  // 特殊处理：若 name 仍为空，尝试从首行提取视觉标题
+  
+  // 如果还是没找到名称，尝试从文件名或特征提取
   if (!result.metadata.name) {
-    const firstLine = content.trim().split('\n')[0].trim();
-    if (
-      firstLine &&
-      !firstLine.startsWith('//') &&
-      !firstLine.startsWith('#!') &&
-      firstLine.length <= 50 // 防止误抓长注释
-    ) {
-      result.metadata.name = firstLine;
+    const titleMatch = content.match(/(脚本|script|重写|rewrite)/i);
+    if (titleMatch) {
+      result.metadata.name = "Custom " + titleMatch[0].trim();
     } else {
-      // 最终兜底
-      const fallback = content.match(/(脚本|script|重写|rewrite)/i);
-      result.metadata.name = fallback ? `Custom ${fallback[0]}` : 'Converted Script';
+      result.metadata.name = "Converted Script";
     }
   }
 }
@@ -334,21 +364,26 @@ function convertToSurge(input) {
   const author = scriptInfo.metadata.author || "Converter";
   
   let config = `#!name=${name}
-#!desc=${desc}
-#!author=${author}
-`;
+#!desc=${desc}`;
+
+  // 添加category字段（如果存在）
+  if (scriptInfo.metadata.category) {
+    config += `\n#!category=${scriptInfo.metadata.category}`;
+  }
+
+  config += `\n#!author=${author}`;
 
   if (scriptInfo.metadata.homepage) {
-    config += `#!homepage=${scriptInfo.metadata.homepage}\n`;
+    config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
   }
   
   if (scriptInfo.metadata.icon) {
-    config += `#!icon=${scriptInfo.metadata.icon}\n`;
+    config += `\n#!icon=${scriptInfo.metadata.icon}`;
   }
 
   // 处理Rule部分 - 修复格式
   if (scriptInfo.rules && scriptInfo.rules.length > 0) {
-    config += "\n[Rule]";
+    config += "\n\n[Rule]";
     
     let lastComment = "";
     for (const rule of scriptInfo.rules) {
@@ -360,13 +395,17 @@ function convertToSurge(input) {
       
       // 转换规则格式为Surge格式
       let surgeRule = rule.content;
-      
-      // 修复规则格式: 移除逗号后的额外空格，并将策略名转为大写
-      surgeRule = surgeRule.replace(/\s*,\s*/g, ','); // 移除逗号周围的空格
-      surgeRule = surgeRule.replace(/,([^,]+)$/g, function(match, policy) {
-        // 将最后一个逗号后的策略名转为大写
-        return ',' + policy.trim().toUpperCase();
-      });
+
+// 修复规则格式: 移除逗号周围空格，并将策略名转为大写
+surgeRule = surgeRule.replace(/\s*,\s*/g, ',');
+surgeRule = surgeRule.replace(/,([^,]+)$/g, function(match, policy) {
+  return ',' + policy.trim().toUpperCase();
+});
+
+// 确保规则类型是大写 (URL-REGEX, DOMAIN-SUFFIX等)
+surgeRule = surgeRule.replace(/^(url-regex|domain-suffix|domain-keyword|host|host-suffix|host-keyword)/i, function(match) {
+  return match.toUpperCase();
+});
       
       config += `\n${surgeRule}`;
     }
@@ -448,7 +487,7 @@ function convertToSurge(input) {
 
   // 处理Script部分
   if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
-    config += "\n[Script]";
+    config += "\n\n[Script]";
     
     let lastComment = "";
     let ruleCounter = 0;
@@ -526,46 +565,56 @@ function convertToLoon(input) {
   const author = scriptInfo.metadata.author || "Converter";
   
   let config = `#!name=${name}
-#!desc=${desc}
-#!author=${author}
-`;
+#!desc=${desc}`;
+
+  // 添加category字段（如果存在）
+  if (scriptInfo.metadata.category) {
+    config += `\n#!category=${scriptInfo.metadata.category}`;
+  }
+
+  config += `\n#!author=${author}`;
 
   if (scriptInfo.metadata.homepage) {
-    config += `#!homepage=${scriptInfo.metadata.homepage}\n`;
+    config += `\n#!homepage=${scriptInfo.metadata.homepage}`;
   }
   
   if (scriptInfo.metadata.icon) {
-    config += `#!icon=${scriptInfo.metadata.icon}\n`;
+    config += `\n#!icon=${scriptInfo.metadata.icon}`;
   }
 
   // 处理Rule部分
-  if (scriptInfo.rules.length > 0) {
-    config += "\n[Rule]";
-    
-    let lastComment = "";
-    for (const rule of scriptInfo.rules) {
-      // 如果有新注释，添加它
-      if (rule.comment && rule.comment !== lastComment) {
-        config += `\n${rule.comment}`;
-        lastComment = rule.comment;
-      }
-      
-      // 修复规则格式
-      let loonRule = rule.content;
-      
-      // 移除逗号周围的额外空格
-      loonRule = loonRule.replace(/\s*,\s*/g, ',');
-      
-      // 将最后一个逗号后的策略名转为大写
-      loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
-        return ',' + policy.trim().toUpperCase();
-      });
-      
-      config += `\n${loonRule}`;
+if (scriptInfo.rules.length > 0) {
+  config += "\n\n[Rule]";
+  
+  let lastComment = "";
+  for (const rule of scriptInfo.rules) {
+    // 如果有新注释，添加它
+    if (rule.comment && rule.comment !== lastComment) {
+      config += `\n${rule.comment}`;
+      lastComment = rule.comment;
     }
     
-    config += "\n";
+    // 修复规则格式
+    let loonRule = rule.content;
+    
+    // 移除逗号周围的额外空格
+    loonRule = loonRule.replace(/\s*,\s*/g, ',');
+    
+    // 将最后一个逗号后的策略名转为大写
+    loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
+      return ',' + policy.trim().toUpperCase();
+    });
+    
+    // 确保规则类型是大写 (URL-REGEX, DOMAIN-SUFFIX等)
+loonRule = loonRule.replace(/^(url-regex|domain-suffix|domain-keyword|host|host-suffix|host-keyword)/i, function(match) {
+  return match.toUpperCase();
+});
+
+    config += `\n${loonRule}`;
   }
+  
+  config += "\n";
+}
 
   // 处理Rewrite部分
   if (scriptInfo.rewrites.length > 0) {
@@ -595,7 +644,8 @@ function convertToLoon(input) {
 
   // 处理Script部分
   if (scriptInfo.scripts.length > 0) {
-    config += "\n[Script]";
+    // 添加一个空行在[Script]之前
+    config += "\n\n[Script]";
     
     let lastComment = "";
     for (const rule of scriptInfo.scripts) {

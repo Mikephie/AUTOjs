@@ -1,0 +1,48 @@
+{
+  "name": "1 am - Daily Affirmations",
+  "appId": "874656917",
+  "bundleId": "com.MonkeyTaps.IAM",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.monkeytaps.iam.premium.year"
+    },
+    {
+      "id": 2,
+      "productId": "com.monkeytaps.iam.premium.month"
+    },
+    {
+      "id": 3,
+      "productId": "com.monkeytaps.iam.premium.year2"
+    },
+    {
+      "id": 4,
+      "productId": "com.monkeytaps.iam.premium.year3"
+    },
+    {
+      "id": 5,
+      "productId": "com.monkeytaps.iam.premium.year4"
+    },
+    {
+      "id": 6,
+      "productId": "com.monkeytaps.iam.premium.year.sale"
+    },
+    {
+      "id": 7,
+      "productId": "com.monkeytaps.iam.premium.offer.year"
+    },
+    {
+      "id": 8,
+      "productId": "com.monkeytaps.iam.premium.month2"
+    },
+    {
+      "id": 9,
+      "productId": "com.monkeytaps.iam.premium.lifetime"
+    },
+    {
+      "id": 10,
+      "productId": "com.monkeytaps.iam.growthbundle"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:59.495Z"
+}

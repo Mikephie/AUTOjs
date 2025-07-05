@@ -1,0 +1,20 @@
+{
+  "name": "真题全刷-四级六级考研英语真题伴侣",
+  "appId": "1614807128",
+  "bundleId": "com.SuperQuestion.Question",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "qtzs_vip_year"
+    },
+    {
+      "id": 2,
+      "productId": "qtzs_vip_month"
+    },
+    {
+      "id": 3,
+      "productId": "qtzs_vip_season"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:26:21.847Z"
+}

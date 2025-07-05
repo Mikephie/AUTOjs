@@ -1,0 +1,20 @@
+{
+  "name": "我的书橱 - 本地漫画小说书籍阅读器",
+  "appId": "1464406562",
+  "bundleId": "com.zhk.forworld",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.zhk.hidebox.yearly"
+    },
+    {
+      "id": 2,
+      "productId": "com.zhk.hidebox.all"
+    },
+    {
+      "id": 3,
+      "productId": "com.zhk.hidebox.monthly"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:59.495Z"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Al Baby Generator - Maker Face",
+  "appId": "1509214720",
+  "bundleId": "com.nilu.faceseer",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.nilu.faceseer.weekly"
+    },
+    {
+      "id": 2,
+      "productId": "com.nilu.faceseer.weeklynew"
+    },
+    {
+      "id": 3,
+      "productId": "com.bs.faceseer.weeklynewoffer"
+    },
+    {
+      "id": 4,
+      "productId": "com.nilu.faceseer.monthly"
+    },
+    {
+      "id": 5,
+      "productId": "com.nilu.faceseer.yearly"
+    },
+    {
+      "id": 6,
+      "productId": "com.nilu.faceseer.removeads"
+    },
+    {
+      "id": 7,
+      "productId": "com.bs.faceseer.lifetime"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:26:21.847Z"
+}

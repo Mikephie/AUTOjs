@@ -1,0 +1,48 @@
+{
+  "user_agent": "Manus",
+  "bundle_id": "tech.butterfly.app",
+  "data": {
+    "tech.butterfly.app.ios.casual": {
+      "entitlements": [
+        "Casual"
+      ],
+      "product_identifier": "tech.butterfly.app.ios.casual"
+    },
+    "tech.butterfly.app.ios.casual.yearly": {
+      "entitlements": [
+        "Casual"
+      ],
+      "product_identifier": "tech.butterfly.app.ios.casual.yearly"
+    },
+    "tech.butterfly.app.ios.credits": {
+      "entitlements": [],
+      "product_identifier": "tech.butterfly.app.ios.credits"
+    },
+    "tech.butterfly.app.ios.credits2": {
+      "entitlements": [],
+      "product_identifier": "tech.butterfly.app.ios.credits2"
+    },
+    "tech.butterfly.app.ios.credits3": {
+      "entitlements": [],
+      "product_identifier": "tech.butterfly.app.ios.credits3"
+    },
+    "tech.butterfly.app.ios.lite": {
+      "entitlements": [
+        "Lite"
+      ],
+      "product_identifier": "tech.butterfly.app.ios.lite"
+    },
+    "tech.butterfly.app.ios.lite.yearly": {
+      "entitlements": [
+        "Lite"
+      ],
+      "product_identifier": "tech.butterfly.app.ios.lite.yearly"
+    },
+    "tech.butterfly.app.ios.pro": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "tech.butterfly.app.ios.pro"
+    }
+  }
+}

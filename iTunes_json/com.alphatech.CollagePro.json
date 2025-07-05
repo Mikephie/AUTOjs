@@ -1,0 +1,48 @@
+{
+  "name": "Photable- Best Body Editor",
+  "appId": "1216590966",
+  "bundleId": "com.alphatech.CollagePro",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Photable_1W_NoTrial"
+    },
+    {
+      "id": 2,
+      "productId": "AUTOSUB_1Y_TRIAL3D"
+    },
+    {
+      "id": 3,
+      "productId": "AUTOSUB_1_M_599"
+    },
+    {
+      "id": 4,
+      "productId": "Photable_1M_A"
+    },
+    {
+      "id": 5,
+      "productId": "Photable_1Y_C"
+    },
+    {
+      "id": 6,
+      "productId": "Photable_1W_Trial"
+    },
+    {
+      "id": 7,
+      "productId": "Photable_1Y_D"
+    },
+    {
+      "id": 8,
+      "productId": "AUTOSUB_1_YR"
+    },
+    {
+      "id": 9,
+      "productId": "AUTOSUB_1_Y"
+    },
+    {
+      "id": 10,
+      "productId": "Photable_SP_1int"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:41:45.896Z"
+}

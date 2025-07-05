@@ -1,0 +1,20 @@
+{
+  "name": "简谱大师-简谱作曲家写简谱作词，作曲，",
+  "appId": "6451075613",
+  "bundleId": "com.xinlin.notation",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.notation.weekly"
+    },
+    {
+      "id": 2,
+      "productId": "com.notation.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.notation.once"
+    }
+  ],
+  "updatedAt": "2025-05-13T11:16:48.733Z"
+}

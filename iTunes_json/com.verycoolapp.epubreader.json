@@ -1,0 +1,24 @@
+{
+  "name": "Epub Reader -read epub,chm,txt",
+  "appId": "1296870631",
+  "bundleId": "com.verycoolapp.epubreader",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "Epub Reader_ProVersion"
+    },
+    {
+      "id": 2,
+      "productId": "EpubReader_RemoveAds"
+    },
+    {
+      "id": 3,
+      "productId": "EpubReader_Passcode Lock"
+    },
+    {
+      "id": 4,
+      "productId": "autorenewable.professional.epubreader.year"
+    }
+  ],
+  "updatedAt": "2025-05-10T05:46:59.895Z"
+}

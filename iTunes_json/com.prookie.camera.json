@@ -1,0 +1,48 @@
+{
+  "name": "Prookie: Hair Style Face Shape",
+  "appId": "1494448939",
+  "bundleId": "com.prookie.camera",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "prookie.week.trial"
+    },
+    {
+      "id": 2,
+      "productId": "prookie.week.notrial.1103"
+    },
+    {
+      "id": 3,
+      "productId": "prookie.month.free.trial"
+    },
+    {
+      "id": 4,
+      "productId": "prookie.vip.yearly"
+    },
+    {
+      "id": 5,
+      "productId": "prookie.week.newtrial.1016"
+    },
+    {
+      "id": 6,
+      "productId": "prookie.first.week"
+    },
+    {
+      "id": 7,
+      "productId": "prookie.week.notrial.1016"
+    },
+    {
+      "id": 8,
+      "productId": "prookie.month.withtrial.0615"
+    },
+    {
+      "id": 9,
+      "productId": "prookie.year.withtrial.0606"
+    },
+    {
+      "id": 10,
+      "productId": "prookie.notrial.yearly30"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:45:26.233Z"
+}

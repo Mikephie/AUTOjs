@@ -1,0 +1,44 @@
+{
+  "name": "My Diary - Journal with Lock",
+  "appId": "1579321589",
+  "bundleId": "com.betterapp.mydiary",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "diary.yearly.vip.v1"
+    },
+    {
+      "id": 2,
+      "productId": "diary.monthly.vip.v1"
+    },
+    {
+      "id": 3,
+      "productId": "diary.yearly.vip.1029"
+    },
+    {
+      "id": 4,
+      "productId": "diary.permanent.vip.v1"
+    },
+    {
+      "id": 5,
+      "productId": "diary.monthly.vip.v2"
+    },
+    {
+      "id": 6,
+      "productId": "diary.permanent.vip.v3"
+    },
+    {
+      "id": 7,
+      "productId": "diary.yearly.vip.v4"
+    },
+    {
+      "id": 8,
+      "productId": "yearly.vip.fullp.v1"
+    },
+    {
+      "id": 9,
+      "productId": "diary.permanent.vip.fullp.v1"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:26.588Z"
+}

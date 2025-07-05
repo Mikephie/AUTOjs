@@ -1,0 +1,20 @@
+{
+  "name": "LUMINS - Light Photo Editor",
+  "appId": "1503176746",
+  "bundleId": "com.Veyola.Lumin",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.spacemushrooms.weekly"
+    },
+    {
+      "id": 2,
+      "productId": "com.spacemushrooms.weeklyNT"
+    },
+    {
+      "id": 3,
+      "productId": "5Day_VIP"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:44:26.588Z"
+}

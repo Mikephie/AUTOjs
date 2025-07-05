@@ -1,0 +1,20 @@
+{
+  "name": "SunAlly",
+  "appId": "6740318671",
+  "bundleId": "com.freenotes.sunally",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.freenotes.sunally.lifetime"
+    },
+    {
+      "id": 2,
+      "productId": "com.freenotes.sunally.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.freenotes.sunally.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:13:05.134Z"
+}

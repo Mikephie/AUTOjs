@@ -1,0 +1,24 @@
+{
+  "name": "PPT制作软件-PPT 模版生成",
+  "appId": "6473618816",
+  "bundleId": "com.FourthPPT.Mobile",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.FourthPPT.Mobile.Generate"
+    },
+    {
+      "id": 2,
+      "productId": "com.FourthPPT.Mobile.Month"
+    },
+    {
+      "id": 3,
+      "productId": "com.FourthPPT.Mobile.Year"
+    },
+    {
+      "id": 4,
+      "productId": "com.FourthPPT.Mobile.Forever"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:36:56.116Z"
+}

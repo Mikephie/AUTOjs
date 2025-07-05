@@ -1,0 +1,56 @@
+{
+  "name": "Spreadsheet-xIsx&csv editor",
+  "appId": "1518721142",
+  "bundleId": "com.bestmusicvideo.formmaster",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.form.1weekvip"
+    },
+    {
+      "id": 2,
+      "productId": "com.form.lyearvip"
+    },
+    {
+      "id": 3,
+      "productId": "com.form.1monthvip"
+    },
+    {
+      "id": 4,
+      "productId": "com.form.permanetvip"
+    },
+    {
+      "id": 5,
+      "productId": "com.form. HalfPrice"
+    },
+    {
+      "id": 6,
+      "productId": "com.formaster.ai50times"
+    },
+    {
+      "id": 7,
+      "productId": "com.formaster.ai10times"
+    },
+    {
+      "id": 8,
+      "productId": "com.form.3y"
+    },
+    {
+      "id": 9,
+      "productId": "com.formaster.ai100times"
+    },
+    {
+      "id": 10,
+      "productId": "com.formaster.monthlytrial"
+    },
+    {
+      "id": 11,
+      "productId": "com.form.1weekvip"
+    },
+    {
+      "id": 12,
+      "productId": "com.form.1yearvip"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:39:44.216Z"
+}

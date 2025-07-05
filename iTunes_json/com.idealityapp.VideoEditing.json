@@ -1,0 +1,20 @@
+{
+  "name": "Magic Video-Video Edit & Clip",
+  "appId": "1462720026",
+  "bundleId": "com.idealityapp.VideoEditing",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "MagicVideoSubscribeThree Month"
+    },
+    {
+      "id": 2,
+      "productId": "MagicVideo_Vip_Permanent"
+    },
+    {
+      "id": 3,
+      "productId": "MagicVideo_Subscribe_OneMonth"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:53:48.471Z"
+}

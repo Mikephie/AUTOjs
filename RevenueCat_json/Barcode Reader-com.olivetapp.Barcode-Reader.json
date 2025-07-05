@@ -1,0 +1,30 @@
+{
+  "user_agent": "Barcode%20Reader",
+  "bundle_id": "com.olivetapp.Barcode-Reader",
+  "data": {
+    "barcode_reader_1m": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "barcode_reader_1m"
+    },
+    "barcode_reader_1w": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "barcode_reader_1w"
+    },
+    "barcode_reader_1y": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "barcode_reader_1y"
+    },
+    "barcode_reader_pro": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "barcode_reader_pro"
+    }
+  }
+}

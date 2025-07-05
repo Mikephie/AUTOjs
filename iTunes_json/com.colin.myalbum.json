@@ -1,0 +1,20 @@
+{
+  "name": "Cleaner - Photo Manager",
+  "appId": "1602098908",
+  "bundleId": "com.colin.myalbum",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.colin.myalbum.monthlyvip"
+    },
+    {
+      "id": 2,
+      "productId": "com.colin.myalbum.isUpgradeVip"
+    },
+    {
+      "id": 3,
+      "productId": "com.colin.myalbum.yearvip"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:36:56.116Z"
+}

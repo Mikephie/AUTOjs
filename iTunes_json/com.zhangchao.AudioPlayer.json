@@ -1,0 +1,12 @@
+{
+  "name": "Ever Play - HiFi Music Player",
+  "appId": "1202642773",
+  "bundleId": "com.zhangchao.AudioPlayer",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "om.zhangchao.AudioPlayer.subscription.oneWeek"
+    }
+  ],
+  "updatedAt": "2025-05-14T07:42:44.813Z"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Color Themes: App Icons, Widget",
+  "appId": "1530002695",
+  "bundleId": "com.widget.theme",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.widget.theme.Yearly"
+    },
+    {
+      "id": 2,
+      "productId": "com.widget.theme. Monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.widget.theme.yearly.3dayfree"
+    },
+    {
+      "id": 4,
+      "productId": "com.widget.theme.pack"
+    },
+    {
+      "id": 5,
+      "productId": "com.widget.theme.year.new"
+    },
+    {
+      "id": 6,
+      "productId": "com.widget.theme.month.new"
+    },
+    {
+      "id": 7,
+      "productId": "com.widget.theme.Yearly"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:43:57.804Z"
+}

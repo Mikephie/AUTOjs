@@ -1,0 +1,12 @@
+{
+  "name": "Idiom Solitaire - 成語猜猜",
+  "appId": "1618185567",
+  "bundleId": "com.agedstudio.word.puzzle.chengyucaicai",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.agedstudio.word.puzzle.chengyucaicai.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-16T23:41:18.606Z"
+}

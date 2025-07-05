@@ -1,0 +1,40 @@
+{
+  "name": "IdeaSnap: Al Voice Notes&Tasks",
+  "appId": "1397149726",
+  "bundleId": "com.chenxi.shanniankapian",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.chenxi.shannian.superNian"
+    },
+    {
+      "id": 2,
+      "productId": "com.shannian.year.cuxiao"
+    },
+    {
+      "id": 3,
+      "productId": "com.chenxi.shannian.yongjiu"
+    },
+    {
+      "id": 4,
+      "productId": "com.chenxi.shannian.biji.yongjiu"
+    },
+    {
+      "id": 5,
+      "productId": "com.chenxi.shannian.biji.year"
+    },
+    {
+      "id": 6,
+      "productId": "com.chenxi.shannian.biji.discount.year"
+    },
+    {
+      "id": 7,
+      "productId": "com.chenxi.shannian.biji.month"
+    },
+    {
+      "id": 8,
+      "productId": "shannianyongjiu"
+    }
+  ],
+  "updatedAt": "2025-05-12T03:36:27.210Z"
+}

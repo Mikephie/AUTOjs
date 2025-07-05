@@ -1,0 +1,32 @@
+{
+  "name": "CapyMood: Daily Stress Tracker",
+  "appId": "6471785489",
+  "bundleId": "com.paha.CapyMood",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.paha.CapyMood.year"
+    },
+    {
+      "id": 2,
+      "productId": "com.paha.CapyMood.month"
+    },
+    {
+      "id": 3,
+      "productId": "com.paha.CapyMood.forever"
+    },
+    {
+      "id": 4,
+      "productId": "com.paha.CapyMood.month.original"
+    },
+    {
+      "id": 5,
+      "productId": "com.paha.CapyMood.year.original"
+    },
+    {
+      "id": 6,
+      "productId": "com.paha.CapyMood.forever.original"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:18:33.006Z"
+}

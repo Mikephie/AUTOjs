@@ -1,0 +1,28 @@
+{
+  "name": "ECG+ | Analyzer for QTc & HRV",
+  "appId": "1567047859",
+  "bundleId": "com.wms.hrv",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.wms.hrv.30days"
+    },
+    {
+      "id": 2,
+      "productId": "com.wms.hrv.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.wms.hrv.pro"
+    },
+    {
+      "id": 4,
+      "productId": "com.wms.hrv.yearlyfamilysharing"
+    },
+    {
+      "id": 5,
+      "productId": "com.wms.hrv.profs"
+    }
+  ],
+  "updatedAt": "2025-05-12T13:12:01.688Z"
+}

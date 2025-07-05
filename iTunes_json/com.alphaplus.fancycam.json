@@ -1,0 +1,44 @@
+{
+  "name": "Fancy Cam:Face Editor, Hairstyle",
+  "appId": "6443581419",
+  "bundleId": "com.alphaplus.fancycam",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.alphaplus.fancycam.week.18.trial"
+    },
+    {
+      "id": 2,
+      "productId": "com.alphaplus.fancycam.week.trial"
+    },
+    {
+      "id": 3,
+      "productId": "com.alphaplus.fancycam.week.trial.event"
+    },
+    {
+      "id": 4,
+      "productId": "com.alphaplus.fancycam.week.8.trial"
+    },
+    {
+      "id": 5,
+      "productId": "com.alphaplus.fancycam.idphoto.permanent"
+    },
+    {
+      "id": 6,
+      "productId": "com.alphaplus.fancycam.life.498"
+    },
+    {
+      "id": 7,
+      "productId": "com.alphaplus.fancycam.life.38"
+    },
+    {
+      "id": 8,
+      "productId": "com.alphaplus.fancycam.year.98.trial"
+    },
+    {
+      "id": 9,
+      "productId": "com.alphaplus.fancycam.year.198"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:46:34.767Z"
+}

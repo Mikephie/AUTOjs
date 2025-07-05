@@ -1,0 +1,56 @@
+{
+  "name": "Water Tracker by WaterMinder®",
+  "appId": "653031147",
+  "bundleId": "com.waterminder.waterminder",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "waterminder.premiumYearly"
+    },
+    {
+      "id": 2,
+      "productId": "wm_subs_29.99_365_7"
+    },
+    {
+      "id": 3,
+      "productId": "waterminder.premiumYearly.tutorial"
+    },
+    {
+      "id": 4,
+      "productId": "waterminder.premiumMonthly"
+    },
+    {
+      "id": 5,
+      "productId": "waterminder.tipjarsubscription"
+    },
+    {
+      "id": 6,
+      "productId": "waterminder.smalltip1"
+    },
+    {
+      "id": 7,
+      "productId": "waterminder.yearly.offer1"
+    },
+    {
+      "id": 8,
+      "productId": "waterminder.yearly.offer2"
+    },
+    {
+      "id": 9,
+      "productId": "waterminder.premiumYearly2"
+    },
+    {
+      "id": 10,
+      "productId": "waterminder.premiumOnetime"
+    },
+    {
+      "id": 11,
+      "productId": "waterminder.premiumYearly"
+    },
+    {
+      "id": 12,
+      "productId": "waterminder.largetip"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:42:25.104Z"
+}

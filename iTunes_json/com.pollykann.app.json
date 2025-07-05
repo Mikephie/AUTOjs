@@ -1,0 +1,48 @@
+{
+  "name": "Pollykann - Ultra Media Player",
+  "appId": "1547395471",
+  "bundleId": "com.pollykann.app",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "vip.quarterly.pollykann"
+    },
+    {
+      "id": 2,
+      "productId": "vip.forever.pollykann"
+    },
+    {
+      "id": 3,
+      "productId": "vip.annually.pollykann"
+    },
+    {
+      "id": 4,
+      "productId": "vip.monthly.pollykann"
+    },
+    {
+      "id": 5,
+      "productId": "vip.3years.pollykann"
+    },
+    {
+      "id": 6,
+      "productId": "point02.consumable.pollykann"
+    },
+    {
+      "id": 7,
+      "productId": "vip.5years.pollykann"
+    },
+    {
+      "id": 8,
+      "productId": "point07.consumable.pollykann"
+    },
+    {
+      "id": 9,
+      "productId": "point06.consumable.pollykann"
+    },
+    {
+      "id": 10,
+      "productId": "point05.consumable.pollykann"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:24:55.389Z"
+}

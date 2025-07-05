@@ -1,0 +1,32 @@
+{
+  "name": "测量员",
+  "appId": "1639492568",
+  "bundleId": "com.celiangyuan.SurveyorPro",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.celiangyuan.SurveyorPro.OneYearNew"
+    },
+    {
+      "id": 2,
+      "productId": "com.celiangyuan.SurveyorPro.ThreeMonthNew"
+    },
+    {
+      "id": 3,
+      "productId": "com.celiangyuan.SurveyorPro.OneMonthNew"
+    },
+    {
+      "id": 4,
+      "productId": "com.celiangyuan.SurveyorPro.OneYear"
+    },
+    {
+      "id": 5,
+      "productId": "com.celiangyuan.SurveyorPro.ThreeMonth"
+    },
+    {
+      "id": 6,
+      "productId": "com.celiangyuan.SurveyorPro.OneMonth"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:24:55.389Z"
+}

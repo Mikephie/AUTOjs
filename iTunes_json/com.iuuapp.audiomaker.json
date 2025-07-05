@@ -1,0 +1,32 @@
+{
+  "name": "Audio Editor - Music editor",
+  "appId": "1493256837",
+  "bundleId": "com.iuuapp.audiomaker",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.iuuapp.audiomaker.removeads.month"
+    },
+    {
+      "id": 2,
+      "productId": "com.iuuapp.audiomaker.removeads"
+    },
+    {
+      "id": 3,
+      "productId": "com.iuuapp.audiomaker.cloud.month"
+    },
+    {
+      "id": 4,
+      "productId": "com.iuuapp.audiomaker.cloud.year"
+    },
+    {
+      "id": 5,
+      "productId": "com.iuuapp.audiomaker.cloud.season"
+    },
+    {
+      "id": 6,
+      "productId": "com.iuuapp.audiomaker.removeads.year"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:43:57.804Z"
+}

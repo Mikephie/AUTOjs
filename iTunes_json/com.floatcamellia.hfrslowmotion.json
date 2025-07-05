@@ -1,0 +1,24 @@
+{
+  "name": "Time Cut: Smooth Slow Motion",
+  "appId": "1587825332",
+  "bundleId": "com.floatcamellia.hfrslowmotion",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.floatcamellia.hfrslowmotion.weekly"
+    },
+    {
+      "id": 2,
+      "productId": "com.floatcamellia.hfrslowmotion.yearlywithtrial"
+    },
+    {
+      "id": 3,
+      "productId": "com.floatcamellia.hfrslowmotion.forevervip"
+    },
+    {
+      "id": 4,
+      "productId": "com.floatcamellia.hfrslowmotion.yearly"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:36:56.116Z"
+}

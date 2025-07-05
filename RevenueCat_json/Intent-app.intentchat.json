@@ -1,0 +1,24 @@
+{
+  "user_agent": "Intent",
+  "bundle_id": "app.intentchat",
+  "data": {
+    "app.intentchat.Annual": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "app.intentchat.Annual"
+    },
+    "app.intentchat.Lifetime": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "app.intentchat.Lifetime"
+    },
+    "app.intentchat.Monthly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "app.intentchat.Monthly"
+    }
+  }
+}

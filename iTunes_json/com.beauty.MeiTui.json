@@ -1,0 +1,16 @@
+{
+  "name": "Al美腿",
+  "appId": "6743067168",
+  "bundleId": "com.beauty.MeiTui",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "vip_member_v3_365day"
+    },
+    {
+      "id": 2,
+      "productId": "vip_member_v3_30day"
+    }
+  ],
+  "updatedAt": "2025-05-16T05:30:33.191Z"
+}

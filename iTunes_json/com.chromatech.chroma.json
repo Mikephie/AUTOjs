@@ -1,0 +1,48 @@
+{
+  "name": "PRESETS: Filters for Pictures",
+  "appId": "1457445491",
+  "bundleId": "com.chromatech.chroma",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.chromatech.chroma.monthlyAutoRenewable Pro"
+    },
+    {
+      "id": 2,
+      "productId": "com.chromatech.chroma.weeklyAR"
+    },
+    {
+      "id": 3,
+      "productId": "com.chromatech.chroma.yearlyAR"
+    },
+    {
+      "id": 4,
+      "productId": "com.chromatech.chroma.annualNTO"
+    },
+    {
+      "id": 5,
+      "productId": "com.chromatech.chroma.monthlyAR"
+    },
+    {
+      "id": 6,
+      "productId": "com.chromatech.chroma.yearlyNT"
+    },
+    {
+      "id": 7,
+      "productId": "com.chromatech.chroma.nonConsumablePurchase"
+    },
+    {
+      "id": 8,
+      "productId": "com.chromatech.chroma.yearlyAutoRenewablePlus"
+    },
+    {
+      "id": 9,
+      "productId": "com.chromatech.chroma.weeklyNTO"
+    },
+    {
+      "id": 10,
+      "productId": "com.chromatech.chroma.yearlyAutoRenewable"
+    }
+  ],
+  "updatedAt": "2025-05-10T05:44:32.727Z"
+}

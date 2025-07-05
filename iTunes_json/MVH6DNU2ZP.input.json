@@ -1,0 +1,24 @@
+{
+  "name": "落格输入法 经典版",
+  "appId": "1140465593",
+  "bundleId": "MVH6DNU2ZP.input",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.logcg.loginput"
+    },
+    {
+      "id": 2,
+      "productId": "com.logcg.loginput.colorful"
+    },
+    {
+      "id": 3,
+      "productId": "com.logcg.loginput.productionpack"
+    },
+    {
+      "id": 4,
+      "productId": "com.logcg.loginput"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:42:54.189Z"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "one sec | screen time + focus",
+  "appId": "1532875441",
+  "bundleId": "wtf.riedel.one-sec",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "wtf.riedel.onesec.annual"
+    },
+    {
+      "id": 2,
+      "productId": "wtf.riedel.one_sec.pro.annual"
+    },
+    {
+      "id": 3,
+      "productId": "wtf.riedel.onesec.lifetime"
+    },
+    {
+      "id": 4,
+      "productId": "wtf.riedel.onesec.lifetime.individual"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:43:57.804Z"
+}

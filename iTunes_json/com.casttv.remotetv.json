@@ -1,0 +1,48 @@
+{
+  "name": "Universal Remote TV Controller",
+  "appId": "1581765635",
+  "bundleId": "com.casttv.remotetv",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "yearly_new_trial"
+    },
+    {
+      "id": 2,
+      "productId": "weekly_trial_399"
+    },
+    {
+      "id": 3,
+      "productId": "yearly"
+    },
+    {
+      "id": 4,
+      "productId": "weekly_trial_159"
+    },
+    {
+      "id": 5,
+      "productId": "checkoutdemo_weekly"
+    },
+    {
+      "id": 6,
+      "productId": "monthly_229"
+    },
+    {
+      "id": 7,
+      "productId": "yearly3"
+    },
+    {
+      "id": 8,
+      "productId": "yearly3_trial"
+    },
+    {
+      "id": 9,
+      "productId": "weekly_trial_3_day"
+    },
+    {
+      "id": 10,
+      "productId": "weekly_trial_159_promote"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:45:23.908Z"
+}

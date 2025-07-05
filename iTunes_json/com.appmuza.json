@@ -1,0 +1,48 @@
+{
+  "name": "Muza: Al Face & Body Editor",
+  "appId": "6467420403",
+  "bundleId": "com.appmuza",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.appmuza.premium_month_essential"
+    },
+    {
+      "id": 2,
+      "productId": "com.appmuza.premium_month"
+    },
+    {
+      "id": 3,
+      "productId": "com.appmuza.premium_year_special"
+    },
+    {
+      "id": 4,
+      "productId": "com.appmuza.premium_month_special"
+    },
+    {
+      "id": 5,
+      "productId": "com.appmuza.premium_year"
+    },
+    {
+      "id": 6,
+      "productId": "com.appmuza.premium_year_trial"
+    },
+    {
+      "id": 7,
+      "productId": "com.appmuza.premium_3_month"
+    },
+    {
+      "id": 8,
+      "productId": "com.appmuza.premium_week_trial"
+    },
+    {
+      "id": 9,
+      "productId": "com.appmuza.premium_week"
+    },
+    {
+      "id": 10,
+      "productId": "com.appmuza.premium_year_essential"
+    }
+  ],
+  "updatedAt": "2025-05-14T12:54:04.414Z"
+}

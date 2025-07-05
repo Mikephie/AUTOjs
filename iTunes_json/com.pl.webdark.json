@@ -1,0 +1,12 @@
+{
+  "name": "DForce - Safari Dark Extension",
+  "appId": "1588518868",
+  "bundleId": "com.pl.webdark",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "dforce_unlock_all_functions"
+    }
+  ],
+  "updatedAt": "2025-05-13T11:16:48.733Z"
+}

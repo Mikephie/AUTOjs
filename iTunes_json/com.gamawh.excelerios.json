@@ -1,0 +1,40 @@
+{
+  "name": "Document Editor-Docs, Sheets",
+  "appId": "1613320599",
+  "bundleId": "com.gamawh.excelerios",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.gamawh.excelerios.month"
+    },
+    {
+      "id": 2,
+      "productId": "com.gamawh.excelerios.year_free"
+    },
+    {
+      "id": 3,
+      "productId": "com.gamawh.excelerios.year_free_v2"
+    },
+    {
+      "id": 4,
+      "productId": "com.gamawh.excelerios.forever"
+    },
+    {
+      "id": 5,
+      "productId": "com.gamawh.excelerios.quarter_v2"
+    },
+    {
+      "id": 6,
+      "productId": "com.gamawh.excelerios.year_v3"
+    },
+    {
+      "id": 7,
+      "productId": "com.gamawh.excelerios.quarter"
+    },
+    {
+      "id": 8,
+      "productId": "com.gamawh.excelerios.year"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:04:51.152Z"
+}

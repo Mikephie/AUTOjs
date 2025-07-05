@@ -1,0 +1,20 @@
+{
+  "name": "SHOT ON: Captured with iPhone",
+  "appId": "6450832499",
+  "bundleId": "com.colin.shoton",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.colin.shoton.forevervip"
+    },
+    {
+      "id": 2,
+      "productId": "com.colin.shoton.yearvip"
+    },
+    {
+      "id": 3,
+      "productId": "com.colin.shoton.monthlyvip"
+    }
+  ],
+  "updatedAt": "2025-05-14T13:21:08.626Z"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Retake - AI Photo Enhancer",
+  "appId": "1643416039",
+  "bundleId": "com.youthpe.retake",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "retake_subscription_yearly"
+    },
+    {
+      "id": 2,
+      "productId": "retake_unlock_forever"
+    }
+  ],
+  "updatedAt": "2025-05-12T12:45:23.908Z"
+}
