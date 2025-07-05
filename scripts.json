@@ -1,0 +1,38 @@
+{
+  "generatedTime": "2025-07-05T12:52:41.502Z",
+  "scripts": [
+    {
+      "name": "axs",
+      "filename": "axs.js",
+      "updateTime": "2025-07-05T12:52:40.920Z",
+      "formats": {
+        "original": "input/axs.js",
+        "quantumultx": "quantumultx/axs.js",
+        "loon": null,
+        "surge": null
+      }
+    },
+    {
+      "name": "bizhi",
+      "filename": "bizhi.js",
+      "updateTime": "2025-07-05T12:52:40.920Z",
+      "formats": {
+        "original": "input/bizhi.js",
+        "quantumultx": "quantumultx/bizhi.js",
+        "loon": null,
+        "surge": null
+      }
+    },
+    {
+      "name": "caiyun",
+      "filename": "caiyun.js",
+      "updateTime": "2025-07-05T12:52:40.920Z",
+      "formats": {
+        "original": "input/caiyun.js",
+        "quantumultx": "quantumultx/caiyun.js",
+        "loon": null,
+        "surge": null
+      }
+    }
+  ]
+}
