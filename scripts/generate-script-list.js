@@ -4,6 +4,7 @@ const path = require('path');
 // 配置目录
 const CONFIG = {
   inputDir: 'input',
+  quantumultxDir: 'quantumultx',
   loonDir: 'loon',
   surgeDir: 'surge',
   outputFile: process.env.GITHUB_PAGES_PATH ? 
@@ -42,10 +43,12 @@ function generateScriptList() {
     const scriptName = script.name;
     const scriptNameWithoutExt = scriptName.replace('.js', '');
     
-    // 检查对应的 Loon 和 Surge 脚本是否存在
+    // 检查对应的 QuantumultX、Loon 和 Surge 脚本是否存在
+    const quantumultxPath = `${CONFIG.quantumultxDir}/${scriptName}`;
     const loonPath = `${CONFIG.loonDir}/${scriptName}`;
     const surgePath = `${CONFIG.surgeDir}/${scriptName}`;
     
+    const hasQuantumultx = fs.existsSync(quantumultxPath);
     const hasLoon = fs.existsSync(loonPath);
     const hasSurge = fs.existsSync(surgePath);
     
@@ -54,7 +57,8 @@ function generateScriptList() {
       filename: scriptName,
       updateTime: script.updateTime,
       formats: {
-        quantumultx: `${CONFIG.inputDir}/${scriptName}`,
+        original: `${CONFIG.inputDir}/${scriptName}`,
+        quantumultx: hasQuantumultx ? `${CONFIG.quantumultxDir}/${scriptName}` : null,
         loon: hasLoon ? `${CONFIG.loonDir}/${scriptName}` : null,
         surge: hasSurge ? `${CONFIG.surgeDir}/${scriptName}` : null
       }
