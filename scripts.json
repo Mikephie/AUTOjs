@@ -1,37 +1,37 @@
 {
-  "generatedTime": "2025-07-05T12:52:41.502Z",
+  "generatedTime": "2025-07-05T13:09:58.609Z",
   "scripts": [
     {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-07-05T12:52:40.920Z",
+      "updateTime": "2025-07-05T13:09:57.939Z",
       "formats": {
         "original": "input/axs.js",
         "quantumultx": "quantumultx/axs.js",
-        "loon": null,
-        "surge": null
+        "loon": "loon/axs.plugin",
+        "surge": "surge/axs.sgmodule"
       }
     },
     {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-07-05T12:52:40.920Z",
+      "updateTime": "2025-07-05T13:09:57.939Z",
       "formats": {
         "original": "input/bizhi.js",
         "quantumultx": "quantumultx/bizhi.js",
-        "loon": null,
-        "surge": null
+        "loon": "loon/bizhi.plugin",
+        "surge": "surge/bizhi.sgmodule"
       }
     },
     {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-07-05T12:52:40.920Z",
+      "updateTime": "2025-07-05T13:09:57.939Z",
       "formats": {
         "original": "input/caiyun.js",
         "quantumultx": "quantumultx/caiyun.js",
-        "loon": null,
-        "surge": null
+        "loon": "loon/caiyun.plugin",
+        "surge": "surge/caiyun.sgmodule"
       }
     }
   ]
