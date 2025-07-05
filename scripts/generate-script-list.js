@@ -43,8 +43,8 @@ function generateScriptList() {
     
     // 检查对应的 QuantumultX、Loon 和 Surge 脚本是否存在
     const quantumultxPath = `${CONFIG.quantumultxDir}/${scriptName}`;
-    const loonPath = `${CONFIG.loonDir}/${scriptName}`;
-    const surgePath = `${CONFIG.surgeDir}/${scriptName}`;
+    const loonPath = `${CONFIG.loonDir}/${scriptNameWithoutExt}.plugin`;      // 改为 .plugin
+    const surgePath = `${CONFIG.surgeDir}/${scriptNameWithoutExt}.sgmodule`;  // 改为 .sgmodule
     
     const hasQuantumultx = fs.existsSync(quantumultxPath);
     const hasLoon = fs.existsSync(loonPath);
@@ -57,8 +57,8 @@ function generateScriptList() {
       formats: {
         original: `${CONFIG.inputDir}/${scriptName}`,
         quantumultx: hasQuantumultx ? `${CONFIG.quantumultxDir}/${scriptName}` : null,
-        loon: hasLoon ? `${CONFIG.loonDir}/${scriptName}` : null,
-        surge: hasSurge ? `${CONFIG.surgeDir}/${scriptName}` : null
+        loon: hasLoon ? `${CONFIG.loonDir}/${scriptNameWithoutExt}.plugin` : null,     // 改为 .plugin
+        surge: hasSurge ? `${CONFIG.surgeDir}/${scriptNameWithoutExt}.sgmodule` : null  // 改为 .sgmodule
       }
     };
   });
