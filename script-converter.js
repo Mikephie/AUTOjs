@@ -368,29 +368,6 @@ if (line.startsWith('#')) {
 
 /**
 
-- 标准化规则格式
-- @param {string} rule 原始规则
-- @returns {string} 标准化后的规则
-  */
-  function normalizeRule(rule) {
-  // 移除逗号周围的空格
-  let normalizedRule = rule.replace(/\s*,\s*/g, ‘,’);
-
-// 将策略名转为大写
-normalizedRule = normalizedRule.replace(/,([^,]+)$/g, function(match, policy) {
-return ‘,’ + policy.trim().toUpperCase();
-});
-
-// 确保规则类型是大写
-normalizedRule = normalizedRule.replace(/^(url-regex|host|host-suffix|host-keyword|domain|domain-suffix|domain-keyword|user-agent)/i, function(match) {
-return match.toUpperCase();
-});
-
-return normalizedRule;
-}
-
-/**
-
 - 转换为Surge格式
 - @param {Object} scriptInfo 脚本信息
 - @returns {string} Surge格式的脚本内容
@@ -639,8 +616,17 @@ for (const rule of scriptInfo.rules) {
     lastComment = rule.comment;
   }
   
-  // 使用标准化函数处理规则
-  const loonRule = normalizeRule(rule.content);
+  // 修复规则格式
+  let loonRule = rule.content;
+  
+  // 移除逗号周围的额外空格
+  loonRule = loonRule.replace(/\s*,\s*/g, ',');
+  
+  // 将最后一个逗号后的策略名转为大写
+  loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
+    return ',' + policy.trim().toUpperCase();
+  });
+  
   config += `\n${loonRule}`;
 }
 
@@ -776,6 +762,5 @@ parseScript,
 convertToLoon,
 convertToSurge,
 convertScript,
-detectScriptType,
-normalizeRule
+detectScriptType
 };
