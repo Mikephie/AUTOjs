@@ -403,9 +403,6 @@ surgeRule = surgeRule.replace(/\s*,\s*/g, ',');
 surgeRule = surgeRule.replace(/,([^,]+)$/g, function(match, policy) {
   return ',' + policy.trim().toUpperCase();
 });
-
-// Surge 规则类型需要大写（如 URL-REGEX）
-surgeRule = surgeRule.replace(/^([a-z\-]+),/i, (match, p1) => `${p1.toUpperCase()},`);
       
       config += `\n${surgeRule}`;
     }
