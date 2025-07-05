@@ -90,7 +90,7 @@ return content.replace(/\n{3,}/g, "\n\n").trim();
   // 默认选项
   const defaultOptions = {
   oldBaseUrl: ‘https://raw.githubusercontent.com/Mikephie/Script/main/qx’,
-  newBaseUrl: ‘https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx’,
+  newBaseUrl: ‘https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx’,
   useLocalPaths: true,
   downloadDir: ‘./quantumultx’,
   debug: false
