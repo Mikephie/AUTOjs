@@ -6,8 +6,8 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/axs.png
 𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [filter_local]
-url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace,reject
-url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight,reject
+#url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace,reject
+#url-regex,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight,reject
 
 [rewrite_local]
 ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*$ url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/axs2.js
