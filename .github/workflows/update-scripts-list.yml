@@ -27,6 +27,15 @@ jobs:
         run: |
           mkdir -p input quantumultx loon surge
           node scripts/generate-script-list.js
+          echo "=== 检查生成的文件 ==="
+          ls -la *.json || echo "根目录没有 JSON 文件"
+          find . -name "scripts.json" -type f
+          echo "=== 显示文件内容 ==="
+          if [ -f "scripts.json" ]; then
+            cat scripts.json
+          else
+            echo "未找到 scripts.json 文件"
+          fi
           
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
