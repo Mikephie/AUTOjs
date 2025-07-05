@@ -395,13 +395,16 @@ function convertToSurge(input) {
       
       // 转换规则格式为Surge格式
       let surgeRule = rule.content;
-      
-      let surgeRule = rule.content;
 
 // 修复规则格式: 移除逗号周围空格，并将策略名转为大写
 surgeRule = surgeRule.replace(/\s*,\s*/g, ',');
 surgeRule = surgeRule.replace(/,([^,]+)$/g, function(match, policy) {
   return ',' + policy.trim().toUpperCase();
+});
+
+// 确保规则类型是大写 (URL-REGEX, DOMAIN-SUFFIX等)
+surgeRule = surgeRule.replace(/^(url-regex|domain-suffix|domain-keyword|host|host-suffix|host-keyword)/i, function(match) {
+  return match.toUpperCase();
 });
       
       config += `\n${surgeRule}`;
