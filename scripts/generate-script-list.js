@@ -7,9 +7,7 @@ const CONFIG = {
   quantumultxDir: 'quantumultx',
   loonDir: 'loon',
   surgeDir: 'surge',
-  outputFile: process.env.GITHUB_PAGES_PATH ? 
-    path.join(process.env.GITHUB_PAGES_PATH, 'scripts.json') : 
-    'scripts.json'
+  outputFile: 'scripts.json'  // 输出到当前工作目录
 };
 
 // 读取目录中的脚本文件
