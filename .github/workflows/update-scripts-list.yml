@@ -2,65 +2,41 @@ name: Update Scripts List
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - 'input/**'
       - 'loon/**'
       - 'quantumultx/**'
       - 'surge/**'
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
 
 jobs:
-  update-scripts-list:
+  update-scripts:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
         with:
-          node-version: '16'
+          token: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Determine GitHub Pages path
-        id: pages-path
-        run: |
-          if [ -d "docs" ]; then
-            echo "GITHUB_PAGES_PATH=docs" >> $GITHUB_ENV
-          else
-            echo "GITHUB_PAGES_PATH=." >> $GITHUB_ENV
-          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
           
       - name: Generate scripts list
         run: |
-          mkdir -p scripts
-          node scripts/generate-script-list.js
+          mkdir -p input quantumultx loon surge
+          node generate-script-list.js
           
-      - name: Setup GitHub Pages branch
-        run: |
-          if [ -d "docs" ]; then
-            mkdir -p docs
-            cp scripts.json docs/
-          else
-            git checkout -b gh-pages || git checkout gh-pages
-            git pull origin gh-pages || true
-            # 保留现有的 index.html 文件
-            cp scripts.json .
-          fi
-          
-      - name: Commit and push changes
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          if [ -d "docs" ]; then
-            git add docs/scripts.json
-            git commit -m "Update scripts list" || echo "No changes to commit"
-            git push origin main
-          else
-            git add scripts.json
-            git commit -m "Update scripts list" || echo "No changes to commit"
-            git push origin gh-pages
-          fi
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          keep_files: true
+          include_only: |
+            scripts.json
+            input/
+            quantumultx/
+            loon/
+            surge/
