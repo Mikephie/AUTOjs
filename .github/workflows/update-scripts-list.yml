@@ -26,7 +26,7 @@ jobs:
       - name: Generate scripts list
         run: |
           mkdir -p input quantumultx loon surge
-          node generate-script-list.js
+          node scripts/generate-script-list.js
           
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
