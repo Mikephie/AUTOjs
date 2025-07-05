@@ -1,480 +1,82 @@
-name: Update Scripts List
+const fs = require(‘fs’);
+const path = require(‘path’);
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'input/**'
-      - 'loon/**'
-      - 'surge/**'
-      - 'quantumultx/**'  # 添加 quantumultx 目录
-  workflow_dispatch:  # 允许手动触发
+// 配置目录
+const CONFIG = {
+inputDir: ‘input’,
+quantumultxDir: ‘quantumultx’,
+loonDir: ‘loon’,
+surgeDir: ‘surge’,
+outputFile: process.env.GITHUB_PAGES_PATH ?
+path.join(process.env.GITHUB_PAGES_PATH, ‘scripts.json’) :
+‘scripts.json’
+};
 
-jobs:
-  update-scripts-list:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          
-      - name: Generate scripts list
-        run: |
-          mkdir -p scripts
-          
-          # 检查脚本生成器是否存在
-          if [ -f "scripts/generate-script-list.js" ]; then
-            node scripts/generate-script-list.js
-          else
-            # 如果脚本生成器不存在，创建一个简单的生成器
-            mkdir -p scripts
-            cat > scripts/generate-script-list.js << 'EOFJS'
-const fs = require('fs');
-const path = require('path');
-
-// 扫描目录
-function scanDirectory(dir) {
-  if (!fs.existsSync(dir)) {
-    return [];
-  }
-  
-  const files = fs.readdirSync(dir);
-  return files
-    .filter(file => {
-      const ext = path.extname(file).toLowerCase();
-      return ['.js', '.conf', '.plugin', '.sgmodule', '.txt'].includes(ext);
-    })
-    .map(file => {
-      const filePath = path.join(dir, file);
-      const stats = fs.statSync(filePath);
-      
-      // 尝试从文件内容中提取描述
-      let description = '';
-      try {
-        const content = fs.readFileSync(filePath, 'utf8');
-        const descMatch = content.match(/#!desc\s*=\s*(.+?)($|\n)/i) || 
-                          content.match(/\/\/\s*@desc(?:ription)?\s+(.+?)($|\n)/i);
-        if (descMatch && descMatch[1]) {
-          description = descMatch[1].trim();
-        }
-      } catch (error) {
-        console.error(`Error reading file ${filePath}:`, error);
-      }
-      
-      return {
-        name: file,
-        path: filePath.replace(/\\/g, '/'),
-        size: stats.size,
-        type: path.extname(file).substring(1),
-        description: description || null,
-        directory: dir
-      };
-    });
+// 读取目录中的脚本文件
+function getScriptFiles(dir) {
+try {
+return fs.readdirSync(dir)
+.filter(file => file.endsWith(’.js’))
+.map(file => ({
+name: file,
+path: `${dir}/${file}`,
+updateTime: fs.statSync(`${dir}/${file}`).mtime.toISOString()
+}));
+} catch (error) {
+console.error(`读取 ${dir} 目录失败:`, error);
+return [];
+}
 }
 
-// 扫描所有目录
-const directories = ['loon', 'surge', 'quantumultx'];
-let allScripts = [];
+// 主函数
+function generateScriptList() {
+// 获取原始脚本
+const originalScripts = getScriptFiles(CONFIG.inputDir);
 
-directories.forEach(dir => {
-  const scripts = scanDirectory(dir);
-  allScripts = allScripts.concat(scripts);
-  console.log(`Found ${scripts.length} scripts in ${dir} directory`);
-});
+if (originalScripts.length === 0) {
+console.error(‘没有找到原始脚本文件’);
+process.exit(1);
+}
 
-// 按目录和名称排序
-allScripts.sort((a, b) => {
-  if (a.directory !== b.directory) {
-    return a.directory.localeCompare(b.directory);
+// 创建脚本列表
+const scriptsList = originalScripts.map(script => {
+const scriptName = script.name;
+const scriptNameWithoutExt = scriptName.replace(’.js’, ‘’);
+
+```
+// 检查对应的 QuantumultX、Loon 和 Surge 脚本是否存在
+const quantumultxPath = `${CONFIG.quantumultxDir}/${scriptName}`;
+const loonPath = `${CONFIG.loonDir}/${scriptName}`;
+const surgePath = `${CONFIG.surgeDir}/${scriptName}`;
+
+const hasQuantumultx = fs.existsSync(quantumultxPath);
+const hasLoon = fs.existsSync(loonPath);
+const hasSurge = fs.existsSync(surgePath);
+
+return {
+  name: scriptNameWithoutExt,
+  filename: scriptName,
+  updateTime: script.updateTime,
+  formats: {
+    original: `${CONFIG.inputDir}/${scriptName}`,
+    quantumultx: hasQuantumultx ? `${CONFIG.quantumultxDir}/${scriptName}` : null,
+    loon: hasLoon ? `${CONFIG.loonDir}/${scriptName}` : null,
+    surge: hasSurge ? `${CONFIG.surgeDir}/${scriptName}` : null
   }
-  return a.name.localeCompare(b.name);
+};
+```
+
 });
 
-// 写入JSON文件
-fs.writeFileSync('scripts.json', JSON.stringify(allScripts, null, 2));
-console.log(`Generated scripts.json with ${allScripts.length} scripts`);
-EOFJS
-            
-            # 执行生成器
-            node scripts/generate-script-list.js
-          fi
-          
-      - name: Setup GitHub Pages branch
-        run: |
-          # 配置Git
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          if [ -d "docs" ]; then
-            # 如果有docs目录，则复制文件到docs
-            mkdir -p docs
-            cp scripts.json docs/
-            
-            # 如果docs目录中没有index.html，创建一个简单的页面
-            if [ ! -f "docs/index.html" ]; then
-              cat > docs/index.html << 'EOFHTML'
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>脚本仓库</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-    h1, h2 { color: #333; }
-    .script-list { margin-top: 20px; }
-    .script-section { margin-bottom: 30px; }
-    .script-item { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-    .script-name { font-weight: bold; }
-    .script-desc { color: #666; margin-top: 5px; }
-    .script-type { color: #0366d6; font-size: 0.8em; }
-    .script-link { display: inline-block; margin-top: 5px; color: #0366d6; text-decoration: none; }
-    .script-link:hover { text-decoration: underline; }
-    .updated { color: #888; font-size: 0.8em; margin-top: 20px; }
-  </style>
-</head>
-<body>
-  <h1>脚本仓库</h1>
-  <p>这里收集了各种格式的脚本文件</p>
-  
-  <div id="script-container">加载中...</div>
-  
-  <p class="updated">最后更新: <span id="update-time"></span></p>
-  
-  <script>
-    document.getElementById('update-time').textContent = new Date().toLocaleString();
-    
-    fetch('scripts.json')
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('script-container');
-        container.innerHTML = '';
-        
-        // 按目录分组
-        const scriptsByDir = {};
-        data.forEach(script => {
-          if (!scriptsByDir[script.directory]) {
-            scriptsByDir[script.directory] = [];
-          }
-          scriptsByDir[script.directory].push(script);
-        });
-        
-        // 创建各部分
-        for (const dir in scriptsByDir) {
-          const section = document.createElement('div');
-          section.className = 'script-section';
-          
-          const heading = document.createElement('h2');
-          heading.textContent = dir.charAt(0).toUpperCase() + dir.slice(1);
-          section.appendChild(heading);
-          
-          const scripts = scriptsByDir[dir];
-          scripts.forEach(script => {
-            const div = document.createElement('div');
-            div.className = 'script-item';
-            
-            const nameSpan = document.createElement('div');
-            nameSpan.className = 'script-name';
-            nameSpan.textContent = script.name;
-            
-            const typeSpan = document.createElement('span');
-            typeSpan.className = 'script-type';
-            typeSpan.textContent = ` (${script.type})`;
-            nameSpan.appendChild(typeSpan);
-            
-            div.appendChild(nameSpan);
-            
-            if (script.description) {
-              const descDiv = document.createElement('div');
-              descDiv.className = 'script-desc';
-              descDiv.textContent = script.description;
-              div.appendChild(descDiv);
-            }
-            
-            const link = document.createElement('a');
-            link.className = 'script-link';
-            link.href = script.path;
-            link.textContent = '下载';
-            link.setAttribute('download', '');
-            div.appendChild(link);
-            
-            section.appendChild(div);
-          });
-          
-          container.appendChild(section);
-        }
-      })
-      .catch(error => {
-        document.getElementById('script-container').innerHTML = `
-          <p>加载脚本列表失败: ${error.message}</p>
-          <p>请稍后再试</p>
-        `;
-        console.error('Error loading scripts:', error);
-      });
-  </script>
-</body>
-</html>
-EOFHTML
-            fi
-            
-            # 提交更改
-            git add docs/scripts.json docs/index.html
-            git commit -m "Update scripts list" || echo "No changes to commit"
-            git push origin HEAD
-            
-          else
-            # 如果没有docs目录，使用gh-pages分支
-            # 先保存生成的文件
-            mkdir -p /tmp/scripts-backup
-            cp scripts.json /tmp/scripts-backup/
-            
-            # 尝试切换到gh-pages分支，如果不存在则创建
-            if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
-              # gh-pages分支存在，但先创建一个新分支避免合并问题
-              git checkout --orphan gh-pages-new
-              git rm -rf .
-              # 恢复scripts.json
-              cp /tmp/scripts-backup/scripts.json .
-              
-              # 创建index.html
-              cat > index.html << 'EOFHTML'
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>脚本仓库</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-    h1, h2 { color: #333; }
-    .script-list { margin-top: 20px; }
-    .script-section { margin-bottom: 30px; }
-    .script-item { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-    .script-name { font-weight: bold; }
-    .script-desc { color: #666; margin-top: 5px; }
-    .script-type { color: #0366d6; font-size: 0.8em; }
-    .script-link { display: inline-block; margin-top: 5px; color: #0366d6; text-decoration: none; }
-    .script-link:hover { text-decoration: underline; }
-    .updated { color: #888; font-size: 0.8em; margin-top: 20px; }
-  </style>
-</head>
-<body>
-  <h1>脚本仓库</h1>
-  <p>这里收集了各种格式的脚本文件</p>
-  
-  <div id="script-container">加载中...</div>
-  
-  <p class="updated">最后更新: <span id="update-time"></span></p>
-  
-  <script>
-    document.getElementById('update-time').textContent = new Date().toLocaleString();
-    
-    fetch('scripts.json')
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('script-container');
-        container.innerHTML = '';
-        
-        // 按目录分组
-        const scriptsByDir = {};
-        data.forEach(script => {
-          if (!scriptsByDir[script.directory]) {
-            scriptsByDir[script.directory] = [];
-          }
-          scriptsByDir[script.directory].push(script);
-        });
-        
-        // 创建各部分
-        for (const dir in scriptsByDir) {
-          const section = document.createElement('div');
-          section.className = 'script-section';
-          
-          const heading = document.createElement('h2');
-          heading.textContent = dir.charAt(0).toUpperCase() + dir.slice(1);
-          section.appendChild(heading);
-          
-          const scripts = scriptsByDir[dir];
-          scripts.forEach(script => {
-            const div = document.createElement('div');
-            div.className = 'script-item';
-            
-            const nameSpan = document.createElement('div');
-            nameSpan.className = 'script-name';
-            nameSpan.textContent = script.name;
-            
-            const typeSpan = document.createElement('span');
-            typeSpan.className = 'script-type';
-            typeSpan.textContent = ` (${script.type})`;
-            nameSpan.appendChild(typeSpan);
-            
-            div.appendChild(nameSpan);
-            
-            if (script.description) {
-              const descDiv = document.createElement('div');
-              descDiv.className = 'script-desc';
-              descDiv.textContent = script.description;
-              div.appendChild(descDiv);
-            }
-            
-            const link = document.createElement('a');
-            link.className = 'script-link';
-            link.href = script.path;
-            link.textContent = '下载';
-            link.setAttribute('download', '');
-            div.appendChild(link);
-            
-            section.appendChild(div);
-          });
-          
-          container.appendChild(section);
-        }
-      })
-      .catch(error => {
-        document.getElementById('script-container').innerHTML = `
-          <p>加载脚本列表失败: ${error.message}</p>
-          <p>请稍后再试</p>
-        `;
-        console.error('Error loading scripts:', error);
-      });
-  </script>
-</body>
-</html>
-EOFHTML
-              
-              # 添加文件并提交
-              git add scripts.json index.html
-              git commit -m "Update scripts list"
-              
-              # 强制推送到gh-pages分支
-              git push -f origin gh-pages-new:gh-pages
-              
-            else
-              # gh-pages分支不存在，创建一个新分支
-              git checkout --orphan gh-pages
-              git rm -rf .
-              
-              # 恢复scripts.json
-              cp /tmp/scripts-backup/scripts.json .
-              
-              # 创建index.html (同上)
-              cat > index.html << 'EOFHTML'
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>脚本仓库</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-    h1, h2 { color: #333; }
-    .script-list { margin-top: 20px; }
-    .script-section { margin-bottom: 30px; }
-    .script-item { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-    .script-name { font-weight: bold; }
-    .script-desc { color: #666; margin-top: 5px; }
-    .script-type { color: #0366d6; font-size: 0.8em; }
-    .script-link { display: inline-block; margin-top: 5px; color: #0366d6; text-decoration: none; }
-    .script-link:hover { text-decoration: underline; }
-    .updated { color: #888; font-size: 0.8em; margin-top: 20px; }
-  </style>
-</head>
-<body>
-  <h1>脚本仓库</h1>
-  <p>这里收集了各种格式的脚本文件</p>
-  
-  <div id="script-container">加载中...</div>
-  
-  <p class="updated">最后更新: <span id="update-time"></span></p>
-  
-  <script>
-    document.getElementById('update-time').textContent = new Date().toLocaleString();
-    
-    fetch('scripts.json')
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('script-container');
-        container.innerHTML = '';
-        
-        // 按目录分组
-        const scriptsByDir = {};
-        data.forEach(script => {
-          if (!scriptsByDir[script.directory]) {
-            scriptsByDir[script.directory] = [];
-          }
-          scriptsByDir[script.directory].push(script);
-        });
-        
-        // 创建各部分
-        for (const dir in scriptsByDir) {
-          const section = document.createElement('div');
-          section.className = 'script-section';
-          
-          const heading = document.createElement('h2');
-          heading.textContent = dir.charAt(0).toUpperCase() + dir.slice(1);
-          section.appendChild(heading);
-          
-          const scripts = scriptsByDir[dir];
-          scripts.forEach(script => {
-            const div = document.createElement('div');
-            div.className = 'script-item';
-            
-            const nameSpan = document.createElement('div');
-            nameSpan.className = 'script-name';
-            nameSpan.textContent = script.name;
-            
-            const typeSpan = document.createElement('span');
-            typeSpan.className = 'script-type';
-            typeSpan.textContent = ` (${script.type})`;
-            nameSpan.appendChild(typeSpan);
-            
-            div.appendChild(nameSpan);
-            
-            if (script.description) {
-              const descDiv = document.createElement('div');
-              descDiv.className = 'script-desc';
-              descDiv.textContent = script.description;
-              div.appendChild(descDiv);
-            }
-            
-            const link = document.createElement('a');
-            link.className = 'script-link';
-            link.href = script.path;
-            link.textContent = '下载';
-            link.setAttribute('download', '');
-            div.appendChild(link);
-            
-            section.appendChild(div);
-          });
-          
-          container.appendChild(section);
-        }
-      })
-      .catch(error => {
-        document.getElementById('script-container').innerHTML = `
-          <p>加载脚本列表失败: ${error.message}</p>
-          <p>请稍后再试</p>
-        `;
-        console.error('Error loading scripts:', error);
-      });
-  </script>
-</body>
-</html>
-EOFHTML
-              
-              # 添加文件并提交
-              git add scripts.json index.html
-              git commit -m "Update scripts list"
-              
-              # 推送到gh-pages分支
-              git push -f origin gh-pages
-            fi
-            
-            # 返回原分支
-            git checkout -
-          fi
+// 保存为 JSON 文件
+fs.writeFileSync(CONFIG.outputFile, JSON.stringify({
+generatedTime: new Date().toISOString(),
+scripts: scriptsList
+}, null, 2));
+
+console.log(`成功生成脚本列表，共 ${scriptsList.length} 个脚本。`);
+console.log(`脚本列表已保存至：${CONFIG.outputFile}`);
+}
+
+// 执行
+generateScriptList();
