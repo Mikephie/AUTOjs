@@ -15,7 +15,7 @@ const CONFIG = {
   outputDir: 'quantumultx',
   
   // 远程基础 URL
-  remoteBaseUrl: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/quantumultx',
+  remoteBaseUrl: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx'
   
   // 文件模式
   filePatterns: ['.conf', '.txt', '.js'],
