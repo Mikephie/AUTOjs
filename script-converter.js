@@ -396,12 +396,16 @@ function convertToSurge(input) {
       // 转换规则格式为Surge格式
       let surgeRule = rule.content;
       
-      // 修复规则格式: 移除逗号后的额外空格，并将策略名转为大写
-      surgeRule = surgeRule.replace(/\s*,\s*/g, ','); // 移除逗号周围的空格
-      surgeRule = surgeRule.replace(/,([^,]+)$/g, function(match, policy) {
-        // 将最后一个逗号后的策略名转为大写
-        return ',' + policy.trim().toUpperCase();
-      });
+      let surgeRule = rule.content;
+
+// 修复规则格式: 移除逗号周围空格，并将策略名转为大写
+surgeRule = surgeRule.replace(/\s*,\s*/g, ',');
+surgeRule = surgeRule.replace(/,([^,]+)$/g, function(match, policy) {
+  return ',' + policy.trim().toUpperCase();
+});
+
+// Surge 规则类型需要大写（如 URL-REGEX）
+surgeRule = surgeRule.replace(/^([a-z\-]+),/i, (match, p1) => `${p1.toUpperCase()},`);
       
       config += `\n${surgeRule}`;
     }
