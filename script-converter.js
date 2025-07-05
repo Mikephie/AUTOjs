@@ -583,33 +583,38 @@ function convertToLoon(input) {
   }
 
   // 处理Rule部分
-  if (scriptInfo.rules.length > 0) {
-    config += "\n\n[Rule]";
-    
-    let lastComment = "";
-    for (const rule of scriptInfo.rules) {
-      // 如果有新注释，添加它
-      if (rule.comment && rule.comment !== lastComment) {
-        config += `\n${rule.comment}`;
-        lastComment = rule.comment;
-      }
-      
-      // 修复规则格式
-      let loonRule = rule.content;
-      
-      // 移除逗号周围的额外空格
-      loonRule = loonRule.replace(/\s*,\s*/g, ',');
-      
-      // 将最后一个逗号后的策略名转为大写
-      loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
-        return ',' + policy.trim().toUpperCase();
-      });
-      
-      config += `\n${loonRule}`;
+if (scriptInfo.rules.length > 0) {
+  config += "\n\n[Rule]";
+  
+  let lastComment = "";
+  for (const rule of scriptInfo.rules) {
+    // 如果有新注释，添加它
+    if (rule.comment && rule.comment !== lastComment) {
+      config += `\n${rule.comment}`;
+      lastComment = rule.comment;
     }
     
-    config += "\n";
+    // 修复规则格式
+    let loonRule = rule.content;
+    
+    // 移除逗号周围的额外空格
+    loonRule = loonRule.replace(/\s*,\s*/g, ',');
+    
+    // 将最后一个逗号后的策略名转为大写
+    loonRule = loonRule.replace(/,([^,]+)$/g, function(match, policy) {
+      return ',' + policy.trim().toUpperCase();
+    });
+    
+    // 确保规则类型是大写 (URL-REGEX, DOMAIN-SUFFIX等)
+loonRule = loonRule.replace(/^(url-regex|domain-suffix|domain-keyword|host|host-suffix|host-keyword)/i, function(match) {
+  return match.toUpperCase();
+});
+
+    config += `\n${loonRule}`;
   }
+  
+  config += "\n";
+}
 
   // 处理Rewrite部分
   if (scriptInfo.rewrites.length > 0) {
