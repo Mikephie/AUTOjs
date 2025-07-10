@@ -1,0 +1,24 @@
+{
+  "user_agent": "Homanager%20Release",
+  "bundle_id": "com.alpha-house.homanager",
+  "data": {
+    "com.alphahouse.homanager.release.premium.lifetime": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "com.alphahouse.homanager.release.premium.lifetime"
+    },
+    "homanager_release_4999_yearly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "homanager_release_4999_yearly"
+    },
+    "homanager_release_499_monthly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "homanager_release_499_monthly"
+    }
+  }
+}
