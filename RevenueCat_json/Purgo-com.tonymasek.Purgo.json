@@ -1,0 +1,24 @@
+{
+  "user_agent": "Purgo",
+  "bundle_id": "com.tonymasek.Purgo",
+  "data": {
+    "purgo_3999_lifetime": {
+      "entitlements": [
+        "plus"
+      ],
+      "product_identifier": "purgo_3999_lifetime"
+    },
+    "purgo_499_1w_3d0": {
+      "entitlements": [
+        "plus"
+      ],
+      "product_identifier": "purgo_499_1w_3d0"
+    },
+    "purgo_699_1m": {
+      "entitlements": [
+        "plus"
+      ],
+      "product_identifier": "purgo_699_1m"
+    }
+  }
+}
