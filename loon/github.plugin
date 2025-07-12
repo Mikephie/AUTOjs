@@ -1,0 +1,11 @@
+#!name=✨ GitHub ✨
+#!desc=脚本仓库
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/filmix.png
+
+[Script]
+http-response https://api.github.com/graphql script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/github.js, requires-body=true, timeout=60, tag=github
+
+[MITM]
+hostname = api.github.com
