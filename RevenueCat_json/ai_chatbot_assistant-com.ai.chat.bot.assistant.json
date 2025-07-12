@@ -1,0 +1,42 @@
+{
+  "user_agent": "ai_chatbot_assistant",
+  "bundle_id": "com.ai.chat.bot.assistant",
+  "data": {
+    "annual_access": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "annual_access"
+    },
+    "annual_access_trial": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "annual_access_trial"
+    },
+    "life_time_deal": {
+      "entitlements": [
+        "lifetime"
+      ],
+      "product_identifier": "life_time_deal"
+    },
+    "monthly_access": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "monthly_access"
+    },
+    "weekly_access": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "weekly_access"
+    },
+    "weekly_access_trial": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "weekly_access_trial"
+    }
+  }
+}
