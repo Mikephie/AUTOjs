@@ -1,0 +1,36 @@
+{
+  "user_agent": "logo_maker_app",
+  "bundle_id": "app.arkstudio.logomakerapp",
+  "data": {
+    "logomaker_1299_1y_3d_trial": {
+      "entitlements": [
+        "all_access"
+      ],
+      "product_identifier": "logomaker_1299_1y_3d_trial"
+    },
+    "logomaker_1999_1y": {
+      "entitlements": [
+        "all_access"
+      ],
+      "product_identifier": "logomaker_1999_1y"
+    },
+    "logomaker_2999_lifetime": {
+      "entitlements": [
+        "all_access"
+      ],
+      "product_identifier": "logomaker_2999_lifetime"
+    },
+    "logomaker_399_1m_3d_trial": {
+      "entitlements": [
+        "all_access"
+      ],
+      "product_identifier": "logomaker_399_1m_3d_trial"
+    },
+    "logomaker_499_1week_3d_trial": {
+      "entitlements": [
+        "all_access"
+      ],
+      "product_identifier": "logomaker_499_1week_3d_trial"
+    }
+  }
+}
