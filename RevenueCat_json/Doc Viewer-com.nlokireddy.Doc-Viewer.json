@@ -1,0 +1,38 @@
+{
+  "user_agent": "Doc%20Viewer",
+  "bundle_id": "com.nlokireddy.Doc-Viewer",
+  "data": {
+    "com.nlokireddy.watchdocs.lifetime": {
+      "entitlements": [
+        "watchdocs.uaf.premiumaccess"
+      ],
+      "product_identifier": "com.nlokireddy.watchdocs.lifetime"
+    },
+    "com.nlokireddy.watchdocs.monthly": {
+      "entitlements": [
+        "watchdocs.uaf.premiumaccess"
+      ],
+      "product_identifier": "com.nlokireddy.watchdocs.monthly"
+    },
+    "com.nlokireddy.watchdocs.monthly.trial": {
+      "entitlements": [
+        "watchdocs.uaf.premiumaccess"
+      ],
+      "product_identifier": "com.nlokireddy.watchdocs.monthly.trial"
+    },
+    "com.nlokireddy.watchdocs.weekly": {
+      "entitlements": [
+        "watchdocs.uaf.premiumaccess"
+      ],
+      "product_identifier": "com.nlokireddy.watchdocs.weekly"
+    },
+    "wb_1999_1y": {
+      "entitlements": [],
+      "product_identifier": "wb_1999_1y"
+    },
+    "wb_1999_1y_3d0": {
+      "entitlements": [],
+      "product_identifier": "wb_1999_1y_3d0"
+    }
+  }
+}
