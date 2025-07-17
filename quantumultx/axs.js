@@ -23,8 +23,8 @@ const notifyKey = "AXS_notify_key";
 const now = Date.now();
 let lastNotifyTime = $persistentStore.read(notifyKey) ? parseInt($persistentStore.read(notifyKey)) : 0;
 if (now - lastNotifyTime > cooldownMs) {
-    $notification.post("✨AXS✨", "🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ", "永久解锁或 ⓿❽-⓿❽-❷⓿❽❽");
-    $persistentStore.write(now.toString(), notifyKey);
+	$notification.post("✨AXS✨", "🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ", "永久解锁或 ⓿❽-⓿❽-❷⓿❽❽");
+	$persistentStore.write(now.toString(), notifyKey);
 }
 // -------- 通知（带冷却）逻辑结束 --------
 
@@ -34,8 +34,8 @@ let url = $request.url;
 
 // 检测URL是否是广告页面
 if (url.includes("/InfoPage/") && url.includes("whatsnew.php")) {
-  // 创建一个只包含关闭按钮的页面
-  const closeButtonPage = `
+	// 创建一个只包含关闭按钮的页面
+	const closeButtonPage = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,18 +76,18 @@ if (url.includes("/InfoPage/") && url.includes("whatsnew.php")) {
   </script>
 </body>
 </html>`;
-  
-  $done({
-    response: {
-      status: 200,
-      headers: {
-        "Content-Type": "text/html",
-        "Cache-Control": "no-store"
-      },
-      body: closeButtonPage
-    }
-  });
+
+	$done({
+		response: {
+			status: 200,
+			headers: {
+				"Content-Type": "text/html",
+				"Cache-Control": "no-store"
+			},
+			body: closeButtonPage
+		}
+	});
 } else {
-  $done({});
+	$done({});
 }
 // 主脚本函数...
