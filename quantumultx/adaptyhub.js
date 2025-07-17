@@ -1,13 +1,15 @@
 /*
-📜 统一订阅解锁框架
-📅 更新时间：2025-04-03
-🔓 功能：自动识别服务类型并解锁永久 VIP
+#!name= ✨ AdaptyHub ✨
+#!desc=Adapty/Apphub/Snow 通杀
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/adaptyhub.png
 
-目前支持服务：
+#目前支持服务：
 - Adapty (adapty.io)
 - Apphud (apphud.com)
 - SNOW (snow.me)
-
+𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [rewrite_local]
 # Adapty解锁
 ^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)) url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js
