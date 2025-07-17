@@ -1,0 +1,20 @@
+{
+  "name": "Textastic Code Editor",
+  "appId": "1049254261",
+  "bundleId": "com.textasticapp.textastic-",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.textasticapp.pro.yearly"
+    },
+    {
+      "id": 2,
+      "productId": "com.textasticapp.pro.monthly"
+    },
+    {
+      "id": 3,
+      "productId": "com.textasticapp.pro.oneTime"
+    }
+  ],
+  "updatedAt": "2025-07-17T04:12:32.895Z"
+}
