@@ -1,0 +1,14 @@
+#!name=Custom rewrite
+#!desc=配置信息
+#!author=Converter
+
+[Script]
+# Adapty解锁
+adaptyhub = type=http-response, pattern=^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/adaptyhub.js, timeout=60
+# Apphud解锁
+adaptyhub = type=http-response, pattern=^https?:\/\/.*\.apphud\.com\/v\d\/(subscriptions|customers)$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/adaptyhub.js, timeout=60
+# SNOW系列解锁
+adaptyhub = type=http-response, pattern=^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/adaptyhub.js, timeout=60
+
+[MITM]
+hostname = %APPEND% api.adapty.io, *.apphud.com, *.snow.me
