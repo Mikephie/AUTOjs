@@ -1,0 +1,120 @@
+{
+  "user_agent": "Slow%20Motion",
+  "bundle_id": "com.picshift.slowmotion",
+  "data": {
+    "SMB.1MPromo": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "SMB.1MPromo"
+    },
+    "SMB.1MPromo7DTrial": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "SMB.1MPromo7DTrial"
+    },
+    "SMB.1WPromo": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "SMB.1WPromo"
+    },
+    "SMB.1WPromo3DTrial": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "SMB.1WPromo3DTrial"
+    },
+    "com.picshift.slomotion.quarterly": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slomotion.quarterly"
+    },
+    "com.picshift.slowmotion.monthlyWithoutTrial": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.monthlyWithoutTrial"
+    },
+    "com.picshift.slowmotion.monthlydiscount": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.monthlydiscount"
+    },
+    "com.picshift.slowmotion.monthlyslowmotion": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.monthlyslowmotion"
+    },
+    "com.picshift.slowmotion.quarterlyWithoutTrail": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.quarterlyWithoutTrail"
+    },
+    "com.picshift.slowmotion.weekly": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.weekly"
+    },
+    "com.picshift.slowmotion.weekly1": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.weekly1"
+    },
+    "com.picshift.slowmotion.weeklyWithTrial": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.weeklyWithTrial"
+    },
+    "com.picshift.slowmotion.weeklyWithoutTrial": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.weeklyWithoutTrial"
+    },
+    "com.picshift.slowmotion.yearly": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.yearly"
+    },
+    "com.picshift.slowmotion.yearlyWithoutTrial": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.yearlyWithoutTrial"
+    },
+    "com.picshift.slowmotion.yearlymembership": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "com.picshift.slowmotion.yearlymembership"
+    },
+    "superslowmotion": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "superslowmotion"
+    },
+    "unlockall": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "unlockall"
+    },
+    "unlockcut": {
+      "entitlements": [
+        "UNLIMITED ACCESS"
+      ],
+      "product_identifier": "unlockcut"
+    }
+  }
+}
