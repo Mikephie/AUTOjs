@@ -1,0 +1,30 @@
+{
+  "user_agent": "Watchly",
+  "bundle_id": "com.appexosolutions.watchface",
+  "data": {
+    "annual": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "annual"
+    },
+    "monthly2": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "monthly2"
+    },
+    "watchface.lifetime": {
+      "entitlements": [
+        "lifetime"
+      ],
+      "product_identifier": "watchface.lifetime"
+    },
+    "weekly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "weekly"
+    }
+  }
+}
