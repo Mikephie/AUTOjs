@@ -1,0 +1,24 @@
+{
+  "user_agent": "Cleaninder",
+  "bundle_id": "zdt.hu.cleaninder",
+  "data": {
+    "ZDT_CLN_Premium": {
+      "entitlements": [
+        "Cleaninder"
+      ],
+      "product_identifier": "ZDT_CLN_Premium"
+    },
+    "ZDT_CLN_SUB_MON": {
+      "entitlements": [
+        "Cleaninder"
+      ],
+      "product_identifier": "ZDT_CLN_SUB_MON"
+    },
+    "ZDT_CLN_SUB_YEA": {
+      "entitlements": [
+        "Cleaninder"
+      ],
+      "product_identifier": "ZDT_CLN_SUB_YEA"
+    }
+  }
+}
