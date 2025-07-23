@@ -6,7 +6,7 @@ inputs:
 INPUT_DIR:
 description: ‘输入脚本目录路径’
 required: false
-default: ‘input’
+default: ‘quantumultx’
 OUTPUT_DIR:
 description: ‘输出脚本目录路径’
 required: false
