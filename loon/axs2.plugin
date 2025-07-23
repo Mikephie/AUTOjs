@@ -1,0 +1,11 @@
+#!name=✨ AXS Payment ✨
+#!desc=缴费账单
+#!category=🚫广告
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/axs.png
+
+[Script]
+http-response ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/axs2.js, requires-body=true, timeout=60, tag=axs2
+
+[MITM]
+hostname = m-station2.axs.com.sg
