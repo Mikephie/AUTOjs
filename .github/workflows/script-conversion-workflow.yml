@@ -13,10 +13,10 @@ on:
           - surge
   push:
     paths:
-      - 'input/**'
+      - 'quantumultx/**'
   pull_request:
     paths:
-      - 'input/**'
+      - 'quantumultx/**'
   schedule:
     - cron: '0 0 * * 0'
 jobs:
