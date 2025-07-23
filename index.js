@@ -6,7 +6,7 @@ const core = require('@actions/core');
 const converter = require('./script-converter');
 
 // 从环境变量获取配置
-const INPUT_DIR = process.env.INPUT_DIR || 'quantumultx';
+const INPUT_DIR = 'quantumultx'; // 强制使用固定值
 // 支持多种输出格式
 const OUTPUT_FORMATS = (process.env.OUTPUT_FORMAT || 'loon,surge').split(',').map(f => f.trim().toLowerCase());
 
