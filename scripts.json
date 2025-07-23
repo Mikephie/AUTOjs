@@ -1,10 +1,21 @@
 {
-  "generatedTime": "2025-07-05T13:09:58.609Z",
+  "generatedTime": "2025-07-23T02:55:55.259Z",
   "scripts": [
+    {
+      "name": "adaptyhub",
+      "filename": "adaptyhub.js",
+      "updateTime": "2025-07-23T02:55:53.092Z",
+      "formats": {
+        "original": "input/adaptyhub.js",
+        "quantumultx": "quantumultx/adaptyhub.js",
+        "loon": "loon/adaptyhub.plugin",
+        "surge": "surge/adaptyhub.sgmodule"
+      }
+    },
     {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-07-05T13:09:57.939Z",
+      "updateTime": "2025-07-23T02:55:53.092Z",
       "formats": {
         "original": "input/axs.js",
         "quantumultx": "quantumultx/axs.js",
@@ -13,9 +24,20 @@
       }
     },
     {
+      "name": "axs2",
+      "filename": "axs2.js",
+      "updateTime": "2025-07-23T02:55:53.092Z",
+      "formats": {
+        "original": "input/axs2.js",
+        "quantumultx": "quantumultx/axs2.js",
+        "loon": "loon/axs2.plugin",
+        "surge": "surge/axs2.sgmodule"
+      }
+    },
+    {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-07-05T13:09:57.939Z",
+      "updateTime": "2025-07-23T02:55:53.093Z",
       "formats": {
         "original": "input/bizhi.js",
         "quantumultx": "quantumultx/bizhi.js",
@@ -26,12 +48,23 @@
     {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-07-05T13:09:57.939Z",
+      "updateTime": "2025-07-23T02:55:53.093Z",
       "formats": {
         "original": "input/caiyun.js",
         "quantumultx": "quantumultx/caiyun.js",
         "loon": "loon/caiyun.plugin",
         "surge": "surge/caiyun.sgmodule"
+      }
+    },
+    {
+      "name": "github",
+      "filename": "github.js",
+      "updateTime": "2025-07-23T02:55:53.093Z",
+      "formats": {
+        "original": "input/github.js",
+        "quantumultx": "quantumultx/github.js",
+        "loon": "loon/github.plugin",
+        "surge": "surge/github.sgmodule"
       }
     }
   ]
