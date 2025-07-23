@@ -29,23 +29,23 @@ DOMAIN,gather.colorfulclouds.net,REJECT
 
 [Script]
 # 赏叶赏花模块
-http-response ^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\?app_name=weather script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+http-response ^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\?app_name=weather script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 # 解锁旧版vip(7.20.0之前)
-http-response ^https:\/\/biz\.cyapi\.cn\/v2\/user script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+http-response ^https:\/\/biz\.cyapi\.cn\/v2\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 # 卫星云图 48小时预报
 http-request ^https:\/\/wrapper\.cyapi\.cn\/v1\/(satellite|nafp\/origin_images) script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=false, timeout=60, tag=caiyun
 # 7.20.0版本显示VIP
-http-response ^https?:\/\/biz\.cyapi\.cn\/api\/v1\/user_detail$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+http-response ^https?:\/\/biz\.cyapi\.cn\/api\/v1\/user_detail$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 # 7.22.0版本 40天趋势/60天潮汐/风 等等有时候无法加载
 http-request ^https:\/\/starplucker\.cyapi\.cn\/v3\/ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=false, timeout=60, tag=caiyun
 # 发现-轮播
-http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/banners\?user_type=paid$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/banners\?user_type=paid$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 # 发现-宫格
-http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/features\?user_type=paid$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/features\?user_type=paid$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 # 发现-官方活动
-http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 # 发现-瀑布流
-http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 
 [MITM]
 hostname = *.cyapi.cn
