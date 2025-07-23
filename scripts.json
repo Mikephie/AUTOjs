@@ -1,10 +1,10 @@
 {
-  "generatedTime": "2025-07-23T03:14:26.509Z",
+  "generatedTime": "2025-07-23T03:15:11.995Z",
   "scripts": [
     {
       "name": "adaptyhub",
       "filename": "adaptyhub.js",
-      "updateTime": "2025-07-23T03:14:21.719Z",
+      "updateTime": "2025-07-23T03:15:10.077Z",
       "formats": {
         "original": "input/adaptyhub.js",
         "quantumultx": "quantumultx/adaptyhub.js",
@@ -15,7 +15,7 @@
     {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-07-23T03:14:21.719Z",
+      "updateTime": "2025-07-23T03:15:10.077Z",
       "formats": {
         "original": "input/axs.js",
         "quantumultx": "quantumultx/axs.js",
@@ -24,20 +24,9 @@
       }
     },
     {
-      "name": "axs2",
-      "filename": "axs2.js",
-      "updateTime": "2025-07-23T03:14:21.720Z",
-      "formats": {
-        "original": "input/axs2.js",
-        "quantumultx": "quantumultx/axs2.js",
-        "loon": "loon/axs2.plugin",
-        "surge": "surge/axs2.sgmodule"
-      }
-    },
-    {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-07-23T03:14:21.720Z",
+      "updateTime": "2025-07-23T03:15:10.077Z",
       "formats": {
         "original": "input/bizhi.js",
         "quantumultx": "quantumultx/bizhi.js",
@@ -48,7 +37,7 @@
     {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-07-23T03:14:21.720Z",
+      "updateTime": "2025-07-23T03:15:10.077Z",
       "formats": {
         "original": "input/caiyun.js",
         "quantumultx": "quantumultx/caiyun.js",
@@ -59,7 +48,7 @@
     {
       "name": "github",
       "filename": "github.js",
-      "updateTime": "2025-07-23T03:14:21.720Z",
+      "updateTime": "2025-07-23T03:15:10.077Z",
       "formats": {
         "original": "input/github.js",
         "quantumultx": "quantumultx/github.js",
