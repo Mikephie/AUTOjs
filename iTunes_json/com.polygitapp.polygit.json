@@ -1,0 +1,20 @@
+{
+  "name": "PolyGit Git Client",
+  "appId": "1508942822",
+  "bundleId": "com.polygitapp.polygit",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "com.polygitapp.polygit.pro.monthly"
+    },
+    {
+      "id": 2,
+      "productId": "com.polygitapp.polygit.pro.yearly"
+    },
+    {
+      "id": 3,
+      "productId": "com.polygitapp.polygit.pro.lifetime"
+    }
+  ],
+  "updatedAt": "2025-07-24T04:18:09.203Z"
+}
