@@ -1,0 +1,30 @@
+{
+  "user_agent": "Ai%20upscale",
+  "bundle_id": "com.neuralfulai.superresolution.ai.upscale.superresolutions",
+  "data": {
+    "lifetime_gs_upscale": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "lifetime_gs_upscale"
+    },
+    "pro_mounthly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "pro_mounthly"
+    },
+    "pro_yearly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "pro_yearly"
+    },
+    "weekly_pro": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "weekly_pro"
+    }
+  }
+}
