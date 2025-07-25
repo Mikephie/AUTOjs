@@ -1,0 +1,30 @@
+{
+  "user_agent": "ZIP%20Extractor",
+  "bundle_id": "com.olivetapp.ZIP-Extractor",
+  "data": {
+    "zip_extractor_1m": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "zip_extractor_1m"
+    },
+    "zip_extractor_1w": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "zip_extractor_1w"
+    },
+    "zip_extractor_1y": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "zip_extractor_1y"
+    },
+    "zip_extractor_pro": {
+      "entitlements": [
+        "proversion"
+      ],
+      "product_identifier": "zip_extractor_pro"
+    }
+  }
+}
