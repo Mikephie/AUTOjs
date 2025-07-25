@@ -1,0 +1,20 @@
+{
+  "name": "Blue Mail - Email | Calendar",
+  "appId": "1063729305",
+  "bundleId": "me.bluemail.email",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "me.bluemail.ios.pro.monthly.nt"
+    },
+    {
+      "id": 2,
+      "productId": "me.bluemail.ios.pro.annually"
+    },
+    {
+      "id": 3,
+      "productId": "me.bluemail.ios.pro.monthly"
+    }
+  ],
+  "updatedAt": "2025-07-25T12:07:05.714Z"
+}
