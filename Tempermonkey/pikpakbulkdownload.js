@@ -1,80 +1,90 @@
 // ==UserScript==
-// @name         PikPak 批量下载增强
-// @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  为 PikPak 网页版添加多文件和文件夹下载按钮，支持批量下载链接生成。
-// @author       Mikephie
-// @match        https://drive.mypikpak.com/*
-// @icon         https://mypikpak.com/favicon.ico
+// @name         PikPak 批量下载助手（桌面+移动端通用）
+// @namespace    https://github.com/Mikephie
+// @version      2.0
+// @description  批量提取 PikPak 文件下载链接，支持复制/打开，兼容桌面与手机 Tampermonkey。
+// @match        https://mypikpak.com/drive/*
+// @grant        GM_setClipboard
 // @grant        GM_openInTab
-// @grant        GM_download
+// @run-at       document-idle
 // ==/UserScript==
 
 (function () {
   'use strict';
 
-  // 递归等待元素出现
-  function waitFor(selector, callback) {
+  function waitForElement(selector, callback) {
     const el = document.querySelector(selector);
     if (el) return callback(el);
-    setTimeout(() => waitFor(selector, callback), 500);
+    setTimeout(() => waitForElement(selector, callback), 500);
   }
 
-  // 添加批量下载按钮
-  function addDownloadButton() {
-    if (document.querySelector('#multiDownloadBtn')) return;
+  function injectBtn() {
+    if (document.getElementById('pikpak-export-btn')) return;
 
-    const toolbar = document.querySelector('[class*="action-bar-right"]');
-    if (!toolbar) return;
+    const container = document.querySelector('[class*="action-bar-right"]');
+    if (!container) return;
 
     const btn = document.createElement('button');
-    btn.id = 'multiDownloadBtn';
-    btn.textContent = '📦 批量下载';
+    btn.id = 'pikpak-export-btn';
+    btn.innerText = '📥 批量导出下载';
     btn.style.cssText = `
-      background-color: #4CAF50; color: white; border: none; padding: 6px 12px;
-      margin-left: 10px; border-radius: 4px; cursor: pointer; font-weight: bold;
+      background:#1abc9c;color:white;padding:6px 10px;
+      border:none;border-radius:5px;margin-left:10px;cursor:pointer;
     `;
-    btn.onclick = collectSelectedLinks;
-
-    toolbar.appendChild(btn);
+    btn.onclick = batchExtract;
+    container.appendChild(btn);
   }
 
-  // 获取所有选中的文件项
-  function collectSelectedLinks() {
-    const selectedItems = document.querySelectorAll('[aria-selected="true"]');
-    if (!selectedItems.length) return alert('请选择至少一个文件或文件夹');
+  async function batchExtract() {
+    const items = document.querySelectorAll('[aria-selected="true"]');
+    if (!items.length) return alert('请先选中文件再操作！');
 
-    let downloadLinks = [];
-
-    selectedItems.forEach((item) => {
+    let links = [];
+    for (const item of items) {
       const name = item.querySelector('[class*="file-name"]')?.textContent.trim();
-      const dlBtn = item.querySelector('button[aria-label*="下载"]');
-      if (dlBtn) {
-        dlBtn.click();
-        setTimeout(() => {
-          const aTag = document.querySelector('a[href^="https://api-drive.mypikpak.com"]');
-          if (aTag) {
-            downloadLinks.push(aTag.href);
-            window.open(aTag.href, '_blank');
-          }
-        }, 1000);
-      } else {
-        alert(`暂不支持文件夹下载: ${name}`);
+      const downloadBtn = item.querySelector('button[aria-label*="下载"]');
+      if (!downloadBtn) {
+        console.warn(`❌ ${name} 是文件夹或无下载项`);
+        continue;
       }
-    });
 
-    if (!downloadLinks.length) alert('未找到可下载链接');
+      downloadBtn.click();
+      await new Promise(r => setTimeout(r, 800));
+
+      const realLink = document.querySelector('a[href^="https://api-drive.mypikpak.com"]');
+      if (realLink) {
+        const url = realLink.href;
+        links.push(`${name}:\n${url}`);
+        if (isMobile()) {
+          GM_openInTab(url, { active: false });
+        }
+      }
+
+      // 关闭弹窗
+      document.querySelector('button[aria-label="关闭"]')?.click();
+      await new Promise(r => setTimeout(r, 300));
+    }
+
+    if (links.length) {
+      const result = links.join('\n\n');
+      try {
+        GM_setClipboard(result);
+        alert(`✅ 共提取 ${links.length} 项，已复制到剪贴板`);
+      } catch (e) {
+        alert(`✅ 共提取 ${links.length} 项，已在新标签页打开（手机无法复制）`);
+      }
+      console.log('📥 下载链接:\n' + result);
+    } else {
+      alert('❌ 没有可下载的链接，请检查是否选择了文件夹');
+    }
   }
 
-  // 主逻辑入口
-  function init() {
-    waitFor('[class*="action-bar-right"]', () => {
-      addDownloadButton();
-    });
+  function isMobile() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   }
 
-  // 等待 DOM 加载完成后执行
+  // 启动监听
   window.addEventListener('load', () => {
-    setTimeout(init, 2000);
+    setTimeout(() => waitForElement('[class*="action-bar-right"]', injectBtn), 2000);
   });
 })();
