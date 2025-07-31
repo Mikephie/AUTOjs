@@ -26,6 +26,30 @@
       ],
       "product_identifier": "alarmify.group15.yearly.7df"
     },
+    "alarmify.group16.monthly": {
+      "entitlements": [
+        "morning_premium"
+      ],
+      "product_identifier": "alarmify.group16.monthly"
+    },
+    "alarmify.group16.monthly.7df": {
+      "entitlements": [
+        "morning_premium"
+      ],
+      "product_identifier": "alarmify.group16.monthly.7df"
+    },
+    "alarmify.group16.yearly": {
+      "entitlements": [
+        "morning_premium"
+      ],
+      "product_identifier": "alarmify.group16.yearly"
+    },
+    "alarmify.group16.yearly.7df": {
+      "entitlements": [
+        "morning_premium"
+      ],
+      "product_identifier": "alarmify.group16.yearly.7df"
+    },
     "alarmify.monthly.1": {
       "entitlements": [
         "morning_premium"
