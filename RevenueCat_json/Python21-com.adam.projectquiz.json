@@ -1,0 +1,18 @@
+{
+  "user_agent": "Python21",
+  "bundle_id": "com.adam.projectquiz",
+  "data": {
+    "v2_python21_15_month_3daysfree": {
+      "entitlements": [
+        "fullaccess"
+      ],
+      "product_identifier": "v2_python21_15_month_3daysfree"
+    },
+    "v2_python21_30_lifetime": {
+      "entitlements": [
+        "fullaccess"
+      ],
+      "product_identifier": "v2_python21_30_lifetime"
+    }
+  }
+}
