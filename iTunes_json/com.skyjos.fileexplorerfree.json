@@ -1,0 +1,28 @@
+{
+  "name": "Owlfiles - File Manager",
+  "appId": "510282524",
+  "bundleId": "com.skyjos.fileexplorerfree",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "owlfiles_monthly_subscription_2"
+    },
+    {
+      "id": 2,
+      "productId": "owlfiles_yearly_subscription_2"
+    },
+    {
+      "id": 3,
+      "productId": "owlfiles_lifetime"
+    },
+    {
+      "id": 4,
+      "productId": "owlfiles_yearly_subscription_promo"
+    },
+    {
+      "id": 5,
+      "productId": "owlfiles_lifetime_promo"
+    }
+  ],
+  "updatedAt": "2025-08-02T14:10:01.233Z"
+}
