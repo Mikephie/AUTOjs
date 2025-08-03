@@ -1,10 +1,10 @@
 {
-  "generatedTime": "2025-08-03T22:09:02.213Z",
+  "generatedTime": "2025-08-03T22:11:33.273Z",
   "scripts": [
     {
       "name": "adaptyhub",
       "filename": "adaptyhub.js",
-      "updateTime": "2025-08-03T22:08:58.139Z",
+      "updateTime": "2025-08-03T22:11:29.008Z",
       "formats": {
         "original": "input/adaptyhub.js",
         "quantumultx": "quantumultx/adaptyhub.js",
@@ -13,53 +13,9 @@
       }
     },
     {
-      "name": "axs-2",
-      "filename": "axs-2.js",
-      "updateTime": "2025-08-03T22:08:58.139Z",
-      "formats": {
-        "original": "input/axs-2.js",
-        "quantumultx": "quantumultx/axs-2.js",
-        "loon": "loon/axs-2.plugin",
-        "surge": "surge/axs-2.sgmodule"
-      }
-    },
-    {
-      "name": "axs-3",
-      "filename": "axs-3.js",
-      "updateTime": "2025-08-03T22:08:58.139Z",
-      "formats": {
-        "original": "input/axs-3.js",
-        "quantumultx": "quantumultx/axs-3.js",
-        "loon": "loon/axs-3.plugin",
-        "surge": "surge/axs-3.sgmodule"
-      }
-    },
-    {
-      "name": "axs-4",
-      "filename": "axs-4.js",
-      "updateTime": "2025-08-03T22:08:58.139Z",
-      "formats": {
-        "original": "input/axs-4.js",
-        "quantumultx": "quantumultx/axs-4.js",
-        "loon": "loon/axs-4.plugin",
-        "surge": "surge/axs-4.sgmodule"
-      }
-    },
-    {
-      "name": "axs-5",
-      "filename": "axs-5.js",
-      "updateTime": "2025-08-03T22:08:58.139Z",
-      "formats": {
-        "original": "input/axs-5.js",
-        "quantumultx": "quantumultx/axs-5.js",
-        "loon": "loon/axs-5.plugin",
-        "surge": "surge/axs-5.sgmodule"
-      }
-    },
-    {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-08-03T22:08:58.139Z",
+      "updateTime": "2025-08-03T22:11:29.008Z",
       "formats": {
         "original": "input/axs.js",
         "quantumultx": "quantumultx/axs.js",
@@ -70,7 +26,7 @@
     {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-08-03T22:08:58.139Z",
+      "updateTime": "2025-08-03T22:11:29.008Z",
       "formats": {
         "original": "input/bizhi.js",
         "quantumultx": "quantumultx/bizhi.js",
@@ -81,7 +37,7 @@
     {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-08-03T22:08:58.140Z",
+      "updateTime": "2025-08-03T22:11:29.008Z",
       "formats": {
         "original": "input/caiyun.js",
         "quantumultx": "quantumultx/caiyun.js",
@@ -92,7 +48,7 @@
     {
       "name": "github",
       "filename": "github.js",
-      "updateTime": "2025-08-03T22:08:58.140Z",
+      "updateTime": "2025-08-03T22:11:29.008Z",
       "formats": {
         "original": "input/github.js",
         "quantumultx": "quantumultx/github.js",
@@ -103,7 +59,7 @@
     {
       "name": "ilovepdf",
       "filename": "ilovepdf.js",
-      "updateTime": "2025-08-03T22:08:58.140Z",
+      "updateTime": "2025-08-03T22:11:29.008Z",
       "formats": {
         "original": "input/ilovepdf.js",
         "quantumultx": "quantumultx/ilovepdf.js",
@@ -114,7 +70,7 @@
     {
       "name": "migumusic",
       "filename": "migumusic.js",
-      "updateTime": "2025-08-03T22:08:58.140Z",
+      "updateTime": "2025-08-03T22:11:29.008Z",
       "formats": {
         "original": "input/migumusic.js",
         "quantumultx": "quantumultx/migumusic.js",
@@ -125,7 +81,7 @@
     {
       "name": "myshiftplanner",
       "filename": "myshiftplanner.js",
-      "updateTime": "2025-08-03T22:08:58.140Z",
+      "updateTime": "2025-08-03T22:11:29.009Z",
       "formats": {
         "original": "input/myshiftplanner.js",
         "quantumultx": "quantumultx/myshiftplanner.js",
