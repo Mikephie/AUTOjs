@@ -392,7 +392,7 @@ if (!config.endsWith('\n\n')) {
 
   // 处理Rule部分 - 修复格式
   if (scriptInfo.rules && scriptInfo.rules.length > 0) {
-    config += "\n\n[Rule]";
+    config += "\n[Rule]";
     
     let lastComment = "";
     for (const rule of scriptInfo.rules) {
@@ -496,7 +496,7 @@ surgeRule = surgeRule.replace(/^(url-regex|domain-suffix|domain-keyword|host|hos
 
   // 处理Script部分
   if (scriptInfo.scripts && scriptInfo.scripts.length > 0) {
-    config += "\n\n[Script]";
+    config += "\n[Script]";
     
     let lastComment = "";
     let ruleCounter = 0;
@@ -596,7 +596,7 @@ if (!config.endsWith('\n\n')) {
 
   // 处理Rule部分
 if (scriptInfo.rules.length > 0) {
-  config += "\n\n[Rule]";
+  config += "\n[Rule]";
   
   let lastComment = "";
   for (const rule of scriptInfo.rules) {
@@ -657,7 +657,7 @@ loonRule = loonRule.replace(/^(url-regex|domain-suffix|domain-keyword|host|host-
   // 处理Script部分
   if (scriptInfo.scripts.length > 0) {
     // 添加一个空行在[Script]之前
-    config += "\n\n[Script]";
+    config += "\n[Script]";
     
     let lastComment = "";
     for (const rule of scriptInfo.scripts) {
