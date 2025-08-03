@@ -283,67 +283,61 @@ function parseQXRules(sectionContent, result) {
 function parseQXRewrites(sectionContent, result) {
   const lines = sectionContent.split('\n');
   let currentComment = "";
-
+  
   for (let line of lines) {
     line = line.trim();
     if (!line) continue;
-
+    
     if (line.startsWith('#')) {
+      // 收集注释
       currentComment = line;
-      continue;
-    }
-
-    if (line.includes(' url ')) {
+    } else if (line.includes(' - ')) {
+      // 处理常规重写（例如 reject）
+      result.rewrites.push({
+        content: line,
+        comment: currentComment
+      });
+      
+      // 重置注释
+      currentComment = "";
+    } else if (line.includes(' url ')) {
+      // 处理脚本重写
       const parts = line.split(' url ');
-      if (parts.length !== 2) continue;
-
-      const pattern = parts[0].trim();
-      const action = parts[1].trim();
-
-      if (action.startsWith('reject')) {
-        // 1️⃣ reject 规则：pattern - reject
-        result.rewrites.push({
-          content: `${pattern} - ${action}`,
-          comment: currentComment
-        });
-
-      } else if (action.startsWith('script-')) {
-        // 2️⃣ script-xxx 重写
-        const scriptType = action.split(' ')[0];
-        const scriptPath = action.split(' ')[1] || '';
-
-        const httpType = scriptType.includes('response') ? 'http-response' : 'http-request';
-        const requiresBody = scriptType.includes('body') ? 'true' : 'false';
-
-        let tag = "script";
-        if (scriptPath && scriptPath.includes('/')) {
-          const scriptName = scriptPath.split('/').pop().split('.')[0];
-          if (scriptName) tag = scriptName;
+      if (parts.length === 2) {
+        const pattern = parts[0].trim();
+        const action = parts[1].trim();
+        
+        if (action.startsWith('reject')) {
+          // reject规则
+          result.rewrites.push({
+            content: `${pattern} - ${action}`,
+            comment: currentComment
+          });
+        } else if (action.startsWith('script-')) {
+          // 脚本规则
+          const scriptType = action.split(' ')[0];
+          let scriptPath = action.split(' ')[1] || '';
+          
+          // 确定HTTP类型
+          const httpType = scriptType.includes('response') ? 'http-response' : 'http-request';
+          const requiresBody = scriptType.includes('body') ? 'true' : 'false';
+          
+          // 提取脚本名称作为tag
+          let tag = "script";
+          if (scriptPath && scriptPath.includes('/')) {
+            const scriptName = scriptPath.split('/').pop().split('.')[0];
+            if (scriptName) tag = scriptName;
+          }
+          
+          // 构建Loon格式脚本规则
+          result.scripts.push({
+            content: `${httpType} ${pattern} script-path=${scriptPath}, requires-body=${requiresBody}, timeout=60, tag=${tag}`,
+            comment: currentComment
+          });
         }
-
-        result.scripts.push({
-          content: `${httpType} ${pattern} script-path=${scriptPath}, requires-body=${requiresBody}, timeout=60, tag=${tag}`,
-          comment: currentComment
-        });
-
-      } else if (/^30[127]\s+/i.test(action)) {
-        // 3️⃣ url 302 / url 307 等：pattern target 302
-        const code = action.match(/^30[127]/)[0];
-        const target = action.replace(/^30[127]\s+/i, '').trim();
-
-        result.rewrites.push({
-          content: `${pattern} ${target} ${code}`,
-          comment: currentComment
-        });
-
-      } else {
-        // 4️⃣ fallback：保留原始 QX 结构
-        result.rewrites.push({
-          content: `${pattern} url ${action}`,
-          comment: currentComment
-        });
       }
-
+      
+      // 重置注释
       currentComment = "";
     }
   }
