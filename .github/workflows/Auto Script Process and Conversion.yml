@@ -1,0 +1,86 @@
+name: 自动脚本转换与更新列表
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'input/**'
+      - 'scripts/**'
+      - 'index.js'
+  schedule:
+    - cron: '0 3 * * *'  # 每天凌晨 3 点执行
+
+jobs:
+  convert-and-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📦 检出仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🧱 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 🗂️ 创建目录结构
+        run: |
+          mkdir -p input quantumultx loon surge
+
+      - name: 📥 安装依赖
+        run: npm install
+
+      - name: 🧩 处理 input → quantumultx
+        run: |
+          echo "查找 JS 文件并复制到 quantumultx/"
+          find input -type f -name "*.js" | while read file; do
+            cp "$file" "quantumultx/$(basename "$file")"
+          done
+
+          echo "查找配置文件并处理脚本引用"
+          find input -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) | while read file; do
+            fname=$(basename "$file")
+            ofile="quantumultx/$fname"
+
+            cp "$file" "$ofile"
+
+            awk '
+            /script-(response|request)-body/ {
+              match($0, /(script-(response|request)-body\s+)([^ \n]+)/, parts);
+              if (parts[3]) {
+                split(parts[3], path_parts, "/");
+                script_name = path_parts[length(path_parts)];
+                remote_url = "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/" script_name;
+                sub(parts[3], remote_url);
+                print "📝 替换: " parts[3] " -> " remote_url > "/dev/stderr";
+              }
+            }
+            { print }
+            ' "$ofile" > "$ofile.tmp" && mv "$ofile.tmp" "$ofile"
+          done
+
+      - name: 🚀 转换 quantumultx → loon/surge
+        run: node index.js
+        env:
+          INPUT_DIR: 'quantumultx'
+          OUTPUT_FORMAT: 'loon,surge'
+
+      - name: 📄 生成 scripts.json
+        run: |
+          node scripts/generate-script-list.js
+          echo "📁 检查生成文件:"
+          ls -l scripts.json || echo "scripts.json 不存在"
+
+      - name: 📤 提交所有更改
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+
+          git add quantumultx/ loon/ surge/ scripts.json
+          git commit -m "🛠️ 自动转换与更新脚本列表 $(date '+%Y-%m-%d %H:%M:%S')" || echo "⚠️ 无需提交"
+          git pull --no-rebase || echo "⚠️ 拉取失败，继续执行"
+          git push || echo "⚠️ 推送失败，请手动处理"
