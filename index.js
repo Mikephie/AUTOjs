@@ -1,10 +1,10 @@
 const fs = require('fs').promises;
 const path = require('path');
-const { execSync } = require('child_process');
 const core = require('@actions/core');
+const { execSync } = require('child_process');
+
 const converter = require('./script-converter');
 
-// 固定输入目录
 const INPUT_DIR = 'quantumultx';
 const OUTPUT_FORMATS = (process.env.OUTPUT_FORMAT || 'loon,surge').split(',').map(f => f.trim().toLowerCase());
 const DEBUG = process.env.DEBUG === 'true';
@@ -17,32 +17,71 @@ const FORMAT_EXTENSIONS = {
 };
 
 function debug(message, ...args) {
-  if (DEBUG) console.log(`[DEBUG] ${message}`, ...args);
+  if (DEBUG) {
+    console.log('[DEBUG]', message, ...args);
+  }
 }
 
 function isSupportedScript(filename) {
-  return SUPPORTED_EXTENSIONS.includes(path.extname(filename).toLowerCase());
+  const ext = path.extname(filename).toLowerCase();
+  return SUPPORTED_EXTENSIONS.includes(ext);
 }
 
-// ✅ 获取这次提交变动的 quantumultx 文件
-function getChangedFiles() {
+async function getChangedQuantumultxFiles() {
   try {
-    const output = execSync('git diff --name-only HEAD^ HEAD').toString();
-    return output
+    const output = execSync('git diff --name-only HEAD^ HEAD').toString().trim();
+    const changed = output
       .split('\n')
-      .filter(f => f.startsWith(`${INPUT_DIR}/`) && isSupportedScript(f));
+      .filter(name => name.startsWith('quantumultx/') && isSupportedScript(name));
+
+    if (changed.length === 0) {
+      console.log('❗ 本次提交中无 quantumultx 变更文件，跳过转换');
+      return [];
+    }
+
+    console.log(`✅ 本次有 ${changed.length} 个变动文件：\n` + changed.join('\n'));
+    return changed.map(f => ({
+      path: f,
+      relativePath: path.relative(INPUT_DIR, f),
+      name: path.basename(f)
+    }));
+  } catch (err) {
+    console.warn('⚠️ 获取变更文件失败，回退为全量处理');
+    return await getAllFiles(INPUT_DIR);
+  }
+}
+
+async function getAllFiles(dir) {
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    const filePromises = entries.map(async (entry) => {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        return getAllFiles(fullPath);
+      } else if (entry.isFile()) {
+        return [{
+          path: fullPath,
+          relativePath: path.relative(INPUT_DIR, fullPath),
+          name: entry.name
+        }];
+      }
+      return [];
+    });
+    const nestedFiles = await Promise.all(filePromises);
+    return nestedFiles.flat();
   } catch (error) {
-    console.error('获取变更文件失败:', error);
+    console.error(`获取目录 ${dir} 内文件失败:`, error);
     return [];
   }
 }
 
 async function ensureOutputDir(outputPath) {
   try {
-    await fs.mkdir(path.dirname(outputPath), { recursive: true });
+    const dir = path.dirname(outputPath);
+    await fs.mkdir(dir, { recursive: true });
     return true;
-  } catch (err) {
-    console.error(`创建目录失败 ${outputPath}:`, err);
+  } catch (error) {
+    console.error(`创建目录失败 ${path.dirname(outputPath)}:`, error);
     return false;
   }
 }
@@ -60,11 +99,13 @@ async function cleanDirectory(dir) {
         await fs.unlink(fullPath);
       }
     }
-  } catch (err) {
-    if (err.code === 'ENOENT') {
+    console.log(`目录 ${dir} 已清空`);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
       await fs.mkdir(dir, { recursive: true });
+      console.log(`目录 ${dir} 已创建`);
     } else {
-      console.error(`清空目录失败: ${dir}`, err);
+      console.error(`清空目录 ${dir} 失败:`, error);
     }
   }
 }
@@ -74,85 +115,90 @@ async function main() {
     console.log('========== 启动脚本转换 ==========');
     console.log(`输出格式: ${OUTPUT_FORMATS.join(', ')}`);
 
-    // 获取本次 push 的变动脚本
-    const changedFilePaths = getChangedFiles();
-    if (changedFilePaths.length === 0) {
-      console.log('❗ 本次提交中无变动的脚本文件，结束转换');
-      return;
+    try {
+      await fs.access(INPUT_DIR);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        await fs.mkdir(INPUT_DIR, { recursive: true });
+        console.log(`创建输入目录: ${INPUT_DIR}`);
+      }
     }
 
-    console.log(`✅ 本次检测到 ${changedFilePaths.length} 个变动文件`);
-
-    // 初始化输出目录
     for (const format of OUTPUT_FORMATS) {
       await cleanDirectory(format);
     }
 
+    const files = await getChangedQuantumultxFiles();
+    if (files.length === 0) return;
+
     let successCount = 0;
+    for (const fileInfo of files) {
+      const { path: inputPath, relativePath, name } = fileInfo;
 
-    for (const relPath of changedFilePaths) {
-      const inputPath = relPath;
-      const relativePath = path.relative(INPUT_DIR, inputPath);
-      const name = path.basename(inputPath);
+      if (!isSupportedScript(name)) {
+        console.log(`跳过不支持的文件类型: ${name}`);
+        continue;
+      }
 
-      console.log(`\n📝 处理: ${relativePath}`);
+      console.log(`\n------------------------------`);
+      console.log(`处理文件: ${relativePath}`);
+      console.log(`输入路径: ${inputPath}`);
 
       try {
         const content = await fs.readFile(inputPath, 'utf8');
-        debug('原始内容:', content.substring(0, 150));
+        console.log(`成功读取文件: ${relativePath} (${content.length} 字节)`);
 
         for (const format of OUTPUT_FORMATS) {
-          const baseName = path.parse(name).name;
-          const ext = FORMAT_EXTENSIONS[format] || `.${format}`;
-          const outputRelPath = path.join(path.dirname(relativePath), `${baseName}${ext}`);
+          const fileBaseName = path.parse(name).name;
+          const outputExt = FORMAT_EXTENSIONS[format] || `.${format}`;
+          const outputRelPath = path.join(path.dirname(relativePath), \`\${fileBaseName}\${outputExt}\`);
           const outputPath = path.join(format, outputRelPath);
 
           if (!(await ensureOutputDir(outputPath))) continue;
 
-          let convertedContent = '';
-
           try {
+            let convertedContent;
             if (typeof converter.convertScript === 'function') {
               convertedContent = converter.convertScript(content, format);
             } else {
-              const extracted = converter.extractScriptContent(content);
-              const type = converter.detectScriptType?.(extracted) || 'unknown';
-              const parsed = converter.parseScript(extracted, type);
+              const extractedContent = converter.extractScriptContent(content);
+              const scriptType = converter.detectScriptType ?
+                                 converter.detectScriptType(extractedContent) : 'unknown';
+              const scriptInfo = converter.parseScript(extractedContent, scriptType);
 
               if (format === 'loon') {
-                convertedContent = converter.convertToLoon(parsed);
+                convertedContent = converter.convertToLoon(scriptInfo);
               } else if (format === 'surge') {
-                convertedContent = converter.convertToSurge(parsed);
+                convertedContent = converter.convertToSurge(scriptInfo);
               } else if (format === 'quantumultx') {
-                convertedContent = converter.convertToQuantumultX(parsed);
+                convertedContent = converter.convertToQuantumultX(scriptInfo);
               } else {
-                throw new Error(`不支持的格式: ${format}`);
+                throw new Error(`不支持的输出格式: ${format}`);
               }
             }
-
             await fs.writeFile(outputPath, convertedContent);
-            console.log(`✅ 成功输出 ${format}: ${outputPath}`);
+            console.log(`✅ 保存 ${format} 格式: ${outputPath}`);
             successCount++;
-
-          } catch (err) {
-            console.error(`❌ 转换 ${format} 格式失败:`, err);
+          } catch (convError) {
+            console.error(`转换文件 ${relativePath} 到 ${format} 格式时出错:`, convError);
           }
         }
-
-      } catch (readErr) {
-        console.error(`❌ 读取文件失败: ${name}`, readErr);
+      } catch (fileError) {
+        console.error(`处理文件 ${relativePath} 时出错:`, fileError);
       }
     }
 
-    console.log('\n========== 转换完成 ==========');
-    console.log(`共成功转换 ${successCount} 个文件`);
-
-    if (core?.setOutput) core.setOutput('success_count', successCount);
-
-  } catch (err) {
-    console.error('❌ 主流程失败:', err);
-    if (core?.setFailed) core.setFailed(err.message);
-    else process.exit(1);
+    console.log(`\n✅ 所有文件转换完成，共转换: ${successCount} 个`);
+    if (core && typeof core.setOutput === 'function') {
+      core.setOutput('success_count', successCount);
+    }
+  } catch (error) {
+    console.error('❌ 脚本转换失败:', error);
+    if (core && typeof core.setFailed === 'function') {
+      core.setFailed(`转换失败: ${error.message}`);
+    } else {
+      process.exit(1);
+    }
   }
 }
 
