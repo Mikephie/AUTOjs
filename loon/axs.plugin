@@ -3,14 +3,5 @@
 #!category=🚫广告
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/axs.png
-
-[Rule]
-URL-REGEX,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace,REJECT
-URL-REGEX,^https:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight,REJECT
-
-
-[Script]
-http-response ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/axs.js, requires-body=true, timeout=60, tag=axs
-
 [MITM]
 hostname = m-station2.axs.com.sg
