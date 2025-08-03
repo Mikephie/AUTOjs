@@ -1,0 +1,100 @@
+name: Auto Script Process and Conversion
+
+on:
+  workflow_dispatch:
+    inputs:
+      output_format:
+        description: '转换输出格式'
+        required: true
+        default: 'loon,surge'
+        type: choice
+        options:
+          - loon,surge
+          - loon
+          - surge
+  push:
+    paths:
+      - '**.js'
+      - 'input/**'
+  schedule:
+    - cron: '0 3 * * *'
+
+env:
+  REMOTE_BASE_URL: 'https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx'
+  PROCESS_ALL: 'false'
+
+jobs:
+  process_and_convert:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: 设置参数
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "REMOTE_BASE_URL=${{ github.event.inputs.remote_base_url || env.REMOTE_BASE_URL }}" >> $GITHUB_ENV
+            echo "PROCESS_ALL=${{ github.event.inputs.process_all || env.PROCESS_ALL }}" >> $GITHUB_ENV
+          fi
+          echo "REMOTE_BASE_URL=$REMOTE_BASE_URL"
+          echo "PROCESS_ALL=$PROCESS_ALL"
+
+      - name: 准备目录
+        run: mkdir -p input quantumultx loon surge
+
+      - name: 拷贝 JS 文件到 quantumultx
+        run: |
+          find input -name "*.js" > js_files.txt
+          if [ -s js_files.txt ]; then
+            while read js; do cp "$js" "quantumultx/$(basename "$js")"; done < js_files.txt
+          fi
+
+      - name: 处理配置文件并替换引用
+        run: |
+          find input -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) > config_files.txt
+          if [ -s config_files.txt ]; then
+            while read config; do
+              base=$(basename "$config")
+              out="quantumultx/$base"
+              cp "$config" "$out"
+              awk '
+              /script-(response|request)-body/ {
+                match($0, /(script-(response|request)-body[[:space:]]+)([^[:space:]]+)/, p);
+                if (p[3]) {
+                  split(p[3], s, "/");
+                  n = s[length(s)];
+                  newurl = "'"$REMOTE_BASE_URL"'/" n;
+                  sub(p[3], newurl);
+                  print "已替换: " p[3] " -> " newurl > "/dev/stderr";
+                }
+              }
+              { print }
+              ' "$out" > "$out.tmp" && mv "$out.tmp" "$out"
+            done < config_files.txt
+          fi
+
+      - name: 安装 Node.js 依赖并执行转换
+        run: |
+          npm install
+          node index.js
+        env:
+          INPUT_DIR: 'quantumultx'
+          OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'loon,surge' }}
+
+      - name: 打包转换结果
+        run: |
+          [ -d loon ] && find loon -type f | grep -q . && tar -czvf loon-scripts.tar.gz loon/
+          [ -d surge ] && find surge -type f | grep -q . && tar -czvf surge-scripts.tar.gz surge/
+
+      - name: 提交并推送更改
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add quantumultx/ loon/ surge/ *.tar.gz || true
+          git commit -m "自动处理和转换脚本" || echo "⚠️ 无需提交"
+          git pull --no-rebase || echo "⚠️ 拉取失败，跳过"
+          git push || echo "⚠️ 推送失败，可能需手动处理"
