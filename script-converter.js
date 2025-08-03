@@ -384,8 +384,11 @@ function convertToSurge(input) {
   }
   
   if (scriptInfo.metadata.icon) {
-    config += `\n#!icon=${scriptInfo.metadata.icon}`;
-  }
+  config += `\n#!icon=${scriptInfo.metadata.icon}`;
+}
+
+// ✅ 插入空行分隔元数据和配置段
+config += `\n`;
 
   // 处理Rule部分 - 修复格式
   if (scriptInfo.rules && scriptInfo.rules.length > 0) {
@@ -585,8 +588,11 @@ function convertToLoon(input) {
   }
   
   if (scriptInfo.metadata.icon) {
-    config += `\n#!icon=${scriptInfo.metadata.icon}`;
-  }
+  config += `\n#!icon=${scriptInfo.metadata.icon}`;
+}
+
+// ✅ 插入空行分隔元数据和配置段
+config += `\n`;
 
   // 处理Rule部分
 if (scriptInfo.rules.length > 0) {
