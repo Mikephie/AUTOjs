@@ -4,6 +4,8 @@
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/filmix.png
 [Rewrite]
+# > 去广告
+^https://app\.c\.nf.migu\.cn/strategy/listen-url/v2.5 https://app.c.nf.migu.cn/strategy/listen-url/v2.4 302
 ^https://app\.c\.nf\.migu\.cn/member/api/marketing/text - REJECT
 ^https://app\.c.nf\.migu\.cn/payment/watch-ad - reject-200
 

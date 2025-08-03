@@ -9,6 +9,10 @@
 Content-Type: image/png
 Content-Length: 0" status-code=200
 
+[URL Rewrite]
+# > 去广告
+^https://app\.c\.nf.migu\.cn/strategy/listen-url/v2.5 https://app.c.nf.migu.cn/strategy/listen-url/v2.4 302
+
 
 [Script]
 # > 咪咕音乐vip、音质
