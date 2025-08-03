@@ -1,67 +1,96 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const core = require('@actions/core');
-const exec = require('child_process').execSync;
 
+// 转换器模块
+const converter = require('./script-converter');
+
+// 设置固定输入目录
 const INPUT_DIR = 'quantumultx';
-const OUTPUT_FORMATS = (process.env.OUTPUT_FORMAT || 'loon,surge').split(',').map(f => f.trim().toLowerCase());
-const FORMAT_EXTENSIONS = { 'loon': '.plugin', 'surge': '.sgmodule', 'quantumultx': '.conf' };
+// 输出格式列表
+const OUTPUT_FORMATS = ['loon', 'surge'];
+// 支持的扩展名
+const SUPPORTED_EXTENSIONS = ['.js', '.conf', '.txt', '.sgmodule', '.plugin'];
+// 格式对应的扩展名
+const FORMAT_EXTENSIONS = {
+  'loon': '.plugin',
+  'surge': '.sgmodule'
+};
 
-function isSupportedScript(filename) {
-  return ['.js', '.conf', '.txt', '.sgmodule', '.plugin'].includes(path.extname(filename).toLowerCase());
+// 递归获取文件
+async function getAllFiles(dir) {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  const files = await Promise.all(entries.map(entry => {
+    const res = path.resolve(dir, entry.name);
+    return entry.isDirectory() ? getAllFiles(res) : res;
+  }));
+  return Array.prototype.concat(...files);
 }
 
-function getChangedFiles() {
-  try {
-    const output = exec('git diff --name-only HEAD^ HEAD', { encoding: 'utf8' }).trim();
-    return output ? output.split('\n').filter(p => p.startsWith(INPUT_DIR + '/')) : [];
-  } catch (error) {
-    console.error('获取变更文件失败:', error);
-    return [];
-  }
+// 检查扩展名
+function isSupported(filePath) {
+  return SUPPORTED_EXTENSIONS.includes(path.extname(filePath).toLowerCase());
 }
 
-async function ensureOutputDir(filePath) {
+// 确保目录存在
+async function ensureDir(filePath) {
   const dir = path.dirname(filePath);
   await fs.mkdir(dir, { recursive: true });
 }
 
-async function convertFile(filePath, converter) {
-  const content = await fs.readFile(filePath, 'utf8');
-  const name = path.basename(filePath);
-  const relPath = path.relative(INPUT_DIR, filePath);
-  const baseName = path.parse(name).name;
-
-  for (const format of OUTPUT_FORMATS) {
-    const ext = FORMAT_EXTENSIONS[format] || `.${format}`;
-    const outputPath = path.join(format, path.dirname(relPath), baseName + ext);
-    await ensureOutputDir(outputPath);
-    const converted = converter.convertScript(content, format);
-    await fs.writeFile(outputPath, converted);
-    console.log(`✅ 转换完成: ${outputPath}`);
-  }
-}
-
-async function main() {
+(async () => {
   console.log('========== 启动脚本转换 ==========');
   console.log('输出格式:', OUTPUT_FORMATS.join(', '));
-  const changed = getChangedFiles();
 
-  if (changed.length === 0) {
-    console.log('❗ 本次提交中无变动的脚本文件，结束转换');
-    return;
+  let files = [];
+  try {
+    files = await getAllFiles(INPUT_DIR);
+  } catch (e) {
+    console.error('读取目录失败:', e);
+    process.exit(1);
   }
 
-  const converter = require('./script-converter');
-  for (const file of changed) {
-    if (!isSupportedScript(file)) continue;
-    console.log(`处理: ${file}`);
-    await convertFile(file, converter);
-  }
-}
+  let converted = 0;
 
-main().catch(err => {
-  console.error('转换失败:', err);
-  process.exit(1);
-});
+  for (const file of files) {
+    const relPath = path.relative(INPUT_DIR, file);
+    if (!isSupported(file)) {
+      console.log('跳过不支持:', relPath);
+      continue;
+    }
+
+    let content = '';
+    try {
+      content = await fs.readFile(file, 'utf8');
+    } catch (e) {
+      console.error('读取失败:', file, e);
+      continue;
+    }
+
+    for (const format of OUTPUT_FORMATS) {
+      try {
+        const fileBase = path.parse(relPath).name;
+        const outputExt = FORMAT_EXTENSIONS[format] || `.${format}`;
+        const outputPath = path.join(format, path.dirname(relPath), fileBase + outputExt);
+        const parsed = converter.parseScript(content);
+        const output =
+          format === 'loon' ? converter.convertToLoon(parsed)
+          : format === 'surge' ? converter.convertToSurge(parsed)
+          : '';
+
+        await ensureDir(outputPath);
+        await fs.writeFile(outputPath, output);
+        console.log(`✅ 转换成功: ${relPath} → ${outputPath}`);
+        converted++;
+      } catch (e) {
+        console.error(`❌ 转换失败: ${relPath} → ${format}`, e.message);
+      }
+    }
+  }
+
+  if (converted === 0) {
+    console.log('❗ 无需转换的脚本文件');
+  } else {
+    console.log(`🎉 完成转换: ${converted} 个输出文件`);
+  }
+})();
