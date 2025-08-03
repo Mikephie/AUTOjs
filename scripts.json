@@ -1,10 +1,10 @@
 {
-  "generatedTime": "2025-08-03T13:12:09.486Z",
+  "generatedTime": "2025-08-03T13:25:19.612Z",
   "scripts": [
     {
       "name": "adaptyhub",
       "filename": "adaptyhub.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/adaptyhub.js",
         "quantumultx": "quantumultx/adaptyhub.js",
@@ -13,130 +13,20 @@
       }
     },
     {
-      "name": "axs-10",
-      "filename": "axs-10.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-10.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-11",
-      "filename": "axs-11.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-11.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-12",
-      "filename": "axs-12.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-12.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-2",
-      "filename": "axs-2.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-2.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
       "name": "axs-3",
       "filename": "axs-3.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/axs-3.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-4",
-      "filename": "axs-4.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-4.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-5",
-      "filename": "axs-5.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-5.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-6",
-      "filename": "axs-6.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-6.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-7",
-      "filename": "axs-7.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-7.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-8",
-      "filename": "axs-8.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-8.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "axs-9",
-      "filename": "axs-9.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/axs-9.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
+        "quantumultx": "quantumultx/axs-3.js",
+        "loon": "loon/axs-3.plugin",
+        "surge": "surge/axs-3.sgmodule"
       }
     },
     {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/axs.js",
         "quantumultx": "quantumultx/axs.js",
@@ -145,64 +35,9 @@
       }
     },
     {
-      "name": "bizhi-2",
-      "filename": "bizhi-2.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/bizhi-2.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "bizhi-3",
-      "filename": "bizhi-3.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/bizhi-3.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "bizhi-4",
-      "filename": "bizhi-4.js",
-      "updateTime": "2025-08-03T13:12:07.163Z",
-      "formats": {
-        "original": "input/bizhi-4.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "bizhi-5",
-      "filename": "bizhi-5.js",
-      "updateTime": "2025-08-03T13:12:07.164Z",
-      "formats": {
-        "original": "input/bizhi-5.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
-      "name": "bizhi-6",
-      "filename": "bizhi-6.js",
-      "updateTime": "2025-08-03T13:12:07.164Z",
-      "formats": {
-        "original": "input/bizhi-6.js",
-        "quantumultx": null,
-        "loon": null,
-        "surge": null
-      }
-    },
-    {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-08-03T13:12:07.164Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/bizhi.js",
         "quantumultx": "quantumultx/bizhi.js",
@@ -213,7 +48,7 @@
     {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-08-03T13:12:07.164Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/caiyun.js",
         "quantumultx": "quantumultx/caiyun.js",
@@ -224,7 +59,7 @@
     {
       "name": "github",
       "filename": "github.js",
-      "updateTime": "2025-08-03T13:12:07.164Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/github.js",
         "quantumultx": "quantumultx/github.js",
@@ -235,7 +70,7 @@
     {
       "name": "ilovepdf",
       "filename": "ilovepdf.js",
-      "updateTime": "2025-08-03T13:12:07.164Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/ilovepdf.js",
         "quantumultx": "quantumultx/ilovepdf.js",
@@ -246,7 +81,7 @@
     {
       "name": "migumusic",
       "filename": "migumusic.js",
-      "updateTime": "2025-08-03T13:12:07.164Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/migumusic.js",
         "quantumultx": "quantumultx/migumusic.js",
@@ -257,7 +92,7 @@
     {
       "name": "myshiftplanner",
       "filename": "myshiftplanner.js",
-      "updateTime": "2025-08-03T13:12:07.164Z",
+      "updateTime": "2025-08-03T13:25:14.663Z",
       "formats": {
         "original": "input/myshiftplanner.js",
         "quantumultx": "quantumultx/myshiftplanner.js",
