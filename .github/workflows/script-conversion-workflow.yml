@@ -14,61 +14,71 @@ on:
           - surge
   push:
     paths:
-      - '**'
-  pull_request:
-    paths:
-      - '**'
+      - 'quantumultx/**'
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '0 0 * * *'
 
 jobs:
   convert:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     steps:
-      - uses: actions/checkout@v2
+      - name: 检出代码
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - name: 设置 Node 环境
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: 准备环境
-        run: |
-          mkdir -p input
-          mkdir -p loon
-          mkdir -p surge
-          npm install @actions/core
+      - name: 安装依赖
+        run: npm install @actions/core
 
-      - name: 显示触发信息（调试）
+      - name: 显示触发信息
         run: |
-          echo "触发方式: ${{ github.event_name }}"
-          echo "输入格式: ${{ github.event.inputs.output_format }}"
+          echo "事件类型: ${{ github.event_name }}"
+          echo "输入格式: ${{ github.event.inputs.output_format || 'loon,surge' }}"
 
-      - name: 运行转换
+      - name: 运行脚本转换
         run: node index.js
         env:
           INPUT_DIR: 'quantumultx'
-          # ✅ 给定默认值，避免 push 场景下为空
-          OUTPUT_FORMAT: 'loon,surge'
+          OUTPUT_FORMAT: 'loon,surge' # ✅ 强制设置默认值以防为空
 
-      - name: 打包转换结果
+      - name: 打包 loon 结果
+        if: success()
         run: |
           if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
-            tar -czvf loon-scripts.tar.gz loon/
-          fi
-          if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
-            tar -czvf surge-scripts.tar.gz surge/
+            echo "打包 loon/"
+            zip -r loon.zip loon/
+          else
+            echo "未找到 loon 文件，跳过打包"
           fi
 
-      - name: 提交并推送结果
+      - name: 打包 surge 结果
+        if: success()
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add -A
-          git commit -m "自动转换脚本" || echo "无变更"
-          git pull --no-rebase || echo "忽略拉取失败"
-          git push || echo "推送失败"
+          if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
+            echo "打包 surge/"
+            zip -r surge.zip surge/
+          else
+            echo "未找到 surge 文件，跳过打包"
+          fi
+
+      - name: 上传 loon Artifact
+        if: success() && hashFiles('loon.zip') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: loon-scripts
+          path: loon.zip
+
+      - name: 上传 surge Artifact
+        if: success() && hashFiles('surge.zip') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: surge-scripts
+          path: surge.zip
