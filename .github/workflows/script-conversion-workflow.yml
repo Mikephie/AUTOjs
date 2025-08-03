@@ -16,13 +16,11 @@ on:
     paths:
       - 'quantumultx/**'
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *' # 每天凌晨执行
 
 jobs:
   convert:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: 检出代码
@@ -38,47 +36,40 @@ jobs:
       - name: 安装依赖
         run: npm install @actions/core
 
-      - name: 显示触发信息
-        run: |
-          echo "事件类型: ${{ github.event_name }}"
-          echo "输入格式: ${{ github.event.inputs.output_format || 'loon,surge' }}"
-
-      - name: 运行脚本转换
+      - name: 执行脚本转换
         run: node index.js
         env:
           INPUT_DIR: 'quantumultx'
-          OUTPUT_FORMAT: 'loon,surge' # ✅ 强制设置默认值以防为空
+          OUTPUT_FORMAT: 'loon,surge'  # ✅ 默认格式
 
-      - name: 打包 loon 结果
+      - name: 打包 loon 输出
         if: success()
         run: |
           if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
-            echo "打包 loon/"
-            zip -r loon.zip loon/
+            zip -r loon-scripts.zip loon/
           else
-            echo "未找到 loon 文件，跳过打包"
+            echo "loon 目录为空，跳过打包"
           fi
 
-      - name: 打包 surge 结果
+      - name: 打包 surge 输出
         if: success()
         run: |
           if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
-            echo "打包 surge/"
-            zip -r surge.zip surge/
+            zip -r surge-scripts.zip surge/
           else
-            echo "未找到 surge 文件，跳过打包"
+            echo "surge 目录为空，跳过打包"
           fi
 
       - name: 上传 loon Artifact
-        if: success() && hashFiles('loon.zip') != ''
+        if: success() && hashFiles('loon-scripts.zip') != ''
         uses: actions/upload-artifact@v4
         with:
           name: loon-scripts
-          path: loon.zip
+          path: loon-scripts.zip
 
       - name: 上传 surge Artifact
-        if: success() && hashFiles('surge.zip') != ''
+        if: success() && hashFiles('surge-scripts.zip') != ''
         uses: actions/upload-artifact@v4
         with:
           name: surge-scripts
-          path: surge.zip
+          path: surge-scripts.zip
