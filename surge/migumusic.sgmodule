@@ -3,6 +3,7 @@
 #!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/filmix.png
+
 [Map Local]
 ^https://app\.c\.nf\.migu\.cn/member/api/marketing/text data-type=text data="HTTP/1.1 200 OK" status-code=200
 ^https://app\.c.nf\.migu\.cn/payment/watch-ad data-type=text data="HTTP/1.1 200 OK

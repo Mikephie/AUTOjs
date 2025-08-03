@@ -3,6 +3,7 @@
 #!category=🚫广告
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/axs.png
+
 [Rewrite]
 ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*\/whatsnew\.php.* closebutton:// 302
 

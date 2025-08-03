@@ -4,6 +4,7 @@
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/adaptyhub.png
 
+
 [Script]
 # Adapty解锁
 http-response ^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub

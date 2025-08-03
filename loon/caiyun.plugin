@@ -4,6 +4,7 @@
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/caiyun.png
 
+
 [Rule]
 # 上传信息
 DOMAIN,gather.colorfulclouds.net,REJECT
