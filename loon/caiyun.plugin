@@ -4,7 +4,6 @@
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/caiyun.png
 
-
 [Rule]
 # 上传信息
 DOMAIN,gather.colorfulclouds.net,REJECT
@@ -26,7 +25,6 @@ DOMAIN,gather.colorfulclouds.net,REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ - REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ - REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ - REJECT
-
 
 [Script]
 # 赏叶赏花模块

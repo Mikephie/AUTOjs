@@ -4,7 +4,6 @@
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/myshiftplanner.png
 
-
 [Script]
 myshiftplanner = type=http-response, pattern=^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, timeout=60
 

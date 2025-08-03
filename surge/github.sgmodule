@@ -4,7 +4,6 @@
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/filmix.png
 
-
 [Script]
 github = type=http-response, pattern=https://api.github.com/graphql, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, timeout=60
 
