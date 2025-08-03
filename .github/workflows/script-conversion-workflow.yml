@@ -1,0 +1,74 @@
+name: Script Conversion Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      output_format:
+        description: '转换输出格式'
+        required: true
+        default: 'loon,surge'
+        type: choice
+        options:
+          - loon,surge
+          - loon
+          - surge
+  push:
+    paths:
+      - '**'
+  pull_request:
+    paths:
+      - '**'
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 准备环境
+        run: |
+          mkdir -p input
+          mkdir -p loon
+          mkdir -p surge
+          npm install @actions/core
+
+      - name: 显示触发信息（调试）
+        run: |
+          echo "触发方式: ${{ github.event_name }}"
+          echo "输入格式: ${{ github.event.inputs.output_format }}"
+
+      - name: 运行转换
+        run: node index.js
+        env:
+          INPUT_DIR: 'quantumultx'
+          # ✅ 给定默认值，避免 push 场景下为空
+          OUTPUT_FORMAT: 'loon,surge'
+
+      - name: 打包转换结果
+        run: |
+          if [ -d "loon" ] && [ "$(find loon -type f | wc -l)" -gt 0 ]; then
+            tar -czvf loon-scripts.tar.gz loon/
+          fi
+          if [ -d "surge" ] && [ "$(find surge -type f | wc -l)" -gt 0 ]; then
+            tar -czvf surge-scripts.tar.gz surge/
+          fi
+
+      - name: 提交并推送结果
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add -A
+          git commit -m "自动转换脚本" || echo "无变更"
+          git pull --no-rebase || echo "忽略拉取失败"
+          git push || echo "推送失败"
