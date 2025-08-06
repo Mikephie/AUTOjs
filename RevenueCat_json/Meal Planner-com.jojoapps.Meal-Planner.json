@@ -1,0 +1,66 @@
+{
+  "user_agent": "Meal%20Planner",
+  "bundle_id": "com.jojoapps.Meal-Planner",
+  "data": {
+    "mp_1299_noads": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_1299_noads"
+    },
+    "mp_1299_noads_discount": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_1299_noads_discount"
+    },
+    "mp_1599_1y": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_1599_1y"
+    },
+    "mp_1599_1y_discount": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_1599_1y_discount"
+    },
+    "mp_1599_1y_trial": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_1599_1y_trial"
+    },
+    "mp_1999_lifetime": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_1999_lifetime"
+    },
+    "mp_1999_lifetime_discount": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_1999_lifetime_discount"
+    },
+    "mp_199_1m": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_199_1m"
+    },
+    "mp_199_1m_discount": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_199_1m_discount"
+    },
+    "mp_199_1m_trial": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "mp_199_1m_trial"
+    }
+  }
+}
