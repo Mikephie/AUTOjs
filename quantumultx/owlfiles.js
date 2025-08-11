@@ -29,7 +29,7 @@ try {
   let obj = JSON.parse($response.body);
 
   obj.memberLevel = 3;
-  obj.expireAt = 3742762088000;
+  obj.expireAt = 2754094349450;
 
   $done({ body: JSON.stringify(obj) });
 } catch (err) {
