@@ -1,0 +1,11 @@
+#!name=✨ Owlfiles ✨
+#!desc=FTP
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/owlfiles.png
+
+[Script]
+http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, requires-body=true, timeout=60, tag=owlfiles
+
+[MITM]
+hostname = skyjos.com:58080
