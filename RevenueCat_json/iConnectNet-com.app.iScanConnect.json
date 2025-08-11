@@ -1,0 +1,44 @@
+{
+  "user_agent": "iConnectNet",
+  "bundle_id": "com.app.iScanConnect",
+  "data": {
+    "com.iScanConnect.yearly": {
+      "entitlements": [],
+      "product_identifier": "com.iScanConnect.yearly"
+    },
+    "iscanmonth": {
+      "entitlements": [
+        "Premium Plan"
+      ],
+      "product_identifier": "iscanmonth"
+    },
+    "lifetime": {
+      "entitlements": [
+        "Premium Plan"
+      ],
+      "product_identifier": "lifetime"
+    },
+    "lifetimefree": {
+      "entitlements": [
+        "Premium Plan"
+      ],
+      "product_identifier": "lifetimefree"
+    },
+    "tokens": {
+      "entitlements": [
+        "Premium Plan"
+      ],
+      "product_identifier": "tokens"
+    },
+    "yearly": {
+      "entitlements": [
+        "Premium Plan"
+      ],
+      "product_identifier": "yearly"
+    },
+    "yearly50": {
+      "entitlements": [],
+      "product_identifier": "yearly50"
+    }
+  }
+}
