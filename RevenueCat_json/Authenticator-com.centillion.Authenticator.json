@@ -1,0 +1,30 @@
+{
+  "user_agent": "Authenticator",
+  "bundle_id": "com.centillion.Authenticator",
+  "data": {
+    "auth_pro_monthly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "auth_pro_monthly"
+    },
+    "auth_pro_non_consumable": {
+      "entitlements": [
+        "lifetime"
+      ],
+      "product_identifier": "auth_pro_non_consumable"
+    },
+    "auth_pro_weekly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "auth_pro_weekly"
+    },
+    "auth_pro_yearly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "auth_pro_yearly"
+    }
+  }
+}
