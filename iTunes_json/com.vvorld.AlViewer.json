@@ -1,0 +1,12 @@
+{
+  "name": "Al Viewer",
+  "appId": "1505083223",
+  "bundleId": "com.vvorld.AlViewer",
+  "subscriptions": [
+    {
+      "id": 1,
+      "productId": "YearlySubscription1"
+    }
+  ],
+  "updatedAt": "2025-08-12T05:18:44.396Z"
+}
