@@ -1,0 +1,24 @@
+{
+  "user_agent": "AIHumanizer",
+  "bundle_id": "com.jasinapp.AIHumanizer",
+  "data": {
+    "com.jasaihumanizer.annual": {
+      "entitlements": [
+        "com.jasinapp.AIHumanizerPackage"
+      ],
+      "product_identifier": "com.jasaihumanizer.annual"
+    },
+    "com.jasaihumanizer.weekly": {
+      "entitlements": [
+        "com.jasinapp.AIHumanizerPackage"
+      ],
+      "product_identifier": "com.jasaihumanizer.weekly"
+    },
+    "com.jasinaihumanizer.lifetime": {
+      "entitlements": [
+        "com.jasinapp.AIHumanizerPackage"
+      ],
+      "product_identifier": "com.jasinaihumanizer.lifetime"
+    }
+  }
+}
