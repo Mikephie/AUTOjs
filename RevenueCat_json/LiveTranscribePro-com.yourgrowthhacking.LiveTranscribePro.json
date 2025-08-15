@@ -1,0 +1,74 @@
+{
+  "user_agent": "LiveTranscribePro",
+  "bundle_id": "com.yourgrowthhacking.LiveTranscribePro",
+  "data": {
+    "19.99_3_day_trial_yearly": {
+      "entitlements": [],
+      "product_identifier": "19.99_3_day_trial_yearly"
+    },
+    "69_9_ltp": {
+      "entitlements": [],
+      "product_identifier": "69_9_ltp"
+    },
+    "7_9_ltp": {
+      "entitlements": [],
+      "product_identifier": "7_9_ltp"
+    },
+    "Weekly3day": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "Weekly3day"
+    },
+    "Yearly_pro": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "Yearly_pro"
+    },
+    "com.ltp.lifetimepro": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "com.ltp.lifetimepro"
+    },
+    "lip_34_1y": {
+      "entitlements": [],
+      "product_identifier": "lip_34_1y"
+    },
+    "lip_4399_1y": {
+      "entitlements": [],
+      "product_identifier": "lip_4399_1y"
+    },
+    "lip_999_1m": {
+      "entitlements": [],
+      "product_identifier": "lip_999_1m"
+    },
+    "ltp_6_9_1m": {
+      "entitlements": [],
+      "product_identifier": "ltp_6_9_1m"
+    },
+    "ltp_basic_3.49": {
+      "entitlements": [],
+      "product_identifier": "ltp_basic_3.49"
+    },
+    "minutebundle1000": {
+      "entitlements": [],
+      "product_identifier": "minutebundle1000"
+    },
+    "minutebundle300": {
+      "entitlements": [],
+      "product_identifier": "minutebundle300"
+    },
+    "minutebundle500": {
+      "entitlements": [],
+      "product_identifier": "minutebundle500"
+    },
+    "yearly_offer": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "yearly_offer"
+    }
+  }
+}
