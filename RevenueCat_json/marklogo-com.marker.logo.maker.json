@@ -1,0 +1,37 @@
+{
+  "user_agent": "marklogo",
+  "bundle_id": "com.marker.logo.maker",
+  "data": {
+    "lifetime_lm": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "lifetime_lm"
+    },
+    "offer_weekly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "offer_weekly"
+    },
+    "offer_yearly": {
+      "entitlements": [
+        "offer",
+        "pro"
+      ],
+      "product_identifier": "offer_yearly"
+    },
+    "weekly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "weekly"
+    },
+    "yearly_id": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "yearly_id"
+    }
+  }
+}
