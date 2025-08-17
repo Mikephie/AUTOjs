@@ -1,0 +1,36 @@
+{
+  "user_agent": "Receipto",
+  "bundle_id": "com.appwrapp.receipto",
+  "data": {
+    "pro_monthly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "pro_monthly"
+    },
+    "pro_weekly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "pro_weekly"
+    },
+    "pro_yearly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "pro_yearly"
+    },
+    "pro_yearly_trial": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "pro_yearly_trial"
+    },
+    "receipto_pro_lifetime": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "receipto_pro_lifetime"
+    }
+  }
+}
