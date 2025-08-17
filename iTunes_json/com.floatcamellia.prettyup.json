@@ -6,35 +6,7 @@
     {
       "id": 1,
       "productId": "com.floatcamellia.prettyup.onetimepurchase"
-    },
-    {
-      "id": 2,
-      "productId": "com.floatcamellia.prettyup.freetrial yearlysubscription"
-    },
-    {
-      "id": 3,
-      "productId": "com.floatcamellia.prettyup.7daysfreetrialyearlyvip"
-    },
-    {
-      "id": 4,
-      "productId": "com.floatcamellia.prettyup.yearlysubscription"
-    },
-    {
-      "id": 5,
-      "productId": "com.floatcamellia.prettyup.newmonthlysubscription"
-    },
-    {
-      "id": 6,
-      "productId": "com.floatcamellia.prettyup.discountyearlysubscription"
-    },
-    {
-      "id": 7,
-      "productId": "com.floatcamellia.prettyup.restorationpurchase"
-    },
-    {
-      "id": 8,
-      "productId": "com.floatcamellia.prettyup.prettyupaicoinpurchase"
     }
   ],
-  "updatedAt": "2025-05-10T06:29:03.001Z"
+  "updatedAt": "2025-08-17T21:43:08.536Z"
 }
