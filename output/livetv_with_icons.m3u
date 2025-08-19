@@ -1,18 +1,18 @@
 #EXTM3U x-tvg-url=""
 
-#EXTINF:1 aktv-group="AKTV" tvg-id="aktv/animaxhk" provider-type="iptv" tvg-logo="https://img.mikephie.site/Animax.png" group-title="hongkong",Animax (HK)
+#EXTINF:1 aktv-group="AKTV" tvg-id="aktv/animaxhk" provider-type="iptv" tvg-logo="https://img.mikephie.site/animax.png" group-title="hongkong",Animax (HK)
 http://s1.an94tv.cfd/aktv/animaxhk/AKTV.m3u8
 
 #EXTINF:2 aktv-group="AKTV" tvg-id="aktv/axn" provider-type="iptv" group-title="movie",AXN
 http://s1.an94tv.cfd/aktv/axn/AKTV.m3u8
 
-#EXTINF:3 aktv-group="AKTV" tvg-id="aktv/channel5hd" provider-type="iptv" group-title="mediacorp",Channel 5 HD
+#EXTINF:3 aktv-group="AKTV" tvg-id="aktv/channel5hd" provider-type="iptv" tvg-logo="https://img.mikephie.site/channel5.png" group-title="mediacorp",Channel 5 HD
 http://s1.an94tv.cfd/aktv/channel5hd/AKTV.m3u8
 
-#EXTINF:4 aktv-group="AKTV" tvg-id="aktv/channel8hd" provider-type="iptv" group-title="mediacorp",Channel 8 HD
+#EXTINF:4 aktv-group="AKTV" tvg-id="aktv/channel8hd" provider-type="iptv" tvg-logo="https://img.mikephie.site/channel8.png" group-title="mediacorp",Channel 8 HD
 http://s1.an94tv.cfd/aktv/channel8hd/AKTV.m3u8
 
-#EXTINF:5 aktv-group="AKTV" tvg-id="aktv/channeluhd" provider-type="iptv" group-title="mediacorp",Channel U HD
+#EXTINF:5 aktv-group="AKTV" tvg-id="aktv/channeluhd" provider-type="iptv" tvg-logo="https://img.mikephie.site/channelu.png" group-title="mediacorp",Channel U HD
 http://s1.an94tv.cfd/aktv/channeluhd/AKTV.m3u8
 
 #EXTINF:6 aktv-group="AKTV" tvg-id="aktv/lovenaturehd" provider-type="iptv" group-title="mix",Love Nature HD
@@ -72,7 +72,7 @@ http://s1.an94tv.cfd/aktv/CH-5/AKTV.m3u8
 #EXTINF:24 aktv-group="AKTV" tvg-id="aktv/CH-6" provider-type="iptv" tvg-logo="https://img.mikephie.site/%E9%BB%83%E9%87%91%E7%BF%A1%E7%BF%A0%E5%8F%B0.png" group-title="hongkong",黃金翡翠台
 http://s1.an94tv.cfd/aktv/CH-6/AKTV.m3u8
 
-#EXTINF:25 aktv-group="AKTV3" tvg-id="aktv3/cna" tvg-logo="https://img.mikephie.site/CNA.png" provider="AKTV3" provider-logo="" provider-type="iptv" group-title="mediacorp",CNA
+#EXTINF:25 aktv-group="AKTV3" tvg-id="aktv3/cna" tvg-logo="https://img.mikephie.site/cna.png" provider="AKTV3" provider-logo="" provider-type="iptv" group-title="mediacorp",CNA
 http://s1.an94tv.cfd/aktv3/cna/AKTV.m3u8
 
 #EXTINF:26 aktv-group="AKTV3" tvg-id="aktv3/CH-0" tvg-logo="" provider="AKTV3" provider-logo="" provider-type="iptv" group-title="mix",朝鲜恩情台
@@ -84,7 +84,7 @@ http://s1.an94tv.cfd/aktvjp/japannews24hlive/AKTV.m3u8
 #EXTINF:28 aktv-group="AKTV-JP" tvg-id="aktvjp/ntv" tvg-logo="" provider="AKTV-JP" provider-logo="" provider-type="iptv" group-title="mix",日テレNEWS LIVE
 http://s1.an94tv.cfd/aktvjp/ntv/AKTV.m3u8
 
-#EXTINF:29 aktv-group="astro" tvg-id="astro/8tv" tvg-logo="https://img.mikephie.site/8TV.png" provider="astro" provider-logo="" provider-type="iptv" group-title="mix",8TV
+#EXTINF:29 aktv-group="astro" tvg-id="astro/8tv" tvg-logo="https://img.mikephie.site/8tv.png" provider="astro" provider-logo="" provider-type="iptv" group-title="mix",8TV
 http://s1.an94tv.cfd/astro/8tv/AKTV.m3u8
 
 #EXTINF:30 aktv-group="astro" tvg-id="astro/eurosport1" tvg-logo="https://img.mikephie.site/EuroSport1.png" provider="astro" provider-logo="" provider-type="iptv" group-title="sport",EuroSport 1
@@ -93,7 +93,7 @@ http://s1.an94tv.cfd/astro/eurosport1/AKTV.m3u8
 #EXTINF:31 aktv-group="astro" tvg-id="astro/eurosport2" tvg-logo="https://img.mikephie.site/EuroSport2.png" provider="astro" provider-logo="" provider-type="iptv" group-title="sport",EuroSport 2
 http://s1.an94tv.cfd/astro/eurosport2/AKTV.m3u8
 
-#EXTINF:32 aktv-group="astro" tvg-id="astro/nbatv" tvg-logo="https://img.mikephie.site/NBATV.png" provider="astro" provider-logo="" provider-type="iptv" group-title="sport",NBA TV
+#EXTINF:32 aktv-group="astro" tvg-id="astro/nbatv" tvg-logo="https://img.mikephie.site/nbatv.png" provider="astro" provider-logo="" provider-type="iptv" group-title="sport",NBA TV
 http://s1.an94tv.cfd/astro/nbatv/AKTV.m3u8
 
 #EXTINF:33 aktv-group="astro" tvg-id="astro/tntsports1" tvg-logo="https://img.mikephie.site/TNTSPORTS1.png" provider="astro" provider-logo="" provider-type="iptv" group-title="sport",TNT SPORTS 1
