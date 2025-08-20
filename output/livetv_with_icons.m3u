@@ -80,15 +80,15 @@ http://s1.an94tv.cfd/aktv/CH-7/AKTV.m3u8
 #EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-17/AKTV.m3u8
 
-#EXTINF:21 tvg-id="aktv/CH-3" group-title="hongkong" tvg-group="hongkong",鳳凰衛視中文台
+#EXTINF:21 tvg-id="aktv/CH-3" tvg-logo="https://img.mikephie.site/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E4%B8%AD%E6%96%87%E5%8F%B0.png" group-title="hongkong" tvg-group="hongkong",鳳凰衛視中文台
 #EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-3/AKTV.m3u8
 
-#EXTINF:22 tvg-id="aktv/CH-4" group-title="hongkong" tvg-group="hongkong",鳳凰衛視資訊台
+#EXTINF:22 tvg-id="aktv/CH-4" tvg-logo="https://img.mikephie.site/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E8%B3%87%E8%A8%8A%E5%8F%B0.png" group-title="hongkong" tvg-group="hongkong",鳳凰衛視資訊台
 #EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-4/AKTV.m3u8
 
-#EXTINF:23 tvg-id="aktv/CH-5" group-title="hongkong" tvg-group="hongkong",鳳凰衛視香港台
+#EXTINF:23 tvg-id="aktv/CH-5" tvg-logo="https://img.mikephie.site/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E9%A6%99%E6%B8%AF%E5%8F%B0.png" group-title="hongkong" tvg-group="hongkong",鳳凰衛視香港台
 #EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-5/AKTV.m3u8
 
