@@ -1,0 +1,32 @@
+{
+  "user_agent": "Text%20Workflow",
+  "bundle_id": "com.gtrigonakis.TextWorkflowIOS",
+  "data": {
+    "com.gtrigonakis.TextWorkflowIOS.premium": {
+      "entitlements": [],
+      "product_identifier": "com.gtrigonakis.TextWorkflowIOS.premium"
+    },
+    "com.gtrigonakis.TextWorkflowIOS.premiumIAP": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "com.gtrigonakis.TextWorkflowIOS.premiumIAP"
+    },
+    "com.gtrigonakis.TextWorkflowIOS.pro": {
+      "entitlements": [],
+      "product_identifier": "com.gtrigonakis.TextWorkflowIOS.pro"
+    },
+    "tw_599_1y": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "tw_599_1y"
+    },
+    "tw_99_1m": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "tw_99_1m"
+    }
+  }
+}
