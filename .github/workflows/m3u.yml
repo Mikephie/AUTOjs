@@ -2,13 +2,17 @@ name: Build M3U (valid-only with icons)
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
-  workflow_dispatch:
+    - cron: "*/30 * * * *"   # 每 30 分钟
+  workflow_dispatch:          # 手动触发
+
+concurrency:
+  group: build-m3u
+  cancel-in-progress: true    # 上一次还在跑就取消
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 15       # ✅ 整个 Job 最多 15 分钟
 
     steps:
       - name: Checkout repository
@@ -20,8 +24,9 @@ jobs:
           node-version: 20
 
       - name: Build M3U (valid-only with icons)
+        timeout-minutes: 5     # ✅ 这一步最多 5 分钟
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}   # 如脚本有用到就留着
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}   # 若脚本用到就保留
           M3U_FILTER: strict                  # strict / loose / off
-          TEST_TOTAL_LIMIT: "50"              # 0 = 全量
+          TEST_TOTAL_LIMIT: "50"              # 0 = 全量；你也可在脚本里写死 50
         run: node m3u.js
