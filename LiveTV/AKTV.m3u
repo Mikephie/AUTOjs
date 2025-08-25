@@ -1,37 +1,196 @@
 #EXTM3U
-# Generated-At: 2025-08-25T09:23:09.025Z (epoch=1756113789025)
-# Build-Tag: v1756113789025
-# Stats: total=20, kept=20, filtered=0
-# Mode: filter=off, test_limit=10
-#EXTINF:1 tvg-id="aktv/animaxhk" tvg-logo="https://img.mikephie.site/TV_logo/animax.png?v=1756113789025" group-title="hongkong" tvg-group="hongkong",Animax (HK)
+# Generated-At: 2025-08-25T09:47:59.823Z (epoch=1756115279823)
+# Build-Tag: v1756115279823
+
+#EXTINF:1 tvg-id="aktv/animaxhk" group-title="hongkong" tvg-group="hongkong",Animax (HK)
 #EXTGRP:hongkong
-#EXTINF:2 tvg-id="aktv/axn" tvg-logo="https://img.mikephie.site/TV_logo/axn.png?v=1756113789025" group-title="movie" tvg-group="movie",AXN
+http://s1.an94tv.cfd/aktv/animaxhk/AKTV.m3u8
+
+#EXTINF:2 tvg-id="aktv/axn" group-title="movie" tvg-group="movie",AXN
 #EXTGRP:movie
-#EXTINF:3 tvg-id="aktv/channel5hd" tvg-logo="https://img.mikephie.site/TV_logo/channel5.png?v=1756113789025" group-title="mediacorp" tvg-group="mediacorp",Channel 5 HD
+http://s1.an94tv.cfd/aktv/axn/AKTV.m3u8
+
+#EXTINF:3 tvg-id="aktv/channel5hd" group-title="mediacorp" tvg-group="mediacorp",Channel 5 HD
 #EXTGRP:mediacorp
-#EXTINF:4 tvg-id="aktv/channel8hd" tvg-logo="https://img.mikephie.site/TV_logo/channel8.png?v=1756113789025" group-title="mediacorp" tvg-group="mediacorp",Channel 8 HD
+http://s1.an94tv.cfd/aktv/channel5hd/AKTV.m3u8
+
+#EXTINF:4 tvg-id="aktv/channel8hd" group-title="mediacorp" tvg-group="mediacorp",Channel 8 HD
 #EXTGRP:mediacorp
-#EXTINF:5 tvg-id="aktv/channeluhd" tvg-logo="https://img.mikephie.site/not-found.png?v=1756113789025" group-title="mediacorp" tvg-group="mediacorp",Channel U HD
+http://s1.an94tv.cfd/aktv/channel8hd/AKTV.m3u8
+
+#EXTINF:5 tvg-id="aktv/channeluhd" group-title="mediacorp" tvg-group="mediacorp",Channel U HD
 #EXTGRP:mediacorp
+http://s1.an94tv.cfd/aktv/channeluhd/AKTV.m3u8
+
 #EXTINF:6 tvg-id="aktv/lovenaturehd" group-title="mix" tvg-group="mix",Love Nature HD
 #EXTGRP:mix
-#EXTINF:7 tvg-id="aktv/popc" tvg-logo="https://img.mikephie.site/not-found.png?v=1756113789025" group-title="mix" tvg-group="mix",PopC
+http://s1.an94tv.cfd/aktv/lovenaturehd/AKTV.m3u8
+
+#EXTINF:7 tvg-id="aktv/popc" group-title="mix" tvg-group="mix",PopC
 #EXTGRP:mix
+http://s1.an94tv.cfd/aktv/popc/AKTV.m3u8
+
 #EXTINF:8 tvg-id="aktv/rockaction" group-title="mix" tvg-group="mix",ROCK Action
 #EXTGRP:mix
-#EXTINF:9 tvg-id="aktv/tvbplus" tvg-logo="https://img.mikephie.site/TV_logo/tvbplus.png?v=1756113789025" group-title="hongkong" tvg-group="hongkong",TVB Plus
+http://s1.an94tv.cfd/aktv/rockaction/AKTV.m3u8
+
+#EXTINF:9 tvg-id="aktv/tvbplus" group-title="hongkong" tvg-group="hongkong",TVB Plus
 #EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/tvbplus/AKTV.m3u8
+
 #EXTINF:10 tvg-id="aktv/tvn" group-title="mix" tvg-group="mix",tvN
 #EXTGRP:mix
-#EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV1.png" group-title="cctv" tvg-group="cctv",2025-08-25 06:18:42
-#EXTGRP:cctv
-#EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV1.png" group-title="cctv" tvg-group="cctv",CCTV-1
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
+http://s1.an94tv.cfd/aktv/tvn/AKTV.m3u8
+
+#EXTINF:11 tvg-id="aktv/1080" group-title="movie" tvg-group="movie",天映經典(1080)
+#EXTGRP:movie
+http://s1.an94tv.cfd/aktv/1080/AKTV.m3u8
+
+#EXTINF:12 tvg-id="aktv/CH-19" group-title="hongkong" tvg-group="hongkong",明珠剧集台(北美)
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-19/AKTV.m3u8
+
+#EXTINF:13 tvg-id="aktv/CH-2" group-title="hongkong" tvg-group="hongkong",明珠台
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-2/AKTV.m3u8
+
+#EXTINF:14 tvg-id="aktv/CH-1" group-title="hongkong" tvg-group="hongkong",無線新聞台
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-1/AKTV.m3u8
+
+#EXTINF:15 tvg-id="aktv/hk" group-title="movie" tvg-group="movie",美亞電影台(HK)
+#EXTGRP:movie
+http://s1.an94tv.cfd/aktv/hk/AKTV.m3u8
+
+#EXTINF:16 tvg-id="aktv/CH-8" group-title="hongkong" tvg-group="hongkong",翡翠一台(北美)
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-8/AKTV.m3u8
+
+#EXTINF:17 tvg-id="aktv/CH-18" group-title="hongkong" tvg-group="hongkong",翡翠剧集台(北美)
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-18/AKTV.m3u8
+
+#EXTINF:18 tvg-id="aktv/CH-0" group-title="hongkong" tvg-group="hongkong",翡翠台
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-0/AKTV.m3u8
+
+#EXTINF:19 tvg-id="aktv/CH-7" group-title="hongkong" tvg-group="hongkong",翡翠娛樂台(北美)
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-7/AKTV.m3u8
+
+#EXTINF:20 tvg-id="aktv/CH-17" group-title="hongkong" tvg-group="hongkong",翡翠综合台(北美)
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-17/AKTV.m3u8
+
+#EXTINF:21 tvg-id="aktv/CH-3" group-title="hongkong" tvg-group="hongkong",鳳凰衛視中文台
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-3/AKTV.m3u8
+
+#EXTINF:22 tvg-id="aktv/CH-4" group-title="hongkong" tvg-group="hongkong",鳳凰衛視資訊台
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-4/AKTV.m3u8
+
+#EXTINF:23 tvg-id="aktv/CH-5" group-title="hongkong" tvg-group="hongkong",鳳凰衛視香港台
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-5/AKTV.m3u8
+
+#EXTINF:24 tvg-id="aktv/CH-6" group-title="hongkong" tvg-group="hongkong",黃金翡翠台
+#EXTGRP:hongkong
+http://s1.an94tv.cfd/aktv/CH-6/AKTV.m3u8
+
+#EXTINF:25 tvg-id="aktv3/cna" tvg-logo="" group-title="mediacorp" tvg-group="mediacorp",CNA
+#EXTGRP:mediacorp
+http://s1.an94tv.cfd/aktv3/cna/AKTV.m3u8
+
+#EXTINF:26 tvg-id="aktv3/CH-0" tvg-logo="" group-title="mix" tvg-group="mix",朝鲜恩情台
+#EXTGRP:mix
+http://s1.an94tv.cfd/aktv3/CH-0/AKTV.m3u8
+
+#EXTINF:27 tvg-id="aktvjp/japannews24hlive" tvg-logo="" group-title="mix" tvg-group="mix",Japan News 24H LIVE
+#EXTGRP:mix
+http://s1.an94tv.cfd/aktvjp/japannews24hlive/AKTV.m3u8
+
+#EXTINF:28 tvg-id="aktvjp/ntv" tvg-logo="" group-title="mix" tvg-group="mix",日テレNEWS LIVE
+#EXTGRP:mix
+http://s1.an94tv.cfd/aktvjp/ntv/AKTV.m3u8
+
+#EXTINF:29 tvg-id="astro/8tv" tvg-logo="" group-title="mix" tvg-group="mix",8TV
+#EXTGRP:mix
+http://s1.an94tv.cfd/astro/8tv/AKTV.m3u8
+
+#EXTINF:30 tvg-id="astro/eurosport1" tvg-logo="" group-title="sport" tvg-group="sport",EuroSport 1
+#EXTGRP:sport
+http://s1.an94tv.cfd/astro/eurosport1/AKTV.m3u8
+
+#EXTINF:31 tvg-id="astro/eurosport2" tvg-logo="" group-title="sport" tvg-group="sport",EuroSport 2
+#EXTGRP:sport
+http://s1.an94tv.cfd/astro/eurosport2/AKTV.m3u8
+
+#EXTINF:32 tvg-id="astro/nbatv" tvg-logo="" group-title="sport" tvg-group="sport",NBA TV
+#EXTGRP:sport
+http://s1.an94tv.cfd/astro/nbatv/AKTV.m3u8
+
+#EXTINF:33 tvg-id="astro/tntsports1" tvg-logo="" group-title="sport" tvg-group="sport",TNT SPORTS 1
+#EXTGRP:sport
+http://s1.an94tv.cfd/astro/tntsports1/AKTV.m3u8
+
+#EXTINF:34 tvg-id="astro/tntsports2" tvg-logo="" group-title="sport" tvg-group="sport",TNT SPORTS 2
+#EXTGRP:sport
+http://s1.an94tv.cfd/astro/tntsports2/AKTV.m3u8
+
+#EXTINF:35 tvg-id="astro/tntsports3" tvg-logo="" group-title="sport" tvg-group="sport",TNT SPORTS 3
+#EXTGRP:sport
+http://s1.an94tv.cfd/astro/tntsports3/AKTV.m3u8
+
+#EXTINF:36 tvg-id="astro/unifisports1" tvg-logo="" group-title="sport" tvg-group="sport",unifi Sports 1
+#EXTGRP:sport
+http://s1.an94tv.cfd/astro/unifisports1/AKTV.m3u8
+
+#EXTINF:37 tvg-id="taiwan/cinemaworld" tvg-logo="" group-title="movie" tvg-group="movie",CinemaWorld
+#EXTGRP:movie
+http://s1.an94tv.cfd/taiwan/cinemaworld/AKTV.m3u8
+
+#EXTINF:38 tvg-id="taiwan/hits" tvg-logo="" group-title="mix" tvg-group="mix",HITS
+#EXTGRP:mix
+http://s1.an94tv.cfd/taiwan/hits/AKTV.m3u8
+
+#EXTINF:39 tvg-id="taiwan/magellantv" tvg-logo="" group-title="mix" tvg-group="mix",MagellanTV頻道
+#EXTGRP:mix
+http://s1.an94tv.cfd/taiwan/magellantv/AKTV.m3u8
+
+#EXTINF:40 tvg-id="zhongtian/tvbs55" tvg-logo="" group-title="taiwan" tvg-group="taiwan",Tvbs 55頻道
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/tvbs55/AKTV.m3u8
+
+#EXTINF:41 tvg-id="zhongtian/tvbs56" tvg-logo="" group-title="taiwan" tvg-group="taiwan",Tvbs 56頻道
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/tvbs56/AKTV.m3u8
+
+#EXTINF:42 tvg-id="zhongtian/live" tvg-logo="" group-title="taiwan" tvg-group="taiwan",三立LIVE
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/live/AKTV.m3u8
+
+#EXTINF:43 tvg-id="zhongtian/CH-0" tvg-logo="" group-title="taiwan" tvg-group="taiwan",中天新闻台
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/CH-0/AKTV.m3u8
+
+#EXTINF:44 tvg-id="zhongtian/CH-3" tvg-logo="" group-title="taiwan" tvg-group="taiwan",中視新聞
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/CH-3/AKTV.m3u8
+
+#EXTINF:45 tvg-id="zhongtian/CH-4" tvg-logo="" group-title="taiwan" tvg-group="taiwan",台視新聞
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/CH-4/AKTV.m3u8
+
+#EXTINF:46 tvg-id="zhongtian/CH-2" tvg-logo="" group-title="taiwan" tvg-group="taiwan",寰宇新聞台
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/CH-2/AKTV.m3u8
+
+#EXTINF:47 tvg-id="zhongtian/CH-1" tvg-logo="" group-title="taiwan" tvg-group="taiwan",東森新聞
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/CH-1/AKTV.m3u8
+
+#EXTINF:48 tvg-id="zhongtian/CH-5" tvg-logo="" group-title="taiwan" tvg-group="taiwan",民視新聞
+#EXTGRP:taiwan
+http://s1.an94tv.cfd/zhongtian/CH-5/AKTV.m3u8
+
