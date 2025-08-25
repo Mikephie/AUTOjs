@@ -1,7 +1,7 @@
 /**
  * m3u.js — 生成可播放 M3U，按“频道显示名”匹配图标并上传到 GitHub
- * 图标优先级：NAME_ALIAS(规范化) → icons.json → 真实存在的 TV_logo(小写/原样都探测) → not-found
- * 流地址：strict 探测，仅保留可播
+ * 图标优先：NAME_ALIAS(规范化) → icons.json(多键命中) → 真实存在的 TV_logo(小写/原样) → not-found
+ * 直链：strict 探测，仅保留可播
  * 性能：凑够 100 条即停；每源最多扫描 500 条
  * 输出：dist/playlist.m3u，并上传至 Mikephie/AUTOjs@main: LiveTV/AKTV.m3u
  */
@@ -25,6 +25,12 @@ const M3U_URLS = [
 const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
 const ICON_BASE      = "https://img.mikephie.site/TV_logo";
 const NOT_FOUND_ICON = "https://img.mikephie.site/not-found.png";
+
+// 仅对白名单域做 200/206 校验 & 加版本号防缓存
+const ICON_HOST_WHITELIST = ["img.mikephie.site"];
+const BUILD_EPOCH = Date.now();
+const BUILD_ISO   = new Date(BUILD_EPOCH).toISOString();
+const BUILD_VER   = String(BUILD_EPOCH);
 
 // 手动别名（“显示名” → 图标名，不带扩展名）；键与来名都会做规范化后比对
 const NAME_ALIAS = {
@@ -114,7 +120,78 @@ async function putFile(repo, branch, filePath, contentStr, message = "chore: upd
   });
 }
 
-/* ===== icons.json 载入 ===== */
+/* ===== 图标键构建/校验工具 ===== */
+const isZh = s => /[\u4e00-\u9fa5]/.test(s||"");
+
+// 英文键：去括号/空白/连字符，去清晰度后缀，转大写
+function englishKey(s){
+  s = (s||"").trim(); if (!s || isZh(s)) return "";
+  s = s.replace(/\([^)]*\)/g, " ")
+       .replace(/\b(HD|FHD|UHD|4K)\b/ig, " ")
+       .replace(/[\s\-_\.]+/g, "");
+  return s.toUpperCase();
+}
+
+// 中文键：去括号内容（保留简繁）
+function chineseKey(s){
+  s = (s||"").trim();
+  if (!isZh(s)) return "";
+  return s.replace(/[（(].*?[)）]/g, "").trim();
+}
+
+// 常用简繁对照
+const ZH_MAP = [
+  ["鳳凰","凤凰"],["衛視","卫视"],["資訊","资讯"],["無線","无线"],["綜合","综合"],["娛樂","娱乐"],
+  ["頻道","频道"],["電影","电影"],["臺","台"],["東森","东森"],["華視","华视"],["公視","公视"],["龍華","龙华"]
+];
+
+// 为一个中文名生成简繁互通变体（并去括号）
+function addZhVariants(set, base){
+  set.add(base);
+  set.add(base.replace(/[（(].*?[)）]/g,""));
+  for (let n=0; n<2; n++) {
+    for (const [trad,simp] of ZH_MAP) {
+      for (const v of Array.from(set)) {
+        set.add(v.replace(new RegExp(trad,"g"), simp));
+        set.add(v.replace(new RegExp(simp,"g"), trad));
+      }
+    }
+  }
+  return set;
+}
+
+// 自家域名加 ?v= 构建号（防缓存）
+function addCacheBuster(u, ver = BUILD_VER){
+  try{
+    const url = new URL(u);
+    if (!ICON_HOST_WHITELIST.includes(url.host.toLowerCase())) return u;
+    const hasV = [...url.searchParams.keys()].some(k => k.toLowerCase() === "v");
+    if (!hasV) url.searchParams.append("v", ver);
+    else url.searchParams.set("v", ver);
+    return url.toString();
+  }catch{ return u; }
+}
+
+// 只对白名单域做 200/206 校验（其余域名直接放行）
+function getHost(u){ try { return new URL(u).host.toLowerCase(); } catch { return ""; } }
+async function probe200(url){
+  try{
+    const host = getHost(url);
+    if (!ICON_HOST_WHITELIST.includes(host)) return true;
+    const { r } = await httpGet(url, { "Range": "bytes=0-0" }, 1500);
+    return r && (r.status === 200 || r.status === 206);
+  }catch{ return false; }
+}
+
+// 兼容不同编码形式（少见但有时有用）
+function encodeVariants(u){
+  const arr = [u];
+  try { const dec = decodeURIComponent(u); if (dec !== u) arr.push(dec); } catch {}
+  try { const enc = encodeURI(u);         if (enc !== u) arr.push(enc); } catch {}
+  return [...new Set(arr)];
+}
+
+/* ===== icons.json 载入（多键映射） ===== */
 function normName(s){
   return (s||"")
     .normalize("NFKC")
@@ -125,19 +202,33 @@ function normName(s){
     .replace(/[^\w\u4e00-\u9fa5]/g,"")   // 仅保留中英数与中文
     .replace(/(fhd|uhd|hd|sd|4k)$/,"");  // 去常见清晰度后缀
 }
+function buildIconMap(json){
+  const list = Array.isArray(json?.icons) ? json.icons : (Array.isArray(json) ? json : []);
+  const map = new Map();
+  for (const it of list){
+    const name = (it?.name || "").trim();
+    const url  = (it?.url  || "").trim();
+    if (!name || !url) continue;
+
+    const base = name.replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i, "").trim();
+
+    const keys = new Set();
+    keys.add(base);                                 // 原样
+    if (isZh(base)) addZhVariants(keys, base);      // 中文变体
+    const up = base.toUpperCase(); if (up) keys.add(up);     // 英文大写键
+    const en = englishKey(base);   if (en) keys.add(en);     // 英文规整键
+    const nn = normName(base);     if (nn) keys.add(nn);     // 规范化键
+
+    for (const k of keys) map.set(k, url);
+  }
+  return map;
+}
 async function loadIcons(){
   try{
     const { d } = await httpGet(ICONS_JSON_URL, {}, 8000);
     if (!d) { console.log("# icons loaded = 0"); return new Map(); }
     let parsed = JSON.parse(d);
-    const arr = Array.isArray(parsed?.icons) ? parsed.icons : (Array.isArray(parsed) ? parsed : []);
-    const map = new Map();
-    for (const it of arr){
-      const name=(it?.name||"").trim();
-      const url =(it?.url ||"").trim();
-      if (!name || !url) continue;
-      map.set(normName(name), url);
-    }
+    const map = buildIconMap(parsed);
     console.log(`# icons loaded = ${map.size}`);
     return map;
   }catch(e){
@@ -146,15 +237,7 @@ async function loadIcons(){
   }
 }
 
-/* ===== 图标匹配 ===== */
-async function probeIcon(url, timeoutMs = 1500){
-  try{
-    const { r } = await httpGet(url, {}, timeoutMs);
-    return !!(r && [200,301,302].includes(r.status));
-  }catch{return false;}
-}
-
-// 生成宽松候选：去括号/空格/清晰度/中文“台|频道”，并内置常见英文规则
+/* ===== 频道名 → TV_logo 候选名（含常见英文规则） ===== */
 function makeNameCandidates(raw){
   const s0 = (raw||"").trim();
   if (!s0) return [];
@@ -178,10 +261,10 @@ function makeNameCandidates(raw){
   return Array.from(set).filter(Boolean);
 }
 
-// 只用：别名(规范化) → icons.json → 真实存在的 TV_logo(小写/原样) → not-found
+/* ===== 图标选择：别名(规范化) → icons.json(多键命中) → 存在的 TV_logo → not-found ===== */
 async function pickIconByDisplayName(iconMap, dispName){
   const raw = (dispName||"").trim();
-  if (!raw) return NOT_FOUND_ICON;
+  if (!raw) return addCacheBuster(NOT_FOUND_ICON);
 
   // 1) 别名（对“键”和“来名”都做规范化）
   const aliasNormMap = new Map(
@@ -190,43 +273,58 @@ async function pickIconByDisplayName(iconMap, dispName){
   const alias = aliasNormMap.get(normName(raw));
   if (alias){
     const aliasKey = normName(alias);
-    if (iconMap.has(aliasKey)) return iconMap.get(aliasKey);
-
-    // TV_logo 里存在才用（小写/原样都探测）
+    // icons.json
+    if (iconMap.has(aliasKey)) {
+      const u0 = iconMap.get(aliasKey);
+      for (const v0 of encodeVariants(u0)) {
+        const v = addCacheBuster(v0);
+        if (await probe200(v)) return v;
+      }
+    }
+    // TV_logo（小写/原样）
     const lower = `${ICON_BASE}/${alias.toLowerCase()}.png`;
     const camel = `${ICON_BASE}/${alias}.png`;
-    if (await probeIcon(lower)) return lower;
-    if (await probeIcon(camel)) return camel;
-    return NOT_FOUND_ICON;
+    if (await probe200(lower)) return addCacheBuster(lower);
+    if (await probe200(camel)) return addCacheBuster(camel);
+    return addCacheBuster(NOT_FOUND_ICON);
   }
 
-  // 2) icons.json：按规范化键/常见变体尝试
+  // 2) icons.json：更“宽”的键空间命中（英文规整 & 中文键 & 规范化变体）
   const k0 = normName(raw);
-  const iconsJsonCandidates = new Set([
+  const jsonKeys = new Set([
     k0,
+    englishKey(raw),
+    chineseKey(raw),
+    // 常见变体
     k0.replace(/channel(\d+)$/,"channel$1"),
     k0.replace(/lovenature.*$/,"lovenature"),
     k0.replace(/tvn.*$/,"tvn"),
     k0.replace(/plus$/,"plus"),
     k0.replace(/action$/,"action"),
   ]);
-  for (const k of iconsJsonCandidates){
-    if (k && iconMap.has(k)) return iconMap.get(k);
+  for (const kk of jsonKeys){
+    if (kk && iconMap.has(kk)) {
+      const u0 = iconMap.get(kk);
+      for (const v0 of encodeVariants(u0)) {
+        const v = addCacheBuster(v0);
+        if (await probe200(v)) return v;
+      }
+    }
   }
 
   // 3) 真实存在的 TV_logo：同一候选名尝试 lowercase 与原样大小写
   for (const base of makeNameCandidates(raw)){
     const lower = `${ICON_BASE}/${base.toLowerCase()}.png`;
     const camel = `${ICON_BASE}/${base}.png`;
-    if (await probeIcon(lower)) return lower;
-    if (await probeIcon(camel)) return camel;
+    if (await probe200(lower)) return addCacheBuster(lower);
+    if (await probe200(camel)) return addCacheBuster(camel);
   }
 
   // 4) 仍无 → not-found
-  return NOT_FOUND_ICON;
+  return addCacheBuster(NOT_FOUND_ICON);
 }
 
-/* ===== 工具函数 ===== */
+/* ===== M3U 工具函数 ===== */
 function findNextUrl(lines, i){
   let j = i+1;
   while (j < lines.length && !lines[j].trim()) j++;
@@ -289,7 +387,7 @@ function clipByPairCount(text, maxPairs){
   return out.join("\n");
 }
 
-/* ===== 探测（只保留可用直链） ===== */
+/* ===== 直链探测（只保留可用） ===== */
 async function quickProbe(url, mode="strict"){
   if (!url) return false;
   if (mode === "off") return true;
@@ -305,7 +403,7 @@ async function quickProbe(url, mode="strict"){
   } catch { return false; }
 }
 
-/* ===== 注入（图标按显示名，保留分组；空/占位 logo 也补） ===== */
+/* ===== 注入：按显示名补图标（空/占位也补），保留分组 ===== */
 async function injectForM3U(m3uText, iconMap, idx=0){
   if (globalStop) return "";
   const lines = m3uText.split(/\r?\n/);
@@ -396,7 +494,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
 
     const header =
       "#EXTM3U\n" +
-      `# Generated-At: ${new Date().toISOString()} (limit=${TEST_TOTAL_LIMIT})\n` +
+      `# Generated-At: ${BUILD_ISO} (limit=${TEST_TOTAL_LIMIT})\n` +
       `# Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}\n`;
 
     const finalText = header + merged.replace(/^#EXTM3U\s*/,'') + "\n";
