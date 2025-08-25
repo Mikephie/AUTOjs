@@ -1,9 +1,10 @@
 /**
- * m3u.js — 固定输出 50 条有效直链 + icons.json 图标 + 保留原有分组
+ * m3u.js — 有效直链 + icons.json 图标 + 保留原分组
+ * 性能优化：全局早停（凑够50条立刻停）、每源最多扫描300条、更短探测超时
  * - 不走 Worker，不加 UA/Referer
  * - 过滤模式 = strict（只留探测可用的直链）
- * - 自动补图标（来自 icons.json）
- * - 全局限制输出 50 条
+ * - 自动补图标（来自 icons.json，只有当原条目未提供时）
+ * - 全局限制输出 50 条（去重后不会超过 50）
  */
 
 const IS_NODE  = typeof process !== "undefined" && process.release?.name === "node";
@@ -19,16 +20,20 @@ const M3U_URLS = [
 ];
 const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
 
-// 固定参数
-const FILTER_MODE       = "strict";   // strict / loose / off
-const TEST_TOTAL_LIMIT  = 50;         // ✅ 固定输出 50 条
+// 固定策略
+const FILTER_MODE              = "strict";  // strict / loose / off
+const TEST_TOTAL_LIMIT         = 50;        // ✅ 全局仅输出 50 条
+const HARD_TARGET              = 50;        // ✅ 凑够 50 条全局早停
+const PER_SOURCE_SCAN_LIMIT    = 300;       // ✅ 每个源最多尝试 300 条（够50就停）
 
-const FETCH_TIMEOUT_MS        = 6000;
-const PROBE_TIMEOUT_MS_STRICT = 2200;
-const PROBE_TIMEOUT_MS_LOOSE  = 1500;
+// 超时收紧（为提速）
+const FETCH_TIMEOUT_MS         = 6000;
+const PROBE_TIMEOUT_MS_STRICT  = 1200;
+const PROBE_TIMEOUT_MS_LOOSE   = 900;
 
-/* ===== 统计 ===== */
+/* ===== 统计/早停 ===== */
 let totalChannels = 0, keptChannels = 0, filteredChannels = 0;
+let globalStop = false;
 
 /* ===== HTTP ===== */
 async function httpGet(url, headers = {}, timeoutMs = FETCH_TIMEOUT_MS) {
@@ -58,7 +63,8 @@ async function loadIcons(){
       if (!name || !url) continue;
       const base = name.replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,"").trim();
       const keys = new Set([
-        name, name.toLowerCase(), base, base.toLowerCase(),
+        name, name.toLowerCase(), name.toUpperCase(),
+        base, base.toLowerCase(), base.toUpperCase(),
         base.replace(/\s+/g,"").toLowerCase()
       ]);
       for (const k of keys) map.set(k, url);
@@ -78,7 +84,7 @@ function pickIcon(iconMap, { tvgId, tvgName, dispName }){
     const s = (raw||"").trim();
     if (!s) continue;
     const keys = [
-      s, s.toLowerCase(),
+      s, s.toLowerCase(), s.toUpperCase(),
       s.replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,""),
       s.replace(/\s+/g,"").toLowerCase()
     ];
@@ -112,6 +118,7 @@ function stripM3UHeaderOnce(text){
   const kept = lines.filter(ln => !ln.trim().toUpperCase().startsWith("#EXTM3U"));
   return ["#EXTM3U", ...kept].join("\n");
 }
+// 去重（携带元数据时不丢 URL）
 function dedupeM3U(m3u){
   const lines = m3u.split(/\r?\n/);
   const out=[], seen=new Set();
@@ -132,6 +139,7 @@ function dedupeM3U(m3u){
   }
   return out.join("\n");
 }
+// 裁剪到前 N 组（EXTINF+URL），带元数据
 function clipByPairCount(text, maxPairs){
   if (!maxPairs || maxPairs <= 0) return text;
   const lines = text.split(/\r?\n/);
@@ -152,7 +160,7 @@ function clipByPairCount(text, maxPairs){
   return out.join("\n");
 }
 
-/* ===== 探测器 ===== */
+/* ===== 探测器（只保留可用直链） ===== */
 async function quickProbe(url, mode="strict"){
   if (!url) return false;
   if (mode === "off") return true;
@@ -168,25 +176,42 @@ async function quickProbe(url, mode="strict"){
   } catch { return false; }
 }
 
-/* ===== 注入逻辑 ===== */
+/* ===== 注入：icon + 分组保留 + 直链过滤（带早停与每源限量） ===== */
 async function injectForM3U(m3uText, iconMap, idx=0){
+  if (globalStop) return "";
   const lines = m3uText.split(/\r?\n/);
   const out = [];
+
+  // 统计 EXTINF 行
+  const extCount = lines.filter(l=>l.startsWith("#EXTINF")).length;
+  console.log(`源#${idx+1}: EXTINF = ${extCount}`);
+
+  let scanned = 0;
   for (let i=0;i<lines.length;i++){
+    if (globalStop) break;
+
     const raw = lines[i];
     if (!raw.startsWith("#EXTINF")) {
       if (raw.trim().toUpperCase().startsWith("#EXTM3U") && out.length===0) out.push("#EXTM3U");
       continue;
     }
 
+    scanned++;
+    if (scanned > PER_SOURCE_SCAN_LIMIT) break;   // 每源上限
+    if (keptChannels >= HARD_TARGET) { globalStop = true; break; } // 全局早停
+
     totalChannels++;
+
     const commaIdx = raw.indexOf(",");
     let header     = commaIdx>=0 ? raw.slice(0,commaIdx) : raw;
     const dispName = commaIdx>=0 ? raw.slice(commaIdx+1).trim() : "";
+
+    // 分组：保留原有（不覆盖）
     const grpTitle = getAttr(header, "group-title");
     const grpTvg   = getAttr(header, "tvg-group");
     const groupVal = grpTitle || grpTvg || "mix";
 
+    // 图标：原条目无 tvg-logo 时，从 icons.json 匹配补上
     const tvgId   = getAttr(header, "tvg-id");
     const tvgName = getAttr(header, "tvg-name");
     if (!/tvg-logo="/i.test(header)){
@@ -195,13 +220,18 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     }
 
     const url = findNextUrl(lines, i);
-    const ok = await quickProbe(url, FILTER_MODE);
+    const ok  = await quickProbe(url, FILTER_MODE);
+
     if (ok) {
       keptChannels++;
       out.push(commaIdx>=0 ? (header + "," + dispName) : header);
       out.push(`#EXTGRP:${groupVal}`);
       out.push(url);
+      // 跳过源里的 URL 行
       if (i+1<lines.length && !lines[i+1].startsWith("#")) i++;
+
+      // 达标后就全局停
+      if (keptChannels >= HARD_TARGET) { globalStop = true; break; }
     } else {
       filteredChannels++;
     }
@@ -224,6 +254,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
 
     const injectedList = [];
     for (let si=0; si<validM3Us.length; si++){
+      if (globalStop) break;
       const injected = await injectForM3U(validM3Us[si], iconMap, si);
       injectedList.push(injected);
     }
@@ -231,7 +262,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     let merged = injectedList.join("\n");
     merged = stripM3UHeaderOnce(merged);
     merged = dedupeM3U(merged);
-    merged = clipByPairCount(merged, TEST_TOTAL_LIMIT);
+    merged = clipByPairCount(merged, TEST_TOTAL_LIMIT);  // 最终再裁一次，确保不超过50
 
     console.log("#EXTM3U");
     console.log(`# Generated-At: ${new Date().toISOString()} (limit=${TEST_TOTAL_LIMIT})`);
