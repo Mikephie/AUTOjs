@@ -2,7 +2,7 @@ name: Auto M3U Update
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/30 * * * *"   # 每 30 分钟执行一次
   workflow_dispatch:
 
 jobs:
@@ -17,10 +17,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20   # Node 20 自带 fetch/AbortController
 
-      # 无须安装依赖，直接运行
+      # 无需安装依赖（如果你的仓库其他脚本需要依赖，再加 npm install）
+      # - name: Install dependencies
+      #   run: npm install
+
       - name: Run M3U generator
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # 仓库 Settings → Secrets → Actions 里配置
+          M3U_FILTER: loose                  # 过滤强度：strict/loose/off，建议先用 loose
         run: node m3u.js
