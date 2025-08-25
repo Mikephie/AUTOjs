@@ -3,8 +3,7 @@
  * - 仅保留可探测直链（strict）
  * - 早停：凑够 100 条立刻停；每源最多扫描 500 条
  * - 图标：按显示名匹配（忽略括号/大小写/空格/符号/HD后缀）
- *         若原条目 tvg-logo 不存在、为空或占位（"-"/"N/A"/"none"/"null"/"empty"）则自动填充
- *         优先 icons.json；未命中 → TV_logo/<候选>.png → not-found.png
+ *         只使用 icons.json 或 NAME_ALIAS，未命中则统一使用 not-found.png
  * - 输出 dist/playlist.m3u；并用 GitHub Contents API 上传到 LiveTV/AKTV.m3u
  */
 
@@ -29,7 +28,7 @@ const NOT_FOUND_ICON = "https://img.mikephie.site/not-found.png";
 
 // 手动别名（频道显示名 -> 图标名，无扩展名）
 const NAME_ALIAS = {
-  "明珠台": "明珠台",
+  "明珠台": "ch2",
   // "翡翠台": "jade",
   // "无线新闻台": "tvbnews",
 };
@@ -42,8 +41,8 @@ const PATH_IN_REPO  = "LiveTV/AKTV.m3u";             // 仓库内路径
 
 /* ===== 限额 / 策略 ===== */
 const FILTER_MODE              = "strict";  // strict / loose / off
-const TEST_TOTAL_LIMIT         = 150;       // 输出上限
-const HARD_TARGET              = 150;       // 早停门槛
+const TEST_TOTAL_LIMIT         = 100;       // 输出上限
+const HARD_TARGET              = 100;       // 早停门槛
 const PER_SOURCE_SCAN_LIMIT    = 500;       // 每源最多尝试
 
 /* ===== 超时（提速） ===== */
@@ -147,7 +146,7 @@ async function loadIcons(){
   }
 }
 
-/* ===== 图标匹配：仅按“显示名” → 别名 → icons.json → TV_logo 兜底 → not-found ===== */
+/* ===== 图标匹配：仅按“显示名” → 别名 → icons.json → not-found（无 TV_logo 兜底） ===== */
 function pickIconByDisplayName(iconMap, dispName){
   const raw = (dispName||"").trim();
   if (!raw) return NOT_FOUND_ICON;
@@ -157,11 +156,11 @@ function pickIconByDisplayName(iconMap, dispName){
     const alias = NAME_ALIAS[raw];
     const aliasKey = normName(alias);
     if (iconMap.has(aliasKey)) return iconMap.get(aliasKey);
-    return `https://img.mikephie.site/TV_logo/${alias}.png`;
+    return NOT_FOUND_ICON; // ❗不再拼 TV_logo 路径
   }
 
-  // 2) 正常规范化键
-  const k0 = normName(raw); // 例如： "Channel 5 HD" -> "channel5"
+  // 2) 标准化键
+  const k0 = normName(raw);
 
   // 3) 常见变体（从强到弱）
   const candidates = new Set([
@@ -178,12 +177,7 @@ function pickIconByDisplayName(iconMap, dispName){
     if (k && iconMap.has(k)) return iconMap.get(k);
   }
 
-  // 5) 兜底：TV_logo/<候选>.png
-  for (const k of candidates) {
-    if (k) return `https://img.mikephie.site/TV_logo/${k}.png`;
-  }
-
-  // 6) 仍无 → not-found
+  // 5) 直接 not-found（不再产生不存在的 URL）
   return NOT_FOUND_ICON;
 }
 
@@ -299,7 +293,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     const grpTvg   = getAttr(header, "tvg-group");
     const groupVal = grpTitle || grpTvg || "mix";
 
-    // ✅ 修复：字段不存在 / 空值 / 占位 都要补 logo
+    // ✅ 字段不存在 / 空值 / 占位 都要补 logo
     const curLogo = getAttr(header, "tvg-logo");
     const needFill = !curLogo || /^https?:\/\/$/.test(curLogo) || (curLogo && curLogo.trim() === "");
     const isPlaceholder = /^(?:-|n\/a|none|null|empty)$/i.test(curLogo || "");
