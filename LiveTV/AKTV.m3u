@@ -1,303 +1,542 @@
 #EXTM3U
-# Generated-At: 2025-08-25T21:35:51.837Z (limit=100)
-# Stats: total=233, kept=100, filtered=133
-#EXTINF:1 aktv-group="AKTV" tvg-id="aktv/animaxhk" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/animax.png?v=1756157751837",Animax (HK)
-#EXTGRP:mix
+# Generated-At: 2025-08-25T22:00:00.097Z (epoch=1756159200097)
+# Build-Tag: v1756159200097
+
+#EXTINF:1 tvg-id="aktv/animaxhk" group-title="hongkong" tvg-group="hongkong",Animax (HK)
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/animaxhk/AKTV.m3u8
-#EXTINF:2 aktv-group="AKTV" tvg-id="aktv/axn" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/axn.png?v=1756157751837",AXN
-#EXTGRP:mix
+
+#EXTINF:2 tvg-id="aktv/axn" group-title="movie" tvg-group="movie",AXN
+#EXTGRP:movie
 http://s1.an94tv.cfd/aktv/axn/AKTV.m3u8
-#EXTINF:3 aktv-group="AKTV" tvg-id="aktv/channel5hd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channel5.png?v=1756157751837",Channel 5 HD
-#EXTGRP:mix
+
+#EXTINF:3 tvg-id="aktv/channel5hd" group-title="mediacorp" tvg-group="mediacorp",Channel 5 HD
+#EXTGRP:mediacorp
 http://s1.an94tv.cfd/aktv/channel5hd/AKTV.m3u8
-#EXTINF:4 aktv-group="AKTV" tvg-id="aktv/channel8hd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channel8.png?v=1756157751837",Channel 8 HD
-#EXTGRP:mix
+
+#EXTINF:4 tvg-id="aktv/channel8hd" group-title="mediacorp" tvg-group="mediacorp",Channel 8 HD
+#EXTGRP:mediacorp
 http://s1.an94tv.cfd/aktv/channel8hd/AKTV.m3u8
-#EXTINF:5 aktv-group="AKTV" tvg-id="aktv/channeluhd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channelu.png?v=1756157751837",Channel U HD
-#EXTGRP:mix
+
+#EXTINF:5 tvg-id="aktv/channeluhd" group-title="mediacorp" tvg-group="mediacorp",Channel U HD
+#EXTGRP:mediacorp
 http://s1.an94tv.cfd/aktv/channeluhd/AKTV.m3u8
-#EXTINF:6 aktv-group="AKTV" tvg-id="aktv/lovenaturehd" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837",Love Nature HD
+
+#EXTINF:6 tvg-id="aktv/lovenaturehd" group-title="mix" tvg-group="mix",Love Nature HD
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/lovenaturehd/AKTV.m3u8
-#EXTINF:7 aktv-group="AKTV" tvg-id="aktv/popc" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/popc.png?v=1756157751837",PopC
+
+#EXTINF:7 tvg-id="aktv/popc" group-title="mix" tvg-group="mix",PopC
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/popc/AKTV.m3u8
-#EXTINF:8 aktv-group="AKTV" tvg-id="aktv/rockaction" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837",ROCK Action
+
+#EXTINF:8 tvg-id="aktv/rockaction" group-title="mix" tvg-group="mix",ROCK Action
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/rockaction/AKTV.m3u8
-#EXTINF:9 aktv-group="AKTV" tvg-id="aktv/tvbplus" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/tvbplus.png?v=1756157751837",TVB Plus
-#EXTGRP:mix
+
+#EXTINF:9 tvg-id="aktv/tvbplus" group-title="hongkong" tvg-group="hongkong",TVB Plus
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/tvbplus/AKTV.m3u8
-#EXTINF:10 aktv-group="AKTV" tvg-id="aktv/tvn" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837",tvN
+
+#EXTINF:10 tvg-id="aktv/tvn" group-title="mix" tvg-group="mix",tvN
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/tvn/AKTV.m3u8
-#EXTINF:11 aktv-group="AKTV" tvg-id="aktv/1080" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/天映經典.png?v=1756157751837",天映經典(1080)
-#EXTGRP:mix
+
+#EXTINF:11 tvg-id="aktv/1080" group-title="movie" tvg-group="movie",天映經典(1080)
+#EXTGRP:movie
 http://s1.an94tv.cfd/aktv/1080/AKTV.m3u8
-#EXTINF:12 aktv-group="AKTV" tvg-id="aktv/CH-19" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/明珠剧集台.png?v=1756157751837",明珠剧集台(北美)
-#EXTGRP:mix
+
+#EXTINF:12 tvg-id="aktv/CH-19" group-title="hongkong" tvg-group="hongkong",明珠剧集台(北美)
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-19/AKTV.m3u8
-#EXTINF:13 aktv-group="AKTV" tvg-id="aktv/CH-2" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837",明珠台
-#EXTGRP:mix
+
+#EXTINF:13 tvg-id="aktv/CH-2" group-title="hongkong" tvg-group="hongkong",明珠台
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-2/AKTV.m3u8
-#EXTINF:14 aktv-group="AKTV" tvg-id="aktv/CH-1" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/無線新聞台.png?v=1756157751837",無線新聞台
-#EXTGRP:mix
+
+#EXTINF:14 tvg-id="aktv/CH-1" group-title="hongkong" tvg-group="hongkong",無線新聞台
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-1/AKTV.m3u8
-#EXTINF:15 aktv-group="AKTV" tvg-id="aktv/hk" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/美亞電影台.png?v=1756157751837",美亞電影台(HK)
-#EXTGRP:mix
+
+#EXTINF:15 tvg-id="aktv/hk" group-title="movie" tvg-group="movie",美亞電影台(HK)
+#EXTGRP:movie
 http://s1.an94tv.cfd/aktv/hk/AKTV.m3u8
-#EXTINF:16 aktv-group="AKTV" tvg-id="aktv/CH-8" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠一台.png?v=1756157751837",翡翠一台(北美)
-#EXTGRP:mix
+
+#EXTINF:16 tvg-id="aktv/CH-8" group-title="hongkong" tvg-group="hongkong",翡翠一台(北美)
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-8/AKTV.m3u8
-#EXTINF:17 aktv-group="AKTV" tvg-id="aktv/CH-18" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠剧集台.png?v=1756157751837",翡翠剧集台(北美)
-#EXTGRP:mix
+
+#EXTINF:17 tvg-id="aktv/CH-18" group-title="hongkong" tvg-group="hongkong",翡翠剧集台(北美)
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-18/AKTV.m3u8
-#EXTINF:18 aktv-group="AKTV" tvg-id="aktv/CH-0" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠台.png?v=1756157751837",翡翠台
-#EXTGRP:mix
+
+#EXTINF:18 tvg-id="aktv/CH-0" group-title="hongkong" tvg-group="hongkong",翡翠台
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-0/AKTV.m3u8
-#EXTINF:19 aktv-group="AKTV" tvg-id="aktv/CH-7" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠娛樂台.png?v=1756157751837",翡翠娛樂台(北美)
-#EXTGRP:mix
+
+#EXTINF:19 tvg-id="aktv/CH-7" group-title="hongkong" tvg-group="hongkong",翡翠娛樂台(北美)
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-7/AKTV.m3u8
-#EXTINF:20 aktv-group="AKTV" tvg-id="aktv/CH-17" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠综合台.png?v=1756157751837",翡翠综合台(北美)
-#EXTGRP:mix
+
+#EXTINF:20 tvg-id="aktv/CH-17" group-title="hongkong" tvg-group="hongkong",翡翠综合台(北美)
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-17/AKTV.m3u8
-#EXTINF:21 aktv-group="AKTV" tvg-id="aktv/CH-3" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視中文台.png?v=1756157751837",鳳凰衛視中文台
-#EXTGRP:mix
+
+#EXTINF:21 tvg-id="aktv/CH-3" group-title="hongkong" tvg-group="hongkong",鳳凰衛視中文台
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-3/AKTV.m3u8
-#EXTINF:22 aktv-group="AKTV" tvg-id="aktv/CH-4" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視資訊台.png?v=1756157751837",鳳凰衛視資訊台
-#EXTGRP:mix
+
+#EXTINF:22 tvg-id="aktv/CH-4" group-title="hongkong" tvg-group="hongkong",鳳凰衛視資訊台
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-4/AKTV.m3u8
-#EXTINF:23 aktv-group="AKTV" tvg-id="aktv/CH-5" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視香港台.png?v=1756157751837",鳳凰衛視香港台
-#EXTGRP:mix
+
+#EXTINF:23 tvg-id="aktv/CH-5" group-title="hongkong" tvg-group="hongkong",鳳凰衛視香港台
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-5/AKTV.m3u8
-#EXTINF:24 aktv-group="AKTV" tvg-id="aktv/CH-6" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837",黃金翡翠台
-#EXTGRP:mix
+
+#EXTINF:24 tvg-id="aktv/CH-6" group-title="hongkong" tvg-group="hongkong",黃金翡翠台
+#EXTGRP:hongkong
 http://s1.an94tv.cfd/aktv/CH-6/AKTV.m3u8
-#EXTINF:25 aktv-group="AKTV3" tvg-id="aktv3/cna" tvg-logo="https://img.mikephie.site/TV_logo/cna.png?v=1756157751837" provider="AKTV3" provider-logo="" provider-type="iptv",CNA
-#EXTGRP:mix
+
+#EXTINF:25 tvg-id="aktv3/cna" tvg-logo="" group-title="mediacorp" tvg-group="mediacorp",CNA
+#EXTGRP:mediacorp
 http://s1.an94tv.cfd/aktv3/cna/AKTV.m3u8
-#EXTINF:26 aktv-group="AKTV3" tvg-id="aktv3/CH-0" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="AKTV3" provider-logo="" provider-type="iptv",朝鲜恩情台
+
+#EXTINF:26 tvg-id="aktv3/CH-0" tvg-logo="" group-title="mix" tvg-group="mix",朝鲜恩情台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv3/CH-0/AKTV.m3u8
-#EXTINF:27 aktv-group="AKTV-JP" tvg-id="aktvjp/japannews24hlive" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="AKTV-JP" provider-logo="" provider-type="iptv",Japan News 24H LIVE
+
+#EXTINF:27 tvg-id="aktvjp/japannews24hlive" tvg-logo="" group-title="mix" tvg-group="mix",Japan News 24H LIVE
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktvjp/japannews24hlive/AKTV.m3u8
-#EXTINF:28 aktv-group="AKTV-JP" tvg-id="aktvjp/ntv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="AKTV-JP" provider-logo="" provider-type="iptv",日テレNEWS LIVE
+
+#EXTINF:28 tvg-id="aktvjp/ntv" tvg-logo="" group-title="mix" tvg-group="mix",日テレNEWS LIVE
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktvjp/ntv/AKTV.m3u8
-#EXTINF:29 aktv-group="astro" tvg-id="astro/8tv" tvg-logo="https://img.mikephie.site/TV_logo/8tv.png?v=1756157751837" provider="astro" provider-logo="" provider-type="iptv",8TV
+
+#EXTINF:29 tvg-id="astro/8tv" tvg-logo="" group-title="mix" tvg-group="mix",8TV
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/8tv/AKTV.m3u8
-#EXTINF:30 aktv-group="astro" tvg-id="astro/eurosport1" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport1.png?v=1756157751837" provider="astro" provider-logo="" provider-type="iptv",EuroSport 1
-#EXTGRP:mix
+
+#EXTINF:30 tvg-id="astro/eurosport1" tvg-logo="" group-title="sport" tvg-group="sport",EuroSport 1
+#EXTGRP:sport
 http://s1.an94tv.cfd/astro/eurosport1/AKTV.m3u8
-#EXTINF:31 aktv-group="astro" tvg-id="astro/eurosport2" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport2.png?v=1756157751837" provider="astro" provider-logo="" provider-type="iptv",EuroSport 2
-#EXTGRP:mix
+
+#EXTINF:31 tvg-id="astro/eurosport2" tvg-logo="" group-title="sport" tvg-group="sport",EuroSport 2
+#EXTGRP:sport
 http://s1.an94tv.cfd/astro/eurosport2/AKTV.m3u8
-#EXTINF:32 aktv-group="astro" tvg-id="astro/nbatv" tvg-logo="https://img.mikephie.site/TV_logo/nbatv.png?v=1756157751837" provider="astro" provider-logo="" provider-type="iptv",NBA TV
-#EXTGRP:mix
+
+#EXTINF:32 tvg-id="astro/nbatv" tvg-logo="" group-title="sport" tvg-group="sport",NBA TV
+#EXTGRP:sport
 http://s1.an94tv.cfd/astro/nbatv/AKTV.m3u8
-#EXTINF:33 aktv-group="astro" tvg-id="astro/tntsports1" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS1.png?v=1756157751837" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 1
-#EXTGRP:mix
+
+#EXTINF:33 tvg-id="astro/tntsports1" tvg-logo="" group-title="sport" tvg-group="sport",TNT SPORTS 1
+#EXTGRP:sport
 http://s1.an94tv.cfd/astro/tntsports1/AKTV.m3u8
-#EXTINF:34 aktv-group="astro" tvg-id="astro/tntsports2" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS2.png?v=1756157751837" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 2
-#EXTGRP:mix
+
+#EXTINF:34 tvg-id="astro/tntsports2" tvg-logo="" group-title="sport" tvg-group="sport",TNT SPORTS 2
+#EXTGRP:sport
 http://s1.an94tv.cfd/astro/tntsports2/AKTV.m3u8
-#EXTINF:35 aktv-group="astro" tvg-id="astro/tntsports3" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS3.png?v=1756157751837" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 3
-#EXTGRP:mix
+
+#EXTINF:35 tvg-id="astro/tntsports3" tvg-logo="" group-title="sport" tvg-group="sport",TNT SPORTS 3
+#EXTGRP:sport
 http://s1.an94tv.cfd/astro/tntsports3/AKTV.m3u8
-#EXTINF:36 aktv-group="astro" tvg-id="astro/unifisports1" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="astro" provider-logo="" provider-type="iptv",unifi Sports 1
-#EXTGRP:mix
+
+#EXTINF:36 tvg-id="astro/unifisports1" tvg-logo="" group-title="sport" tvg-group="sport",unifi Sports 1
+#EXTGRP:sport
 http://s1.an94tv.cfd/astro/unifisports1/AKTV.m3u8
-#EXTINF:37 aktv-group="taiwan" tvg-id="taiwan/cinemaworld" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="taiwan" provider-logo="" provider-type="iptv",CinemaWorld
-#EXTGRP:mix
+
+#EXTINF:37 tvg-id="taiwan/cinemaworld" tvg-logo="" group-title="movie" tvg-group="movie",CinemaWorld
+#EXTGRP:movie
 http://s1.an94tv.cfd/taiwan/cinemaworld/AKTV.m3u8
-#EXTINF:38 aktv-group="taiwan" tvg-id="taiwan/hits" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="taiwan" provider-logo="" provider-type="iptv",HITS
+
+#EXTINF:38 tvg-id="taiwan/hits" tvg-logo="" group-title="mix" tvg-group="mix",HITS
 #EXTGRP:mix
 http://s1.an94tv.cfd/taiwan/hits/AKTV.m3u8
-#EXTINF:39 aktv-group="taiwan" tvg-id="taiwan/magellantv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="taiwan" provider-logo="" provider-type="iptv",MagellanTV頻道
+
+#EXTINF:39 tvg-id="taiwan/magellantv" tvg-logo="" group-title="mix" tvg-group="mix",MagellanTV頻道
 #EXTGRP:mix
 http://s1.an94tv.cfd/taiwan/magellantv/AKTV.m3u8
-#EXTINF:40 aktv-group="zhongtian" tvg-id="zhongtian/tvbs55" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",Tvbs 55頻道
-#EXTGRP:mix
+
+#EXTINF:40 tvg-id="zhongtian/tvbs55" tvg-logo="" group-title="taiwan" tvg-group="taiwan",Tvbs 55頻道
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/tvbs55/AKTV.m3u8
-#EXTINF:41 aktv-group="zhongtian" tvg-id="zhongtian/tvbs56" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",Tvbs 56頻道
-#EXTGRP:mix
+
+#EXTINF:41 tvg-id="zhongtian/tvbs56" tvg-logo="" group-title="taiwan" tvg-group="taiwan",Tvbs 56頻道
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/tvbs56/AKTV.m3u8
-#EXTINF:42 aktv-group="zhongtian" tvg-id="zhongtian/live" tvg-logo="https://img.mikephie.site/TV_logo/三立LIVE.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",三立LIVE
-#EXTGRP:mix
+
+#EXTINF:42 tvg-id="zhongtian/live" tvg-logo="" group-title="taiwan" tvg-group="taiwan",三立LIVE
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/live/AKTV.m3u8
-#EXTINF:43 aktv-group="zhongtian" tvg-id="zhongtian/CH-0" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",中天新闻台
-#EXTGRP:mix
+
+#EXTINF:43 tvg-id="zhongtian/CH-0" tvg-logo="" group-title="taiwan" tvg-group="taiwan",中天新闻台
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/CH-0/AKTV.m3u8
-#EXTINF:44 aktv-group="zhongtian" tvg-id="zhongtian/CH-3" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",中視新聞
-#EXTGRP:mix
+
+#EXTINF:44 tvg-id="zhongtian/CH-3" tvg-logo="" group-title="taiwan" tvg-group="taiwan",中視新聞
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/CH-3/AKTV.m3u8
-#EXTINF:45 aktv-group="zhongtian" tvg-id="zhongtian/CH-4" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",台視新聞
-#EXTGRP:mix
+
+#EXTINF:45 tvg-id="zhongtian/CH-4" tvg-logo="" group-title="taiwan" tvg-group="taiwan",台視新聞
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/CH-4/AKTV.m3u8
-#EXTINF:46 aktv-group="zhongtian" tvg-id="zhongtian/CH-2" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",寰宇新聞台
-#EXTGRP:mix
+
+#EXTINF:46 tvg-id="zhongtian/CH-2" tvg-logo="" group-title="taiwan" tvg-group="taiwan",寰宇新聞台
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/CH-2/AKTV.m3u8
-#EXTINF:47 aktv-group="zhongtian" tvg-id="zhongtian/CH-1" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",東森新聞
-#EXTGRP:mix
+
+#EXTINF:47 tvg-id="zhongtian/CH-1" tvg-logo="" group-title="taiwan" tvg-group="taiwan",東森新聞
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/CH-1/AKTV.m3u8
-#EXTINF:48 aktv-group="zhongtian" tvg-id="zhongtian/CH-5" tvg-logo="https://img.mikephie.site/not-found.png?v=1756157751837" provider="zhongtian" provider-logo="" provider-type="iptv",民視新聞
-#EXTGRP:mix
+
+#EXTINF:48 tvg-id="zhongtian/CH-5" tvg-logo="" group-title="taiwan" tvg-group="taiwan",民視新聞
+#EXTGRP:taiwan
 http://s1.an94tv.cfd/zhongtian/CH-5/AKTV.m3u8
-#EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV1.png" group-title="📺央视频道",CCTV-1
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/608807420.m3u8?migutoken=5b04cf0d91179ab2d3d71703f0a8bc3d32dd02f7d8fb55ee70e05c216b8a9d1a73d911fbde798459fb66d94934157c996f8306c0dd37917775f2ed73dcc22cf84b25ca500bff5c636ff48d6344
-#EXTINF:-1 tvg-name="CCTV2" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV2.png" group-title="📺央视频道",CCTV-2
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv2HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV2" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV2.png" group-title="📺央视频道",CCTV-2
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv2
-#EXTINF:-1 tvg-name="CCTV3" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV3.png" group-title="📺央视频道",CCTV-3
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv3HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV3" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV3.png" group-title="📺央视频道",CCTV-3
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv3
-#EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV4.png" group-title="📺央视频道",CCTV-4
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv4HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV4.png" group-title="📺央视频道",CCTV-4
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/631780421.m3u8?migutoken=fefc6a44400a0dd448699ae0ce3d6e2c5a0f49b8d48adb36e747c4fbab039337eb3244f9951acbddaf26b7bf51597a7d1b43c8845e67fd5914ece875dcad325bb388200bc0f12fdff727d03e2d
-#EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV4.png" group-title="📺央视频道",CCTV-4
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv4
-#EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5.png" group-title="📺央视频道",CCTV-5
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv5HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5.png" group-title="📺央视频道",CCTV-5
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/641886683.m3u8?migutoken=3e5c01f93922de8d1c940fe15bb47349b27e8f7a2e624dde1a83dff3b2a80f58b7624151a3a4d00488edee34f202818557340903382fae02bb754084eb942bd50e59061df36fab62fb5b908903
-#EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5.png" group-title="📺央视频道",CCTV-5
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv5
-#EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5.png" group-title="📺央视频道",CCTV-5
-#EXTGRP:📺央视频道
-http://www.freetv.top/migu/641886683.m3u8?migutoken=cea30189b17e30fb3b4876609eb6e3128f840f8ab5db6f9643403213dc9980613938be69b13fe0290d2c44f0052b78d90c669a2f92e28951f92da861b7cba070b55ec1b4fe1a92a2c133c43c4c
-#EXTINF:-1 tvg-name="CCTV5+" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5+.png" group-title="📺央视频道",CCTV-5+
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv5SportHD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV5+" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5+.png" group-title="📺央视频道",CCTV-5+
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/641886773.m3u8?migutoken=03a1b82e35e58cd89a95034ecb29e77e50493397000ec2b1e4d1ce59af01e6420d6dbc068c8230ec03be3a35a20eed8714e0959e3570a08713a7a2e8d86085eabf8f1aa85744c80c38343988b2
-#EXTINF:-1 tvg-name="CCTV5+" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5+.png" group-title="📺央视频道",CCTV-5+
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv5plus
-#EXTINF:-1 tvg-name="CCTV6" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV6.png" group-title="📺央视频道",CCTV-6
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv6HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV6" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV6.png" group-title="📺央视频道",CCTV-6
-#EXTGRP:📺央视频道
-http://php.cqshushu.ggff.net/jzb.php?id=cctv6&公众号【医工学习日志】
-#EXTINF:-1 tvg-name="CCTV6" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV6.png" group-title="📺央视频道",CCTV-6
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv6
-#EXTINF:-1 tvg-name="CCTV7" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV7.png" group-title="📺央视频道",CCTV-7
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv7HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV7" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV7.png" group-title="📺央视频道",CCTV-7
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv7
-#EXTINF:-1 tvg-name="CCTV8" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV8.png" group-title="📺央视频道",CCTV-8
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv8HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV8" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV8.png" group-title="📺央视频道",CCTV-8
-#EXTGRP:📺央视频道
-http://php.cqshushu.ggff.net/jzb.php?id=cctv8&公众号【医工学习日志】
-#EXTINF:-1 tvg-name="CCTV8" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV8.png" group-title="📺央视频道",CCTV-8
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv8hd
-#EXTINF:-1 tvg-name="CCTV9" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV9.png" group-title="📺央视频道",CCTV-9
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv9HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV9" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV9.png" group-title="📺央视频道",CCTV-9
-#EXTGRP:📺央视频道
-http://php.cqshushu.ggff.net/jzb.php?id=cctv9&公众号【医工学习日志】
-#EXTINF:-1 tvg-name="CCTV9" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV9.png" group-title="📺央视频道",CCTV-9
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/673168140.m3u8?migutoken=749c49cdc31bb395e0349adc81010adc8707f80e51e9d3491ad67bfa71388ad768f7b52c8064338a7ef45eb7ddb192fb4937b21681c82499a0c16653ad9a9bec98ff5ce6ab183e4029bbdf269e
-#EXTINF:-1 tvg-name="CCTV9" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV9.png" group-title="📺央视频道",CCTV-9
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv9hd
-#EXTINF:-1 tvg-name="CCTV10" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV10.png" group-title="📺央视频道",CCTV-10
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv10HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV10" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV10.png" group-title="📺央视频道",CCTV-10
-#EXTGRP:📺央视频道
-http://php.cqshushu.ggff.net/jzb.php?id=cctv10&公众号【医工学习日志】
-#EXTINF:-1 tvg-name="CCTV10" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV10.png" group-title="📺央视频道",CCTV-10
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv10hd
-#EXTINF:-1 tvg-name="CCTV11" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV11.png" group-title="📺央视频道",CCTV-11
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv11HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV11" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV11.png" group-title="📺央视频道",CCTV-11
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv11
-#EXTINF:-1 tvg-name="CCTV12" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV12.png" group-title="📺央视频道",CCTV-12
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv12HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV12" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV12.png" group-title="📺央视频道",CCTV-12
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/673168185.m3u8?migutoken=37acadb43b1d7932b0a1e8a4f2d01a06b42a10c31f3ccb417bae200ac3028f30a8110509f2cd6cd130aee4b21c85693aa49817f3381e4d28e140d8db1a20b6fecea22fec17a70ff1341efe6081
-#EXTINF:-1 tvg-name="CCTV12" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV12.png" group-title="📺央视频道",CCTV-12
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv12
-#EXTINF:-1 tvg-name="CCTV13" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV13.png" group-title="📺央视频道",CCTV-13
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/CCTVNewsHD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV13" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV13.png" group-title="📺央视频道",CCTV-13
-#EXTGRP:📺央视频道
-https://event.pull.hebtv.com/jishi/cp1.m3u8
-#EXTINF:-1 tvg-name="CCTV13" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV13.png" group-title="📺央视频道",CCTV-13
-#EXTGRP:📺央视频道
-http://j.x.bkpcp.top/jx/CCTV13HD
-#EXTINF:-1 tvg-name="CCTV13" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV13.png" group-title="📺央视频道",CCTV-13
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/608807423.m3u8?migutoken=ac19a58805588401a8e818b6dd00df9b327912af3611ba95f89235e7020821668a2b6dc65ccc3904967da59d0a9742565c56ea582baf8915d068035054818ef0f369dab64705a6a7f7120529ec
-#EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="📺央视频道",CCTV-14
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctvseHD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="📺央视频道",CCTV-14
-#EXTGRP:📺央视频道
-http://php.cqshushu.ggff.net/jzb.php?id=cctv14&公众号【医工学习日志】
-#EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="📺央视频道",CCTV-14
-#EXTGRP:📺央视频道
-https://event.pull.hebtv.com/jishi/cp2.m3u8#rtsp://103.251.96.71/PLTV/88888888/224/3221225783/10000100000000060000000000726027_0.smil?icpid=SSPID&amp;accounttype=1&amp;limitflux=-1&amp;limitdur=-1&amp;accountinfo=:20240213104135
-#EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="📺央视频道",CCTV-14
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/624878440.m3u8?migutoken=239edad94ac0bbff14f123c7f8996ed7639110bd6cf64ec8ba8cf85842224956d452ec8b683385cb27f8a7685224a03e3aa4d914b8fe33249da9df699351b105c795452d03f2be0a1f1e39adb0
-#EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="📺央视频道",CCTV-14
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv14
-#EXTINF:-1 tvg-name="CCTV15" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV15.png" group-title="📺央视频道",CCTV-15
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv15HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV15" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV15.png" group-title="📺央视频道",CCTV-15
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/673168223.m3u8?migutoken=4e8d5766579c6bef231494cabd07e5b49d965804790214280c9791e4c331fd90311cb62ea43d3a1899229bfa57be4afe5a567b32a6b78153fc9a9801e28a39435e078b48c211e71d6083519be4
-#EXTINF:-1 tvg-name="CCTV15" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV15.png" group-title="📺央视频道",CCTV-15
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv15
-#EXTINF:-1 tvg-name="CCTV16" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV16.png" group-title="📺央视频道",CCTV-16
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/CCTV16_4K/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV16" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV16.png" group-title="📺央视频道",CCTV-16
-#EXTGRP:📺央视频道
-https://stream1.freetv.fun/87de3fae6db73a08904421488de7b0ba39e5eccf12a85ec47f8ccfb0985d2fa7.m3u8
-#EXTINF:-1 tvg-name="CCTV17" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV17.png" group-title="📺央视频道",CCTV-17
-#EXTGRP:📺央视频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv17HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV17" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV17.png" group-title="📺央视频道",CCTV-17
-#EXTGRP:📺央视频道
-https://www.freetv.top/migu/673168256.m3u8?migutoken=e7dc493273bb331a8b7e0d3c475924ad4706b90f18fd4775c1c134103274e9ad9d59015289e02877b65420a149fcae4f793ded0177cc600ac79d9a95a234e4a8db198072e6973c4a14c05c9dc6
-#EXTINF:-1 tvg-name="CETV1" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CETV1.png" group-title="📺央视频道",CETV-1
-#EXTGRP:📺央视频道
-https://migu.188766.xyz/?migutoken=a55dadc35d37e3e168faf8268cc6fa97&id=CETV1&type=yy
+
+
+#EXT-X-APP APTV
+#EXT-X-APTV-TYPE remote
+#EXT-X-SUB-URL https://gh.aptv.app/https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u
+
+#EXTINF:-1 tvg-name="CHC家庭影院" group-title="mix" tvg-group="mix",CHC家庭影院
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCHC%E5%AE%B6%E5%BA%AD%E5%BD%B1%E9%99%A2
+#EXTINF:-1 tvg-name="CHC动作电影" http-user-agent="AptvPlayer-UA" group-title="movie" tvg-group="movie",CHC动作电影
+#EXTGRP:movie
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCHC%E5%8A%A8%E4%BD%9C%E7%94%B5%E5%BD%B1&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-name="CHC影迷电影" group-title="movie" tvg-group="movie",CHC影迷电影
+#EXTGRP:movie
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCHC%E5%BD%B1%E8%BF%B7%E7%94%B5%E5%BD%B1
+#EXTINF:-1 tvg-id="CCTV1" tvg-name="CCTV1" http-user-agent="AptvPlayer-UA" group-title="cctv" tvg-group="cctv",CCTV1
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV1&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV2" tvg-name="CCTV2" group-title="cctv" tvg-group="cctv",CCTV2
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV2
+#EXTINF:-1 tvg-id="CCTV3" tvg-name="CCTV3" http-user-agent="AptvPlayer-UA" group-title="cctv" tvg-group="cctv",CCTV3
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV3&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV4" tvg-name="CCTV4" group-title="cctv" tvg-group="cctv",CCTV4
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV4
+#EXTINF:-1 tvg-id="CCTV5" tvg-name="CCTV5" http-user-agent="AptvPlayer-UA" group-title="sport" tvg-group="sport",CCTV5
+#EXTGRP:sport
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV5&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV5PLUS" tvg-name="CCTV5+" group-title="sport" tvg-group="sport",CCTV5+
+#EXTGRP:sport
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV5p
+#EXTINF:-1 tvg-id="CCTV6" tvg-name="CCTV6" http-user-agent="AptvPlayer-UA" group-title="cctv" tvg-group="cctv",CCTV6
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV6&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV7" tvg-name="CCTV7" group-title="cctv" tvg-group="cctv",CCTV7
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV7
+#EXTINF:-1 tvg-id="CCTV8" tvg-name="CCTV8" http-user-agent="AptvPlayer-UA" group-title="cctv" tvg-group="cctv",CCTV8
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV8&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV9" tvg-name="CCTV9" group-title="cctv" tvg-group="cctv",CCTV9
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV9
+#EXTINF:-1 tvg-id="CCTV10" tvg-name="CCTV10" http-user-agent="AptvPlayer-UA" group-title="cctv" tvg-group="cctv",CCTV10
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV10&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV11" tvg-name="CCTV11" group-title="cctv" tvg-group="cctv",CCTV11
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV11
+#EXTINF:-1 tvg-id="CCTV12" tvg-name="CCTV12" http-user-agent="AptvPlayer-UA" group-title="cctv" tvg-group="cctv",CCTV12
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV12&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV13" tvg-name="CCTV13" group-title="cctv" tvg-group="cctv",CCTV13
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV13
+#EXTINF:-1 tvg-id="CCTV14" tvg-name="CCTV14" http-user-agent="AptvPlayer-UA" group-title="cctv" tvg-group="cctv",CCTV14
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV14&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV15" tvg-name="CCTV15" group-title="cctv" tvg-group="cctv",CCTV15
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV15
+#EXTINF:-1 tvg-id="CCTV16" tvg-name="CCTV16" http-user-agent="AptvPlayer-UA" group-title="cctv" tvg-group="cctv",CCTV16
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3DCCTV16&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="CCTV17" tvg-name="CCTV17" group-title="cctv" tvg-group="cctv",CCTV17
+#EXTGRP:cctv
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3DCCTV17
+#EXTINF:-1 tvg-id="CGTN" tvg-name="CGTN" group-title="mix" tvg-group="mix",CGTN英语
+#EXTGRP:mix
+https://0472.org/hls/cgtn.m3u8
+#EXTINF:-1 tvg-id="CGTN纪录" tvg-name="CGTN纪录" group-title="mix" tvg-group="mix",CGTN纪录
+#EXTGRP:mix
+https://0472.org/hls/cgtnd.m3u8
+#EXTINF:-1 tvg-id="CGTN西语" tvg-name="CGTN西语" group-title="mix" tvg-group="mix",CGTN西语
+#EXTGRP:mix
+https://0472.org/hls/cgtnx.m3u8
+#EXTINF:-1 tvg-id="CGTN法语" tvg-name="CGTN法语" group-title="mix" tvg-group="mix",CGTN法语
+#EXTGRP:mix
+https://0472.org/hls/cgtnf.m3u8
+#EXTINF:-1 tvg-id="CGTN阿语" tvg-name="CGTN阿语" group-title="mix" tvg-group="mix",CGTN阿语
+#EXTGRP:mix
+https://0472.org/hls/cgtna.m3u8
+#EXTINF:-1 tvg-id="CGTN俄语" tvg-name="CGTN俄语" group-title="mix" tvg-group="mix",CGTN俄语
+#EXTGRP:mix
+https://0472.org/hls/cgtne.m3u8
+
+#EXTINF:-1 tvg-id="重温经典" tvg-name="重温经典" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",重温经典
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E9%87%8D%E6%B8%A9%E7%BB%8F%E5%85%B8&ua=AptvPlayer-UA
+#EXTGRP:hongkong
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E7%BF%A1%E7%BF%A0%E5%8F%B0&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="五星体育" tvg-name="五星体育" http-user-agent="iPhone" http-header="Referer=https://live.kankanews.com/" group-title="sport" tvg-group="sport",五星体育
+#EXTGRP:sport
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E4%BA%94%E6%98%9F%E4%BD%93%E8%82%B2&ua=iPhone
+#EXTINF:-1 tvg-id="凤凰资讯" tvg-name="凤凰资讯" http-user-agent="iPhone" group-title="hongkong" catchup="append" catchup-source="?playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}" tvg-group="hongkong",凤凰资讯
+#EXTGRP:hongkong
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Fphenix.php%3Fid%3Dfhzx&ua=iPhone
+#EXTINF:-1 tvg-id="凤凰中文" tvg-name="凤凰中文" http-user-agent="iPhone" group-title="hongkong" catchup="append" catchup-source="?playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}" tvg-group="hongkong",凤凰中文
+#EXTGRP:hongkong
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Fphenix.php%3Fid%3Dfhzw&ua=iPhone
+#EXTINF:-1 tvg-id="凤凰香港" tvg-name="凤凰香港" http-user-agent="iPhone" group-title="hongkong" catchup="append" catchup-source="?playseek=${(b)yyyyMMddHHmmss}-${(e)yyyyMMddHHmmss}" tvg-group="hongkong",凤凰香港
+#EXTGRP:hongkong
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Fphenix.php%3Fid%3Dfhhk&ua=iPhone
+#EXTINF:-1 tvg-id="香港卫视" tvg-name="香港卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",香港卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E9%A6%99%E6%B8%AF%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="湖南卫视" tvg-name="湖南卫视" http-user-agent="AptvPlayer-UA" http-referer="https:/aptv.app/" group-title="mix" tvg-group="mix",湖南卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E6%B9%96%E5%8D%97%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="北京卫视" tvg-name="北京卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",北京卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E5%8C%97%E4%BA%AC%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="深圳卫视" tvg-name="深圳卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",深圳卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E6%B7%B1%E5%9C%B3%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="浙江卫视" tvg-name="浙江卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",浙江卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E6%B5%99%E6%B1%9F%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="江苏卫视" tvg-name="江苏卫视" http-user-agent="AptvPlayer-UA" http-header="Referer=https://litchi-play-encrypted-site.jstv.com/" group-title="mix" tvg-group="mix",江苏卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E6%B1%9F%E8%8B%8F%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="陕西卫视" tvg-name="陕西卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",陕西卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E9%99%95%E8%A5%BF%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="湖北卫视" tvg-name="湖北卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",湖北卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E6%B9%96%E5%8C%97%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="内蒙古卫视" tvg-name="内蒙古卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",内蒙古卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E5%86%85%E8%92%99%E5%8F%A4%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="江西卫视" tvg-name="江西卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",江西卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E6%B1%9F%E8%A5%BF%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="广东卫视" tvg-name="广东卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",广东卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E5%B9%BF%E4%B8%9C%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="东方卫视" tvg-name="东方卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",东方卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E4%B8%9C%E6%96%B9%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="西藏卫视" tvg-name="西藏卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",西藏卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E8%A5%BF%E8%97%8F%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="新疆卫视" tvg-name="新疆卫视" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",新疆卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E6%96%B0%E7%96%86%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="青海卫视" tvg-name="青海卫视" group-title="mix" tvg-group="mix",青海卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E9%9D%92%E6%B5%B7%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="东南卫视" tvg-name="东南卫视" group-title="mix" tvg-group="mix",东南卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E4%B8%9C%E5%8D%97%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="吉林卫视" tvg-name="吉林卫视" group-title="mix" tvg-group="mix",吉林卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E5%90%89%E6%9E%97%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="四川卫视" tvg-name="四川卫视" group-title="mix" tvg-group="mix",四川卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E5%9B%9B%E5%B7%9D%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="天津卫视" tvg-name="天津卫视" group-title="mix" tvg-group="mix",天津卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E5%A4%A9%E6%B4%A5%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="安徽卫视" tvg-name="安徽卫视" http-user-agent="iPhone" http-referer="https://www.ahtv.cn/" group-title="mix" tvg-group="mix",安徽卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E5%AE%89%E5%BE%BD%E5%8D%AB%E8%A7%86&ua=iPhone
+#EXTINF:-1 tvg-id="山东卫视" tvg-name="山东卫视" group-title="mix" tvg-group="mix",山东卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E5%B1%B1%E4%B8%9C%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="山西卫视" tvg-name="山西卫视" group-title="mix" tvg-group="mix",山西卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E5%B1%B1%E8%A5%BF%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="广西卫视" tvg-name="广西卫视" group-title="mix" tvg-group="mix",广西卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E5%B9%BF%E8%A5%BF%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="河北卫视" tvg-name="河北卫视" group-title="mix" tvg-group="mix",河北卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E6%B2%B3%E5%8C%97%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="河南卫视" tvg-name="河南卫视" group-title="mix" tvg-group="mix",河南卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E6%B2%B3%E5%8D%97%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="甘肃卫视" tvg-name="甘肃卫视" group-title="mix" tvg-group="mix",甘肃卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E7%94%98%E8%82%83%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="贵州卫视" tvg-name="贵州卫视" group-title="mix" tvg-group="mix",贵州卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E8%B4%B5%E5%B7%9E%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="辽宁卫视" tvg-name="辽宁卫视" group-title="mix" tvg-group="mix",辽宁卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E8%BE%BD%E5%AE%81%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="重庆卫视" tvg-name="重庆卫视" group-title="mix" tvg-group="mix",重庆卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E9%87%8D%E5%BA%86%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="黑龙江卫视" tvg-name="黑龙江卫视" group-title="mix" tvg-group="mix",黑龙江卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E9%BB%91%E9%BE%99%E6%B1%9F%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="海南卫视" tvg-name="海南卫视" group-title="mix" tvg-group="mix",海南卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E6%B5%B7%E5%8D%97%E5%8D%AB%E8%A7%86
+#EXTINF:-1 tvg-id="大湾区卫视" tvg-name="大湾区卫视" group-title="mix" tvg-group="mix",大湾区卫视
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F148.135.93.213%2Flive.php%3Fid%3D%E5%A4%A7%E6%B9%BE%E5%8C%BA%E5%8D%AB%E8%A7%86
+
+#EXTINF:-1 http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",北京卫视4K
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E5%8C%97%E4%BA%AC%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 http-user-agent="AptvPlayer-UA" group-title="mix" tvg-group="mix",深圳卫视4K
+#EXTGRP:mix
+https://m3u-converter.mikephiemy.workers.dev/?u=http%3A%2F%2F101.35.240.114%3A88%2Flive.php%3Fid%3D%E6%B7%B1%E5%9C%B3%E5%8D%AB%E8%A7%86&ua=AptvPlayer-UA
+#EXTINF:-1 tvg-id="苏州4K" tvg-name="苏州4K" group-title="mix" tvg-group="mix",苏州4K
+#EXTGRP:mix
+https://tylive.kan0512.com/norecord/csztv4k_4k.m3u8
+#EXTINF:-1 tvg-id="河北4K" tvg-name="河北4K" group-title="mix" tvg-group="mix",河北4K
+#EXTGRP:mix
+https://event.pull.hebtv.com:443/live/live101.m3u8
+#EXTINF:-1 tvg-id="北京纪实科教" tvg-name="北京纪实科教" http-user-agent="AptvPlayer-UA" group-title="mix" tvg-logo="https://gcore.jsdelivr.net/gh/taksssss/tv/icon/北京纪实科教.png" tvg-group="mix",北京纪实科教8K
+#EXTGRP:mix
+http://101.35.240.114:88/brtv8k.php
+
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1983
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/31/15/BMjAyMjAxMzExNTU5MTRfNDAzMDAxOTlfNjYyNzMxNjcwMjBfMF8z_b_Beb3bda599f76c60c463c433ca7460153.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1984
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/31/15/BMjAyMjAxMzExNTU5NTRfNDAzMDAxOTlfNjYyNzMyMzg3MTRfMF8z_b_B192356dadbc90d207ba16964d4c2914c.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1985
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/31/16/BMjAyMjAxMzExNjAwMDFfNDAzMDAxOTlfNjYyNzMyNTAwMzJfMF8z_b_Be73c5abcbc0eeb2ec9fce6842e1362a4.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1986
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/31/16/BMjAyMjAxMzExNjAwMDRfNDAzMDAxOTlfNjYyNzMyNTU0OTRfMF8z_b_B24f7d19f1132fa5d7f502f8377ad5567.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1987
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/31/16/BMjAyMjAxMzExNjAwMDhfNDAzMDAxOTlfNjYyNzMyNjMyMDNfMF8z_b_B570493ed8f7200d4013a66b2d21b2de9.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1988
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/31/16/BMjAyMjAxMzExNjAwMTJfNDAzMDAxOTlfNjYyNzMyNjkxNjBfMF8z_b_B8c835b83a92d25bde81ba22c5cd9521e.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1989
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/31/16/BMjAyMjAxMzExNjAwMTVfNDAzMDAxOTlfNjYyNzMyNzQ2OTlfMF8z_b_Be477b27b9ce655d2372df56a5a3d96ef.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1990
+#EXTGRP:mix
+https://cdn8.yzzy-online.com/20220704/597_e0d90c37/1000k/hls/index.m3u8
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1991
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/31/16/BMjAyMjAxMzExNjI2MTVfNDAzMDAxOTlfNjYyNzYwNjUxNjVfMF8z_b_B8feb7b85888678d71bf37a259c6850f6.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1992
+#EXTGRP:mix
+https://txmov2.a.kwimgs.com/bs3/video-hls/5256826755663896297_hlshd15.m3u8
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1993
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/22/BMjAyMzAxMTMyMjEwMDNfNDAzMDAxOTlfOTM1MTIzMzYwODJfMF8z_b_B647d10e431b4cc5e48e6c77347d69021.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1994
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/22/BMjAyMzAxMTMyMjEwMDNfNDAzMDAxOTlfOTM1MTIzMzYxMjNfMF8z_b_B3dde97f36273f04403d4dc5eec611a35.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1995
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQwNzVfMF8z_b_B811c0dec6b9a3d3074a18522c185010a.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1996
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/22/BMjAyMzAxMTMyMjEwMDNfNDAzMDAxOTlfOTM1MTIzMzYxNTJfMF8z_b_Bd841eae10ab1c9955ef55fbedfae6c45.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1997
+#EXTGRP:mix
+https://txmov2.a.kwimgs.com/bs3/video-hls/5230649583590411879_hlshd15.m3u8
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1998
+#EXTGRP:mix
+https://txmov2.a.kwimgs.com/bs3/video-hls/5225864507896315430_hlshd15.m3u8
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚1999
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQxNTRfMF8z_b_B0b5e52bc003285ef66ec0cbb2be08556.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2000
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/21/BMjAyMzAxMTMyMTE4MzRfNDAzMDAxOTlfOTM1MDY4ODIxMTNfMF8z_b_Bdddf4e7ef0ff6cfd477857bb40e78419.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2001
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQyMDFfMF8z_b_B70592cb7c4054e9cabb675e849bbf4bd.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2002
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/21/BMjAyMzAxMTMyMTE4MzRfNDAzMDAxOTlfOTM1MDY4ODIxNDdfMF8z_b_Ba6271d10b7e6cfae83759033a091f257.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2003
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/14/23/BMjAyMzAxMTQyMzQxNDdfNDAzMDAxOTlfOTM2MTU0MTk1NDFfMF8z_b_B182749d2cd2ea9323639254af385f24b.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2004
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/21/BMjAyMzAxMTMyMTE4MzRfNDAzMDAxOTlfOTM1MDY4ODIxOTVfMF8z_b_B86c4430b82ff5a7f4e8132f6ee558536.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2005
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQyMzhfMF8z_b_B35ad7cc86aec8fc9e5ddfb31fc7bed63.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2006
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQyNzlfMF8z_b_Bbc3703fc331dc994c50859c19aad28ff.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2007
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQzMjNfMF8z_b_B00b069c7899976459ceeaa99353dfefe.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2008
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQzNTNfMF8z_b_Bd7346962e61bd7b84e11a1fa6e4616f9.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2009
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQzOTBfMF8z_b_B29a36a85e0277f6c2a1f033ef7c10708.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2010
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQ0MjlfMF8z_b_B8818807a00eed329a69fb494f405bd43.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2011
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/16/11/BMjAyMzAxMTYxMTA3MjFfNDAzMDAxOTlfOTM3MjcyMjA3ODhfMF8z_b_B8214200efc869dc6fcf99dad619fa4c1.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2012
+#EXTGRP:mix
+https://cdn8.yzzy-online.com/20220704/591_82b72f82/1000k/hls/index.m3u8
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2013
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQ1NjNfMF8z_b_B4fea55408dca4471a68a963ae096be59.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2014
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/06/16/BMjAyMzAxMDYxNjMxMTNfNDAzMDAxOTlfOTI4OTY2ODAzNjlfMF8z_b_Bdee65c77f9e7b2120a185c919dad81d2.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2015
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQ2MTZfMF8z_b_B4851f43f5a2bc2871a9b0ec87294a6e7.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2016
+#EXTGRP:mix
+https://cdn8.yzzy-online.com/20220704/577_cda9c8d1/1000k/hls/index.m3u8
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2017
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/13/20/BMjAyMzAxMTMyMDA5MjJfNDAzMDAxOTlfOTM0OTkwNDQ2NDhfMF8z_b_B6527b0c2ce3dda1d9b3f34edd4fdb9aa.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2018
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/06/16/BMjAyMzAxMDYxNjMxMTRfNDAzMDAxOTlfOTI4OTY2ODE2MTBfMF8z_b_B11a778e34390a21de42d407e94f45b91.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2019
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2023/01/06/16/BMjAyMzAxMDYxNjMxMTRfNDAzMDAxOTlfOTI4OTY2ODE2MTBfMF8z_b_B11a778e34390a21de42d407e94f45b91.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2020
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/30/17/BMjAyMjAxMzAxNzA5NDdfNDAzMDAxOTlfNjYxNzQ2MDAyMTFfMF8z_b_B5d51d9564c5670dc66faeba20aa7af3f.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2021
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/01/30/17/BMjAyMjAxMzAxNzE4NTJfNDAzMDAxOTlfNjYxNzUzOTg3NjlfMF8z_b_Be41d9503181d7b0608a839ed401e02c2.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2022
+#EXTGRP:mix
+https://alimov2.a.kwimgs.com/upic/2022/02/01/11/BMjAyMjAyMDExMTEwMjNfNDAzMDAxOTlfNjYzNzA4MTk4NzNfMF8z_b_B898cc7ddd0025bf54ddb18ec1f723c84.mp4
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2023
+#EXTGRP:mix
+https://txmov2.a.kwimgs.com/bs3/video-hls/5251197255879398624_hlshd15.m3u8
+#EXTINF:-1 tvg-name="春晚" group-title="mix" tvg-group="mix",春晚2024
+#EXTGRP:mix
+https://p2.bdstatic.com/rtmp.liveshow.lss-user.baidubce.com/live/stream_bduid_6488563992_8982723413/merged_1707497046297_88536_25144_41936.m3u8
+#EXTINF:-1 tvg-name="春晚" group-title="cctv" tvg-group="cctv",春晚2025
+#EXTGRP:cctv
+https://res.cctvnews.cctv.com/video/3005/record/cctv/merge1/133396667284143308839013005/8fbd6180bdef4da19f6155cf6b4652e1-4.m3u8
