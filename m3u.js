@@ -160,18 +160,6 @@ function addZhVariants(set, base){
   return set;
 }
 
-// 自家域名加 ?v= 构建号（防缓存）
-function addCacheBuster(u, ver = BUILD_VER){
-  try{
-    const url = new URL(u);
-    if (!ICON_HOST_WHITELIST.includes(url.host.toLowerCase())) return u;
-    const hasV = [...url.searchParams.keys()].some(k => k.toLowerCase() === "v");
-    if (!hasV) url.searchParams.append("v", ver);
-    else url.searchParams.set("v", ver);
-    return url.toString();
-  }catch{ return u; }
-}
-
 // 只对白名单域做 200/206 校验（其余域名直接放行）
 function getHost(u){ try { return new URL(u).host.toLowerCase(); } catch { return ""; } }
 async function probe200(url){
@@ -183,11 +171,23 @@ async function probe200(url){
   }catch{ return false; }
 }
 
-// 兼容不同编码形式（少见但有时有用）
+// 自家域名加 ?v= 构建号（防缓存）— 不用 URL 对象，避免百分号编码
+function addCacheBuster(u, ver = BUILD_VER){
+  try{
+    const host = getHost(u);
+    if (!ICON_HOST_WHITELIST.includes(host)) return u;
+    if (/[?&]v=[^&]+/.test(u)) {
+      return u.replace(/([?&]v=)[^&]+/, `$1${ver}`);
+    }
+    const sep = u.includes("?") ? "&" : "?";
+    return `${u}${sep}v=${ver}`;
+  }catch{ return u; }
+}
+
+// 兼容不同编码形式（不主动 encode，优先保留原样中文路径）
 function encodeVariants(u){
   const arr = [u];
   try { const dec = decodeURIComponent(u); if (dec !== u) arr.push(dec); } catch {}
-  try { const enc = encodeURI(u);         if (enc !== u) arr.push(enc); } catch {}
   return [...new Set(arr)];
 }
 
@@ -195,12 +195,12 @@ function encodeVariants(u){
 function normName(s){
   return (s||"")
     .normalize("NFKC")
-    .replace(/（.*?）|\(.*?\)/g, "")     // 去中文/英文括号及其中内容
+    .replace(/（.*?）|\(.*?\)/g, "")     // 去括号及内容
     .toLowerCase()
     .replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,"")
-    .replace(/[\s\/\-\_]+/g,"")          // 去空格/斜杠/连字符/下划线
-    .replace(/[^\w\u4e00-\u9fa5]/g,"")   // 仅保留中英数与中文
-    .replace(/(fhd|uhd|hd|sd|4k)$/,"");  // 去常见清晰度后缀
+    .replace(/[\s\/\-\_]+/g,"")
+    .replace(/[^\w\u4e00-\u9fa5]/g,"")
+    .replace(/(fhd|uhd|hd|sd|4k)$/,"");
 }
 function buildIconMap(json){
   const list = Array.isArray(json?.icons) ? json.icons : (Array.isArray(json) ? json : []);
@@ -403,7 +403,7 @@ async function quickProbe(url, mode="strict"){
   } catch { return false; }
 }
 
-/* ===== 注入：按显示名补图标（空/占位也补），保留分组 ===== */
+/* ===== 注入（图标按显示名，保留分组；空/占位 logo 也补） ===== */
 async function injectForM3U(m3uText, iconMap, idx=0){
   if (globalStop) return "";
   const lines = m3uText.split(/\r?\n/);
