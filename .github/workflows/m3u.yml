@@ -2,5 +2,27 @@ name: Auto M3U Update
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # 每30分钟执行一次
-  workflow_dispatch:         # 允许手动触发
+    - cron: "*/30 * * * *"   # 每 30 分钟执行一次
+  workflow_dispatch:          # 允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 如果你的脚本没有依赖包，可以跳过这一步
+      - name: Install dependencies
+        run: npm install || true
+
+      - name: Run M3U generator
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: node m3u.js
