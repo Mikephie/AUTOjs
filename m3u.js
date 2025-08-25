@@ -5,7 +5,7 @@
  * - findNextUrl 更稳：先跳空行，再跳注释
  * - 保底写回原始 URL
  * - 去掉供应商冗余属性
- * - 合并后单一 #EXTM3U 头、去重、裁剪到 50
+ * - 合并后单一 #EXTM3U 头、去重、裁剪到 50（已修复：携带 #EXTGRP 时不会丢 URL）
  */
 
 const IS_NODE  = typeof process !== "undefined" && process.release?.name === "node";
@@ -73,36 +73,76 @@ function stripM3UHeaderOnce(text){
   const kept = lines.filter(ln => !ln.trim().toUpperCase().startsWith("#EXTM3U"));
   return ["#EXTM3U", ...kept].join("\n");
 }
+
+/* ✅ 修复：在存在 #EXTGRP 等元数据时，去重不会丢 URL */
 function dedupeM3U(m3u){
   const lines = m3u.split(/\r?\n/);
   const out=[], seen=new Set();
+
   for (let i=0;i<lines.length;i++){
     const line = lines[i];
-    if (!line.startsWith("#EXTINF")) { if (line.startsWith("#")) out.push(line); continue; }
-    const url = (i+1<lines.length && !lines[i+1].startsWith("#")) ? lines[i+1].trim() : "";
+    if (!line.startsWith("#EXTINF")) {
+      if (line.startsWith("#")) out.push(line);   // 保留头/注释
+      continue;
+    }
+
+    // 收集元数据行（#EXTGRP 等），并找到真实 URL
+    const meta = [];
+    let j = i + 1;
+    while (j < lines.length && (lines[j].startsWith("#") || !lines[j].trim())) {
+      meta.push(lines[j]);
+      j++;
+    }
+    const url = (j < lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
+
     const dispName = line.split(",").slice(1).join(",").trim();
     const key = `${dispName.toLowerCase()}||${(url||"").toLowerCase()}`;
-    if (seen.has(key)) { if (url) i++; continue; }
-    seen.add(key); out.push(line); if (url) { out.push(url); i++; }
+    if (seen.has(key)) {
+      if (url) i = j; // 跳过到 URL 之后
+      continue;
+    }
+    seen.add(key);
+
+    out.push(line);
+    for (const m of meta) out.push(m);
+    if (url) { out.push(url); i = j; }
   }
   return out.join("\n");
 }
+
+/* ✅ 修复：裁剪前 50 组时，携带元数据并正确定位 URL */
 function clipByPairCount(text, maxPairs){
   if (!maxPairs || maxPairs <= 0) return text;
+
   const lines = text.split(/\r?\n/);
   const out = [];
   let pairs = 0;
+
   for (let i=0;i<lines.length;i++){
     const ln = lines[i];
-    if (ln.startsWith("#EXTINF")){
-      if (pairs >= maxPairs) break;
-      out.push(ln);
-      if (i+1<lines.length && !lines[i+1].startsWith("#")) { out.push(lines[i+1]); i++; }
-      pairs++;
-    } else if (ln.startsWith("#")) {
-      out.push(ln);
+
+    if (!ln.startsWith("#EXTINF")) {
+      if (ln.startsWith("#")) out.push(ln);  // 保留头/注释
+      continue;
     }
+
+    if (pairs >= maxPairs) break;
+
+    const meta = [];
+    let j = i + 1;
+    while (j < lines.length && (lines[j].startsWith("#") || !lines[j].trim())) {
+      meta.push(lines[j]);
+      j++;
+    }
+    const url = (j < lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
+
+    out.push(ln);
+    for (const m of meta) out.push(m);
+    if (url) { out.push(url); i = j; }
+
+    pairs++;
   }
+
   return out.join("\n");
 }
 
@@ -134,12 +174,11 @@ async function injectLogoForM3U(m3uText, idx=0){
 
     let urlForThis = findNextUrl(lines, i);
 
-    // Worker 接线（所有 http(s) 直链统统接到网关，保证可控）
+    // Worker 接线（所有 http(s) 直链接到网关）
     if (USE_WORKER_GATEWAY && urlForThis && /^https?:\/\//i.test(urlForThis)) {
       urlForThis = GW_BASE + encodeURIComponent(urlForThis);
     }
 
-    // 输出三行：EXTINF、EXTGRP、URL（带兜底）
     const grp = guessGroupByName(dispName);
     out.push(commaIdx>=0 ? (header + "," + dispName) : header);
     out.push(`#EXTGRP:${grp}`);
@@ -180,9 +219,9 @@ async function injectLogoForM3U(m3uText, idx=0){
     }
 
     let merged = injectedList.join("\n");
-    merged = stripM3UHeaderOnce(merged);           // 单一 #EXTM3U 头
-    merged = dedupeM3U(merged);                    // 去重
-    merged = clipByPairCount(merged, TEST_TOTAL_LIMIT); // ✅ 全局裁到 50 条
+    merged = stripM3UHeaderOnce(merged);                 // 单一 #EXTM3U 头
+    merged = dedupeM3U(merged);                          // 去重（带 #EXTGRP 不丢 URL）
+    merged = clipByPairCount(merged, TEST_TOTAL_LIMIT);  // ✅ 全局裁到 50 组
 
     // 打印头部统计（供 Actions 日志观察）
     console.log(`#EXTM3U`);
