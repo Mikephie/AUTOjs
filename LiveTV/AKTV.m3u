@@ -1,37 +1,5 @@
 #EXTM3U
-# Generated-At: 2025-08-25T09:13:31.900Z (epoch=1756113211900)
-# Build-Tag: v1756113211900
-# Stats: total=20, kept=20, filtered=0
+# Generated-At: 2025-08-25T09:16:36.958Z (epoch=1756113396958)
+# Build-Tag: v1756113396958
+# Stats: total=0, kept=0, filtered=0
 # Mode: filter=off, test_limit=10
-#EXTINF:1 tvg-id="aktv/animaxhk" tvg-logo="https://img.mikephie.site/TV_logo/animax.png?v=1756113211900" group-title="hongkong" tvg-group="hongkong",Animax (HK)
-#EXTGRP:hongkong
-#EXTINF:2 tvg-id="aktv/axn" tvg-logo="https://img.mikephie.site/TV_logo/axn.png?v=1756113211900" group-title="movie" tvg-group="movie",AXN
-#EXTGRP:movie
-#EXTINF:3 tvg-id="aktv/channel5hd" tvg-logo="https://img.mikephie.site/TV_logo/channel5.png?v=1756113211900" group-title="mediacorp" tvg-group="mediacorp",Channel 5 HD
-#EXTGRP:mediacorp
-#EXTINF:4 tvg-id="aktv/channel8hd" tvg-logo="https://img.mikephie.site/TV_logo/channel8.png?v=1756113211900" group-title="mediacorp" tvg-group="mediacorp",Channel 8 HD
-#EXTGRP:mediacorp
-#EXTINF:5 tvg-id="aktv/channeluhd" tvg-logo="https://img.mikephie.site/TV_logo/channelu.png?v=1756113211900" group-title="mediacorp" tvg-group="mediacorp",Channel U HD
-#EXTGRP:mediacorp
-#EXTINF:6 tvg-id="aktv/lovenaturehd" group-title="mix" tvg-group="mix",Love Nature HD
-#EXTGRP:mix
-#EXTINF:7 tvg-id="aktv/popc" tvg-logo="https://img.mikephie.site/TV_logo/popc.png?v=1756113211900" group-title="mix" tvg-group="mix",PopC
-#EXTGRP:mix
-#EXTINF:8 tvg-id="aktv/rockaction" group-title="mix" tvg-group="mix",ROCK Action
-#EXTGRP:mix
-#EXTINF:9 tvg-id="aktv/tvbplus" tvg-logo="https://img.mikephie.site/TV_logo/tvbplus.png?v=1756113211900" group-title="hongkong" tvg-group="hongkong",TVB Plus
-#EXTGRP:hongkong
-#EXTINF:10 tvg-id="aktv/tvn" group-title="mix" tvg-group="mix",tvN
-#EXTGRP:mix
-#EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV1.png" group-title="cctv" tvg-group="cctv",2025-08-25 06:18:42
-#EXTGRP:cctv
-#EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV1.png" group-title="cctv" tvg-group="cctv",CCTV-1
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
