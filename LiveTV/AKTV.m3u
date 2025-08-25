@@ -1,56 +1,56 @@
 #EXTM3U
-# Generated-At: 2025-08-25T08:38:29.894Z (epoch=1756111109894)
-# Build-Tag: v1756111109894
-# Stats: total=398, kept=209, filtered=189
-#EXTINF:1 tvg-id="aktv/animaxhk" tvg-logo="https://img.mikephie.site/TV_logo/animax.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",Animax (HK)
+# Generated-At: 2025-08-25T08:46:53.886Z (epoch=1756111613886)
+# Build-Tag: v1756111613886
+# Stats: total=398, kept=202, filtered=196
+#EXTINF:1 tvg-id="aktv/animaxhk" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",Animax (HK)
 #EXTGRP:hongkong
-#EXTINF:2 tvg-id="aktv/axn" tvg-logo="https://img.mikephie.site/TV_logo/axn.png?v=1756111109894" group-title="movie" tvg-group="movie",AXN
+#EXTINF:2 tvg-id="aktv/axn" tvg-logo="https://img.mikephie.site/TV_logo/axn.png?v=1756111613886" group-title="movie" tvg-group="movie",AXN
 #EXTGRP:movie
-#EXTINF:3 tvg-id="aktv/channel5hd" tvg-logo="https://img.mikephie.site/TV_logo/channel5.png?v=1756111109894" group-title="mediacorp" tvg-group="mediacorp",Channel 5 HD
+#EXTINF:3 tvg-id="aktv/channel5hd" tvg-logo="https://img.mikephie.site/TV_logo/channel5.png?v=1756111613886" group-title="mediacorp" tvg-group="mediacorp",Channel 5 HD
 #EXTGRP:mediacorp
-#EXTINF:4 tvg-id="aktv/channel8hd" tvg-logo="https://img.mikephie.site/TV_logo/channel8.png?v=1756111109894" group-title="mediacorp" tvg-group="mediacorp",Channel 8 HD
+#EXTINF:4 tvg-id="aktv/channel8hd" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="mediacorp" tvg-group="mediacorp",Channel 8 HD
 #EXTGRP:mediacorp
-#EXTINF:5 tvg-id="aktv/channeluhd" tvg-logo="https://img.mikephie.site/TV_logo/channelu.png?v=1756111109894" group-title="mediacorp" tvg-group="mediacorp",Channel U HD
+#EXTINF:5 tvg-id="aktv/channeluhd" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="mediacorp" tvg-group="mediacorp",Channel U HD
 #EXTGRP:mediacorp
 #EXTINF:6 tvg-id="aktv/lovenaturehd" group-title="mix" tvg-group="mix",Love Nature HD
 #EXTGRP:mix
-#EXTINF:7 tvg-id="aktv/popc" tvg-logo="https://img.mikephie.site/TV_logo/popc.png?v=1756111109894" group-title="mix" tvg-group="mix",PopC
+#EXTINF:7 tvg-id="aktv/popc" tvg-logo="https://img.mikephie.site/TV_logo/popc.png?v=1756111613886" group-title="mix" tvg-group="mix",PopC
 #EXTGRP:mix
 #EXTINF:8 tvg-id="aktv/rockaction" group-title="mix" tvg-group="mix",ROCK Action
 #EXTGRP:mix
-#EXTINF:9 tvg-id="aktv/tvbplus" tvg-logo="https://img.mikephie.site/TV_logo/tvbplus.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",TVB Plus
+#EXTINF:9 tvg-id="aktv/tvbplus" tvg-logo="https://img.mikephie.site/TV_logo/tvbplus.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",TVB Plus
 #EXTGRP:hongkong
 #EXTINF:10 tvg-id="aktv/tvn" group-title="mix" tvg-group="mix",tvN
 #EXTGRP:mix
-#EXTINF:11 tvg-id="aktv/1080" tvg-logo="https://img.mikephie.site/TV_logo/%E5%A4%A9%E6%98%A0%E7%B6%93%E5%85%B8.png?v=1756111109894" group-title="movie" tvg-group="movie",天映經典(1080)
+#EXTINF:11 tvg-id="aktv/1080" tvg-logo="https://img.mikephie.site/TV_logo/%E5%A4%A9%E6%98%A0%E7%B6%93%E5%85%B8.png?v=1756111613886" group-title="movie" tvg-group="movie",天映經典(1080)
 #EXTGRP:movie
-#EXTINF:12 tvg-id="aktv/CH-19" tvg-logo="https://img.mikephie.site/TV_logo/%E6%98%8E%E7%8F%A0%E5%89%A7%E9%9B%86%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",明珠剧集台(北美)
+#EXTINF:12 tvg-id="aktv/CH-19" tvg-logo="https://img.mikephie.site/TV_logo/%E6%98%8E%E7%8F%A0%E5%89%A7%E9%9B%86%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",明珠剧集台(北美)
 #EXTGRP:hongkong
-#EXTINF:13 tvg-id="aktv/CH-2" tvg-logo="https://img.mikephie.site/TV_logo/%E6%98%8E%E7%8F%A0%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",明珠台
+#EXTINF:13 tvg-id="aktv/CH-2" tvg-logo="https://img.mikephie.site/TV_logo/%E6%98%8E%E7%8F%A0%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",明珠台
 #EXTGRP:hongkong
-#EXTINF:14 tvg-id="aktv/CH-1" tvg-logo="https://img.mikephie.site/TV_logo/%E7%84%A1%E7%B7%9A%E6%96%B0%E8%81%9E%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",無線新聞台
+#EXTINF:14 tvg-id="aktv/CH-1" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",無線新聞台
 #EXTGRP:hongkong
-#EXTINF:15 tvg-id="aktv/hk" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BE%8E%E4%BA%9E%E9%9B%BB%E5%BD%B1%E5%8F%B0.png?v=1756111109894" group-title="movie" tvg-group="movie",美亞電影台(HK)
+#EXTINF:15 tvg-id="aktv/hk" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BE%8E%E4%BA%9E%E9%9B%BB%E5%BD%B1%E5%8F%B0.png?v=1756111613886" group-title="movie" tvg-group="movie",美亞電影台(HK)
 #EXTGRP:movie
-#EXTINF:16 tvg-id="aktv/CH-8" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E4%B8%80%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",翡翠一台(北美)
+#EXTINF:16 tvg-id="aktv/CH-8" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E4%B8%80%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",翡翠一台(北美)
 #EXTGRP:hongkong
-#EXTINF:17 tvg-id="aktv/CH-18" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E5%89%A7%E9%9B%86%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",翡翠剧集台(北美)
+#EXTINF:17 tvg-id="aktv/CH-18" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",翡翠剧集台(北美)
 #EXTGRP:hongkong
-#EXTINF:18 tvg-id="aktv/CH-0" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",翡翠台
+#EXTINF:18 tvg-id="aktv/CH-0" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",翡翠台
 #EXTGRP:hongkong
-#EXTINF:19 tvg-id="aktv/CH-7" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E5%A8%9B%E6%A8%82%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",翡翠娛樂台(北美)
+#EXTINF:19 tvg-id="aktv/CH-7" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E5%A8%9B%E6%A8%82%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",翡翠娛樂台(北美)
 #EXTGRP:hongkong
-#EXTINF:20 tvg-id="aktv/CH-17" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E7%BB%BC%E5%90%88%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",翡翠综合台(北美)
+#EXTINF:20 tvg-id="aktv/CH-17" tvg-logo="https://img.mikephie.site/TV_logo/%E7%BF%A1%E7%BF%A0%E7%BB%BC%E5%90%88%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",翡翠综合台(北美)
 #EXTGRP:hongkong
-#EXTINF:21 tvg-id="aktv/CH-3" tvg-logo="https://img.mikephie.site/TV_logo/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E4%B8%AD%E6%96%87%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",鳳凰衛視中文台
+#EXTINF:21 tvg-id="aktv/CH-3" tvg-logo="https://img.mikephie.site/TV_logo/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E4%B8%AD%E6%96%87%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",鳳凰衛視中文台
 #EXTGRP:hongkong
-#EXTINF:22 tvg-id="aktv/CH-4" tvg-logo="https://img.mikephie.site/TV_logo/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E8%B3%87%E8%A8%8A%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",鳳凰衛視資訊台
+#EXTINF:22 tvg-id="aktv/CH-4" tvg-logo="https://img.mikephie.site/TV_logo/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E8%B3%87%E8%A8%8A%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",鳳凰衛視資訊台
 #EXTGRP:hongkong
-#EXTINF:23 tvg-id="aktv/CH-5" tvg-logo="https://img.mikephie.site/TV_logo/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E9%A6%99%E6%B8%AF%E5%8F%B0.png?v=1756111109894" group-title="hongkong" tvg-group="hongkong",鳳凰衛視香港台
+#EXTINF:23 tvg-id="aktv/CH-5" tvg-logo="https://img.mikephie.site/TV_logo/%E9%B3%B3%E5%87%B0%E8%A1%9B%E8%A6%96%E9%A6%99%E6%B8%AF%E5%8F%B0.png?v=1756111613886" group-title="hongkong" tvg-group="hongkong",鳳凰衛視香港台
 #EXTGRP:hongkong
 #EXTINF:24 tvg-id="aktv/CH-6" group-title="hongkong" tvg-group="hongkong",黃金翡翠台
 #EXTGRP:hongkong
-#EXTINF:25 tvg-id="aktv3/cna" tvg-logo="https://img.mikephie.site/TV_logo/cna.png?v=1756111109894" group-title="mediacorp" tvg-group="mediacorp",CNA
+#EXTINF:25 tvg-id="aktv3/cna" tvg-logo="https://img.mikephie.site/TV_logo/cna.png?v=1756111613886" group-title="mediacorp" tvg-group="mediacorp",CNA
 #EXTGRP:mediacorp
 #EXTINF:26 tvg-id="aktv3/CH-0" tvg-logo="" group-title="mix" tvg-group="mix",朝鲜恩情台
 #EXTGRP:mix
@@ -58,19 +58,19 @@
 #EXTGRP:mix
 #EXTINF:28 tvg-id="aktvjp/ntv" tvg-logo="" group-title="mix" tvg-group="mix",日テレNEWS LIVE
 #EXTGRP:mix
-#EXTINF:29 tvg-id="astro/8tv" tvg-logo="https://img.mikephie.site/TV_logo/8tv.png?v=1756111109894" group-title="mix" tvg-group="mix",8TV
+#EXTINF:29 tvg-id="astro/8tv" tvg-logo="https://img.mikephie.site/TV_logo/8tv.png?v=1756111613886" group-title="mix" tvg-group="mix",8TV
 #EXTGRP:mix
-#EXTINF:30 tvg-id="astro/eurosport1" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport1.png?v=1756111109894" group-title="sport" tvg-group="sport",EuroSport 1
+#EXTINF:30 tvg-id="astro/eurosport1" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport1.png?v=1756111613886" group-title="sport" tvg-group="sport",EuroSport 1
 #EXTGRP:sport
-#EXTINF:31 tvg-id="astro/eurosport2" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport2.png?v=1756111109894" group-title="sport" tvg-group="sport",EuroSport 2
+#EXTINF:31 tvg-id="astro/eurosport2" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="sport" tvg-group="sport",EuroSport 2
 #EXTGRP:sport
-#EXTINF:32 tvg-id="astro/nbatv" tvg-logo="https://img.mikephie.site/TV_logo/nbatv.png?v=1756111109894" group-title="sport" tvg-group="sport",NBA TV
+#EXTINF:32 tvg-id="astro/nbatv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="sport" tvg-group="sport",NBA TV
 #EXTGRP:sport
-#EXTINF:33 tvg-id="astro/tntsports1" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS1.png?v=1756111109894" group-title="sport" tvg-group="sport",TNT SPORTS 1
+#EXTINF:33 tvg-id="astro/tntsports1" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS1.png?v=1756111613886" group-title="sport" tvg-group="sport",TNT SPORTS 1
 #EXTGRP:sport
-#EXTINF:34 tvg-id="astro/tntsports2" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS2.png?v=1756111109894" group-title="sport" tvg-group="sport",TNT SPORTS 2
+#EXTINF:34 tvg-id="astro/tntsports2" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS2.png?v=1756111613886" group-title="sport" tvg-group="sport",TNT SPORTS 2
 #EXTGRP:sport
-#EXTINF:35 tvg-id="astro/tntsports3" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS3.png?v=1756111109894" group-title="sport" tvg-group="sport",TNT SPORTS 3
+#EXTINF:35 tvg-id="astro/tntsports3" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="sport" tvg-group="sport",TNT SPORTS 3
 #EXTGRP:sport
 #EXTINF:36 tvg-id="astro/unifisports1" tvg-logo="" group-title="sport" tvg-group="sport",unifi Sports 1
 #EXTGRP:sport
@@ -84,7 +84,7 @@
 #EXTGRP:taiwan
 #EXTINF:41 tvg-id="zhongtian/tvbs56" tvg-logo="" group-title="taiwan" tvg-group="taiwan",Tvbs 56頻道
 #EXTGRP:taiwan
-#EXTINF:42 tvg-id="zhongtian/live" tvg-logo="https://img.mikephie.site/TV_logo/%E4%B8%89%E7%AB%8BLIVE.png?v=1756111109894" group-title="taiwan" tvg-group="taiwan",三立LIVE
+#EXTINF:42 tvg-id="zhongtian/live" tvg-logo="https://img.mikephie.site/not-found.png?v=1756111613886" group-title="taiwan" tvg-group="taiwan",三立LIVE
 #EXTGRP:taiwan
 #EXTINF:43 tvg-id="zhongtian/CH-0" tvg-logo="" group-title="taiwan" tvg-group="taiwan",中天新闻台
 #EXTGRP:taiwan
@@ -182,11 +182,7 @@
 #EXTGRP:cctv
 #EXTGRP:cctv
 #EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
-#EXTGRP:cctv
 #EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="cctv" tvg-group="cctv",CCTV-14
-#EXTGRP:cctv
 #EXTGRP:cctv
 #EXTGRP:cctv
 #EXTGRP:cctv
@@ -237,7 +233,6 @@
 #EXTINF:-1 tvg-name="兵器科技" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/兵器科技.png" group-title="mix" tvg-group="mix",兵器科技
 #EXTGRP:mix
 #EXTINF:-1 tvg-name="广东卫视" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/广东卫视.png" group-title="mix" tvg-group="mix",广东卫视
-#EXTGRP:mix
 #EXTGRP:mix
 #EXTGRP:mix
 #EXTGRP:mix
@@ -294,9 +289,7 @@
 #EXTGRP:mix
 #EXTGRP:mix
 #EXTGRP:mix
-#EXTGRP:mix
 #EXTINF:-1 tvg-name="甘肃卫视" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/甘肃卫视.png" group-title="mix" tvg-group="mix",甘肃卫视
-#EXTGRP:mix
 #EXTGRP:mix
 #EXTGRP:mix
 #EXTGRP:mix
