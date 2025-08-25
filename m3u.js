@@ -1,6 +1,7 @@
 /**
  * 最终版 m3u.js
  * - 双环境：Node.js/GitHub Actions & Surge/Loon/QuanX
+ * - 过滤模式 FILTER_MODE：'strict' | 'loose' | 'off'（默认从 env M3U_FILTER 读取）
  * - 过滤无效流（Node 环境启用；Surge/Loon 跳过以避免超时）
  * - 图标注入：仅对自家域做 200 校验（Range: bytes=0-0）
  * - UA 网关：按需为 live.php / 指定域注入 UA
@@ -20,12 +21,16 @@ if (IS_NODE && typeof fetch === "undefined") {
   nodeFetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args));
 }
 
+// =============== 过滤模式（通过 env 控制） ===============
+const FILTER_MODE = (IS_NODE ? (process.env.M3U_FILTER || "loose") : "off").toLowerCase(); 
+// 'strict'：仅 Range 探测；'loose'：Range 失败再试一次普通 GET；'off'：完全不探测（保留所有链接）
+
 // =============== 可调参数（性能/超时/并发/上限） ===============
 const FETCH_TIMEOUT_MS        = 5000;  // 普通拉取（icons/m3u）超时
 const STREAM_PROBE_TIMEOUT_MS = 2000;  // 流探测超时
 const ICON_PROBE_TIMEOUT_MS   = 1200;  // 图标探测超时（仅自家域）
-const MAX_CHANNELS_PER_SOURCE = 350;   // 单源最多处理频道
-const MAX_CHANNELS_TOTAL      = 900;   // 合并后最多频道（#EXTINF 对数）
+const MAX_CHANNELS_PER_SOURCE = 1000;  // 单源最多处理频道（放大，避免早截断）
+const MAX_CHANNELS_TOTAL      = 2000;  // 合并后最多频道（#EXTINF 对数）
 const ACCEPT_206_PARTIAL      = true;  // 206 视为可用
 const ACCEPT_REDIRECT_AS_OK   = true;  // 301/302 视为可用
 const SKIP_PROBE_FOR_GATEWAY  = true;  // workers.dev 网关跳过探测直过
@@ -77,7 +82,7 @@ let filteredChannels = 0;
 
 // =============== HTTP 封装（带超时） ===============
 async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) {
-  // Surge/Loon → 用 $httpClient，忽略 AbortController
+  // Surge/Loon → 用 $httpClient
   if (!IS_NODE) {
     return new Promise((resolve) => {
       $httpClient.get({ url, headers: options.headers || {} }, (e, r, d) => {
@@ -200,7 +205,7 @@ function shouldOverrideLogo(cur, nxt){
   return false;
 }
 
-// =============== 200/探测 ===============
+// =============== 200/探测（含 FILTER_MODE） ===============
 async function probe200Icon(url){
   try{
     const host=getHost(url);
@@ -212,21 +217,27 @@ async function probe200Icon(url){
 }
 function encodePathKeepSlash(p){ return p.split("/").map(s => encodeURIComponent(s)).join("/"); }
 function toEncodedOnce(chineseUrl){ try{ const u=new URL(chineseUrl); u.pathname=encodePathKeepSlash(u.pathname); return u.toString(); } catch{ return chineseUrl; } }
+
 async function probeStream(url){
   if (!url) return false;
-  if (!IS_NODE) return true; // 移动端本地跳过探测
-  const host = getHost(url);
-  if (SKIP_PROBE_FOR_GATEWAY && /workers\.dev$/i.test(host)) return true;
-  const { r } = await httpGet(url, { "Range":"bytes=0-0" }, STREAM_PROBE_TIMEOUT_MS);
-  if (!r) return false;
-  if (r.status === 200) return true;
-  if (ACCEPT_206_PARTIAL && r.status === 206) return true;
-  if (ACCEPT_REDIRECT_AS_OK && (r.status === 301 || r.status === 302)) return true;
+  if (!IS_NODE || FILTER_MODE === "off") return true; // 本地或关闭过滤：直接通过
+
+  // 1) 轻量带 Range 探测
+  let res = await httpGet(url, { "Range": "bytes=0-0" }, STREAM_PROBE_TIMEOUT_MS);
+  if (res?.r && ([200,206,301,302].includes(res.r.status))) return true;
+
+  // 2) 宽松模式：再尝试一次不带 Range（有些源不支持 Range/会 403）
+  if (FILTER_MODE === "loose") {
+    res = await httpGet(url, {}, Math.min(STREAM_PROBE_TIMEOUT_MS, 1500));
+    if (res?.r && ([200,301,302].includes(res.r.status))) return true;
+  }
+
   return false;
 }
+
 async function pickPlayableUrl(rawUrl){
   if (!rawUrl) return "";
-  if (!IS_NODE) return rawUrl;                           // 本地直接返回，避免超时
+  if (!IS_NODE || FILTER_MODE === "off") return rawUrl; // 本地或关闭过滤：直接保留
   if (await probeStream(rawUrl)) return rawUrl;
   const encoded = toEncodedOnce(rawUrl);
   if (encoded !== rawUrl && await probeStream(encoded)) return encoded;
@@ -468,7 +479,7 @@ async function uploadToGitHub(text){
     return { ok:true, msg:`NO CHANGE -> ${viewUrl}\nRAW -> ${rawUrl}` };
   }
 
-  const body={ message:`Auto update M3U @ ${BUILD_ISO} (v${BUILD_VER}) - probe&filter`, content:b64encode(text), branch:BRANCH };
+  const body={ message:`Auto update M3U @ ${BUILD_ISO} (v${BUILD_VER}) - probe&filter(${FILTER_MODE})`, content:b64encode(text), branch:BRANCH };
   if (remote.exists && remote.sha) body.sha = remote.sha;
 
   const { r, d } = await httpPut(api, body, ghHeaders(TOKEN));
@@ -521,6 +532,7 @@ async function uploadToGitHub(text){
     const merged = stampM3U(mergedCore);
     store.write(merged, PERSIST_KEY);
     console.log(`📊 Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}`);
+    console.log(`🔧 Filter mode: ${FILTER_MODE}`);
 
     // 6) 上传
     if (UPLOAD_NOW){
