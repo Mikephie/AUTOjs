@@ -1,46 +1,37 @@
 /**
- * 最终版 m3u.js（含测试模式）
- * - 双环境：Node.js/GitHub Actions & Surge/Loon/QuanX
- * - 过滤模式 FILTER_MODE：'strict' | 'loose' | 'off'（默认从 env M3U_FILTER 读取）
- * - 过滤无效流（Node 环境启用；Surge/Loon 跳过以避免超时）
- * - 图标注入：仅对自家域做 200 校验（Range: bytes=0-0）
- * - UA 网关：按需为 live.php / 指定域注入 UA
- * - 并发/超时/上限：防止卡死；统计总数/保留/过滤
- * - 测试模式 TEST_LIMIT：只输出前 N 条，便于快速验证
- * - GitHub 上传：PUT contents API（自动获取 sha，避免 409）
+ * m3u.js (TEST LIMIT = 10)
+ * - Node.js/GitHub Actions & Surge/Loon/QuanX 双环境
+ * - 过滤模式由 env M3U_FILTER 控制：strict/loose/off（测试用 off）
+ * - 热修复：
+ *   A) 探测失败也写回原始 URL（必出链接）
+ *   B) 只保留 #EXTM3U 头，丢弃源里其他杂项行（避免干扰）
+ * - 超时保护、分组、图标注入（仅自家域 200 校验）、统计
+ * - GitHub PUT 上传（含 sha）
  */
 
-// =============== 环境检测 & 依赖 =================
+/* ========== 环境/依赖 ========== */
 const IS_NODE  = typeof process !== "undefined" && process.release?.name === "node";
 const IS_SURGE = typeof $httpClient !== "undefined";
-const IS_LOON  = typeof $loon !== "undefined";
-const IS_QX    = typeof $task !== "undefined";
-
-// Node 20 全局自带 fetch/AbortController；如无则动态导入 node-fetch
 let nodeFetch = null;
 if (IS_NODE && typeof fetch === "undefined") {
   nodeFetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args));
 }
 
-// =============== 测试模式 & 过滤模式 ===============
-// 测试模式：只输出前 N 条频道。上线时改为 0 关闭限制。
-const TEST_LIMIT = 10; // ← 测试中：只取前 10 条。上线改为 0。
+/* ========== 测试与过滤开关 ========== */
+const TEST_LIMIT   = 10;                                      // ★ 只输出 10 条
+const FILTER_MODE  = (IS_NODE ? (process.env.M3U_FILTER || "loose") : "off").toLowerCase();
 
-// 过滤模式（由工作流通过环境变量传入；默认 loose）：
-const FILTER_MODE = (IS_NODE ? (process.env.M3U_FILTER || "loose") : "off").toLowerCase(); 
-// 'strict'：仅 Range 探测；'loose'：Range 失败再试一次普通 GET；'off'：完全不探测（保留所有链接）
+/* ========== 超时/上限/策略 ========== */
+const FETCH_TIMEOUT_MS        = 5000;
+const STREAM_PROBE_TIMEOUT_MS = 2000;
+const ICON_PROBE_TIMEOUT_MS   = 1200;
+const MAX_CHANNELS_PER_SOURCE = 1000;
+const MAX_CHANNELS_TOTAL      = 2000;
+const ACCEPT_206_PARTIAL      = true;
+const ACCEPT_REDIRECT_AS_OK   = true;
+const SKIP_PROBE_FOR_GATEWAY  = true;
 
-// =============== 可调参数（性能/超时/并发/上限） ===============
-const FETCH_TIMEOUT_MS        = 5000;  // 普通拉取（icons/m3u）超时
-const STREAM_PROBE_TIMEOUT_MS = 2000;  // 流探测超时
-const ICON_PROBE_TIMEOUT_MS   = 1200;  // 图标探测超时（仅自家域）
-const MAX_CHANNELS_PER_SOURCE = 1000;  // 单源最多处理频道（放大，避免早截断）
-const MAX_CHANNELS_TOTAL      = 2000;  // 合并后最多频道（#EXTINF 对数）
-const ACCEPT_206_PARTIAL      = true;  // 206 视为可用
-const ACCEPT_REDIRECT_AS_OK   = true;  // 301/302 视为可用
-const SKIP_PROBE_FOR_GATEWAY  = true;  // workers.dev 网关跳过探测直过
-
-// =============== 构建/网关/数据源/上传配置 =================
+/* ========== 构建/数据源/上传配置 ========== */
 const BUILD_EPOCH = Date.now();
 const BUILD_ISO   = new Date(BUILD_EPOCH).toISOString();
 const BUILD_VER   = String(BUILD_EPOCH);
@@ -48,20 +39,17 @@ const BUILD_VER   = String(BUILD_EPOCH);
 const USE_WORKER_GATEWAY = true;
 const GW_BASE = "https://m3u-converter.mikephiemy.workers.dev/?u=";
 
-// 需要强制带 UA 的域名（可按需扩充）
 const UA_MAP = {
   "mursor.ottiptv.cc": "okHttp/Mod-1.1.0",
   "sub.ottiptv.cc":    "okHttp/Mod-1.1.0",
 };
 
-// 数据源
 const M3U_URLS = [
   { url: "https://aktv.space/live.m3u" },
   { url: "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/result.m3u" },
 ];
 const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
 
-// 输出 & 上传
 const PERSIST_KEY = "M3U_CONTENT";
 const UPLOAD_NOW  = true;
 const REPO        = "Mikephie/AUTOjs";
@@ -70,26 +58,22 @@ const PATH        = "LiveTV/AKTV.m3u";
 const INLINE_TOKEN = "";
 const TOKEN = IS_NODE ? (process.env.GH_TOKEN || INLINE_TOKEN) : (($persistentStore?.read("GH_TOKEN")) || INLINE_TOKEN);
 
-// 分组策略
-const GROUP_WHITELIST    = ["sport", "movie", "cctv", "mediacorp", "hongkong", "taiwan"];
-const DEFAULT_GROUP      = "mix";
+/* ========== 分组/图标策略 ========== */
+const GROUP_WHITELIST = ["sport", "movie", "cctv", "mediacorp", "hongkong", "taiwan"];
+const DEFAULT_GROUP   = "mix";
 const FORCE_RENAME_GROUP = true;
-const EMIT_TVG_GROUP     = true;
-const EMIT_EXTGRP        = true;
+const EMIT_TVG_GROUP  = true;
+const EMIT_EXTGRP     = true;
 
-// 图标策略
-const ICON_HOST_WHITELIST = ["img.mikephie.site"]; // 仅自家域做 200 校验
+const ICON_HOST_WHITELIST = ["img.mikephie.site"];
 const FORCE_REPLACE_ALL   = true;
 const FALLBACK_LOGO       = "https://img.mikephie.site/not-found.png";
 
-// =============== 统计 ===============
-let totalChannels = 0;
-let keptChannels = 0;
-let filteredChannels = 0;
+/* ========== 统计 ========== */
+let totalChannels = 0, keptChannels = 0, filteredChannels = 0;
 
-// =============== HTTP 封装（带超时） ===============
+/* ========== HTTP (带超时) ========== */
 async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) {
-  // Surge/Loon → 用 $httpClient
   if (!IS_NODE) {
     return new Promise((resolve) => {
       $httpClient.get({ url, headers: options.headers || {} }, (e, r, d) => {
@@ -98,7 +82,6 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS)
       });
     });
   }
-  // Node：用全局 fetch 或 node-fetch
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -110,10 +93,7 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS)
     return { r: { status: 0 }, d: "" };
   } finally { clearTimeout(id); }
 }
-
-function httpGet(url, headers = {}, timeoutMs = FETCH_TIMEOUT_MS) {
-  return fetchWithTimeout(url, { headers }, timeoutMs);
-}
+function httpGet(url, headers = {}, timeoutMs = FETCH_TIMEOUT_MS) { return fetchWithTimeout(url, { headers }, timeoutMs); }
 function httpPut(url, body, headers = {}) {
   if (!IS_NODE) {
     return new Promise((resolve) => {
@@ -129,48 +109,15 @@ function httpPut(url, body, headers = {}) {
     .catch(() => ({ r: { status: 0 }, d: "" }));
 }
 
-// =============== 存储/Base64 ===============
-const store = {
-  read(k){ if (IS_NODE) { try { return require("fs").readFileSync(`./${k}.txt`, "utf8"); } catch { return ""; } }
-           return $persistentStore?.read(k) || ""; },
-  write(v,k){ if (IS_NODE) { require("fs").writeFileSync(`./${k}.txt`, v, "utf8"); return true; }
-              return $persistentStore?.write(v,k); }
-};
-function b64encode(text){
-  if (IS_NODE) return Buffer.from(text, "utf8").toString("base64");
-  if (typeof $base64 !== "undefined" && $base64.encode) return $base64.encode(text);
-  return "";
-}
-
-// =============== 字符串/匹配工具 ===============
+/* ========== 工具/图标辅助 ========== */
 const isZh = s => /[\u4e00-\u9fa5]/.test(s||"");
-function englishKey(s){
-  s = (s||"").trim(); if (!s || isZh(s)) return "";
-  s = s.replace(/\([^)]*\)/g, " ").replace(/\b(HD|FHD|UHD|4K)\b/ig, " ").replace(/[\s\-_\.]+/g, "");
-  return s.toUpperCase();
-}
-function chineseKey(s){
-  s = (s||"").trim(); if (!isZh(s)) return ""; return s.replace(/[（(].*?[)）]/g, "").trim();
-}
-const ZH_MAP = [
-  ["鳳凰","凤凰"],["衛視","卫视"],["資訊","资讯"],["無線","无线"],["綜合","综合"],["娛樂","娱乐"],
-  ["頻道","频道"],["電影","电影"],["臺","台"],["東森","东森"],["華視","华视"],["公視","公视"],["龍華","龙华"]
-];
-function addZhVariants(set, base){
-  set.add(base); set.add(base.replace(/[（(].*?[)）]/g,""));
-  for (let n=0;n<2;n++) for (const [trad,simp] of ZH_MAP)
-    for (const v of Array.from(set)) { set.add(v.replace(new RegExp(trad,"g"),simp)); set.add(v.replace(new RegExp(simp,"g"),trad)); }
-  return set;
-}
+function englishKey(s){ s=(s||"").trim(); if(!s||isZh(s))return""; s=s.replace(/\([^)]*\)/g," ").replace(/\b(HD|FHD|UHD|4K)\b/ig," ").replace(/[\s\-_\.]+/g,""); return s.toUpperCase(); }
+function chineseKey(s){ s=(s||"").trim(); if(!isZh(s))return""; return s.replace(/[（(].*?[)）]/g,"").trim(); }
+const ZH_MAP=[["鳳凰","凤凰"],["衛視","卫视"],["資訊","资讯"],["無線","无线"],["綜合","综合"],["娛樂","娱乐"],["頻道","频道"],["電影","电影"],["臺","台"],["東森","东森"],["華視","华视"],["公視","公视"],["龍華","龙华"]];
+function addZhVariants(set, base){ set.add(base); set.add(base.replace(/[（(].*?[)）]/g,"")); for(let n=0;n<2;n++) for(const [trad,simp] of ZH_MAP) for(const v of Array.from(set)){ set.add(v.replace(new RegExp(trad,"g"),simp)); set.add(v.replace(new RegExp(simp,"g"),trad)); } return set; }
 function getHost(u){ try { return new URL(u).host.toLowerCase(); } catch { return ""; } }
 function getHostPath(u){ try { const x=new URL(u); return {host:x.host||"", path:x.pathname||""}; } catch { return {host:"", path:""}; } }
-function addCacheBuster(u, ver = BUILD_VER){
-  try{ const url = new URL(u); if (!ICON_HOST_WHITELIST.includes(url.host.toLowerCase())) return u;
-       const has=[...url.searchParams.keys()].some(k=>k.toLowerCase()==="v"); has?url.searchParams.set("v",ver):url.searchParams.append("v",ver); return url.toString(); }
-  catch{ return u; }
-}
-
-// =============== 图标表构建/选择 ===============
+function addCacheBuster(u, ver=BUILD_VER){ try{ const url=new URL(u); if(!ICON_HOST_WHITELIST.includes(url.host.toLowerCase())) return u; const has=[...url.searchParams.keys()].some(k=>k.toLowerCase()==="v"); has?url.searchParams.set("v",ver):url.searchParams.append("v",ver); return url.toString(); }catch{ return u; } }
 function buildIconMap(json){
   const list = Array.isArray(json?.icons) ? json.icons : (Array.isArray(json) ? json : []);
   const map = new Map();
@@ -180,11 +127,7 @@ function buildIconMap(json){
     const baseFull = name.replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i, "");
     const base = baseFull.split("/").pop();
     const keys = new Set();
-    if (base) {
-      keys.add(base); keys.add(base.toUpperCase());
-      const en=englishKey(base); if (en) keys.add(en);
-      if (isZh(base)) addZhVariants(keys, base);
-    }
+    if (base){ keys.add(base); keys.add(base.toUpperCase()); const en=englishKey(base); if(en)keys.add(en); if(isZh(base)) addZhVariants(keys, base); }
     if (baseFull) keys.add(baseFull);
     for (const k of keys) map.set(k, url);
   }
@@ -192,11 +135,11 @@ function buildIconMap(json){
 }
 function pickLogoUrl(iconMap, candidates){
   for (const raw of candidates){
-    const s=(raw||"").trim(); if (!s) continue;
+    const s=(raw||"").trim(); if(!s) continue;
     if (iconMap.has(s)) return iconMap.get(s);
     const up=s.toUpperCase(); if (iconMap.has(up)) return iconMap.get(up);
-    const en=englishKey(s); if (en && iconMap.has(en)) return iconMap.get(en);
-    const zh=chineseKey(s); if (zh && iconMap.has(zh)) return iconMap.get(zh);
+    const en=englishKey(s); if (en&&iconMap.has(en)) return iconMap.get(en);
+    const zh=chineseKey(s); if (zh&&iconMap.has(zh)) return iconMap.get(zh);
   }
   return null;
 }
@@ -204,19 +147,18 @@ function fileLower(u){ try { return decodeURIComponent(u).toLowerCase(); } catch
 function shouldOverrideLogo(cur, nxt){
   if (!cur) return true;
   if (FORCE_REPLACE_ALL) return true;
-  const curf=fileLower(cur);
-  if (!curf || /not[-_]?found\.png$/.test(curf)) return true;
+  const curf=fileLower(cur); if (!curf || /not[-_]?found\.png$/.test(curf)) return true;
   const curMine=ICON_HOST_WHITELIST.includes(getHost(cur));
   const nxtMine=ICON_HOST_WHITELIST.includes(getHost(nxt));
   if (nxtMine && !curMine) return true;
   return false;
 }
 
-// =============== 200/探测（含 FILTER_MODE） ===============
+/* ========== 探测（含过滤模式） ========== */
 async function probe200Icon(url){
   try{
     const host=getHost(url);
-    if (!ICON_HOST_WHITELIST.includes(host)) return true; // 外域图标直接放过
+    if (!ICON_HOST_WHITELIST.includes(host)) return true;
     const { r } = await httpGet(url, { "Range":"bytes=0-0" }, ICON_PROBE_TIMEOUT_MS);
     if (!r) return false;
     return r.status === 200 || (ACCEPT_206_PARTIAL && r.status === 206);
@@ -227,31 +169,25 @@ function toEncodedOnce(chineseUrl){ try{ const u=new URL(chineseUrl); u.pathname
 
 async function probeStream(url){
   if (!url) return false;
-  if (!IS_NODE || FILTER_MODE === "off") return true; // 本地或关闭过滤：直接通过
-
-  // 1) 轻量带 Range 探测
-  let res = await httpGet(url, { "Range": "bytes=0-0" }, STREAM_PROBE_TIMEOUT_MS);
+  if (!IS_NODE || FILTER_MODE === "off") return true;
+  let res = await httpGet(url, { "Range":"bytes=0-0" }, STREAM_PROBE_TIMEOUT_MS);
   if (res?.r && ([200,206,301,302].includes(res.r.status))) return true;
-
-  // 2) 宽松模式：再尝试一次不带 Range（有些源不支持 Range/会 403）
   if (FILTER_MODE === "loose") {
     res = await httpGet(url, {}, Math.min(STREAM_PROBE_TIMEOUT_MS, 1500));
     if (res?.r && ([200,301,302].includes(res.r.status))) return true;
   }
-
   return false;
 }
-
 async function pickPlayableUrl(rawUrl){
   if (!rawUrl) return "";
-  if (!IS_NODE || FILTER_MODE === "off") return rawUrl; // 本地或关闭过滤：直接保留
+  if (!IS_NODE || FILTER_MODE === "off") return rawUrl;
   if (await probeStream(rawUrl)) return rawUrl;
   const encoded = toEncodedOnce(rawUrl);
   if (encoded !== rawUrl && await probeStream(encoded)) return encoded;
-  return "";                                             // 过滤
+  return "";
 }
 
-// =============== 分组规则/分类 ===============
+/* ========== 分组规则 ========== */
 const RULES_HOST = [
   { test: /(espn|bein|skysports|foxsports|eleven|nba|bundesliga|laliga|premierleague)\./i, group: "sport" },
   { test: /(hbo|cinemax|celestial|starmovies|foxmovies|paramount|amc|mubi)\./i,           group: "movie" },
@@ -304,27 +240,28 @@ function stripVendorGroups(header){
   return header.replace(/\s+(aktv-group|provider|provider-logo|provider-type)="[^"]*"/ig, "");
 }
 
-// =============== M3U 注入（核心，含过滤无效流 & 测试限制） ===============
+/* ========== 注入（含两处热修复 & TEST_LIMIT） ========== */
 function findNextUrl(lines, i){
   let j=i+1; while (j<lines.length && (lines[j].startsWith("#") || !lines[j].trim())) j++;
   return (j<lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
 }
 
 async function injectLogoForM3U(m3uText, iconMap){
-  const lines = m3uText.split(/\r?\n/);
+  const lines = m3uText.split(/\r?\\n/);
   const out = [];
-  let processed = 0;
-  let totalKeptForThisSource = 0;
+  let processed = 0, keptThisSource = 0;
 
   for (let i=0;i<lines.length;i++){
     if (processed >= MAX_CHANNELS_PER_SOURCE) { console.log("⏩ reach MAX_CHANNELS_PER_SOURCE"); break; }
-    if (TEST_LIMIT > 0 && totalKeptForThisSource >= TEST_LIMIT) {
-      console.log(`⏩ reach TEST_LIMIT=${TEST_LIMIT} for this source`);
-      break;
-    }
+    if (TEST_LIMIT > 0 && keptThisSource >= TEST_LIMIT) { console.log(`⏩ reach TEST_LIMIT=${TEST_LIMIT}`); break; }
 
     const rawLine = lines[i];
-    if (!rawLine.startsWith("#EXTINF")) { out.push(rawLine); continue; }
+
+    // 热修复 B：非 #EXTINF 行一律丢弃，仅保留 #EXTM3U（避免把源里的 #EXTGRP/注释带进来）
+    if (!rawLine.startsWith("#EXTINF")) {
+      if (rawLine.trim().toUpperCase().startsWith("#EXTM3U") && out.length === 0) out.push("#EXTM3U");
+      continue;
+    }
 
     processed++; totalChannels++;
 
@@ -336,18 +273,17 @@ async function injectLogoForM3U(m3uText, iconMap){
     const tvgName  = getAttr("tvg-name");
     let   tvgLogo  = getAttr("tvg-logo");
 
-    // 读取原始 URL（下一行）
+    // 找原始 URL（下一行）
     let urlForThis = findNextUrl(lines, i);
 
-    // A) live.php/id=xxx → 网关 + 透传 UA
+    // live.php/id= → 网关 + 透传 UA
     if (USE_WORKER_GATEWAY && (/\blive\.php\b/i.test(urlForThis) || /\.php\?id=/i.test(urlForThis))) {
       let newUrl = GW_BASE + encodeURIComponent(urlForThis);
       const uaMatch = header.match(/http-user-agent="([^"]+)"/i);
       if (uaMatch) newUrl += "&ua=" + encodeURIComponent(uaMatch[1]);
       urlForThis = newUrl;
     }
-
-    // B) 普通 m3u8 按需注入 UA（条目内或按域名）
+    // 普通 m3u8 按域名/条目注入 UA（走网关）
     try {
       const u = new URL(urlForThis);
       const needUAByHost = UA_MAP[u.host.toLowerCase()];
@@ -358,17 +294,13 @@ async function injectLogoForM3U(m3uText, iconMap){
       }
     } catch {}
 
-    // 1) 选 logo（自家域优先） + 200 校验（仅自家域）
+    // 选 logo（仅自家域做 200 校验）
     const logoCandidates = [tvgName, dispName, tvgId];
     let logoUrl = pickLogoUrl(iconMap, logoCandidates);
     if (logoUrl && (!tvgLogo || shouldOverrideLogo(tvgLogo, logoUrl))) {
       const v = addCacheBuster(logoUrl);
       const ok = await probe200Icon(v);
-      if (!ok) {
-        logoUrl = FALLBACK_LOGO ? addCacheBuster(FALLBACK_LOGO) : "";
-      } else {
-        logoUrl = v;
-      }
+      logoUrl = ok ? v : (FALLBACK_LOGO ? addCacheBuster(FALLBACK_LOGO) : "");
       if (logoUrl){
         header = header.match(/tvg-logo="/i)
           ? header.replace(/tvg-logo="[^"]*"/i, `tvg-logo="${logoUrl}"`)
@@ -376,7 +308,7 @@ async function injectLogoForM3U(m3uText, iconMap){
       }
     }
 
-    // 2) 分组（三保险）
+    // 分组与清洁
     let targetGroup = classifyChannel({ tvgId, tvgName, dispName, url: urlForThis });
     if (!GROUP_WHITELIST.includes(targetGroup)) targetGroup = DEFAULT_GROUP;
     header = stripVendorGroups(header);
@@ -393,27 +325,29 @@ async function injectLogoForM3U(m3uText, iconMap){
         : header + ` tvg-group="${targetGroup}"`;
     }
 
-    // 3) 流可用性：验证通过才写入；失败整段丢弃（测试/关闭过滤时一定会保留）
-    let playable = "";
-    if (urlForThis) playable = await pickPlayableUrl(urlForThis);
+    // 可用性（测试模式关闭过滤时总为真）
+    const playable = urlForThis ? await pickPlayableUrl(urlForThis) : "";
 
     if (playable) {
-      keptChannels++;
-      totalKeptForThisSource++;
+      keptChannels++; keptThisSource++;
       out.push(commaIdx>=0 ? (header + "," + dispName) : header);
       if (EMIT_EXTGRP) out.push(`#EXTGRP:${targetGroup}`);
       out.push(playable);
-      if (i+1<lines.length && !lines[i+1].startsWith("#")) i++; // 跳过原 URL
     } else {
       filteredChannels++;
-      if (i+1<lines.length && !lines[i+1].startsWith("#")) i++; // 跳过原 URL
-      // 测试/关闭过滤时 playable 不会为空，这里只作为兜底
+      // 热修复 A：即便不可用也保留原始 URL（保证文件里有链接）
+      out.push(commaIdx>=0 ? (header + "," + dispName) : header);
+      if (EMIT_EXTGRP) out.push(`#EXTGRP:${targetGroup}`);
+      if (urlForThis) out.push(urlForThis);
     }
+
+    // 跳过原 URL 行（若存在）
+    if (i+1<lines.length && !lines[i+1].startsWith("#")) i++;
   }
   return out.join("\n");
 }
 
-// =============== 合并/去重/裁剪/标记 ===============
+/* ========== 合并/去重/裁剪/标记 ========== */
 function stripM3UHeaderOnce(text){
   const lines = text.split(/\r?\n/);
   const kept = lines.filter(ln => !ln.trim().toUpperCase().startsWith("#EXTM3U"));
@@ -421,10 +355,10 @@ function stripM3UHeaderOnce(text){
 }
 function dedupeM3U(mergedText){
   const lines = mergedText.split(/\r?\n/);
-  const out = []; const seen = new Set();
+  const out=[], seen=new Set();
   for (let i=0;i<lines.length;i++){
     const line = lines[i];
-    if (!line.startsWith("#EXTINF")) { out.push(line); continue; }
+    if (!line.startsWith("#EXTINF")) { if (line.startsWith("#")) out.push(line); continue; }
     const url = (i+1<lines.length && !lines[i+1].startsWith("#")) ? lines[i+1].trim() : "";
     const dispName = line.split(",").slice(1).join(",").trim();
     const key = `${(dispName||"").toLowerCase()}||${(url||"").toLowerCase()}`;
@@ -435,7 +369,7 @@ function dedupeM3U(mergedText){
 }
 function clipByTotalLimit(text, maxPairs){
   const lines = text.split(/\r?\n/);
-  const out = []; let pairs = 0;
+  const out=[]; let pairs=0;
   for (let i=0;i<lines.length;i++){
     const ln = lines[i];
     if (ln.startsWith("#EXTINF")){
@@ -449,28 +383,27 @@ function clipByTotalLimit(text, maxPairs){
 }
 function stampM3U(m3uText){
   const lines = m3uText.split(/\r?\n/);
-  const statsLine = `# Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}`;
+  const stats = `# Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}`;
+  const mode  = `# Mode: filter=${FILTER_MODE}, test_limit=${TEST_LIMIT}`;
   if (lines.length === 0) return m3uText;
   if (lines[0].startsWith("#EXTM3U")) {
     const stamp = `# Generated-At: ${BUILD_ISO} (epoch=${BUILD_VER})`;
     if (lines[1]?.startsWith("# Generated-At:")) lines[1] = stamp; else lines.splice(1,0,stamp);
     const tag = `# Build-Tag: v${BUILD_VER}`;
     if (lines[2]?.startsWith("# Build-Tag:")) lines[2] = tag; else lines.splice(2,0,tag);
-    if (lines[3]?.startsWith("# Stats:")) lines[3] = statsLine; else lines.splice(3,0,statsLine);
-    // 额外注入测试提示
-    const tip = `# Mode: filter=${FILTER_MODE}, test_limit=${TEST_LIMIT}`;
-    if (lines[4]?.startsWith("# Mode:")) lines[4] = tip; else lines.splice(4,0,tip);
+    if (lines[3]?.startsWith("# Stats:")) lines[3] = stats; else lines.splice(3,0,stats);
+    if (lines[4]?.startsWith("# Mode:"))  lines[4] = mode;  else lines.splice(4,0,mode);
     return lines.join("\n");
   }
-  return `#EXTM3U\n# Generated-At: ${BUILD_ISO} (epoch=${BUILD_VER})\n# Build-Tag: v${BUILD_VER}\n# Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}\n# Mode: filter=${FILTER_MODE}, test_limit=${TEST_LIMIT}\n${m3uText}`;
+  return `#EXTM3U\n# Generated-At: ${BUILD_ISO} (epoch=${BUILD_VER})\n# Build-Tag: v${BUILD_VER}\n${stats}\n${mode}\n${m3uText}`;
 }
 
-// =============== GitHub 上传 ===============
+/* ========== GitHub 上传 ========== */
 function ghHeaders(token){
   return {
     Authorization: `Bearer ${token}`,
     Accept: "application/vnd.github+json",
-    "User-Agent": "M3U-AutoUploader/1.4",
+    "User-Agent": "M3U-AutoUploader/1.5",
     "Content-Type": "application/json"
   };
 }
@@ -484,11 +417,7 @@ async function getRemoteFile(repo, path, branch, token){
   let decoded=""; try{ decoded = b64 ? Buffer.from(b64,"base64").toString("utf8") : ""; } catch {}
   return { exists:true, sha:(j.sha||null), text:decoded, size:j.size||0, path:j.path||path };
 }
-function b64encode(text){
-  if (IS_NODE) return Buffer.from(text, "utf8").toString("base64");
-  if (typeof $base64 !== "undefined" && $base64.encode) return $base64.encode(text);
-  return "";
-}
+function b64encode(text){ return Buffer.from(text, "utf8").toString("base64"); }
 async function uploadToGitHub(text){
   if (!TOKEN){ console.log("⚠️ Token 缺失"); return {ok:false,msg:"NO TOKEN"}; }
   const viewUrl=`https://github.com/${REPO}/blob/${BRANCH}/${PATH}`;
@@ -497,19 +426,19 @@ async function uploadToGitHub(text){
 
   let remote={exists:false}; try{ remote=await getRemoteFile(REPO,PATH,BRANCH,TOKEN);}catch(e){ console.log("⚠️ 读远端失败：",String(e)); }
   if (remote.exists && remote.text === text){
-    console.log("🟡 NO CHANGE"); console.log("  view:", viewUrl); console.log("  raw :", rawUrl);
+    console.log("🟡 NO CHANGE"); console.log("view:", viewUrl); console.log("raw :", rawUrl);
     return { ok:true, msg:`NO CHANGE -> ${viewUrl}\nRAW -> ${rawUrl}` };
   }
 
-  const body={ message:`Auto update M3U @ ${BUILD_ISO} (v${BUILD_VER}) - probe&filter(${FILTER_MODE}), test_limit=${TEST_LIMIT}`, content:b64encode(text), branch:BRANCH };
+  const body={ message:`Auto update M3U @ ${BUILD_ISO} (v${BUILD_VER}) - mode=${FILTER_MODE}, test=${TEST_LIMIT}`, content:b64encode(text), branch:BRANCH };
   if (remote.exists && remote.sha) body.sha = remote.sha;
 
   const { r, d } = await httpPut(api, body, ghHeaders(TOKEN));
   if (r && r.status>=200 && r.status<300){
     let p={}; try{ p=JSON.parse(d||"{}"); }catch{}
     const sha=p?.commit?.sha||""; const curl= sha? `https://github.com/${REPO}/commit/${sha}` : "";
-    console.log("✅ GitHub 更新完成"); if (curl) console.log("  commit:", curl);
-    console.log("  view  :", viewUrl); console.log("  raw   :", rawUrl);
+    console.log("✅ GitHub 更新完成"); if (curl) console.log("commit:", curl);
+    console.log("view:", viewUrl); console.log("raw :", rawUrl);
     return { ok:true, msg:`OK Uploaded -> ${viewUrl}\nRAW -> ${rawUrl}` };
   }else{
     console.log("❌ GitHub 上传失败：", r?.status, d);
@@ -517,46 +446,37 @@ async function uploadToGitHub(text){
   }
 }
 
-// =============== 主流程 ===============
+/* ========== 主流程 ========== */
 (async function main(){
   try{
-    // 1) 拉取 icons 与各源（带超时）
     const tasks = [
       httpGet(ICONS_JSON_URL, {}, FETCH_TIMEOUT_MS),
       ...M3U_URLS.map(({url, ua}) => httpGet(url, ua ? {"User-Agent": ua} : {}, FETCH_TIMEOUT_MS))
     ];
     const [iconsRes, ...m3uResArr] = await Promise.all(tasks);
+    if (!(iconsRes?.r?.status>=200 && iconsRes?.r?.status<300 && iconsRes.d)) return finish("ICON FAIL");
 
-    if (!(iconsRes?.r?.status>=200 && iconsRes?.r?.status<300 && iconsRes.d)){
-      return finish("ICON FAIL");
-    }
     const validM3Us = m3uResArr.filter(res => res?.r?.status>=200 && res?.r?.status<300 && res.d).map(res => res.d);
     if (!validM3Us.length) return finish("ALL M3U FAIL");
 
-    // 2) 图标表
     let iconsJson={}; try { iconsJson = JSON.parse(iconsRes.d); } catch { return finish("ICON PARSE FAIL"); }
     const iconMap = buildIconMap(iconsJson);
 
-    // 3) 注入 + 过滤（每个源独立应用 TEST_LIMIT）
     const injectedList = [];
     for (const m3uText of validM3Us){
       const injected = await injectLogoForM3U(m3uText, iconMap);
       injectedList.push(injected);
     }
-    let mergedCore = injectedList.join("\n");
 
-    // 4) 只保留一个 #EXTM3U 头；总量裁剪；去重
+    let mergedCore = injectedList.join("\n");
     mergedCore = stripM3UHeaderOnce(mergedCore);
     mergedCore = clipByTotalLimit(mergedCore, MAX_CHANNELS_TOTAL);
     mergedCore = dedupeM3U(mergedCore);
 
-    // 5) 标记 + 统计
     const merged = stampM3U(mergedCore);
-    store.write(merged, PERSIST_KEY);
     console.log(`📊 Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}`);
     console.log(`🔧 Mode: filter=${FILTER_MODE}, test_limit=${TEST_LIMIT}`);
 
-    // 6) 上传
     if (UPLOAD_NOW){
       const up = await uploadToGitHub(merged);
       return finish(up.msg);
@@ -568,8 +488,4 @@ async function uploadToGitHub(text){
     return finish("ERR " + (e?.message || e));
   }
 })();
-
-function finish(msg){
-  if (IS_NODE) { console.log(msg); process.exit(0); }
-  else { $done?.({ body: msg }); }
-}
+function finish(msg){ if (IS_NODE) { console.log(msg); process.exit(0); } else { $done?.({ body: msg }); } }
