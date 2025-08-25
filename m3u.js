@@ -1,9 +1,10 @@
 /**
  * m3u.js — 生成可播放 M3U，按“频道显示名”匹配图标并上传到 GitHub
- * - 严格过滤：仅保留可探测直链
+ * - 仅保留可探测直链（strict）
  * - 早停：凑够 100 条立刻停；每源最多扫描 500 条
- * - 图标：优先 icons.json（按显示名匹配；忽略大小写/空格/符号/括号/HD 等后缀）
- *         未命中 → 兜底 TV_logo/<候选>.png → 仍无则 not-found.png
+ * - 图标：按显示名匹配（忽略括号/大小写/空格/符号/HD后缀）
+ *         若原条目 tvg-logo 不存在、为空或占位（"-"/"N/A"/"none"/"null"/"empty"）则自动填充
+ *         优先 icons.json；未命中 → TV_logo/<候选>.png → not-found.png
  * - 输出 dist/playlist.m3u；并用 GitHub Contents API 上传到 LiveTV/AKTV.m3u
  */
 
@@ -29,7 +30,8 @@ const NOT_FOUND_ICON = "https://img.mikephie.site/not-found.png";
 // 手动别名（频道显示名 -> 图标名，无扩展名）
 const NAME_ALIAS = {
   "明珠台": "ch2",
-  // 可在此继续添加： "翡翠台": "jade", "无线新闻台": "tvbnews"
+  // "翡翠台": "jade",
+  // "无线新闻台": "tvbnews",
 };
 
 /* ===== 上传配置 ===== */
@@ -264,7 +266,7 @@ async function quickProbe(url, mode="strict"){
   } catch { return false; }
 }
 
-/* ===== 注入（图标按显示名，保留分组） ===== */
+/* ===== 注入（图标按显示名，保留分组；修复空/占位 logo 也补） ===== */
 async function injectForM3U(m3uText, iconMap, idx=0){
   if (globalStop) return "";
   const lines = m3uText.split(/\r?\n/);
@@ -297,7 +299,11 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     const grpTvg   = getAttr(header, "tvg-group");
     const groupVal = grpTitle || grpTvg || "mix";
 
-    if (!/tvg-logo="/i.test(header)){
+    // ✅ 修复：字段不存在 / 空值 / 占位 都要补 logo
+    const curLogo = getAttr(header, "tvg-logo");
+    const needFill = !curLogo || /^https?:\/\/$/.test(curLogo) || (curLogo && curLogo.trim() === "");
+    const isPlaceholder = /^(?:-|n\/a|none|null|empty)$/i.test(curLogo || "");
+    if (!/tvg-logo="/i.test(header) || needFill || isPlaceholder){
       const iconUrl = pickIconByDisplayName(iconMap, dispName);
       header = setOrReplaceAttr(header, "tvg-logo", iconUrl);
     }
