@@ -1,5 +1,9 @@
 /**
  * m3u.js — 生成可播放 M3U，按“频道显示名”匹配图标并上传到 GitHub
+ * 图标优先级：NAME_ALIAS(规范化) → icons.json → 真实存在的 TV_logo(小写/原样都探测) → not-found
+ * 流地址：strict 探测，仅保留可播
+ * 性能：凑够 100 条即停；每源最多扫描 500 条
+ * 输出：dist/playlist.m3u，并上传至 Mikephie/AUTOjs@main: LiveTV/AKTV.m3u
  */
 
 const IS_NODE  = typeof process !== "undefined" && process.release?.name === "node";
@@ -22,9 +26,11 @@ const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
 const ICON_BASE      = "https://img.mikephie.site/TV_logo";
 const NOT_FOUND_ICON = "https://img.mikephie.site/not-found.png";
 
-// 手动别名（频道显示名 -> 图标名，无扩展名）
+// 手动别名（“显示名” → 图标名，不带扩展名）；键与来名都会做规范化后比对
 const NAME_ALIAS = {
   "明珠台": "ch2",
+  // "翡翠台": "jade",
+  // "无线新闻台": "tvbnews",
 };
 
 /* ===== 上传配置 ===== */
@@ -112,12 +118,12 @@ async function putFile(repo, branch, filePath, contentStr, message = "chore: upd
 function normName(s){
   return (s||"")
     .normalize("NFKC")
-    .replace(/（.*?）|\(.*?\)/g, "")
+    .replace(/（.*?）|\(.*?\)/g, "")     // 去中文/英文括号及其中内容
     .toLowerCase()
     .replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,"")
-    .replace(/[\s\/\-\_]+/g,"")
-    .replace(/[^\w\u4e00-\u9fa5]/g,"")
-    .replace(/(fhd|uhd|hd|sd|4k)$/,"");
+    .replace(/[\s\/\-\_]+/g,"")          // 去空格/斜杠/连字符/下划线
+    .replace(/[^\w\u4e00-\u9fa5]/g,"")   // 仅保留中英数与中文
+    .replace(/(fhd|uhd|hd|sd|4k)$/,"");  // 去常见清晰度后缀
 }
 async function loadIcons(){
   try{
@@ -147,34 +153,54 @@ async function probeIcon(url, timeoutMs = 1500){
     return !!(r && [200,301,302].includes(r.status));
   }catch{return false;}
 }
+
+// 生成宽松候选：去括号/空格/清晰度/中文“台|频道”，并内置常见英文规则
 function makeNameCandidates(raw){
   const s0 = (raw||"").trim();
   if (!s0) return [];
+
   const noParen = s0.replace(/（.*?）|\(.*?\)/g, "");
   const noSpace = noParen.replace(/\s+/g, "");
-  const cuts = new Set([
-    noParen,
-    noSpace,
+  const baseAscii = noParen.toLowerCase().replace(/[\s\/\-\_]+/g,"");
+
+  const set = new Set([
+    noParen,                                 // 原样（去括号）
+    noSpace,                                 // 去空格
+    baseAscii,                               // 全小写
+    baseAscii.replace(/(hd|fhd|uhd|sd|4k)$/,""),
     noSpace.replace(/(台|频道|頻道)$/,""),
-    noSpace.replace(/(HD|FHD|UHD|SD|4K)$/i,""),
+    // 英文规则归一
+    baseAscii.replace(/^channel(\d+)(hd|fhd|uhd|sd|4k)?$/,"channel$1"),
+    baseAscii.replace(/^channelu(hd|fhd|uhd|sd|4k)?$/,"channelu"),
+    baseAscii.replace(/^tntsports(\d)(hd|fhd|uhd|sd|4k)?$/,"tntsports$1"),
   ]);
-  const ascii = noParen.toLowerCase().replace(/[\s\/\-\_]+/g,"").replace(/(hd|fhd|uhd|sd|4k)$/,"");
-  cuts.add(ascii);
-  return Array.from(cuts).filter(Boolean);
+
+  return Array.from(set).filter(Boolean);
 }
+
+// 只用：别名(规范化) → icons.json → 真实存在的 TV_logo(小写/原样) → not-found
 async function pickIconByDisplayName(iconMap, dispName){
   const raw = (dispName||"").trim();
   if (!raw) return NOT_FOUND_ICON;
 
-  if (NAME_ALIAS[raw]) {
-    const alias = NAME_ALIAS[raw];
+  // 1) 别名（对“键”和“来名”都做规范化）
+  const aliasNormMap = new Map(
+    Object.entries(NAME_ALIAS).map(([k,v]) => [normName(k), v])
+  );
+  const alias = aliasNormMap.get(normName(raw));
+  if (alias){
     const aliasKey = normName(alias);
     if (iconMap.has(aliasKey)) return iconMap.get(aliasKey);
-    const url = `${ICON_BASE}/${alias}.png`;
-    if (await probeIcon(url)) return url;
+
+    // TV_logo 里存在才用（小写/原样都探测）
+    const lower = `${ICON_BASE}/${alias.toLowerCase()}.png`;
+    const camel = `${ICON_BASE}/${alias}.png`;
+    if (await probeIcon(lower)) return lower;
+    if (await probeIcon(camel)) return camel;
     return NOT_FOUND_ICON;
   }
 
+  // 2) icons.json：按规范化键/常见变体尝试
   const k0 = normName(raw);
   const iconsJsonCandidates = new Set([
     k0,
@@ -188,70 +214,152 @@ async function pickIconByDisplayName(iconMap, dispName){
     if (k && iconMap.has(k)) return iconMap.get(k);
   }
 
+  // 3) 真实存在的 TV_logo：同一候选名尝试 lowercase 与原样大小写
   for (const base of makeNameCandidates(raw)){
-    const url = `${ICON_BASE}/${base}.png`;
-    if (await probeIcon(url)) return url;
+    const lower = `${ICON_BASE}/${base.toLowerCase()}.png`;
+    const camel = `${ICON_BASE}/${base}.png`;
+    if (await probeIcon(lower)) return lower;
+    if (await probeIcon(camel)) return camel;
   }
 
+  // 4) 仍无 → not-found
   return NOT_FOUND_ICON;
 }
 
-/* ===== 工具函数（略去注释，和之前相同） ===== */
-function findNextUrl(lines, i){ let j=i+1; while(j<lines.length&& !lines[j].trim()) j++; if(j<lines.length&& !lines[j].startsWith("#")) return lines[j].trim(); j=i+1; while(j<lines.length&&(lines[j].startsWith("#")||!lines[j].trim())) j++; return (j<lines.length&& !lines[j].startsWith("#"))?lines[j].trim():""; }
-function getAttr(header, key){ return (header.match(new RegExp(`${key}="([^"]*)"`, "i")) || [])[1] || ""; }
-function setOrReplaceAttr(header, key, value){ if(!value) return header; return header.match(new RegExp(`${key}="`, "i")) ? header.replace(new RegExp(`${key}="[^"]*"`, "i"), `${key}="${value}"`) : `${header} ${key}="${value}"`; }
-function stripM3UHeaderOnce(text){ const lines=text.split(/\r?\n/); const kept=lines.filter(ln=>!ln.trim().toUpperCase().startsWith("#EXTM3U")); return ["#EXTM3U",...kept].join("\n"); }
-function dedupeM3U(m3u){ const lines=m3u.split(/\r?\n/); const out=[], seen=new Set(); for(let i=0;i<lines.length;i++){ const line=lines[i]; if(!line.startsWith("#EXTINF")){ if(line.startsWith("#")) out.push(line); continue;} const meta=[]; let j=i+1; while(j<lines.length&&(lines[j].startsWith("#")||!lines[j].trim())){ meta.push(lines[j]); j++; } const url=(j<lines.length&&!lines[j].startsWith("#"))?lines[j].trim():""; const dispName=line.split(",").slice(1).join(",").trim(); const key=`${dispName.toLowerCase()}||${(url||"").toLowerCase()}`; if(seen.has(key)){ if(url) i=j; continue;} seen.add(key); out.push(line); for(const m of meta) out.push(m); if(url){ out.push(url); i=j;} } return out.join("\n"); }
-function clipByPairCount(text,maxPairs){ if(!maxPairs||maxPairs<=0) return text; const lines=text.split(/\r?\n/); const out=[]; let pairs=0; for(let i=0;i<lines.length;i++){ const ln=lines[i]; if(!ln.startsWith("#EXTINF")){ if(ln.startsWith("#")) out.push(ln); continue;} if(pairs>=maxPairs) break; const meta=[]; let j=i+1; while(j<lines.length&&(lines[j].startsWith("#")||!lines[j].trim())){ meta.push(lines[j]); j++; } const url=(j<lines.length&&!lines[j].startsWith("#"))?lines[j].trim():""; out.push(ln); for(const m of meta) out.push(m); if(url){ out.push(url); i=j;} pairs++; } return out.join("\n"); }
+/* ===== 工具函数 ===== */
+function findNextUrl(lines, i){
+  let j = i+1;
+  while (j < lines.length && !lines[j].trim()) j++;
+  if (j < lines.length && !lines[j].startsWith("#")) return lines[j].trim();
+  j = i+1;
+  while (j < lines.length && (lines[j].startsWith("#") || !lines[j].trim())) j++;
+  return (j < lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
+}
+function getAttr(header, key){
+  return (header.match(new RegExp(`${key}="([^"]*)"`, "i")) || [])[1] || "";
+}
+function setOrReplaceAttr(header, key, value){
+  if (!value) return header;
+  return header.match(new RegExp(`${key}="`, "i"))
+    ? header.replace(new RegExp(`${key}="[^"]*"`, "i"), `${key}="${value}"`)
+    : `${header} ${key}="${value}"`;
+}
+function stripM3UHeaderOnce(text){
+  const lines = text.split(/\r?\n/);
+  const kept = lines.filter(ln => !ln.trim().toUpperCase().startsWith("#EXTM3U"));
+  return ["#EXTM3U", ...kept].join("\n");
+}
+function dedupeM3U(m3u){
+  const lines = m3u.split(/\r?\n/);
+  const out=[], seen=new Set();
+  for (let i=0;i<lines.length;i++){
+    const line = lines[i];
+    if (!line.startsWith("#EXTINF")) { if (line.startsWith("#")) out.push(line); continue; }
+    const meta = [];
+    let j = i + 1;
+    while (j < lines.length && (lines[j].startsWith("#") || !lines[j].trim())) { meta.push(lines[j]); j++; }
+    const url = (j < lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
+    const dispName = line.split(",").slice(1).join(",").trim();
+    const key = `${dispName.toLowerCase()}||${(url||"").toLowerCase()}`;
+    if (seen.has(key)) { if (url) i = j; continue; }
+    seen.add(key);
+    out.push(line);
+    for (const m of meta) out.push(m);
+    if (url) { out.push(url); i = j; }
+  }
+  return out.join("\n");
+}
+function clipByPairCount(text, maxPairs){
+  if (!maxPairs || maxPairs <= 0) return text;
+  const lines = text.split(/\r?\n/);
+  const out = []; let pairs = 0;
+  for (let i=0;i<lines.length;i++){
+    const ln = lines[i];
+    if (!ln.startsWith("#EXTINF")) { if (ln.startsWith("#")) out.push(ln); continue; }
+    if (pairs >= maxPairs) break;
+    const meta = [];
+    let j = i + 1;
+    while (j < lines.length && (lines[j].startsWith("#") || !lines[j].trim())) { meta.push(lines[j]); j++; }
+    const url = (j < lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
+    out.push(ln);
+    for (const m of meta) out.push(m);
+    if (url) { out.push(url); i = j; }
+    pairs++;
+  }
+  return out.join("\n");
+}
 
-/* ===== 探测 ===== */
-async function quickProbe(url, mode="strict"){ if(!url) return false; if(mode==="off") return true; const t1=(mode==="strict")?PROBE_TIMEOUT_MS_STRICT:PROBE_TIMEOUT_MS_LOOSE; try{ let { r }=await httpGet(url,{ Range:"bytes=0-0"},t1); if(r&&[200,206,301,302].includes(r.status)) return true; if(mode==="loose"){ ({ r }=await httpGet(url,{},PROBE_TIMEOUT_MS_LOOSE)); if(r&&[200,301,302].includes(r.status)) return true;} return false;}catch{return false;} }
+/* ===== 探测（只保留可用直链） ===== */
+async function quickProbe(url, mode="strict"){
+  if (!url) return false;
+  if (mode === "off") return true;
+  const t1 = (mode === "strict") ? PROBE_TIMEOUT_MS_STRICT : PROBE_TIMEOUT_MS_LOOSE;
+  try {
+    let { r } = await httpGet(url, { Range: "bytes=0-0" }, t1);
+    if (r && [200,206,301,302].includes(r.status)) return true;
+    if (mode === "loose") {
+      ({ r } = await httpGet(url, {}, PROBE_TIMEOUT_MS_LOOSE));
+      if (r && [200,301,302].includes(r.status)) return true;
+    }
+    return false;
+  } catch { return false; }
+}
 
-/* ===== 注入 ===== */
+/* ===== 注入（图标按显示名，保留分组；空/占位 logo 也补） ===== */
 async function injectForM3U(m3uText, iconMap, idx=0){
   if (globalStop) return "";
   const lines = m3uText.split(/\r?\n/);
   const out = [];
+
   const extCount = lines.filter(l=>l.startsWith("#EXTINF")).length;
   console.log(`源#${idx+1}: EXTINF = ${extCount}`);
 
-  let scanned=0;
+  let scanned = 0;
   for (let i=0;i<lines.length;i++){
-    if(globalStop) break;
-    const raw=lines[i];
-    if(!raw.startsWith("#EXTINF")){
-      if(raw.trim().toUpperCase().startsWith("#EXTM3U") && out.length===0) out.push("#EXTM3U");
+    if (globalStop) break;
+
+    const raw = lines[i];
+    if (!raw.startsWith("#EXTINF")) {
+      if (raw.trim().toUpperCase().startsWith("#EXTM3U") && out.length===0) out.push("#EXTM3U");
       continue;
     }
-    scanned++; if(scanned>PER_SOURCE_SCAN_LIMIT) break; if(keptChannels>=HARD_TARGET){ globalStop=true; break;}
+
+    scanned++;
+    if (scanned > PER_SOURCE_SCAN_LIMIT) break;
+    if (keptChannels >= HARD_TARGET) { globalStop = true; break; }
+
     totalChannels++;
 
-    const commaIdx=raw.indexOf(",");
-    let header=commaIdx>=0 ? raw.slice(0,commaIdx) : raw;
-    const dispName=commaIdx>=0 ? raw.slice(commaIdx+1).trim() : "";
-    const grpTitle=getAttr(header,"group-title");
-    const grpTvg=getAttr(header,"tvg-group");
-    const groupVal=grpTitle||grpTvg||"mix";
+    const commaIdx = raw.indexOf(",");
+    let header     = commaIdx>=0 ? raw.slice(0,commaIdx) : raw;
+    const dispName = commaIdx>=0 ? raw.slice(commaIdx+1).trim() : "";
 
-    const curLogo=getAttr(header,"tvg-logo");
-    const needFill=!curLogo||/^https?:\/\/$/.test(curLogo)||(curLogo&&curLogo.trim()==="");
-    const isPlaceholder=/^(?:-|n\/a|none|null|empty)$/i.test(curLogo||"");
-    if(!/tvg-logo="/i.test(header)||needFill||isPlaceholder){
+    const grpTitle = getAttr(header, "group-title");
+    const grpTvg   = getAttr(header, "tvg-group");
+    const groupVal = grpTitle || grpTvg || "mix";
+
+    // 字段不存在 / 空值 / 占位 都要补 logo
+    const curLogo = getAttr(header, "tvg-logo");
+    const needFill = !curLogo || /^https?:\/\/$/.test(curLogo) || (curLogo && curLogo.trim() === "");
+    const isPlaceholder = /^(?:-|n\/a|none|null|empty)$/i.test(curLogo || "");
+    if (!/tvg-logo="/i.test(header) || needFill || isPlaceholder){
       const iconUrl = await pickIconByDisplayName(iconMap, dispName);
-      header=setOrReplaceAttr(header,"tvg-logo",iconUrl);
+      header = setOrReplaceAttr(header, "tvg-logo", iconUrl);
     }
 
-    const url=findNextUrl(lines,i);
-    const ok=await quickProbe(url,FILTER_MODE);
+    const url = findNextUrl(lines, i);
+    const ok  = await quickProbe(url, FILTER_MODE);
 
-    if(ok){
+    if (ok) {
       keptChannels++;
-      out.push(commaIdx>=0 ? (header+","+dispName) : header);
+      out.push(commaIdx>=0 ? (header + "," + dispName) : header);
       out.push(`#EXTGRP:${groupVal}`);
       out.push(url);
-      if(i+1<lines.length && !lines[i+1].startsWith("#")) i++;
-      if(keptChannels>=HARD_TARGET){ globalStop=true; break;}
-    } else { filteredChannels++; }
+      if (i+1<lines.length && !lines[i+1].startsWith("#")) i++;
+      if (keptChannels >= HARD_TARGET) { globalStop = true; break; }
+    } else {
+      filteredChannels++;
+    }
   }
   return out.join("\n");
 }
@@ -263,49 +371,57 @@ async function injectForM3U(m3uText, iconMap, idx=0){
       loadIcons(),
       ...M3U_URLS.map(o=>httpGet(o.url))
     ]);
-    const validM3Us=srcs.filter(r=>r?.r?.status>=200&&r.d).map(r=>r.d);
-    if(!validM3Us.length){
-      const empty="#EXTM3U\n# Stats: total=0, kept=0, filtered=0\n# 失败：没有可用源\n";
+    const validM3Us = srcs.filter(r=>r?.r?.status>=200 && r.d).map(r=>r.d);
+    if (!validM3Us.length) {
+      const empty = "#EXTM3U\n# Stats: total=0, kept=0, filtered=0\n# 失败：没有可用源\n";
       console.log(empty);
-      if(IS_NODE){ fs.mkdirSync(OUT_DIR,{ recursive:true }); fs.writeFileSync(OUT_FILE,empty); }
+      if (IS_NODE) {
+        fs.mkdirSync(OUT_DIR, { recursive: true });
+        fs.writeFileSync(OUT_FILE, empty);
+      }
       return;
     }
 
-    const injectedList=[];
-    for(let si=0; si<validM3Us.length; si++){
-      if(globalStop) break;
-      const injected=await injectForM3U(validM3Us[si], iconMap, si);
+    const injectedList = [];
+    for (let si=0; si<validM3Us.length; si++){
+      if (globalStop) break;
+      const injected = await injectForM3U(validM3Us[si], iconMap, si);
       injectedList.push(injected);
     }
 
-    let merged=injectedList.join("\n");
-    merged=stripM3UHeaderOnce(merged);
-    merged=dedupeM3U(merged);
-    merged=clipByPairCount(merged, TEST_TOTAL_LIMIT);
+    let merged = injectedList.join("\n");
+    merged = stripM3UHeaderOnce(merged);
+    merged = dedupeM3U(merged);
+    merged = clipByPairCount(merged, TEST_TOTAL_LIMIT);
 
-    const header=
-      "#EXTM3U\n"+
-      `# Generated-At: ${new Date().toISOString()} (limit=${TEST_TOTAL_LIMIT})\n`+
+    const header =
+      "#EXTM3U\n" +
+      `# Generated-At: ${new Date().toISOString()} (limit=${TEST_TOTAL_LIMIT})\n` +
       `# Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}\n`;
 
-    const finalText=header+merged.replace(/^#EXTM3U\s*/,'')+"\n";
+    const finalText = header + merged.replace(/^#EXTM3U\s*/,'') + "\n";
 
     console.log(finalText);
-    if(IS_NODE){
-      fs.mkdirSync(OUT_DIR,{ recursive:true });
-      fs.writeFileSync(OUT_FILE,finalText);
+    if (IS_NODE) {
+      fs.mkdirSync(OUT_DIR, { recursive: true });
+      fs.writeFileSync(OUT_FILE, finalText);
 
-      if(UPLOAD_NOW){
-        try{
+      if (UPLOAD_NOW) {
+        try {
           console.log(`# Uploading to GitHub: ${REPO}@${BRANCH} -> ${PATH_IN_REPO}`);
-          const resp=await putFile(REPO, BRANCH, PATH_IN_REPO, finalText);
+          const resp = await putFile(REPO, BRANCH, PATH_IN_REPO, finalText);
           console.log(`# Uploaded commit: ${resp.commit?.sha || "(no sha)"}`);
-        }catch(e){ console.log(`⚠️ 上传失败：${String(e)}`); }
+        } catch (e) {
+          console.log(`⚠️ 上传失败：${String(e)}`);
+        }
       }
     }
   }catch(e){
-    const msg="#EXTM3U\n# 异常："+String(e)+"\n";
+    const msg = "#EXTM3U\n# 异常：" + String(e) + "\n";
     console.log(msg);
-    if(IS_NODE){ fs.mkdirSync(OUT_DIR,{ recursive:true }); fs.writeFileSync(OUT_FILE,msg); }
+    if (IS_NODE) {
+      fs.mkdirSync(OUT_DIR, { recursive: true });
+      fs.writeFileSync(OUT_FILE, msg);
+    }
   }
 })();
