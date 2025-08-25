@@ -1,5 +1,10 @@
 /**
- * m3u.js — 生成可播放 M3U，附带图标并上传到 GitHub
+ * m3u.js — 生成可播放 M3U，按“频道显示名”匹配图标并上传到 GitHub
+ * - 严格过滤：仅保留可探测直链
+ * - 早停：凑够 100 条立刻停；每源最多扫描 500 条
+ * - 图标：优先 icons.json（按显示名匹配；忽略大小写/空格/符号/括号/HD 等后缀）
+ *         未命中 → 兜底 TV_logo/<候选>.png → 仍无则 not-found.png
+ * - 输出 dist/playlist.m3u；并用 GitHub Contents API 上传到 LiveTV/AKTV.m3u
  */
 
 const IS_NODE  = typeof process !== "undefined" && process.release?.name === "node";
@@ -20,24 +25,26 @@ const M3U_URLS = [
 /* ===== 图标配置 ===== */
 const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
 const NOT_FOUND_ICON = "https://img.mikephie.site/not-found.png";
+
+// 手动别名（频道显示名 -> 图标名，无扩展名）
 const NAME_ALIAS = {
-  // 手动别名，例如 “明珠台”→ch2.png
   "明珠台": "ch2",
+  // 可在此继续添加： "翡翠台": "jade", "无线新闻台": "tvbnews"
 };
 
 /* ===== 上传配置 ===== */
-const PERSIST_KEY   = "M3U_CONTENT";                 // 标记
-const UPLOAD_NOW    = true;                          // ✅ 启用上传
-const REPO          = "Mikephie/AUTOjs";             // 仓库
-const BRANCH        = "main";                        // 分支
-const PATH_IN_REPO  = "LiveTV/AKTV.m3u";             // 仓库路径
+const UPLOAD_NOW    = true;                          // 生成后立即上传
+const REPO          = "Mikephie/AUTOjs";             // owner/repo
+const BRANCH        = "main";                        // 目标分支
+const PATH_IN_REPO  = "LiveTV/AKTV.m3u";             // 仓库内路径
 
 /* ===== 限额 / 策略 ===== */
 const FILTER_MODE              = "strict";  // strict / loose / off
 const TEST_TOTAL_LIMIT         = 100;       // 输出上限
-const HARD_TARGET              = 100;       // 早停
-const PER_SOURCE_SCAN_LIMIT    = 500;       // 每源最大扫描
+const HARD_TARGET              = 100;       // 早停门槛
+const PER_SOURCE_SCAN_LIMIT    = 500;       // 每源最多尝试
 
+/* ===== 超时（提速） ===== */
 const FETCH_TIMEOUT_MS         = 6000;
 const PROBE_TIMEOUT_MS_STRICT  = 1200;
 const PROBE_TIMEOUT_MS_LOOSE   = 900;
@@ -46,7 +53,7 @@ const PROBE_TIMEOUT_MS_LOOSE   = 900;
 const OUT_DIR  = "dist";
 const OUT_FILE = path ? path.join(OUT_DIR, "playlist.m3u") : "playlist.m3u";
 
-/* ===== 状态变量 ===== */
+/* ===== 状态 ===== */
 let totalChannels = 0, keptChannels = 0, filteredChannels = 0;
 let globalStop = false;
 
@@ -64,20 +71,17 @@ async function httpGet(url, headers = {}, timeoutMs = FETCH_TIMEOUT_MS) {
   finally { clearTimeout(id); }
 }
 
-/* ===== GitHub API 上传工具 ===== */
+/* ===== GitHub 上传工具 ===== */
 async function ghApi(path, opts = {}) {
   const GH_TOKEN = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
   if (!GH_TOKEN) throw new Error("缺少 GH_TOKEN/GITHUB_TOKEN 环境变量");
-
   const headers = Object.assign({
     "Authorization": `Bearer ${GH_TOKEN}`,
     "Accept": "application/vnd.github+json",
     "User-Agent": "m3u-uploader",
   }, opts.headers || {});
-
   const res = await (typeof fetch === "function" ? fetch : nodeFetch)(`https://api.github.com${path}`, {
-    ...opts,
-    headers,
+    ...opts, headers,
   });
   if (!res.ok) {
     const body = await res.text();
@@ -109,14 +113,16 @@ async function putFile(repo, branch, filePath, contentStr, message = "chore: upd
   });
 }
 
-/* ===== icons.json 载入 ===== */
+/* ===== icons.json 载入（name → url 索引） ===== */
 function normName(s){
   return (s||"")
-    .toLowerCase()
     .normalize("NFKC")
+    .replace(/（.*?）|\(.*?\)/g, "")     // 去中文/英文括号及其中内容
+    .toLowerCase()
     .replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,"")
-    .replace(/[\s\-\_\/]+/g,"")
-    .replace(/[^\w\u4e00-\u9fa5]/g,"");
+    .replace(/[\s\/\-\_]+/g,"")          // 去空格/斜杠/连字符/下划线
+    .replace(/[^\w\u4e00-\u9fa5]/g,"")   // 仅保留中英数与中文
+    .replace(/(fhd|uhd|hd|sd|4k)$/,"");  // 去常见清晰度后缀
 }
 async function loadIcons(){
   try{
@@ -139,27 +145,43 @@ async function loadIcons(){
   }
 }
 
-/* ===== 图标匹配（优先别名 → 名称归一化 → not-found） ===== */
+/* ===== 图标匹配：仅按“显示名” → 别名 → icons.json → TV_logo 兜底 → not-found ===== */
 function pickIconByDisplayName(iconMap, dispName){
   const raw = (dispName||"").trim();
   if (!raw) return NOT_FOUND_ICON;
 
-  // 别名
-  const aliasKey = NAME_ALIAS[raw];
-  if (aliasKey){
-    const aliasNorm = normName(aliasKey);
-    if (iconMap.has(aliasNorm)) return iconMap.get(aliasNorm);
-    return `https://img.mikephie.site/TV_logo/${aliasKey}.png`;
+  // 1) 别名（显示名精确匹配）
+  if (NAME_ALIAS[raw]) {
+    const alias = NAME_ALIAS[raw];
+    const aliasKey = normName(alias);
+    if (iconMap.has(aliasKey)) return iconMap.get(aliasKey);
+    return `https://img.mikephie.site/TV_logo/${alias}.png`;
   }
 
-  // 正常匹配
-  const k = normName(raw);
-  if (iconMap.has(k)) return iconMap.get(k);
+  // 2) 正常规范化键
+  const k0 = normName(raw); // 例如： "Channel 5 HD" -> "channel5"
 
-  // 去除后缀再匹配
-  const k2 = k.replace(/(hd|fhd|uhd|sd|4k)$/,"").replace(/(台|频道|頻道)$/,"");
-  if (iconMap.has(k2)) return iconMap.get(k2);
+  // 3) 常见变体（从强到弱）
+  const candidates = new Set([
+    k0,
+    k0.replace(/channel(\d+)$/,"channel$1"),
+    k0.replace(/lovenature.*$/,"lovenature"),
+    k0.replace(/tvn.*$/,"tvn"),
+    k0.replace(/plus$/,"plus"),
+    k0.replace(/action$/,"action"),
+  ]);
 
+  // 4) icons.json 命中
+  for (const k of candidates) {
+    if (k && iconMap.has(k)) return iconMap.get(k);
+  }
+
+  // 5) 兜底：TV_logo/<候选>.png
+  for (const k of candidates) {
+    if (k) return `https://img.mikephie.site/TV_logo/${k}.png`;
+  }
+
+  // 6) 仍无 → not-found
   return NOT_FOUND_ICON;
 }
 
@@ -226,7 +248,7 @@ function clipByPairCount(text, maxPairs){
   return out.join("\n");
 }
 
-/* ===== 探测 ===== */
+/* ===== 探测（只保留可用直链） ===== */
 async function quickProbe(url, mode="strict"){
   if (!url) return false;
   if (mode === "off") return true;
@@ -242,7 +264,7 @@ async function quickProbe(url, mode="strict"){
   } catch { return false; }
 }
 
-/* ===== 注入 ===== */
+/* ===== 注入（图标按显示名，保留分组） ===== */
 async function injectForM3U(m3uText, iconMap, idx=0){
   if (globalStop) return "";
   const lines = m3uText.split(/\r?\n/);
@@ -254,16 +276,19 @@ async function injectForM3U(m3uText, iconMap, idx=0){
   let scanned = 0;
   for (let i=0;i<lines.length;i++){
     if (globalStop) break;
+
     const raw = lines[i];
     if (!raw.startsWith("#EXTINF")) {
       if (raw.trim().toUpperCase().startsWith("#EXTM3U") && out.length===0) out.push("#EXTM3U");
       continue;
     }
+
     scanned++;
     if (scanned > PER_SOURCE_SCAN_LIMIT) break;
     if (keptChannels >= HARD_TARGET) { globalStop = true; break; }
 
     totalChannels++;
+
     const commaIdx = raw.indexOf(",");
     let header     = commaIdx>=0 ? raw.slice(0,commaIdx) : raw;
     const dispName = commaIdx>=0 ? raw.slice(commaIdx+1).trim() : "";
