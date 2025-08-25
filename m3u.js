@@ -29,7 +29,7 @@ const NOT_FOUND_ICON = "https://img.mikephie.site/not-found.png";
 
 // 手动别名（频道显示名 -> 图标名，无扩展名）
 const NAME_ALIAS = {
-  "明珠台": "ch2",
+  "明珠台": "明珠台",
   // "翡翠台": "jade",
   // "无线新闻台": "tvbnews",
 };
@@ -42,8 +42,8 @@ const PATH_IN_REPO  = "LiveTV/AKTV.m3u";             // 仓库内路径
 
 /* ===== 限额 / 策略 ===== */
 const FILTER_MODE              = "strict";  // strict / loose / off
-const TEST_TOTAL_LIMIT         = 100;       // 输出上限
-const HARD_TARGET              = 100;       // 早停门槛
+const TEST_TOTAL_LIMIT         = 150;       // 输出上限
+const HARD_TARGET              = 150;       // 早停门槛
 const PER_SOURCE_SCAN_LIMIT    = 500;       // 每源最多尝试
 
 /* ===== 超时（提速） ===== */
