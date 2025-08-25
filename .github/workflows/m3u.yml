@@ -2,12 +2,13 @@ name: Auto M3U Update
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # 每 30 分钟执行一次
-  workflow_dispatch:          # 允许手动触发
+    - cron: "*/30 * * * *"   # 每 30 分钟执行一次（在小时的第 0、30 分）
+  workflow_dispatch:          # 支持手动触发
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15       # 整个 Job 最长 15 分钟，防止挂死
 
     steps:
       - name: Checkout repository
@@ -16,13 +17,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20    # Node 20 自带 fetch/AbortController
 
-      # 如果你的脚本没有依赖包，可以跳过这一步
+      # 如果你的仓库里没有别的依赖，这一步可省略
       - name: Install dependencies
-        run: npm install || true
+        run: npm ci || npm i
 
       - name: Run M3U generator
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}   # 在仓库 Settings → Secrets 中配置
         run: node m3u.js
