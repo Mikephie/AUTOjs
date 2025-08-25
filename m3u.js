@@ -1,9 +1,9 @@
 /**
- * m3u.js — 有效直链 + icons.json 图标 + 保留既有分组
- * - 仅输出探测可用的直链（默认 strict）
- * - 自动注入 tvg-logo（仅当原条目未提供时）
- * - #EXTGRP 同步为原条目 group-title / tvg-group（不覆盖你的分组预设）
- * - 去重 +（可选）全局裁剪
+ * m3u.js — 固定输出 50 条有效直链 + icons.json 图标 + 保留原有分组
+ * - 不走 Worker，不加 UA/Referer
+ * - 过滤模式 = strict（只留探测可用的直链）
+ * - 自动补图标（来自 icons.json）
+ * - 全局限制输出 50 条
  */
 
 const IS_NODE  = typeof process !== "undefined" && process.release?.name === "node";
@@ -17,17 +17,12 @@ const M3U_URLS = [
   { url: "https://aktv.space/live.m3u" },
   { url: "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/result.m3u" },
 ];
-
-// 图标清单（你的 JSON）
 const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
 
-// 过滤模式：strict / loose / off （默认 strict）
-const FILTER_MODE = (IS_NODE ? (process.env.M3U_FILTER || "strict") : "strict").toLowerCase();
+// 固定参数
+const FILTER_MODE       = "strict";   // strict / loose / off
+const TEST_TOTAL_LIMIT  = 50;         // ✅ 固定输出 50 条
 
-// 全局输出条数限制（成对：EXTINF+URL；0 = 不限制）
-const TEST_TOTAL_LIMIT = (IS_NODE && process.env.TEST_TOTAL_LIMIT) ? Number(process.env.TEST_TOTAL_LIMIT) : 50;
-
-// HTTP 超时
 const FETCH_TIMEOUT_MS        = 6000;
 const PROBE_TIMEOUT_MS_STRICT = 2200;
 const PROBE_TIMEOUT_MS_LOOSE  = 1500;
@@ -61,11 +56,9 @@ async function loadIcons(){
       const name=(it?.name||"").trim();
       const url =(it?.url ||"").trim();
       if (!name || !url) continue;
-      // 建多个 key：原名、去扩展名、去空白、大小写
       const base = name.replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,"").trim();
       const keys = new Set([
-        name, name.toLowerCase(), name.toUpperCase(),
-        base, base.toLowerCase(), base.toUpperCase(),
+        name, name.toLowerCase(), base, base.toLowerCase(),
         base.replace(/\s+/g,"").toLowerCase()
       ]);
       for (const k of keys) map.set(k, url);
@@ -85,7 +78,7 @@ function pickIcon(iconMap, { tvgId, tvgName, dispName }){
     const s = (raw||"").trim();
     if (!s) continue;
     const keys = [
-      s, s.toLowerCase(), s.toUpperCase(),
+      s, s.toLowerCase(),
       s.replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,""),
       s.replace(/\s+/g,"").toLowerCase()
     ];
@@ -93,16 +86,14 @@ function pickIcon(iconMap, { tvgId, tvgName, dispName }){
       if (iconMap.has(k)) return iconMap.get(k);
     }
   }
-  return ""; // 不给默认占位，保留空则不写 tvg-logo
+  return "";
 }
 
 /* ===== 工具函数 ===== */
 function findNextUrl(lines, i){
-  // 先跳空行
   let j = i+1;
   while (j < lines.length && !lines[j].trim()) j++;
   if (j < lines.length && !lines[j].startsWith("#")) return lines[j].trim();
-  // 再跳注释
   j = i+1;
   while (j < lines.length && (lines[j].startsWith("#") || !lines[j].trim())) j++;
   return (j < lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
@@ -121,8 +112,6 @@ function stripM3UHeaderOnce(text){
   const kept = lines.filter(ln => !ln.trim().toUpperCase().startsWith("#EXTM3U"));
   return ["#EXTM3U", ...kept].join("\n");
 }
-
-// 去重：携带元数据（#EXTGRP 等）时不丢 URL
 function dedupeM3U(m3u){
   const lines = m3u.split(/\r?\n/);
   const out=[], seen=new Set();
@@ -143,8 +132,6 @@ function dedupeM3U(m3u){
   }
   return out.join("\n");
 }
-
-// 裁剪到前 N 组（EXTINF + URL），带元数据
 function clipByPairCount(text, maxPairs){
   if (!maxPairs || maxPairs <= 0) return text;
   const lines = text.split(/\r?\n/);
@@ -165,7 +152,7 @@ function clipByPairCount(text, maxPairs){
   return out.join("\n");
 }
 
-/* ===== 探测器（只保留可用直链） ===== */
+/* ===== 探测器 ===== */
 async function quickProbe(url, mode="strict"){
   if (!url) return false;
   if (mode === "off") return true;
@@ -181,14 +168,10 @@ async function quickProbe(url, mode="strict"){
   } catch { return false; }
 }
 
-/* ===== 注入：icon + 分组保留 + 直链过滤 ===== */
+/* ===== 注入逻辑 ===== */
 async function injectForM3U(m3uText, iconMap, idx=0){
   const lines = m3uText.split(/\r?\n/);
   const out = [];
-  let keptThisSrc = 0;
-
-  console.log(`源#${idx+1}: EXTINF =`, lines.filter(l=>l.startsWith("#EXTINF")).length);
-
   for (let i=0;i<lines.length;i++){
     const raw = lines[i];
     if (!raw.startsWith("#EXTINF")) {
@@ -197,46 +180,30 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     }
 
     totalChannels++;
-
-    // 解析 header & 显示名
     const commaIdx = raw.indexOf(",");
     let header     = commaIdx>=0 ? raw.slice(0,commaIdx) : raw;
     const dispName = commaIdx>=0 ? raw.slice(commaIdx+1).trim() : "";
-
-    // 读取已有分组（不覆盖）
     const grpTitle = getAttr(header, "group-title");
     const grpTvg   = getAttr(header, "tvg-group");
     const groupVal = grpTitle || grpTvg || "mix";
 
-    // 图标（只有当原条目没有 tvg-logo 时才补）
     const tvgId   = getAttr(header, "tvg-id");
     const tvgName = getAttr(header, "tvg-name");
-    const hasLogo = /tvg-logo="/i.test(header);
-    if (!hasLogo){
+    if (!/tvg-logo="/i.test(header)){
       const iconUrl = pickIcon(iconMap, { tvgId, tvgName, dispName });
       if (iconUrl) header = setOrReplaceAttr(header, "tvg-logo", iconUrl);
     }
 
-    // 直链
     const url = findNextUrl(lines, i);
-
-    // 过滤：只保留可用直链
     const ok = await quickProbe(url, FILTER_MODE);
     if (ok) {
-      keptChannels++; keptThisSrc++;
-      // 写：EXTINF（保留原分组属性）、EXTGRP（与原分组同步）、URL
+      keptChannels++;
       out.push(commaIdx>=0 ? (header + "," + dispName) : header);
       out.push(`#EXTGRP:${groupVal}`);
       out.push(url);
-      // 跳过源里的 URL 行
       if (i+1<lines.length && !lines[i+1].startsWith("#")) i++;
     } else {
       filteredChannels++;
-      // 不保底：你明确说“只要有效直链”
-      // 若想保底：可把下行改为写回原 URL
-      // out.push(commaIdx>=0 ? (header + "," + dispName) : header);
-      // out.push(`#EXTGRP:${groupVal}`);
-      // if (url) { out.push(url); if (i+1<lines.length && !lines[i+1].startsWith("#")) i++; }
     }
   }
   return out.join("\n");
@@ -266,9 +233,8 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     merged = dedupeM3U(merged);
     merged = clipByPairCount(merged, TEST_TOTAL_LIMIT);
 
-    // 输出
     console.log("#EXTM3U");
-    console.log(`# Generated-At: ${new Date().toISOString()} (filter=${FILTER_MODE}, limit=${TEST_TOTAL_LIMIT||"∞"})`);
+    console.log(`# Generated-At: ${new Date().toISOString()} (limit=${TEST_TOTAL_LIMIT})`);
     console.log(`# Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}`);
     console.log(merged.replace(/^#EXTM3U\s*/,''));
   }catch(e){
