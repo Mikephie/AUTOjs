@@ -1,8 +1,10 @@
 /**
  * m3u.js — 生成可播放 M3U，按“频道显示名”匹配图标并上传到 GitHub
  * 图标优先：NAME_ALIAS(规范化) → icons.json(多键命中) → 真实存在的 TV_logo(小写/原样) → not-found
- * 直链：strict 探测，仅保留可播
- * 性能：凑够 100 条即停；每源最多扫描 500 条
+ * 直链：strict 探测（记录 TTFB），仅保留可播且挑首包更快的
+ * CCTV：同号去重只留一条（更快的）
+ * “卫视”：凡名称含“卫视/衛視”统一分组为 "卫视"
+ * 性能：凑够 TEST_TOTAL_LIMIT/100 条即停；每源最多扫描 PER_SOURCE_SCAN_LIMIT/500 条
  * 输出：dist/playlist.m3u，并上传至 Mikephie/AUTOjs@main: LiveTV/AKTV.m3u
  */
 
@@ -26,7 +28,7 @@ const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
 const ICON_BASE      = "https://img.mikephie.site/TV_logo";
 const NOT_FOUND_ICON = "https://img.mikephie.site/not-found.png";
 
-// 仅对白名单域做 200/206 校验 & 加版本号防缓存
+// 仅对白名单域做 200/206 校验 & 加版本号防缓存（不会把中文路径编码）
 const ICON_HOST_WHITELIST = ["img.mikephie.site"];
 const BUILD_EPOCH = Date.now();
 const BUILD_ISO   = new Date(BUILD_EPOCH).toISOString();
@@ -47,8 +49,8 @@ const PATH_IN_REPO  = "LiveTV/AKTV.m3u";
 
 /* ===== 限额 / 策略 ===== */
 const FILTER_MODE              = "strict";  // strict / loose / off
-const TEST_TOTAL_LIMIT         = 100;       // 输出上限
-const HARD_TARGET              = 100;       // 早停门槛
+const TEST_TOTAL_LIMIT         = 200;       // 输出上限（可由 CI 环境变量覆盖）
+const HARD_TARGET              = 200;       // 早停门槛
 const PER_SOURCE_SCAN_LIMIT    = 500;       // 每源最多尝试
 
 /* ===== 超时（提速） ===== */
@@ -387,23 +389,40 @@ function clipByPairCount(text, maxPairs){
   return out.join("\n");
 }
 
-/* ===== 直链探测（只保留可用） ===== */
-async function quickProbe(url, mode="strict"){
-  if (!url) return false;
-  if (mode === "off") return true;
-  const t1 = (mode === "strict") ? PROBE_TIMEOUT_MS_STRICT : PROBE_TIMEOUT_MS_LOOSE;
-  try {
-    let { r } = await httpGet(url, { Range: "bytes=0-0" }, t1);
-    if (r && [200,206,301,302].includes(r.status)) return true;
-    if (mode === "loose") {
-      ({ r } = await httpGet(url, {}, PROBE_TIMEOUT_MS_LOOSE));
-      if (r && [200,301,302].includes(r.status)) return true;
-    }
-    return false;
-  } catch { return false; }
+/* ===== CCTV 去重键（合并同号） ===== */
+function canonicalKeyForDedup(dispName, header){
+  const name = (dispName || "").trim();
+  const tvgId = getAttr(header, "tvg-id") || "";
+  const m = name.match(/^CCTV[\s\-]?(\d{1,2})/i) || tvgId.match(/^cctv[\s\-]?(\d{1,2})/i);
+  if (m) return `cctv${String(m[1]).padStart(2,"0")}`;
+  return (tvgId && tvgId.trim()) ? tvgId.trim().toLowerCase() : normName(name);
 }
 
-/* ===== 注入（图标按显示名，保留分组；空/占位 logo 也补） ===== */
+/* ===== 直链探测：返回 { ok, ttfb }（首包时延） ===== */
+async function quickProbe(url, mode="strict"){
+  const res = { ok:false, ttfb: Number.POSITIVE_INFINITY };
+  if (!url) return res;
+  if (mode === "off") return { ok:true, ttfb:0 };
+
+  const t1 = (mode === "strict") ? PROBE_TIMEOUT_MS_STRICT : PROBE_TIMEOUT_MS_LOOSE;
+  try {
+    const t0 = Date.now();
+    let { r } = await httpGet(url, { Range: "bytes=0-0" }, t1);
+    if (r && [200,206,301,302].includes(r.status)) {
+      res.ok = true; res.ttfb = Date.now() - t0; return res;
+    }
+    if (mode === "loose") {
+      const t2 = Date.now();
+      ({ r } = await httpGet(url, {}, PROBE_TIMEOUT_MS_LOOSE));
+      if (r && [200,301,302].includes(r.status)) {
+        res.ok = true; res.ttfb = Date.now() - t2; return res;
+      }
+    }
+    return res;
+  } catch { return res; }
+}
+
+/* ===== 注入：收集→挑最快→统一分组→输出 ===== */
 async function injectForM3U(m3uText, iconMap, idx=0){
   if (globalStop) return "";
   const lines = m3uText.split(/\r?\n/);
@@ -412,19 +431,18 @@ async function injectForM3U(m3uText, iconMap, idx=0){
   const extCount = lines.filter(l=>l.startsWith("#EXTINF")).length;
   console.log(`源#${idx+1}: EXTINF = ${extCount}`);
 
+  // key -> { header, dispName, groupVal, url, ttfb }
+  const bestByKey = new Map();
+
   let scanned = 0;
   for (let i=0;i<lines.length;i++){
     if (globalStop) break;
 
     const raw = lines[i];
-    if (!raw.startsWith("#EXTINF")) {
-      if (raw.trim().toUpperCase().startsWith("#EXTM3U") && out.length===0) out.push("#EXTM3U");
-      continue;
-    }
+    if (!raw.startsWith("#EXTINF")) continue;
 
     scanned++;
     if (scanned > PER_SOURCE_SCAN_LIMIT) break;
-    if (keptChannels >= HARD_TARGET) { globalStop = true; break; }
 
     totalChannels++;
 
@@ -432,34 +450,55 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     let header     = commaIdx>=0 ? raw.slice(0,commaIdx) : raw;
     const dispName = commaIdx>=0 ? raw.slice(commaIdx+1).trim() : "";
 
+    // 分组：优先已有分组，否则 "mix"；卫视统一归类为 "卫视"
     const grpTitle = getAttr(header, "group-title");
     const grpTvg   = getAttr(header, "tvg-group");
-    const groupVal = grpTitle || grpTvg || "mix";
+    let groupVal   = grpTitle || grpTvg || "mix";
+    if (/卫视|衛視/.test(dispName)) groupVal = "卫视";
 
-    // 字段不存在 / 空值 / 占位 都要补 logo
+    // 补 logo（按显示名）
     const curLogo = getAttr(header, "tvg-logo");
-    const needFill = !curLogo || /^https?:\/\/$/.test(curLogo) || (curLogo && curLogo.trim() === "");
-    const isPlaceholder = /^(?:-|n\/a|none|null|empty)$/i.test(curLogo || "");
-    if (!/tvg-logo="/i.test(header) || needFill || isPlaceholder){
+    const needFill = !curLogo || /^https?:\/\/$/.test(curLogo) || (curLogo && curLogo.trim() === "") || /^(?:-|n\/a|none|null|empty)$/i.test(curLogo||"");
+    if (!/tvg-logo="/i.test(header) || needFill){
       const iconUrl = await pickIconByDisplayName(iconMap, dispName);
       header = setOrReplaceAttr(header, "tvg-logo", iconUrl);
     }
 
     const url = findNextUrl(lines, i);
-    const ok  = await quickProbe(url, FILTER_MODE);
+    const pr  = await quickProbe(url, FILTER_MODE);
+    if (!pr.ok) { filteredChannels++; continue; }
 
-    if (ok) {
-      keptChannels++;
-      out.push(commaIdx>=0 ? (header + "," + dispName) : header);
-      out.push(`#EXTGRP:${groupVal}`);
-      out.push(url);
-      if (i+1<lines.length && !lines[i+1].startsWith("#")) i++;
-      if (keptChannels >= HARD_TARGET) { globalStop = true; break; }
-    } else {
-      filteredChannels++;
+    // CCTV 合并：同“去重键”只留 TTFB 更低的一条
+    const key = canonicalKeyForDedup(dispName, header);
+    const prev = bestByKey.get(key);
+    if (!prev || pr.ttfb < prev.ttfb) {
+      bestByKey.set(key, { header, dispName, groupVal, url, ttfb: pr.ttfb });
     }
+
+    keptChannels = bestByKey.size;
+    if (keptChannels >= HARD_TARGET) { globalStop = true; break; }
   }
-  return out.join("\n");
+
+  // 输出（CCTV 在前按数字；其余按中文名）
+  const entries = Array.from(bestByKey.entries()).map(([k,v])=>({ key:k, ...v }));
+  entries.sort((a,b)=>{
+    const ma = a.key.match(/^cctv(\d+)/), mb = b.key.match(/^cctv(\d+)/);
+    if (ma && mb) return Number(ma[1]) - Number(mb[1]);
+    if (ma) return -1;
+    if (mb) return 1;
+    return a.dispName.localeCompare(b.dispName, "zh");
+  });
+
+  const result = ["#EXTM3U"];
+  for (const it of entries){
+    let hdr = setOrReplaceAttr(it.header, "group-title", it.groupVal);
+    hdr = setOrReplaceAttr(hdr, "tvg-group", it.groupVal);
+    result.push(`${hdr},${it.dispName}`);
+    result.push(`#EXTGRP:${it.groupVal}`);
+    result.push(it.url);
+  }
+
+  return result.join("\n");
 }
 
 /* ===== 主流程 ===== */
@@ -490,11 +529,11 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     let merged = injectedList.join("\n");
     merged = stripM3UHeaderOnce(merged);
     merged = dedupeM3U(merged);
-    merged = clipByPairCount(merged, TEST_TOTAL_LIMIT);
+    merged = clipByPairCount(merged, Number(process.env.TEST_TOTAL_LIMIT || TEST_TOTAL_LIMIT));
 
     const header =
       "#EXTM3U\n" +
-      `# Generated-At: ${BUILD_ISO} (limit=${TEST_TOTAL_LIMIT})\n` +
+      `# Generated-At: ${BUILD_ISO} (limit=${Number(process.env.TEST_TOTAL_LIMIT || TEST_TOTAL_LIMIT)})\n` +
       `# Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}\n`;
 
     const finalText = header + merged.replace(/^#EXTM3U\s*/,'') + "\n";
