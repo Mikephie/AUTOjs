@@ -1,10 +1,10 @@
 /**
- * m3u.js — 有效直链 + icons.json 图标 + 保留原分组
- * 性能优化：全局早停（凑够50条立刻停）、每源最多扫描300条、更短探测超时
+ * m3u.js — 有效直链 + icons.json 图标 + TV_logo 兜底 + 保留原分组
+ * 性能优化：全局早停（凑够100条立刻停）、每源最多扫描500条、更短探测超时
  * - 不走 Worker，不加 UA/Referer
  * - 过滤模式 = strict（只留探测可用的直链）
- * - 自动补图标（来自 icons.json，只有当原条目未提供时）
- * - 全局限制输出 50 条（去重后不会超过 50）
+ * - 自动补图标（来自 icons.json；未命中则拼接 TV_logo/xxx.png 兜底）
+ * - 全局限制输出 100 条（去重后不会超过 100）
  */
 
 const IS_NODE  = typeof process !== "undefined" && process.release?.name === "node";
@@ -13,20 +13,23 @@ if (IS_NODE && typeof fetch === "undefined") {
   nodeFetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args));
 }
 
-/* ===== 配置 ===== */
+/* ===== 数据源 ===== */
 const M3U_URLS = [
   { url: "https://aktv.space/live.m3u" },
   { url: "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/result.m3u" },
 ];
+
+/* ===== 图标清单 / 兜底目录 ===== */
 const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
+const ICON_BASE      = "https://img.mikephie.site/TV_logo/";   // 兜底目录
 
-// 固定策略
+/* ===== 固定策略与限额 ===== */
 const FILTER_MODE              = "strict";  // strict / loose / off
-const TEST_TOTAL_LIMIT         = 50;        // ✅ 全局仅输出 50 条
-const HARD_TARGET              = 50;        // ✅ 凑够 50 条全局早停
-const PER_SOURCE_SCAN_LIMIT    = 300;       // ✅ 每个源最多尝试 300 条（够50就停）
+const TEST_TOTAL_LIMIT         = 100;       // ✅ 全局输出 100 条
+const HARD_TARGET              = 100;       // ✅ 凑够 100 条全局早停
+const PER_SOURCE_SCAN_LIMIT    = 500;       // ✅ 每个源最多尝试 500 条（够100就停）
 
-// 超时收紧（为提速）
+/* ===== 超时（为提速） ===== */
 const FETCH_TIMEOUT_MS         = 6000;
 const PROBE_TIMEOUT_MS_STRICT  = 1200;
 const PROBE_TIMEOUT_MS_LOOSE   = 900;
@@ -53,7 +56,7 @@ async function httpGet(url, headers = {}, timeoutMs = FETCH_TIMEOUT_MS) {
 async function loadIcons(){
   try{
     const { d } = await httpGet(ICONS_JSON_URL, {}, 8000);
-    if (!d) return new Map();
+    if (!d) { console.log("# icons loaded = 0"); return new Map(); }
     let parsed = JSON.parse(d);
     const arr = Array.isArray(parsed?.icons) ? parsed.icons : (Array.isArray(parsed) ? parsed : []);
     const map = new Map();
@@ -65,41 +68,66 @@ async function loadIcons(){
       const keys = new Set([
         name, name.toLowerCase(), name.toUpperCase(),
         base, base.toLowerCase(), base.toUpperCase(),
-        base.replace(/\s+/g,"").toLowerCase()
+        base.replace(/\s+/g,"").toLowerCase(),
+        base.replace(/[\/\s\-\_]+/g,"").toLowerCase()
       ]);
       for (const k of keys) map.set(k, url);
     }
+    console.log(`# icons loaded = ${map.size}`);
     return map;
   }catch(e){
     console.log("⚠️ icons.json 加载失败：", String(e));
     return new Map();
   }
 }
-function pickIcon(iconMap, { tvgId, tvgName, dispName }){
-  const cands = [];
-  if (tvgId)   cands.push(tvgId, tvgId.split("/").pop());
-  if (tvgName) cands.push(tvgName);
-  if (dispName)cands.push(dispName);
-  for (const raw of cands){
+function normKey(s){
+  return (s||"")
+    .toLowerCase()
+    .replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,"")
+    .replace(/[\/\s\-\_]+/g,"")     // 去 / 空格 - _
+    .replace(/(uhd|fhd|hd|sd|4k)$/,""); // 去末尾分辨率后缀
+}
+function makeCandidates({ tvgId, tvgName, dispName }){
+  const ids = [];
+  if (tvgId){
+    const seg = tvgId.split("/").pop();     // e.g. channel5hd
+    ids.push(seg, tvgId);
+  }
+  if (tvgName)  ids.push(tvgName);
+  if (dispName) ids.push(dispName);
+
+  const normeds = new Set();
+  for (const raw of ids){
     const s = (raw||"").trim();
     if (!s) continue;
-    const keys = [
-      s, s.toLowerCase(), s.toUpperCase(),
-      s.replace(/\.(png|jpg|jpeg|webp|gif|svg)$/i,""),
-      s.replace(/\s+/g,"").toLowerCase()
-    ];
-    for (const k of keys){
-      if (iconMap.has(k)) return iconMap.get(k);
-    }
+    const base = normKey(s);
+    if (!base) continue;
+    normeds.add(base);
+    // 常见别名/简化
+    normeds.add(base.replace(/channel(\d+)hd$/,"channel$1")); // channel5hd -> channel5
+    normeds.add(base.replace(/lovenature.*$/,"lovenature"));  // lovenaturehd -> lovenature
+    normeds.add(base.replace(/tvn.*$/,"tvn"));                // tvNxxx -> tvn
   }
+  return Array.from(normeds).filter(Boolean);
+}
+function pickIcon(iconMap, info){
+  // 1) 先用 icons.json 映射
+  const keys = makeCandidates(info);
+  for (const key of keys){
+    if (iconMap.has(key)) return iconMap.get(key);
+  }
+  // 2) 兜底：直接拼 TV_logo 目录（不探测）
+  if (keys.length) return ICON_BASE + keys[0] + ".png";
   return "";
 }
 
 /* ===== 工具函数 ===== */
 function findNextUrl(lines, i){
+  // 先跳空行
   let j = i+1;
   while (j < lines.length && !lines[j].trim()) j++;
   if (j < lines.length && !lines[j].startsWith("#")) return lines[j].trim();
+  // 再跳注释
   j = i+1;
   while (j < lines.length && (lines[j].startsWith("#") || !lines[j].trim())) j++;
   return (j < lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
@@ -197,7 +225,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     }
 
     scanned++;
-    if (scanned > PER_SOURCE_SCAN_LIMIT) break;   // 每源上限
+    if (scanned > PER_SOURCE_SCAN_LIMIT) break;     // 每源上限
     if (keptChannels >= HARD_TARGET) { globalStop = true; break; } // 全局早停
 
     totalChannels++;
@@ -211,7 +239,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     const grpTvg   = getAttr(header, "tvg-group");
     const groupVal = grpTitle || grpTvg || "mix";
 
-    // 图标：原条目无 tvg-logo 时，从 icons.json 匹配补上
+    // 图标：原条目无 tvg-logo 时，从 icons.json 匹配；未命中用 TV_logo 兜底
     const tvgId   = getAttr(header, "tvg-id");
     const tvgName = getAttr(header, "tvg-name");
     if (!/tvg-logo="/i.test(header)){
@@ -262,7 +290,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     let merged = injectedList.join("\n");
     merged = stripM3UHeaderOnce(merged);
     merged = dedupeM3U(merged);
-    merged = clipByPairCount(merged, TEST_TOTAL_LIMIT);  // 最终再裁一次，确保不超过50
+    merged = clipByPairCount(merged, TEST_TOTAL_LIMIT);  // 最终再裁一次，确保不超过100
 
     console.log("#EXTM3U");
     console.log(`# Generated-At: ${new Date().toISOString()} (limit=${TEST_TOTAL_LIMIT})`);
