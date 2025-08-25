@@ -1,153 +1,153 @@
 #EXTM3U
-# Generated-At: 2025-08-25T14:11:40.306Z (limit=100)
-# Stats: total=277, kept=100, filtered=177
-#EXTINF:1 aktv-group="AKTV" tvg-id="aktv/animaxhk" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/animax.png?v=1756131100306",Animax (HK)
+# Generated-At: 2025-08-25T14:41:37.313Z (limit=100)
+# Stats: total=246, kept=100, filtered=146
+#EXTINF:1 aktv-group="AKTV" tvg-id="aktv/animaxhk" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/animax.png?v=1756132897313",Animax (HK)
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/animaxhk/AKTV.m3u8
-#EXTINF:2 aktv-group="AKTV" tvg-id="aktv/axn" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/axn.png?v=1756131100306",AXN
+#EXTINF:2 aktv-group="AKTV" tvg-id="aktv/axn" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/axn.png?v=1756132897313",AXN
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/axn/AKTV.m3u8
-#EXTINF:3 aktv-group="AKTV" tvg-id="aktv/channel5hd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channel5.png?v=1756131100306",Channel 5 HD
+#EXTINF:3 aktv-group="AKTV" tvg-id="aktv/channel5hd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channel5.png?v=1756132897313",Channel 5 HD
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/channel5hd/AKTV.m3u8
-#EXTINF:4 aktv-group="AKTV" tvg-id="aktv/channel8hd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channel8.png?v=1756131100306",Channel 8 HD
+#EXTINF:4 aktv-group="AKTV" tvg-id="aktv/channel8hd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channel8.png?v=1756132897313",Channel 8 HD
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/channel8hd/AKTV.m3u8
-#EXTINF:5 aktv-group="AKTV" tvg-id="aktv/channeluhd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channelu.png?v=1756131100306",Channel U HD
+#EXTINF:5 aktv-group="AKTV" tvg-id="aktv/channeluhd" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/channelu.png?v=1756132897313",Channel U HD
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/channeluhd/AKTV.m3u8
-#EXTINF:6 aktv-group="AKTV" tvg-id="aktv/lovenaturehd" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306",Love Nature HD
+#EXTINF:6 aktv-group="AKTV" tvg-id="aktv/lovenaturehd" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313",Love Nature HD
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/lovenaturehd/AKTV.m3u8
-#EXTINF:7 aktv-group="AKTV" tvg-id="aktv/popc" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/popc.png?v=1756131100306",PopC
+#EXTINF:7 aktv-group="AKTV" tvg-id="aktv/popc" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/popc.png?v=1756132897313",PopC
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/popc/AKTV.m3u8
-#EXTINF:8 aktv-group="AKTV" tvg-id="aktv/rockaction" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306",ROCK Action
+#EXTINF:8 aktv-group="AKTV" tvg-id="aktv/rockaction" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313",ROCK Action
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/rockaction/AKTV.m3u8
-#EXTINF:9 aktv-group="AKTV" tvg-id="aktv/tvbplus" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/tvbplus.png?v=1756131100306",TVB Plus
+#EXTINF:9 aktv-group="AKTV" tvg-id="aktv/tvbplus" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/tvbplus.png?v=1756132897313",TVB Plus
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/tvbplus/AKTV.m3u8
-#EXTINF:10 aktv-group="AKTV" tvg-id="aktv/tvn" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306",tvN
+#EXTINF:10 aktv-group="AKTV" tvg-id="aktv/tvn" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313",tvN
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/tvn/AKTV.m3u8
-#EXTINF:11 aktv-group="AKTV" tvg-id="aktv/1080" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/天映經典.png?v=1756131100306",天映經典(1080)
+#EXTINF:11 aktv-group="AKTV" tvg-id="aktv/1080" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/天映經典.png?v=1756132897313",天映經典(1080)
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/1080/AKTV.m3u8
-#EXTINF:12 aktv-group="AKTV" tvg-id="aktv/CH-19" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/明珠剧集台.png?v=1756131100306",明珠剧集台(北美)
+#EXTINF:12 aktv-group="AKTV" tvg-id="aktv/CH-19" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/明珠剧集台.png?v=1756132897313",明珠剧集台(北美)
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-19/AKTV.m3u8
-#EXTINF:13 aktv-group="AKTV" tvg-id="aktv/CH-2" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306",明珠台
+#EXTINF:13 aktv-group="AKTV" tvg-id="aktv/CH-2" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313",明珠台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-2/AKTV.m3u8
-#EXTINF:14 aktv-group="AKTV" tvg-id="aktv/CH-1" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/無線新聞台.png?v=1756131100306",無線新聞台
+#EXTINF:14 aktv-group="AKTV" tvg-id="aktv/CH-1" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/無線新聞台.png?v=1756132897313",無線新聞台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-1/AKTV.m3u8
-#EXTINF:15 aktv-group="AKTV" tvg-id="aktv/hk" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/美亞電影台.png?v=1756131100306",美亞電影台(HK)
+#EXTINF:15 aktv-group="AKTV" tvg-id="aktv/hk" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/美亞電影台.png?v=1756132897313",美亞電影台(HK)
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/hk/AKTV.m3u8
-#EXTINF:16 aktv-group="AKTV" tvg-id="aktv/CH-8" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠一台.png?v=1756131100306",翡翠一台(北美)
+#EXTINF:16 aktv-group="AKTV" tvg-id="aktv/CH-8" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠一台.png?v=1756132897313",翡翠一台(北美)
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-8/AKTV.m3u8
-#EXTINF:17 aktv-group="AKTV" tvg-id="aktv/CH-18" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠剧集台.png?v=1756131100306",翡翠剧集台(北美)
+#EXTINF:17 aktv-group="AKTV" tvg-id="aktv/CH-18" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠剧集台.png?v=1756132897313",翡翠剧集台(北美)
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-18/AKTV.m3u8
-#EXTINF:18 aktv-group="AKTV" tvg-id="aktv/CH-0" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠台.png?v=1756131100306",翡翠台
+#EXTINF:18 aktv-group="AKTV" tvg-id="aktv/CH-0" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠台.png?v=1756132897313",翡翠台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-0/AKTV.m3u8
-#EXTINF:19 aktv-group="AKTV" tvg-id="aktv/CH-7" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠娛樂台.png?v=1756131100306",翡翠娛樂台(北美)
+#EXTINF:19 aktv-group="AKTV" tvg-id="aktv/CH-7" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠娛樂台.png?v=1756132897313",翡翠娛樂台(北美)
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-7/AKTV.m3u8
-#EXTINF:20 aktv-group="AKTV" tvg-id="aktv/CH-17" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠综合台.png?v=1756131100306",翡翠综合台(北美)
+#EXTINF:20 aktv-group="AKTV" tvg-id="aktv/CH-17" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/翡翠综合台.png?v=1756132897313",翡翠综合台(北美)
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-17/AKTV.m3u8
-#EXTINF:21 aktv-group="AKTV" tvg-id="aktv/CH-3" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視中文台.png?v=1756131100306",鳳凰衛視中文台
+#EXTINF:21 aktv-group="AKTV" tvg-id="aktv/CH-3" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視中文台.png?v=1756132897313",鳳凰衛視中文台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-3/AKTV.m3u8
-#EXTINF:22 aktv-group="AKTV" tvg-id="aktv/CH-4" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視資訊台.png?v=1756131100306",鳳凰衛視資訊台
+#EXTINF:22 aktv-group="AKTV" tvg-id="aktv/CH-4" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視資訊台.png?v=1756132897313",鳳凰衛視資訊台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-4/AKTV.m3u8
-#EXTINF:23 aktv-group="AKTV" tvg-id="aktv/CH-5" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視香港台.png?v=1756131100306",鳳凰衛視香港台
+#EXTINF:23 aktv-group="AKTV" tvg-id="aktv/CH-5" provider-type="iptv" tvg-logo="https://img.mikephie.site/TV_logo/鳳凰衛視香港台.png?v=1756132897313",鳳凰衛視香港台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-5/AKTV.m3u8
-#EXTINF:24 aktv-group="AKTV" tvg-id="aktv/CH-6" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306",黃金翡翠台
+#EXTINF:24 aktv-group="AKTV" tvg-id="aktv/CH-6" provider-type="iptv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313",黃金翡翠台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv/CH-6/AKTV.m3u8
-#EXTINF:25 aktv-group="AKTV3" tvg-id="aktv3/cna" tvg-logo="https://img.mikephie.site/TV_logo/cna.png?v=1756131100306" provider="AKTV3" provider-logo="" provider-type="iptv",CNA
+#EXTINF:25 aktv-group="AKTV3" tvg-id="aktv3/cna" tvg-logo="https://img.mikephie.site/TV_logo/cna.png?v=1756132897313" provider="AKTV3" provider-logo="" provider-type="iptv",CNA
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv3/cna/AKTV.m3u8
-#EXTINF:26 aktv-group="AKTV3" tvg-id="aktv3/CH-0" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="AKTV3" provider-logo="" provider-type="iptv",朝鲜恩情台
+#EXTINF:26 aktv-group="AKTV3" tvg-id="aktv3/CH-0" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="AKTV3" provider-logo="" provider-type="iptv",朝鲜恩情台
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktv3/CH-0/AKTV.m3u8
-#EXTINF:27 aktv-group="AKTV-JP" tvg-id="aktvjp/japannews24hlive" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="AKTV-JP" provider-logo="" provider-type="iptv",Japan News 24H LIVE
+#EXTINF:27 aktv-group="AKTV-JP" tvg-id="aktvjp/japannews24hlive" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="AKTV-JP" provider-logo="" provider-type="iptv",Japan News 24H LIVE
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktvjp/japannews24hlive/AKTV.m3u8
-#EXTINF:28 aktv-group="AKTV-JP" tvg-id="aktvjp/ntv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="AKTV-JP" provider-logo="" provider-type="iptv",日テレNEWS LIVE
+#EXTINF:28 aktv-group="AKTV-JP" tvg-id="aktvjp/ntv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="AKTV-JP" provider-logo="" provider-type="iptv",日テレNEWS LIVE
 #EXTGRP:mix
 http://s1.an94tv.cfd/aktvjp/ntv/AKTV.m3u8
-#EXTINF:29 aktv-group="astro" tvg-id="astro/8tv" tvg-logo="https://img.mikephie.site/TV_logo/8tv.png?v=1756131100306" provider="astro" provider-logo="" provider-type="iptv",8TV
+#EXTINF:29 aktv-group="astro" tvg-id="astro/8tv" tvg-logo="https://img.mikephie.site/TV_logo/8tv.png?v=1756132897313" provider="astro" provider-logo="" provider-type="iptv",8TV
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/8tv/AKTV.m3u8
-#EXTINF:30 aktv-group="astro" tvg-id="astro/eurosport1" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport1.png?v=1756131100306" provider="astro" provider-logo="" provider-type="iptv",EuroSport 1
+#EXTINF:30 aktv-group="astro" tvg-id="astro/eurosport1" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport1.png?v=1756132897313" provider="astro" provider-logo="" provider-type="iptv",EuroSport 1
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/eurosport1/AKTV.m3u8
-#EXTINF:31 aktv-group="astro" tvg-id="astro/eurosport2" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport2.png?v=1756131100306" provider="astro" provider-logo="" provider-type="iptv",EuroSport 2
+#EXTINF:31 aktv-group="astro" tvg-id="astro/eurosport2" tvg-logo="https://img.mikephie.site/TV_logo/EuroSport2.png?v=1756132897313" provider="astro" provider-logo="" provider-type="iptv",EuroSport 2
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/eurosport2/AKTV.m3u8
-#EXTINF:32 aktv-group="astro" tvg-id="astro/nbatv" tvg-logo="https://img.mikephie.site/TV_logo/nbatv.png?v=1756131100306" provider="astro" provider-logo="" provider-type="iptv",NBA TV
+#EXTINF:32 aktv-group="astro" tvg-id="astro/nbatv" tvg-logo="https://img.mikephie.site/TV_logo/nbatv.png?v=1756132897313" provider="astro" provider-logo="" provider-type="iptv",NBA TV
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/nbatv/AKTV.m3u8
-#EXTINF:33 aktv-group="astro" tvg-id="astro/tntsports1" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS1.png?v=1756131100306" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 1
+#EXTINF:33 aktv-group="astro" tvg-id="astro/tntsports1" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS1.png?v=1756132897313" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 1
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/tntsports1/AKTV.m3u8
-#EXTINF:34 aktv-group="astro" tvg-id="astro/tntsports2" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS2.png?v=1756131100306" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 2
+#EXTINF:34 aktv-group="astro" tvg-id="astro/tntsports2" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS2.png?v=1756132897313" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 2
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/tntsports2/AKTV.m3u8
-#EXTINF:35 aktv-group="astro" tvg-id="astro/tntsports3" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS3.png?v=1756131100306" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 3
+#EXTINF:35 aktv-group="astro" tvg-id="astro/tntsports3" tvg-logo="https://img.mikephie.site/TV_logo/TNTSPORTS3.png?v=1756132897313" provider="astro" provider-logo="" provider-type="iptv",TNT SPORTS 3
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/tntsports3/AKTV.m3u8
-#EXTINF:36 aktv-group="astro" tvg-id="astro/unifisports1" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="astro" provider-logo="" provider-type="iptv",unifi Sports 1
+#EXTINF:36 aktv-group="astro" tvg-id="astro/unifisports1" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="astro" provider-logo="" provider-type="iptv",unifi Sports 1
 #EXTGRP:mix
 http://s1.an94tv.cfd/astro/unifisports1/AKTV.m3u8
-#EXTINF:37 aktv-group="taiwan" tvg-id="taiwan/cinemaworld" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="taiwan" provider-logo="" provider-type="iptv",CinemaWorld
+#EXTINF:37 aktv-group="taiwan" tvg-id="taiwan/cinemaworld" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="taiwan" provider-logo="" provider-type="iptv",CinemaWorld
 #EXTGRP:mix
 http://s1.an94tv.cfd/taiwan/cinemaworld/AKTV.m3u8
-#EXTINF:38 aktv-group="taiwan" tvg-id="taiwan/hits" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="taiwan" provider-logo="" provider-type="iptv",HITS
+#EXTINF:38 aktv-group="taiwan" tvg-id="taiwan/hits" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="taiwan" provider-logo="" provider-type="iptv",HITS
 #EXTGRP:mix
 http://s1.an94tv.cfd/taiwan/hits/AKTV.m3u8
-#EXTINF:39 aktv-group="taiwan" tvg-id="taiwan/magellantv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="taiwan" provider-logo="" provider-type="iptv",MagellanTV頻道
+#EXTINF:39 aktv-group="taiwan" tvg-id="taiwan/magellantv" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="taiwan" provider-logo="" provider-type="iptv",MagellanTV頻道
 #EXTGRP:mix
 http://s1.an94tv.cfd/taiwan/magellantv/AKTV.m3u8
-#EXTINF:40 aktv-group="zhongtian" tvg-id="zhongtian/tvbs55" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",Tvbs 55頻道
+#EXTINF:40 aktv-group="zhongtian" tvg-id="zhongtian/tvbs55" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",Tvbs 55頻道
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/tvbs55/AKTV.m3u8
-#EXTINF:41 aktv-group="zhongtian" tvg-id="zhongtian/tvbs56" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",Tvbs 56頻道
+#EXTINF:41 aktv-group="zhongtian" tvg-id="zhongtian/tvbs56" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",Tvbs 56頻道
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/tvbs56/AKTV.m3u8
-#EXTINF:42 aktv-group="zhongtian" tvg-id="zhongtian/live" tvg-logo="https://img.mikephie.site/TV_logo/三立LIVE.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",三立LIVE
+#EXTINF:42 aktv-group="zhongtian" tvg-id="zhongtian/live" tvg-logo="https://img.mikephie.site/TV_logo/三立LIVE.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",三立LIVE
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/live/AKTV.m3u8
-#EXTINF:43 aktv-group="zhongtian" tvg-id="zhongtian/CH-0" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",中天新闻台
+#EXTINF:43 aktv-group="zhongtian" tvg-id="zhongtian/CH-0" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",中天新闻台
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/CH-0/AKTV.m3u8
-#EXTINF:44 aktv-group="zhongtian" tvg-id="zhongtian/CH-3" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",中視新聞
+#EXTINF:44 aktv-group="zhongtian" tvg-id="zhongtian/CH-3" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",中視新聞
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/CH-3/AKTV.m3u8
-#EXTINF:45 aktv-group="zhongtian" tvg-id="zhongtian/CH-4" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",台視新聞
+#EXTINF:45 aktv-group="zhongtian" tvg-id="zhongtian/CH-4" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",台視新聞
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/CH-4/AKTV.m3u8
-#EXTINF:46 aktv-group="zhongtian" tvg-id="zhongtian/CH-2" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",寰宇新聞台
+#EXTINF:46 aktv-group="zhongtian" tvg-id="zhongtian/CH-2" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",寰宇新聞台
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/CH-2/AKTV.m3u8
-#EXTINF:47 aktv-group="zhongtian" tvg-id="zhongtian/CH-1" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",東森新聞
+#EXTINF:47 aktv-group="zhongtian" tvg-id="zhongtian/CH-1" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",東森新聞
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/CH-1/AKTV.m3u8
-#EXTINF:48 aktv-group="zhongtian" tvg-id="zhongtian/CH-5" tvg-logo="https://img.mikephie.site/not-found.png?v=1756131100306" provider="zhongtian" provider-logo="" provider-type="iptv",民視新聞
+#EXTINF:48 aktv-group="zhongtian" tvg-id="zhongtian/CH-5" tvg-logo="https://img.mikephie.site/not-found.png?v=1756132897313" provider="zhongtian" provider-logo="" provider-type="iptv",民視新聞
 #EXTGRP:mix
 http://s1.an94tv.cfd/zhongtian/CH-5/AKTV.m3u8
 #EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV1.png" group-title="📺央视频道",CCTV-1
 #EXTGRP:📺央视频道
-http://php.jdshipin.com/TVOD/iptv.php?id=rthk33
+https://smart.pendy.dpdns.org/Smart.php?id=cctv1
 #EXTINF:-1 tvg-name="CCTV2" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV2.png" group-title="📺央视频道",CCTV-2
 #EXTGRP:📺央视频道
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv2HD/__op/default/__f/index.m3u8
@@ -159,7 +159,13 @@ https://smart.pendy.dpdns.org/Smart.php?id=cctv2
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv3HD/__op/default/__f/index.m3u8
 #EXTINF:-1 tvg-name="CCTV3" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV3.png" group-title="📺央视频道",CCTV-3
 #EXTGRP:📺央视频道
+http://php.cqshushu.ggff.net/jzb.php?id=cctv3&公众号【医工学习日志】
+#EXTINF:-1 tvg-name="CCTV3" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV3.png" group-title="📺央视频道",CCTV-3
+#EXTGRP:📺央视频道
 https://smart.pendy.dpdns.org/Smart.php?id=cctv3
+#EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV4.png" group-title="📺央视频道",CCTV-4
+#EXTGRP:📺央视频道
+http://php.cqshushu.ggff.net/jzb.php?id=cctv5&公众号【医工学习日志】
 #EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV4.png" group-title="📺央视频道",CCTV-4
 #EXTGRP:📺央视频道
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv4HD/__op/default/__f/index.m3u8
@@ -177,10 +183,16 @@ https://smart.pendy.dpdns.org/Smart.php?id=cctv5
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv5SportHD/__op/default/__f/index.m3u8
 #EXTINF:-1 tvg-name="CCTV5+" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5+.png" group-title="📺央视频道",CCTV-5+
 #EXTGRP:📺央视频道
+https://www.freetv.top/migu/641886773.m3u8?migutoken=03a1b82e35e58cd89a95034ecb29e77e50493397000ec2b1e4d1ce59af01e6420d6dbc068c8230ec03be3a35a20eed8714e0959e3570a08713a7a2e8d86085eabf8f1aa85744c80c38343988b2
+#EXTINF:-1 tvg-name="CCTV5+" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5+.png" group-title="📺央视频道",CCTV-5+
+#EXTGRP:📺央视频道
 https://smart.pendy.dpdns.org/Smart.php?id=cctv5plus
 #EXTINF:-1 tvg-name="CCTV6" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV6.png" group-title="📺央视频道",CCTV-6
 #EXTGRP:📺央视频道
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv6HD/__op/default/__f/index.m3u8
+#EXTINF:-1 tvg-name="CCTV6" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV6.png" group-title="📺央视频道",CCTV-6
+#EXTGRP:📺央视频道
+http://php.cqshushu.ggff.net/jzb.php?id=cctv6&公众号【医工学习日志】
 #EXTINF:-1 tvg-name="CCTV6" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV6.png" group-title="📺央视频道",CCTV-6
 #EXTGRP:📺央视频道
 https://smart.pendy.dpdns.org/Smart.php?id=cctv6
@@ -195,10 +207,16 @@ http://www.freetv.top/migu/624878396.m3u8?migutoken=3adcad950884d4ecc6c6967edee9
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv7HD/__op/default/__f/index.m3u8
 #EXTINF:-1 tvg-name="CCTV7" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV7.png" group-title="📺央视频道",CCTV-7
 #EXTGRP:📺央视频道
+http://php.cqshushu.ggff.net/jzb.php?id=cctv7&公众号【医工学习日志】
+#EXTINF:-1 tvg-name="CCTV7" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV7.png" group-title="📺央视频道",CCTV-7
+#EXTGRP:📺央视频道
 https://smart.pendy.dpdns.org/Smart.php?id=cctv7
 #EXTINF:-1 tvg-name="CCTV8" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV8.png" group-title="📺央视频道",CCTV-8
 #EXTGRP:📺央视频道
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv8HD/__op/default/__f/index.m3u8
+#EXTINF:-1 tvg-name="CCTV8" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV8.png" group-title="📺央视频道",CCTV-8
+#EXTGRP:📺央视频道
+http://php.cqshushu.ggff.net/jzb.php?id=cctv8&公众号【医工学习日志】
 #EXTINF:-1 tvg-name="CCTV8" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV8.png" group-title="📺央视频道",CCTV-8
 #EXTGRP:📺央视频道
 https://smart.pendy.dpdns.org/Smart.php?id=cctv8hd
@@ -207,13 +225,13 @@ https://smart.pendy.dpdns.org/Smart.php?id=cctv8hd
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv9HD/__op/default/__f/index.m3u8
 #EXTINF:-1 tvg-name="CCTV9" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV9.png" group-title="📺央视频道",CCTV-9
 #EXTGRP:📺央视频道
+https://www.freetv.top/migu/673168140.m3u8?migutoken=749c49cdc31bb395e0349adc81010adc8707f80e51e9d3491ad67bfa71388ad768f7b52c8064338a7ef45eb7ddb192fb4937b21681c82499a0c16653ad9a9bec98ff5ce6ab183e4029bbdf269e
+#EXTINF:-1 tvg-name="CCTV9" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV9.png" group-title="📺央视频道",CCTV-9
+#EXTGRP:📺央视频道
 https://smart.pendy.dpdns.org/Smart.php?id=cctv9hd
 #EXTINF:-1 tvg-name="CCTV10" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV10.png" group-title="📺央视频道",CCTV-10
 #EXTGRP:📺央视频道
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv10HD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="CCTV10" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV10.png" group-title="📺央视频道",CCTV-10
-#EXTGRP:📺央视频道
-https://smart.pendy.dpdns.org/Smart.php?id=cctv10hd
 #EXTINF:-1 tvg-name="CCTV11" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV11.png" group-title="📺央视频道",CCTV-11
 #EXTGRP:📺央视频道
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv11HD/__op/default/__f/index.m3u8
@@ -225,13 +243,25 @@ https://smart.pendy.dpdns.org/Smart.php?id=cctv11
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctv12HD/__op/default/__f/index.m3u8
 #EXTINF:-1 tvg-name="CCTV12" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV12.png" group-title="📺央视频道",CCTV-12
 #EXTGRP:📺央视频道
+https://www.freetv.top/migu/673168185.m3u8?migutoken=37acadb43b1d7932b0a1e8a4f2d01a06b42a10c31f3ccb417bae200ac3028f30a8110509f2cd6cd130aee4b21c85693aa49817f3381e4d28e140d8db1a20b6fecea22fec17a70ff1341efe6081
+#EXTINF:-1 tvg-name="CCTV12" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV12.png" group-title="📺央视频道",CCTV-12
+#EXTGRP:📺央视频道
 https://smart.pendy.dpdns.org/Smart.php?id=cctv12
 #EXTINF:-1 tvg-name="CCTV13" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV13.png" group-title="📺央视频道",CCTV-13
 #EXTGRP:📺央视频道
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/CCTVNewsHD/__op/default/__f/index.m3u8
+#EXTINF:-1 tvg-name="CCTV13" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV13.png" group-title="📺央视频道",CCTV-13
+#EXTGRP:📺央视频道
+http://j.x.bkpcp.top/jx/CCTV13HD
+#EXTINF:-1 tvg-name="CCTV13" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV13.png" group-title="📺央视频道",CCTV-13
+#EXTGRP:📺央视频道
+http://ali-m-l.cztv.com/channels/lantian/channel21/1080p.m3u8
 #EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="📺央视频道",CCTV-14
 #EXTGRP:📺央视频道
 http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/cctvseHD/__op/default/__f/index.m3u8
+#EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="📺央视频道",CCTV-14
+#EXTGRP:📺央视频道
+http://php.cqshushu.ggff.net/jzb.php?id=cctv14&公众号【医工学习日志】
 #EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV14.png" group-title="📺央视频道",CCTV-14
 #EXTGRP:📺央视频道
 https://smart.pendy.dpdns.org/Smart.php?id=cctv14
@@ -271,33 +301,3 @@ https://migu.188766.xyz/?migutoken=98daa3ba4c81372351b73d9075023b9b&id=CETV2&typ
 #EXTINF:-1 tvg-name="CETV2" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CETV2.png" group-title="📺央视频道",CETV-2
 #EXTGRP:📺央视频道
 https://cc06.tv12.xyz/24.m3u8
-#EXTINF:-1 tvg-name="CETV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CETV4.png" group-title="📺央视频道",CETV-4
-#EXTGRP:📺央视频道
-https://mursor.ottiptv.cc/migu/923287339.m3u8?migutoken=165b545b4402eaba61cdc31defb6548a443d9b5eebb1d99392852bd799c553e8817e85eb324c512581ca9a1ed8e56e530144f79606cf44fe5b2d5e97b6da577e0f2adae2a90c2a55089c95880b
-#EXTINF:-1 tvg-name="CETV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CETV4.png" group-title="📺央视频道",CETV-4
-#EXTGRP:📺央视频道
-https://migu.188766.xyz/?migutoken=d5d19d868e1df41e984866fc7ca15071&id=CETV4&type=yy
-#EXTINF:-1 tvg-name="央视台球" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/央视台球.png" group-title="💰央视付费频道",央视台球
-#EXTGRP:💰央视付费频道
-https://epg.pw/stream/25677ac2e8c1f7c3dd6359c43eb5f0f54efb3f5c11f9dda18d01b3e0308ed017.m3u8
-#EXTINF:-1 tvg-name="风云音乐" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/风云音乐.png" group-title="💰央视付费频道",风云音乐
-#EXTGRP:💰央视付费频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/fyyyHD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="第一剧场" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/第一剧场.png" group-title="💰央视付费频道",第一剧场
-#EXTGRP:💰央视付费频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/diyijuchangHD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="第一剧场" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/第一剧场.png" group-title="💰央视付费频道",第一剧场
-#EXTGRP:💰央视付费频道
-https://epg.pw/stream/6d7bf281e3d739806a73f5373acaa6e01988ec9739f5ac1355ce54b47a928472.m3u8
-#EXTINF:-1 tvg-name="怀旧剧场" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/怀旧剧场.png" group-title="💰央视付费频道",怀旧剧场
-#EXTGRP:💰央视付费频道
-http://43.152.25.217:80/tencent.live.cbncdn.cn/__cl/cg:live/__c/hjjcHD/__op/default/__f/index.m3u8
-#EXTINF:-1 tvg-name="怀旧剧场" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/怀旧剧场.png" group-title="💰央视付费频道",怀旧剧场
-#EXTGRP:💰央视付费频道
-https://cc06.tv12.xyz/52.m3u8
-#EXTINF:-1 tvg-name="女性时尚" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/女性时尚.png" group-title="💰央视付费频道",女性时尚
-#EXTGRP:💰央视付费频道
-https://cc06.tv12.xyz/95.m3u8
-#EXTINF:-1 tvg-name="风云足球" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/风云足球.png" group-title="💰央视付费频道",风云足球
-#EXTGRP:💰央视付费频道
-https://epg.pw/stream/6d7bf281e3d739806a73f5373acaa6e01988ec9739f5ac1355ce54b47a928472.m3u8
