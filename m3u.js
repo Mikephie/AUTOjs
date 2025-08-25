@@ -1,11 +1,12 @@
 /**
- * 最终版 m3u.js
+ * 最终版 m3u.js（含测试模式）
  * - 双环境：Node.js/GitHub Actions & Surge/Loon/QuanX
  * - 过滤模式 FILTER_MODE：'strict' | 'loose' | 'off'（默认从 env M3U_FILTER 读取）
  * - 过滤无效流（Node 环境启用；Surge/Loon 跳过以避免超时）
  * - 图标注入：仅对自家域做 200 校验（Range: bytes=0-0）
  * - UA 网关：按需为 live.php / 指定域注入 UA
  * - 并发/超时/上限：防止卡死；统计总数/保留/过滤
+ * - 测试模式 TEST_LIMIT：只输出前 N 条，便于快速验证
  * - GitHub 上传：PUT contents API（自动获取 sha，避免 409）
  */
 
@@ -21,7 +22,11 @@ if (IS_NODE && typeof fetch === "undefined") {
   nodeFetch = (...args) => import("node-fetch").then(({ default: f }) => f(...args));
 }
 
-// =============== 过滤模式（通过 env 控制） ===============
+// =============== 测试模式 & 过滤模式 ===============
+// 测试模式：只输出前 N 条频道。上线时改为 0 关闭限制。
+const TEST_LIMIT = 10; // ← 测试中：只取前 10 条。上线改为 0。
+
+// 过滤模式（由工作流通过环境变量传入；默认 loose）：
 const FILTER_MODE = (IS_NODE ? (process.env.M3U_FILTER || "loose") : "off").toLowerCase(); 
 // 'strict'：仅 Range 探测；'loose'：Range 失败再试一次普通 GET；'off'：完全不探测（保留所有链接）
 
@@ -43,18 +48,20 @@ const BUILD_VER   = String(BUILD_EPOCH);
 const USE_WORKER_GATEWAY = true;
 const GW_BASE = "https://m3u-converter.mikephiemy.workers.dev/?u=";
 
-// 需要强制带 UA 的域名
+// 需要强制带 UA 的域名（可按需扩充）
 const UA_MAP = {
   "mursor.ottiptv.cc": "okHttp/Mod-1.1.0",
   "sub.ottiptv.cc":    "okHttp/Mod-1.1.0",
 };
 
+// 数据源
 const M3U_URLS = [
   { url: "https://aktv.space/live.m3u" },
   { url: "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/result.m3u" },
 ];
 const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
 
+// 输出 & 上传
 const PERSIST_KEY = "M3U_CONTENT";
 const UPLOAD_NOW  = true;
 const REPO        = "Mikephie/AUTOjs";
@@ -63,7 +70,7 @@ const PATH        = "LiveTV/AKTV.m3u";
 const INLINE_TOKEN = "";
 const TOKEN = IS_NODE ? (process.env.GH_TOKEN || INLINE_TOKEN) : (($persistentStore?.read("GH_TOKEN")) || INLINE_TOKEN);
 
-// 组策略
+// 分组策略
 const GROUP_WHITELIST    = ["sport", "movie", "cctv", "mediacorp", "hongkong", "taiwan"];
 const DEFAULT_GROUP      = "mix";
 const FORCE_RENAME_GROUP = true;
@@ -71,7 +78,7 @@ const EMIT_TVG_GROUP     = true;
 const EMIT_EXTGRP        = true;
 
 // 图标策略
-const ICON_HOST_WHITELIST = ["img.mikephie.site"];                // 仅自家域做 200 校验
+const ICON_HOST_WHITELIST = ["img.mikephie.site"]; // 仅自家域做 200 校验
 const FORCE_REPLACE_ALL   = true;
 const FALLBACK_LOGO       = "https://img.mikephie.site/not-found.png";
 
@@ -297,7 +304,7 @@ function stripVendorGroups(header){
   return header.replace(/\s+(aktv-group|provider|provider-logo|provider-type)="[^"]*"/ig, "");
 }
 
-// =============== M3U 注入（核心，含过滤无效流） ===============
+// =============== M3U 注入（核心，含过滤无效流 & 测试限制） ===============
 function findNextUrl(lines, i){
   let j=i+1; while (j<lines.length && (lines[j].startsWith("#") || !lines[j].trim())) j++;
   return (j<lines.length && !lines[j].startsWith("#")) ? lines[j].trim() : "";
@@ -307,9 +314,15 @@ async function injectLogoForM3U(m3uText, iconMap){
   const lines = m3uText.split(/\r?\n/);
   const out = [];
   let processed = 0;
+  let totalKeptForThisSource = 0;
 
   for (let i=0;i<lines.length;i++){
     if (processed >= MAX_CHANNELS_PER_SOURCE) { console.log("⏩ reach MAX_CHANNELS_PER_SOURCE"); break; }
+    if (TEST_LIMIT > 0 && totalKeptForThisSource >= TEST_LIMIT) {
+      console.log(`⏩ reach TEST_LIMIT=${TEST_LIMIT} for this source`);
+      break;
+    }
+
     const rawLine = lines[i];
     if (!rawLine.startsWith("#EXTINF")) { out.push(rawLine); continue; }
 
@@ -380,12 +393,13 @@ async function injectLogoForM3U(m3uText, iconMap){
         : header + ` tvg-group="${targetGroup}"`;
     }
 
-    // 3) 流可用性：验证通过才写入；失败整段丢弃
+    // 3) 流可用性：验证通过才写入；失败整段丢弃（测试/关闭过滤时一定会保留）
     let playable = "";
     if (urlForThis) playable = await pickPlayableUrl(urlForThis);
 
     if (playable) {
       keptChannels++;
+      totalKeptForThisSource++;
       out.push(commaIdx>=0 ? (header + "," + dispName) : header);
       if (EMIT_EXTGRP) out.push(`#EXTGRP:${targetGroup}`);
       out.push(playable);
@@ -393,7 +407,7 @@ async function injectLogoForM3U(m3uText, iconMap){
     } else {
       filteredChannels++;
       if (i+1<lines.length && !lines[i+1].startsWith("#")) i++; // 跳过原 URL
-      // 整段丢弃（不 push）
+      // 测试/关闭过滤时 playable 不会为空，这里只作为兜底
     }
   }
   return out.join("\n");
@@ -443,9 +457,12 @@ function stampM3U(m3uText){
     const tag = `# Build-Tag: v${BUILD_VER}`;
     if (lines[2]?.startsWith("# Build-Tag:")) lines[2] = tag; else lines.splice(2,0,tag);
     if (lines[3]?.startsWith("# Stats:")) lines[3] = statsLine; else lines.splice(3,0,statsLine);
+    // 额外注入测试提示
+    const tip = `# Mode: filter=${FILTER_MODE}, test_limit=${TEST_LIMIT}`;
+    if (lines[4]?.startsWith("# Mode:")) lines[4] = tip; else lines.splice(4,0,tip);
     return lines.join("\n");
   }
-  return `#EXTM3U\n# Generated-At: ${BUILD_ISO} (epoch=${BUILD_VER})\n# Build-Tag: v${BUILD_VER}\n${statsLine}\n${m3uText}`;
+  return `#EXTM3U\n# Generated-At: ${BUILD_ISO} (epoch=${BUILD_VER})\n# Build-Tag: v${BUILD_VER}\n# Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}\n# Mode: filter=${FILTER_MODE}, test_limit=${TEST_LIMIT}\n${m3uText}`;
 }
 
 // =============== GitHub 上传 ===============
@@ -467,6 +484,11 @@ async function getRemoteFile(repo, path, branch, token){
   let decoded=""; try{ decoded = b64 ? Buffer.from(b64,"base64").toString("utf8") : ""; } catch {}
   return { exists:true, sha:(j.sha||null), text:decoded, size:j.size||0, path:j.path||path };
 }
+function b64encode(text){
+  if (IS_NODE) return Buffer.from(text, "utf8").toString("base64");
+  if (typeof $base64 !== "undefined" && $base64.encode) return $base64.encode(text);
+  return "";
+}
 async function uploadToGitHub(text){
   if (!TOKEN){ console.log("⚠️ Token 缺失"); return {ok:false,msg:"NO TOKEN"}; }
   const viewUrl=`https://github.com/${REPO}/blob/${BRANCH}/${PATH}`;
@@ -479,7 +501,7 @@ async function uploadToGitHub(text){
     return { ok:true, msg:`NO CHANGE -> ${viewUrl}\nRAW -> ${rawUrl}` };
   }
 
-  const body={ message:`Auto update M3U @ ${BUILD_ISO} (v${BUILD_VER}) - probe&filter(${FILTER_MODE})`, content:b64encode(text), branch:BRANCH };
+  const body={ message:`Auto update M3U @ ${BUILD_ISO} (v${BUILD_VER}) - probe&filter(${FILTER_MODE}), test_limit=${TEST_LIMIT}`, content:b64encode(text), branch:BRANCH };
   if (remote.exists && remote.sha) body.sha = remote.sha;
 
   const { r, d } = await httpPut(api, body, ghHeaders(TOKEN));
@@ -515,7 +537,7 @@ async function uploadToGitHub(text){
     let iconsJson={}; try { iconsJson = JSON.parse(iconsRes.d); } catch { return finish("ICON PARSE FAIL"); }
     const iconMap = buildIconMap(iconsJson);
 
-    // 3) 注入 + 过滤
+    // 3) 注入 + 过滤（每个源独立应用 TEST_LIMIT）
     const injectedList = [];
     for (const m3uText of validM3Us){
       const injected = await injectLogoForM3U(m3uText, iconMap);
@@ -532,7 +554,7 @@ async function uploadToGitHub(text){
     const merged = stampM3U(mergedCore);
     store.write(merged, PERSIST_KEY);
     console.log(`📊 Stats: total=${totalChannels}, kept=${keptChannels}, filtered=${filteredChannels}`);
-    console.log(`🔧 Filter mode: ${FILTER_MODE}`);
+    console.log(`🔧 Mode: filter=${FILTER_MODE}, test_limit=${TEST_LIMIT}`);
 
     // 6) 上传
     if (UPLOAD_NOW){
