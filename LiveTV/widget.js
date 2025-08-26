@@ -5,7 +5,7 @@ var WidgetMetadata = {
   author: "Mikephie",
   site: "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/widget.js",
   version: "1.1.7",
-  requiredVersion: "0.0.8",
+  requiredVersion: "0.0.1",
   modules: [
     {
       title: "电视频道",
