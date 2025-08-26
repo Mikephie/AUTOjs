@@ -4,7 +4,7 @@ var WidgetMetadata = {
   description: "电视直播频道",
   author: "Mikephie",
   site: "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/widget.js",
-  version: "1.1.5",
+  version: "1.1.6",
   requiredVersion: "0.0.1",
   modules: [
     {
@@ -53,7 +53,10 @@ var WidgetMetadata = {
           name: "url",
           title: "用户订阅",
           type: "input",
-          description: "输入M3U格式订阅链接"
+          description: "输入M3U格式订阅链接",
+          placeholders: [
+            { title: "默认订阅 (AKTV)", value: "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/AKTV.m3u" }
+          ]
         },
         {
           name: "bg_color",
@@ -83,7 +86,7 @@ async function getLiveTv(params = {}) {
     let addedSourcesCount = 0;
     const usedUserUrls = new Set();
     
-    // 修改后的默认订阅地址
+    // 默认订阅：AKTV.m3u
     const url = params.url || "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/AKTV.m3u";
 
     if (url) {
@@ -120,6 +123,7 @@ async function getLiveTv(params = {}) {
           allPotentialMatches.forEach(({ baseChannel, userChannel }) => {
             if (!usedUserUrls.has(userChannel.url)) {
               const targetChannel = findChannelInData(modifiedData, baseChannel.name);
+              if (targetChannel) return;
               if (targetChannel) {
                 targetChannel.childItems = [
                   ...(targetChannel.childItems || []),
