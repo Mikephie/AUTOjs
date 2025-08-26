@@ -4,8 +4,8 @@ var WidgetMetadata = {
   description: "电视直播频道",
   author: "Mikephie",
   site: "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/widget.js",
-  version: "1.1.6",
-  requiredVersion: "0.0.1",
+  version: "1.1.7",
+  requiredVersion: "0.0.8",
   modules: [
     {
       title: "电视频道",
@@ -54,9 +54,8 @@ var WidgetMetadata = {
           title: "用户订阅",
           type: "input",
           description: "输入M3U格式订阅链接",
-          placeholders: [
-            { title: "默认订阅 (AKTV)", value: "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/AKTV.m3u" }
-          ]
+          // 默认直接填好 AKTV.m3u
+          value: "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/AKTV.m3u"
         },
         {
           name: "bg_color",
@@ -86,8 +85,9 @@ async function getLiveTv(params = {}) {
     let addedSourcesCount = 0;
     const usedUserUrls = new Set();
     
-    // 默认订阅：AKTV.m3u
-    const url = params.url || "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/AKTV.m3u";
+    // 无论是否清空，都会兜底用 AKTV.m3u
+    const url = (params.url && String(params.url).trim()) 
+             || "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/AKTV.m3u";
 
     if (url) {
       try {
@@ -123,7 +123,6 @@ async function getLiveTv(params = {}) {
           allPotentialMatches.forEach(({ baseChannel, userChannel }) => {
             if (!usedUserUrls.has(userChannel.url)) {
               const targetChannel = findChannelInData(modifiedData, baseChannel.name);
-              if (targetChannel) return;
               if (targetChannel) {
                 targetChannel.childItems = [
                   ...(targetChannel.childItems || []),
@@ -145,12 +144,6 @@ async function getLiveTv(params = {}) {
           });
           
           console.log(`[用户订阅] 共添加了 ${addedSourcesCount} 个有效源`);
-          for (const [channelName, stats] of Object.entries(channelStats)) {
-            console.log(`  - ${channelName}: 添加了 ${stats.count} 个源`);
-            stats.urls.forEach((url, index) => {
-              console.log(`    ${index + 1}. ${url}`);
-            });
-          }
         }
       } catch (userError) {
         console.error("[用户订阅] 处理用户订阅失败:", userError.message);
