@@ -95,22 +95,32 @@ async function ghApi(path, opts = {}) {
 }
 async function getFileSha(repo, branch, filePath) {
   try {
-    const r = await ghApi(`/repos/${repo}/contents/${encodeURIComponent(filePath)}?ref=${encodeURIComponent(branch)}`);
+    // ❌ 不要 encodeURIComponent(filePath)，斜杠必须保留
+    const r = await ghApi(`/repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(branch)}`);
+    // 若 path 指向目录时 API 会返回数组，这里只处理文件
+    if (Array.isArray(r)) return "";
     return r.sha || "";
-  } catch { return ""; }
+  } catch {
+    return "";
+  }
 }
+
 async function putFile(repo, branch, filePath, contentStr, message = "chore: update AKTV.m3u") {
   const sha = await getFileSha(repo, branch, filePath);
   const body = {
     message,
     content: Buffer.from(contentStr, "utf8").toString("base64"),
     branch,
-    sha: sha || undefined,
+    // 只有文件已存在才需要 sha
+    ...(sha ? { sha } : {}),
     committer: { name: "github-actions[bot]", email: "41898282+github-actions[bot]@users.noreply.github.com" },
     author:    { name: "github-actions[bot]", email: "41898282+github-actions[bot]@users.noreply.github.com" },
   };
-  return ghApi(`/repos/${repo}/contents/${encodeURIComponent(filePath)}`, {
-    method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+  // ❌ 这里同样不要对 filePath 做 encodeURIComponent
+  return ghApi(`/repos/${repo}/contents/${filePath}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
   });
 }
 
