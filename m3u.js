@@ -49,8 +49,8 @@ const PATH_IN_REPO  = "LiveTV/AKTV.m3u";
 
 /* ===== 限额 / 策略 ===== */
 const FILTER_MODE              = "strict";  // strict / loose / off
-const TEST_TOTAL_LIMIT         = 150;       // 输出上限（可由 CI 环境变量覆盖）
-const HARD_TARGET              = 150;       // 早停门槛
+const TEST_TOTAL_LIMIT         = 100;       // 输出上限（可由 CI 环境变量覆盖）
+const HARD_TARGET              = 100;       // 早停门槛
 const PER_SOURCE_SCAN_LIMIT    = 500;       // 每源最多尝试
 
 /* ===== 超时（提速） ===== */
