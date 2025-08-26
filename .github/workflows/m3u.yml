@@ -5,25 +5,17 @@ on:
     - cron: "*/30 * * * *"
   workflow_dispatch:
 
-concurrency:
-  group: build-m3u
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with: { node-version: 20 }
-
       - name: Build M3U (valid-only with icons)
-        timeout-minutes: 5
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          TEST_TOTAL_LIMIT: "80"      # 稳定后可调 100/150/200
+          M3U_FILTER: strict
         run: node m3u.js
