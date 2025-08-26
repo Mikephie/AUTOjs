@@ -1,68 +1,91 @@
 /* =========================
- * MissAV – 女优检索 (含5个固定收藏位示例)
- * 文件：LiveTV/missav.js
+ * MissAV – 女优检索（ForwardWidgets 规范版）
+ * 写死 5 个收藏位：把下方数组里的空字符串替换成你的常用女优名
  * ========================= */
 
+// ▼▼ 在这里填你收藏的 1~5 位女优（留空的不显示） ▼▼
+const FAVORITE_STARS = [
+  "", // 例如："三上悠亜"
+  "", // 例如："安齋らら"
+  "",
+  "",
+  ""
+];
+// ▲▲ 修改到此为止 ▲▲
+
+/** MissAV 基础域名（如需改备用域名，可改这里） */
+const BASE_DOMAIN = "https://missav.com";
+
+/** 生成搜索 URL（MissAV 支持 /search?keyword=） */
+function buildSearchUrl(q) {
+  return `${BASE_DOMAIN}/search?keyword=${encodeURIComponent(q.trim())}`;
+}
+
+/** 将收藏数组转为 ForwardWidgets 的枚举选项 */
+const FAVORITE_ENUM = FAVORITE_STARS
+  .map(s => (s || "").trim())
+  .filter(Boolean)
+  .map(name => ({ title: name, value: name }));
+
+/* ========== ForwardWidgets 必需元数据 ========== */
 var WidgetMetadata = {
-  id: "missav",
-  title: "MissAV 检索",
-  description: "女优影片搜索（支持5个固定收藏位）",
-  author: "Mikephie",
+  id: "missav.star",
+  title: "MissAV 女优检索",
+  description: "输入或选择收藏的女优进行搜索（5 个收藏位写死）",
+  author: "custom",
   site: "https://missav.com",
-  version: "1.0.2",
+  version: "1.0.0",
   requiredVersion: "0.0.1",
   modules: [
     {
       title: "搜索女优",
-      description: "输入女优名称，或直接点选收藏的女优",
+      description: "手动输入或从收藏中选择一位进行检索",
       requiresWebView: true,
-      functionName: "searchByActress",
+      functionName: "searchMissAV",
+      // 注：ForwardWidgets 支持的参数类型：input / constant / enumeration / count / page / offset
+      // 我们用 input + enumeration（收藏下拉）
       params: [
         {
           name: "keyword",
-          title: "女优名称",
+          title: "关键字",
           type: "input",
-          description: "支持中文/日文/英文",
-          placeholders: [
-            { title: "示例：三上悠亜", value: "" }
-          ]
+          description: "女优名 / 关键词（支持中日文）",
+          placeholders: [{ title: "例如：三上悠亜 / 河北彩花", value: "" }]
         },
-        // ===== 固定收藏位 (示例已填好 5 位) =====
-        { name: "fav1", title: "收藏 1", type: "preset", value: "三上悠亜" },
-        { name: "fav2", title: "收藏 2", type: "preset", value: "安齋らら" },
-        { name: "fav3", title: "收藏 3", type: "preset", value: "深田えいみ" },
-        { name: "fav4", title: "收藏 4", type: "preset", value: "河南实里" },
-        { name: "fav5", title: "收藏 5", type: "preset", value: "高桥圣子" }
+        // 收藏下拉（若全留空，该下拉会显示为空，但不影响使用）
+        {
+          name: "favorite",
+          title: "收藏",
+          type: "enumeration",
+          description: "从预设 5 位里选一个",
+          enumOptions: FAVORITE_ENUM
+        }
       ]
     }
   ]
 };
 
-/* ===== 工具函数 ===== */
-function buildSearchUrl(keyword) {
-  return "https://missav.com/search?keyword=" + encodeURIComponent(keyword.trim());
+/* ========== 模块函数（与 functionName 一致） ========== */
+async function searchMissAV(params = {}) {
+  const keyword = (params.keyword || "").trim() || (params.favorite || "").trim();
+  const url = keyword ? buildSearchUrl(keyword) : BASE_DOMAIN;
+
+  // ForwardWidgets 期望返回数组项，常用 type: "url" + link
+  // （参见数据模型说明，需要返回对象数组，包含 id/type/title/link 等） 
+  return [
+    {
+      id: url,
+      type: "url",
+      title: keyword ? `MissAV：${keyword}` : "MissAV 首页",
+      link: url
+    }
+  ];
 }
 
-/* ===== 核心功能 ===== */
-async function searchByActress(params) {
-  let keyword =
-    (params.keyword || "").trim() ||
-    (params.fav1 || "").trim() ||
-    (params.fav2 || "").trim() ||
-    (params.fav3 || "").trim() ||
-    (params.fav4 || "").trim() ||
-    (params.fav5 || "").trim();
-
-  if (!keyword) {
-    return { redirect: "https://missav.com" };
-  }
-  return { redirect: buildSearchUrl(keyword) };
-}
-
-/* ===== 导出 ===== */
+/* ========== 导出（兼容多运行环境） ========== */
 if (typeof module !== "undefined") {
-  module.exports = { WidgetMetadata, searchByActress };
+  module.exports = { WidgetMetadata, searchMissAV };
 } else {
   self.WidgetMetadata = WidgetMetadata;
-  self.searchByActress = searchByActress;
+  self.searchMissAV = searchMissAV;
 }
