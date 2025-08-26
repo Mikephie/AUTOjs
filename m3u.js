@@ -13,6 +13,7 @@ const path = IS_NODE ? require("path") : null;
 /* ===== 数据源 ===== */
 const M3U_URLS = [
   { url: "https://aktv.space/live.m3u" },
+  { url: "https://raw.githubusercontent.com/DataShare-duo/MovieLiveUrl/refs/heads/main/movie_live.m3u" },
   { url: "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/result.m3u" },
 ];
 
