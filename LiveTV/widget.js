@@ -14,47 +14,41 @@ var WidgetMetadata = {
       functionName: "getLiveTv",
       params: [
         {
-  name: "group_filter",
-  title: "按组关键字过滤(选填)，如 央视 / 香港 / 体育",
-  type: "input",
-  description: "支持正则。示例：^中国大陆  或  (香港|台湾)",
-  placeholders: [
-    // ---- 来自 99.js 的"视频类别" ----  （all / cctv / stv / ltv）
-    { title: "全部频道", value: "" },        // 等同于 all
-    { title: "央视频道", value: "cctv" },
-    { title: "卫视频道", value: "stv" },
-    { title: "地方频道", value: "ltv" },
-
-    // ---- 你原来与前面确认过的扩展项（全部保留） ----
-    { title: "中国大陆(全部)", value: "^中国大陆" },
-    { title: "香港(全部)",     value: "^香港" },
-    { title: "台湾(全部)",     value: "^台湾" },
-    { title: "日本(全部)",     value: "^日本" },
-    { title: "韩国(全部)",     value: "^韩国" },
-    { title: "美国(全部)",     value: "^美国" },
-    { title: "英国(全部)",     value: "^英国" },
-    { title: "港澳台(合并)",   value: "^(香港|澳门|台湾)" },
-
-    { title: "综合",         value: "综合$" },
-    { title: "新闻",         value: "新闻$" },
-    { title: "体育",         value: "体育$" },
-    { title: "电影",         value: "电影$" },
-    { title: "剧集",         value: "剧集$|电视剧$|戏剧$" },
-    { title: "纪录片",       value: "纪录片$|纪实$" },
-    { title: "少儿/动漫",     value: "少儿$|儿童$|动漫$|卡通$" },
-    { title: "音乐",         value: "音乐$" },
-    { title: "综艺娱乐",     value: "综艺$|娱乐$|生活$" },
-
-    { title: "央视频道(关键词)", value: "央视|CCTV" },
-    { title: "卫视频道(关键词)", value: "卫视" },
-
-    { title: "中国大陆 · 新闻", value: "^中国大陆/.+新闻$" },
-    { title: "中国大陆 · 体育", value: "^中国大陆/.+体育$" },
-    { title: "香港 · 综合",     value: "^香港/综合$" },
-    { title: "台湾 · 新闻",     value: "^台湾/.+新闻$" },
-    { title: "日本 · 动漫",     value: "^日本/.+(少儿|动漫)$" }
-  ]
-},
+          name: "group_filter",
+          title: "按组关键字过滤(选填)，如 央视 / 香港 / 体育",
+          type: "input",
+          description: "支持正则。示例：^中国大陆  或  (香港|台湾)",
+          placeholders: [
+            { title: "全部频道", value: "" },
+            { title: "央视频道", value: "cctv" },
+            { title: "卫视频道", value: "stv" },
+            { title: "地方频道", value: "ltv" },
+            { title: "中国大陆(全部)", value: "^中国大陆" },
+            { title: "香港(全部)",     value: "^香港" },
+            { title: "台湾(全部)",     value: "^台湾" },
+            { title: "日本(全部)",     value: "^日本" },
+            { title: "韩国(全部)",     value: "^韩国" },
+            { title: "美国(全部)",     value: "^美国" },
+            { title: "英国(全部)",     value: "^英国" },
+            { title: "港澳台(合并)",   value: "^(香港|澳门|台湾)" },
+            { title: "综合",         value: "综合$" },
+            { title: "新闻",         value: "新闻$" },
+            { title: "体育",         value: "体育$" },
+            { title: "电影",         value: "电影$" },
+            { title: "剧集",         value: "剧集$|电视剧$|戏剧$" },
+            { title: "纪录片",       value: "纪录片$|纪实$" },
+            { title: "少儿/动漫",     value: "少儿$|儿童$|动漫$|卡通$" },
+            { title: "音乐",         value: "音乐$" },
+            { title: "综艺娱乐",     value: "综艺$|娱乐$|生活$" },
+            { title: "央视频道(关键词)", value: "央视|CCTV" },
+            { title: "卫视频道(关键词)", value: "卫视" },
+            { title: "中国大陆 · 新闻", value: "^中国大陆/.+新闻$" },
+            { title: "中国大陆 · 体育", value: "^中国大陆/.+体育$" },
+            { title: "香港 · 综合",     value: "^香港/综合$" },
+            { title: "台湾 · 新闻",     value: "^台湾/.+新闻$" },
+            { title: "日本 · 动漫",     value: "^日本/.+(少儿|动漫)$" }
+          ]
+        },
         {
           name: "url",
           title: "用户订阅",
@@ -89,7 +83,8 @@ async function getLiveTv(params = {}) {
     let addedSourcesCount = 0;
     const usedUserUrls = new Set();
     
-    const url = params.url || "https://gist.githubusercontent.com/2kuai/d8e81b63e272dd838f372079bd204b42/raw/d9b79fe5937b0064ca0fe543dda78ba99787eb62/aptv";
+    // 修改后的默认订阅地址
+    const url = params.url || "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/AKTV.m3u";
 
     if (url) {
       try {
