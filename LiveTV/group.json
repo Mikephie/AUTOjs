@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "group_style": "country/category",
+  "country": {
+    "中国大陆": [
+      "CCTV", "央视", "CGTN", "卫视", "衛視",
+      "CNTV", "咪咕", "migu", "chinamobile", "cbcdn.cn", "wasu", "1905.com"
+    ],
+    "香港": [
+      "TVB", "翡翠", "明珠", "J2", "Viu", "HOY", "凤凰", "鳳凰", "港台", "RTHK", "mytv", "tvbanywhere", "hoy"
+    ],
+    "台湾": [
+      "台視", "台视", "華視", "华视", "中視", "中视", "民視", "民视", "東森", "东森",
+      "三立", "寰宇", "鏡新聞", "镜新闻", "TVBS", "公視", "公视"
+    ],
+    "新加坡": [
+      "Mediacorp", "Channel 5", "Channel 8", "Channel U", "CNA", "mewatch", "toggle"
+    ],
+    "马来西亚": [
+      "Astro", "Unifi", "TV3", "8TV", "RTM", "TNT Sports"
+    ],
+    "日本": [
+      "NHK", "日テレ", "NTV", "TBS", "フジ", "富士", "朝日", "TV Asahi", "Japan"
+    ],
+    "韩国": [
+      "KBS", "SBS", "MBC", "tvN", "OCN", "SPOTV", "Korea"
+    ],
+    "英国": [
+      "BBC", "ITV", "Sky Sports", "BT Sport", "UK"
+    ],
+    "美国": [
+      "CNN", "FOX", "HBO", "ESPN", "NBC", "CBS", "USA"
+    ],
+    "国际": [
+      "Euronews", "Al Jazeera", "France 24", "DW News"
+    ]
+  },
+  "category": {
+    "电影":       ["电影", "電影", "Cinema", "Movies", "HBO", "AXN", "Cinemax", "ROCK Action", "天映", "美亞", "美亚"],
+    "体育":       ["体育", "體育", "Sport", "Sports", "NBA", "Eurosport", "TNT Sports", "ESPN", "SPOTV"],
+    "新闻":       ["新闻", "新聞", "News", "CNA", "BBC News", "DW News", "CNN", "Sky News", "NHK News", "日テレ News", "Japan News"],
+    "少儿":       ["少儿", "少兒", "Kids", "Cartoon", "Animax", "Nick", "Baby", "Boomerang"],
+    "纪录片":     ["纪录", "紀錄", "Documentary", "Nat Geo", "National Geographic", "Discovery", "Love Nature", "Magellan"],
+    "音乐":       ["音乐", "音樂", "Music", "MTV", "Channel V"],
+    "财经":       ["财经", "財經", "Finance", "CNBC", "Bloomberg"],
+    "卫视":       ["卫视", "衛視"],
+    "综艺":       ["综艺", "綜藝", "Variety"],
+    "剧集":       ["剧", "劇", "Drama", "Series"],
+    "教育":       ["教育", "Learning", "Knowledge"],
+    "综合":       []
+  },
+  "fallback": {
+    "卫视归类到": "中国大陆"
+  }
+}
