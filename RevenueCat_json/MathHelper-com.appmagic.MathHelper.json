@@ -1,0 +1,36 @@
+{
+  "user_agent": "MathHelper",
+  "bundle_id": "com.appmagic.MathHelper",
+  "data": {
+    "com.appmagic.MathHelper.lifetime": {
+      "entitlements": [
+        "premium_access"
+      ],
+      "product_identifier": "com.appmagic.MathHelper.lifetime"
+    },
+    "com.appmagic.MathHelper.weekly": {
+      "entitlements": [
+        "premium_access"
+      ],
+      "product_identifier": "com.appmagic.MathHelper.weekly"
+    },
+    "com.appmagic.MathHelper.weekly_": {
+      "entitlements": [
+        "premium_access"
+      ],
+      "product_identifier": "com.appmagic.MathHelper.weekly_"
+    },
+    "com.appmagic.MathHelper.yearly": {
+      "entitlements": [
+        "premium_access"
+      ],
+      "product_identifier": "com.appmagic.MathHelper.yearly"
+    },
+    "com.appmagic.MathHelper.yearly_": {
+      "entitlements": [
+        "premium_access"
+      ],
+      "product_identifier": "com.appmagic.MathHelper.yearly_"
+    }
+  }
+}
