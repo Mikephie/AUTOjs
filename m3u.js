@@ -2,7 +2,7 @@
  * m3u.js — 生成可播放 M3U（并发探测、CCTV 去重、卫视归类）
  * 图标：别名 → icons.json → TV_logo → not-found（中文路径原样保留）
  * 探测：并发首包(Range 0-0)，只留可播；同键（尤其 CCTVxx）保留首包更快的一条
- * 性能：候选仅收 HARD_TARGET*3；每源最多扫描 200；并发 35；严格首包超时 700ms
+ * 性能：候选仅收 HARD_TARGET*3；每源扫描上限自适配；并发 50；严格首包超时 650ms
  * 输出：dist/playlist.m3u，并上传至 Mikephie/AUTOjs@main: LiveTV/AKTV.m3u
  */
 
@@ -39,15 +39,15 @@ const PATH_IN_REPO = "LiveTV/AKTV.m3u";
 
 /* ===== 策略 / 限额 / 超时 ===== */
 const FILTER_MODE              = "strict"; // strict / loose / off
-const TEST_TOTAL_LIMIT         = Number(process.env.TEST_TOTAL_LIMIT || 80); // 输出上限（workflow 可覆盖）
+const TEST_TOTAL_LIMIT         = Number(process.env.TEST_TOTAL_LIMIT || 200); // ★ 最终输出上限
 const HARD_TARGET              = TEST_TOTAL_LIMIT;  // 早停门槛
-const PER_SOURCE_SCAN_LIMIT    = 200;   // 每源最多扫描
+const PER_SOURCE_SCAN_LIMIT    = Math.max(600, HARD_TARGET * 3); // ★ 每源扫描额度（候选池）≈600+
 const FETCH_TIMEOUT_MS         = 5000;
-const PROBE_TIMEOUT_MS_STRICT  = 700;
+const PROBE_TIMEOUT_MS_STRICT  = 650;
 const PROBE_TIMEOUT_MS_LOOSE   = 600;
 
 /* ===== 并发优化 ===== */
-const PROBE_CONCURRENCY = 35;   // 并发探测数量
+const PROBE_CONCURRENCY = 50;   // ★ 并发探测数量（200 条建议 50）
 const ICON_HTTP_CHECK   = false;// 图标不做 HTTP 校验以提速
 
 /* ===== 输出目录 ===== */
