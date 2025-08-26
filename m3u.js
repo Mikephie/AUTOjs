@@ -1,9 +1,5 @@
 /**
- * m3u.js — 生成可播放 M3U（并发探测、CCTV 去重、卫视归类）
- * 图标：别名 → icons.json → TV_logo → not-found（中文路径原样保留）
- * 探测：并发首包(Range 0-0)，只留可播；同键（尤其 CCTVxx）保留首包更快的一条
- * 性能：候选仅收 HARD_TARGET*3；每源扫描上限自适配；并发 50；严格首包超时 650ms
- * 输出：dist/playlist.m3u，并上传至 Mikephie/AUTOjs@main: LiveTV/AKTV.m3u
+ * m3u.js — 生成可播放 M3U（并发探测、CCTV 去重、卫视归类、图标匹配、自动上传）
  */
 
 const IS_NODE = typeof process !== "undefined" && process.release?.name === "node";
@@ -41,7 +37,7 @@ const PATH_IN_REPO = "LiveTV/AKTV.m3u";
 const FILTER_MODE              = "strict"; // strict / loose / off
 const TEST_TOTAL_LIMIT         = Number(process.env.TEST_TOTAL_LIMIT || 200); // ★ 最终输出上限
 const HARD_TARGET              = TEST_TOTAL_LIMIT;  // 早停门槛
-const PER_SOURCE_SCAN_LIMIT    = Math.max(600, HARD_TARGET * 3); // ★ 每源扫描额度（候选池）≈600+
+const PER_SOURCE_SCAN_LIMIT    = Math.max(600, HARD_TARGET * 3); // 候选池
 const FETCH_TIMEOUT_MS         = 5000;
 const PROBE_TIMEOUT_MS_STRICT  = 650;
 const PROBE_TIMEOUT_MS_LOOSE   = 600;
@@ -79,30 +75,66 @@ async function httpGet(url, headers = {}, timeoutMs = FETCH_TIMEOUT_MS) {
   finally { clearTimeout(id); }
 }
 
-/* ===== GitHub 上传 ===== */
+/* ===== GitHub API（超时+退避重试） ===== */
 async function ghApi(path, opts = {}) {
   const GH_TOKEN = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
-  if (!GH_TOKEN) throw new Error("缺少 GH_TOKEN/GITHUB_TOKEN 环境变量");
-  const headers = Object.assign({
-    "Authorization": `Bearer ${GH_TOKEN}`,
-    "Accept": "application/vnd.github+json",
-    "User-Agent": "m3u-uploader",
-  }, opts.headers || {});
-  const res = await (typeof fetch === "function" ? fetch : nodeFetch)(`https://api.github.com${path}`, { ...opts, headers });
-  if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
-  const text = await res.text();
-  try { return JSON.parse(text); } catch { return text; }
+  if (!GH_TOKEN) throw new Error("缺少 GH_TOKEN/GITHUB_TOKEN");
+  const MAX_RETRY = 5;
+  const baseUrl = "https://api.github.com";
+
+  for (let attempt = 1; attempt <= MAX_RETRY; attempt++) {
+    const ac = new AbortController();
+    const timeout = setTimeout(() => ac.abort(), 8000);
+
+    try {
+      const res = await (typeof fetch === "function" ? fetch : nodeFetch)(`${baseUrl}${path}`, {
+        ...opts,
+        headers: {
+          "Authorization": `Bearer ${GH_TOKEN}`,
+          "Accept": "application/vnd.github+json",
+          "User-Agent": "m3u-uploader",
+          ...(opts.headers || {}),
+        },
+        signal: ac.signal,
+      });
+
+      if (res.status >= 500 || res.status === 429) {
+        const text = await res.text().catch(() => "");
+        if (attempt < MAX_RETRY) {
+          const backoff = 500 * attempt + Math.floor(Math.random()*250);
+          console.log(`GitHub API ${res.status}，重试 ${attempt}/${MAX_RETRY-1}，等待 ${backoff}ms…`);
+          await new Promise(r => setTimeout(r, backoff));
+          continue;
+        }
+        throw new Error(`GitHub API ${res.status}: ${text}`);
+      }
+      if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
+      const text = await res.text();
+      try { return JSON.parse(text); } catch { return text; }
+    } catch (e) {
+      const msg = String(e && e.message || e);
+      const transient = /fetch failed|ECONNRESET|ENOTFOUND|EAI_AGAIN|socket hang up|aborted/i.test(msg);
+      if (transient && attempt < MAX_RETRY) {
+        const backoff = 700 * attempt + Math.floor(Math.random()*400);
+        console.log(`GitHub API 网络异常（${msg}），重试 ${attempt}/${MAX_RETRY-1}，等待 ${backoff}ms…`);
+        await new Promise(r => setTimeout(r, backoff));
+        continue;
+      }
+      throw e;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+  throw new Error("GitHub API 重试仍失败");
 }
+
 async function getFileSha(repo, branch, filePath) {
   try {
-    // ❌ 不要 encodeURIComponent(filePath)，斜杠必须保留
+    // 斜杠不能编码；只编码查询参数
     const r = await ghApi(`/repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(branch)}`);
-    // 若 path 指向目录时 API 会返回数组，这里只处理文件
-    if (Array.isArray(r)) return "";
+    if (Array.isArray(r)) return ""; // 目录时返回数组
     return r.sha || "";
-  } catch {
-    return "";
-  }
+  } catch { return ""; }
 }
 
 async function putFile(repo, branch, filePath, contentStr, message = "chore: update AKTV.m3u") {
@@ -111,12 +143,10 @@ async function putFile(repo, branch, filePath, contentStr, message = "chore: upd
     message,
     content: Buffer.from(contentStr, "utf8").toString("base64"),
     branch,
-    // 只有文件已存在才需要 sha
     ...(sha ? { sha } : {}),
     committer: { name: "github-actions[bot]", email: "41898282+github-actions[bot]@users.noreply.github.com" },
     author:    { name: "github-actions[bot]", email: "41898282+github-actions[bot]@users.noreply.github.com" },
   };
-  // ❌ 这里同样不要对 filePath 做 encodeURIComponent
   return ghApi(`/repos/${repo}/contents/${filePath}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -124,7 +154,7 @@ async function putFile(repo, branch, filePath, contentStr, message = "chore: upd
   });
 }
 
-/* ===== 工具：名字规范化 & 键构建 ===== */
+/* ===== 名称规范化 & 键构建 ===== */
 const isZh = s => /[\u4e00-\u9fa5]/.test(s||"");
 function englishKey(s){
   s = (s||"").trim(); if (!s || isZh(s)) return "";
@@ -211,7 +241,7 @@ async function loadIcons(){
 
 /* ===== 图标选择：别名 → icons.json → TV_logo → not-found ===== */
 async function probe200(url){
-  if (!ICON_HTTP_CHECK) return true; // 为提速，默认不做 HTTP 校验
+  if (!ICON_HTTP_CHECK) return true; // 提速：默认不校验图标 URL
   try{
     const host = getHost(url);
     if (!ICON_HOST_WHITELIST.includes(host)) return true;
@@ -459,6 +489,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
       fs.writeFileSync(OUT_FILE, finalText);
       if (UPLOAD_NOW) {
         try{
+          console.log(`# uploader token source = ${process.env.GH_TOKEN ? "GH_TOKEN" : (process.env.GITHUB_TOKEN ? "GITHUB_TOKEN" : "NONE")}`);
           console.log(`# Uploading to GitHub: ${REPO}@${BRANCH} -> ${PATH_IN_REPO}`);
           const resp = await putFile(REPO, BRANCH, PATH_IN_REPO, finalText);
           console.log(`# Uploaded commit: ${resp.commit?.sha || "(no sha)"}`);
