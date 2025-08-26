@@ -1,9 +1,9 @@
 var WidgetMetadata = {
   id: "tv_live",
-  title: "电视台",
-  description: "获取热门电视直播频道",
-  author: "两块",
-  site: "https://github.com/2kuai/ForwardWidgets",
+  title: "热门电视台",
+  description: "电视直播频道",
+  author: "Mikephie",
+  site: "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/widget.js",
   version: "1.1.5",
   requiredVersion: "0.0.1",
   modules: [
