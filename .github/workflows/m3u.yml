@@ -5,6 +5,9 @@ on:
     - cron: "*/30 * * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write   # ★ 必须，有时 schedule 默认只有 read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +18,15 @@ jobs:
         with: { node-version: 20 }
       - name: Build M3U (valid-only with icons)
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          TEST_TOTAL_LIMIT: "150"      # 稳定后可调 100/150/200
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}   # 你自己的 PAT（可选，但更稳）
+          GITHUB_TOKEN: ${{ github.token }}   # 平台内置 token 兜底
+          TEST_TOTAL_LIMIT: "200"
           M3U_FILTER: strict
         run: node m3u.js
+      # （可选）即使上传失败，也把文件丢到构件里方便下载
+      - name: Upload artifact (fallback)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playlist.m3u
+          path: dist/playlist.m3u
