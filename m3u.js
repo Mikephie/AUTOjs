@@ -1,5 +1,10 @@
 /**
- * m3u.js — 生成可播放 M3U（并发探测、CCTV 去重、卫视归类、图标匹配、自动上传）
+ * m3u.js — 生成可播放 M3U（JSON优先：图标&分组 → 现有直链 → 目录猜测 → 兜底）
+ * - 图标匹配优先级：icons.json / 别名 → 现有 tvg-logo 直链 → TV_logo/xxx → not-found
+ * - 分组优先级：group.json 分类（国家/类型） → 原组名/回退
+ * - 链接探测：并发首包(Range 0-0)，strict 仅保留可播；CCTV 去重留首包更快
+ * - 性能：并发 50；每源扫描额度≈目标×3；输出上限 TEST_TOTAL_LIMIT（默认200）
+ * - 上传：GitHub Contents API（超时+重试），产物写 dist/playlist.m3u
  */
 
 const IS_NODE = typeof process !== "undefined" && process.release?.name === "node";
@@ -13,12 +18,20 @@ const path = IS_NODE ? require("path") : null;
 /* ===== 数据源 ===== */
 const M3U_URLS = [
   { url: "https://aktv.space/live.m3u" },
-  { url: "https://raw.githubusercontent.com/DataShare-duo/MovieLiveUrl/refs/heads/main/movie_live.m3u" },
   { url: "https://raw.githubusercontent.com/Guovin/iptv-api/gd/output/result.m3u" },
 ];
 
-/* ===== 图标配置 ===== */
-const ICONS_JSON_URL = "https://img.mikephie.site/icons.json";
+/* ===== 图标 & 分组 JSON（可用 env 覆盖） ===== */
+const ICONS_JSON_URL = process.env.ICONS_JSON_URL
+  || "https://img.mikephie.site/icons.json";
+
+const GROUPS_JSON_URL = process.env.GROUPS_JSON_URL
+  || "https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/LiveTV/group.json";
+
+const GROUPS_JSON_URL_FALLBACK =
+  "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/group.json";
+
+/* ===== 图标目录与兜底 ===== */
 const ICON_BASE      = "https://img.mikephie.site/TV_logo";
 const NOT_FOUND_ICON = "https://img.mikephie.site/not-found.png";
 const ICON_HOST_WHITELIST = ["img.mikephie.site"]; // 仅这些域加 ?v= 构建号
@@ -35,16 +48,16 @@ const BRANCH       = "main";
 const PATH_IN_REPO = "LiveTV/AKTV.m3u";
 
 /* ===== 策略 / 限额 / 超时 ===== */
-const FILTER_MODE              = "strict"; // strict / loose / off
+const FILTER_MODE              = (process.env.M3U_FILTER || "strict").toLowerCase(); // strict / loose / off
 const TEST_TOTAL_LIMIT         = Number(process.env.TEST_TOTAL_LIMIT || 200); // ★ 最终输出上限
 const HARD_TARGET              = TEST_TOTAL_LIMIT;  // 早停门槛
-const PER_SOURCE_SCAN_LIMIT    = Math.max(600, HARD_TARGET * 3); // 候选池
+const PER_SOURCE_SCAN_LIMIT    = Math.max(600, HARD_TARGET * 3); // 候选池≈目标×3
 const FETCH_TIMEOUT_MS         = 5000;
 const PROBE_TIMEOUT_MS_STRICT  = 650;
 const PROBE_TIMEOUT_MS_LOOSE   = 600;
 
 /* ===== 并发优化 ===== */
-const PROBE_CONCURRENCY = 50;   // ★ 并发探测数量（200 条建议 50）
+const PROBE_CONCURRENCY = 50;   // ★ 并发探测数量
 const ICON_HTTP_CHECK   = false;// 图标不做 HTTP 校验以提速
 
 /* ===== 输出目录 ===== */
@@ -55,7 +68,7 @@ const OUT_FILE = path ? path.join(OUT_DIR, "playlist.m3u") : "playlist.m3u";
 let totalChannels = 0, keptChannels = 0, filteredChannels = 0;
 let globalStop = false;
 
-/* ===== 别名（显示名 → 图标文件名，不带扩展名） ===== */
+/* ===== 图标别名（显示名 → 图标文件名，不带扩展名） ===== */
 const NAME_ALIAS = {
   "明珠台": "ch2",
   // "翡翠台": "jade",
@@ -131,13 +144,11 @@ async function ghApi(path, opts = {}) {
 
 async function getFileSha(repo, branch, filePath) {
   try {
-    // 斜杠不能编码；只编码查询参数
     const r = await ghApi(`/repos/${repo}/contents/${filePath}?ref=${encodeURIComponent(branch)}`);
-    if (Array.isArray(r)) return ""; // 目录时返回数组
+    if (Array.isArray(r)) return "";
     return r.sha || "";
   } catch { return ""; }
 }
-
 async function putFile(repo, branch, filePath, contentStr, message = "chore: update AKTV.m3u") {
   const sha = await getFileSha(repo, branch, filePath);
   const body = {
@@ -159,7 +170,9 @@ async function putFile(repo, branch, filePath, contentStr, message = "chore: upd
 const isZh = s => /[\u4e00-\u9fa5]/.test(s||"");
 function englishKey(s){
   s = (s||"").trim(); if (!s || isZh(s)) return "";
-  s = s.replace(/\([^)]*\)/g, " ").replace(/\b(HD|FHD|UHD|4K)\b/ig, " ").replace(/[\s\-_\.]+/g, "");
+  s = s.replace(/\([^)]*\)/g, " ")
+       .replace(/\b(HD|FHD|UHD|4K)\b/ig, " ")
+       .replace(/[\s\-_\.]+/g, "");
   return s.toUpperCase();
 }
 function chineseKey(s){
@@ -212,7 +225,7 @@ function encodeVariants(u){
   return [...new Set(arr)];
 }
 
-/* ===== 图标映射加载 ===== */
+/* ===== 图标映射加载（icons.json） ===== */
 function buildIconMap(json){
   const list = Array.isArray(json?.icons) ? json.icons : (Array.isArray(json) ? json : []);
   const map = new Map();
@@ -235,12 +248,87 @@ async function loadIcons(){
     const { d } = await httpGet(ICONS_JSON_URL, {}, 8000);
     if (!d) { console.log("# icons loaded = 0"); return new Map(); }
     const map = buildIconMap(JSON.parse(d));
-    console.log(`# icons loaded = ${map.size}`);
+    console.log(`# icons.json loaded = ${map.size}`);
     return map;
   }catch(e){ console.log("⚠️ icons.json 加载失败：", String(e)); return new Map(); }
 }
 
-/* ===== 图标选择：别名 → icons.json → TV_logo → not-found ===== */
+/* ===== 外部分组规则（group.json） ===== */
+async function loadGroups(){
+  async function tryLoad(url){
+    const { d, r } = await httpGet(url, {}, 8000);
+    if (!d || (r && r.status >= 400)) throw new Error(`HTTP ${r?.status||0}`);
+    return JSON.parse(d);
+  }
+  try{
+    try {
+      const json = await tryLoad(GROUPS_JSON_URL);
+      console.log(`# group.json loaded: primary`);
+      return json;
+    } catch {
+      const json = await tryLoad(GROUPS_JSON_URL_FALLBACK);
+      console.log(`# group.json loaded: fallback`);
+      return json;
+    }
+  } catch(e){
+    console.log("⚠️ group.json 加载失败：", String(e));
+    return null;
+  }
+}
+function buildMatchText(dispName, tvgId, groupVal, url){
+  let host = ""; try { host = new URL(url).host || ""; } catch {}
+  return `${dispName||""} ${tvgId||""} ${groupVal||""} ${host}`.toLowerCase();
+}
+function firstKeywordHit(txtLower, keywordList){
+  for (const kw of (keywordList||[])) {
+    if (!kw) continue;
+    if (String(kw).toLowerCase && txtLower.includes(String(kw).toLowerCase())) return true;
+  }
+  return false;
+}
+function classifyByGroupsJSON(groups, dispName, tvgId, url, originalGroup){
+  const txt = buildMatchText(dispName, tvgId, originalGroup, url);
+  let country = "", category = "";
+
+  if (groups?.country) {
+    for (const [cty, keywords] of Object.entries(groups.country)) {
+      if (firstKeywordHit(txt, keywords)) { country = cty; break; }
+    }
+  }
+  if (groups?.category) {
+    // 先具体后综合
+    for (const [cat, keywords] of Object.entries(groups.category)) {
+      if (!keywords || keywords.length === 0) { if (!category) category = cat; continue; }
+      if (firstKeywordHit(txt, keywords)) { category = cat; break; }
+    }
+  }
+  if (!category) category = "综合";
+
+  // CCTV 精准类型
+  if (/^CCTV[\s\-]?\d{1,2}\b/i.test(dispName) || /^cctv[\s\-]?\d{1,2}/i.test((tvgId||""))) {
+    if (!country) country = "中国大陆";
+    if (/^CCTV[\s\-]?5(?!\d)|^CCTV[\s\-]?16/i.test(dispName)) category = "体育";
+    else if (/CCTV[\s\-]?6\b/i.test(dispName)) category = "电影";
+    else if (/CCTV[\s\-]?13\b/i.test(dispName)) category = "新闻";
+    else if (/CCTV[\s\-]?9\b/i.test(dispName)) category = "纪录片";
+  }
+
+  if ((/卫视|衛視/.test(dispName) || /卫视|衛視/.test(originalGroup||""))) {
+    if (!country) country = groups?.fallback?.["卫视归类到"] || "中国大陆";
+    if (!/卫视/.test(category)) category = "卫视";
+  }
+
+  const style = (groups?.group_style || "country/category").toLowerCase();
+  const cty = country || "其他";
+  const cat = category || "综合";
+  let groupTitle = "";
+  if (style === "country") groupTitle = cty;
+  else if (style === "category") groupTitle = cat;
+  else groupTitle = `${cty}/${cat}`;
+  return { country: cty, category: cat, groupTitle };
+}
+
+/* ===== 图标选择（JSON → 现有直链 → 目录 → 兜底） ===== */
 async function probe200(url){
   if (!ICON_HTTP_CHECK) return true; // 提速：默认不校验图标 URL
   try{
@@ -250,39 +338,51 @@ async function probe200(url){
     return r && (r.status===200 || r.status===206);
   }catch{ return false; }
 }
-async function pickIconByDisplayName(iconMap, dispName){
-  const raw = (dispName||"").trim(); if (!raw) return addCacheBuster(NOT_FOUND_ICON);
+async function pickIconByDisplayName(iconMap, dispName, currentLogo){
+  const raw = (dispName||"").trim();
+  if (!raw) return addCacheBuster(NOT_FOUND_ICON);
 
-  // 别名（规范化键）
+  const validLogo = async (u) => {
+    if (!u || /^(?:-|n\/a|none|null|empty)$/i.test(u)) return false;
+    if (!/^https?:\/\//i.test(u)) return false;
+    if (!ICON_HTTP_CHECK) return true;
+    return await probe200(u);
+  };
+
+  // 1) JSON/icons 优先（别名 → 多键）
   const aliasNormMap = new Map(Object.entries(NAME_ALIAS).map(([k,v])=>[normName(k), v]));
   const alias = aliasNormMap.get(normName(raw));
-  if (alias){
-    const aliasKey = normName(alias);
-    if (iconMap.has(aliasKey)) {
-      const u0 = iconMap.get(aliasKey); for (const v0 of encodeVariants(u0)) { const v = addCacheBuster(v0); if (await probe200(v)) return v; }
-    }
-    const lower = `${ICON_BASE}/${alias.toLowerCase()}.png`, camel = `${ICON_BASE}/${alias}.png`;
-    if (await probe200(lower)) return addCacheBuster(lower);
-    if (await probe200(camel)) return addCacheBuster(camel);
-    return addCacheBuster(NOT_FOUND_ICON);
-  }
+  const jsonKeys = new Set([
+    alias ? normName(alias) : "",
+    normName(raw),
+    englishKey(raw),
+    chineseKey(raw),
+  ].filter(Boolean));
 
-  // icons.json 多键
-  const k0 = normName(raw);
-  const jsonKeys = new Set([k0, englishKey(raw), chineseKey(raw), k0.replace(/channel(\d+)$/,"channel$1"),
-    k0.replace(/lovenature.*$/,"lovenature"), k0.replace(/tvn.*$/,"tvn"), k0.replace(/plus$/,"plus"), k0.replace(/action$/,"action")]);
   for (const kk of jsonKeys){
     if (kk && iconMap.has(kk)) {
-      const u0 = iconMap.get(kk); for (const v0 of encodeVariants(u0)) { const v = addCacheBuster(v0); if (await probe200(v)) return v; }
+      const u0 = iconMap.get(kk);
+      for (const v0 of encodeVariants(u0)) {
+        const v = addCacheBuster(v0);
+        if (await validLogo(v)) return v;     // ★ JSON 命中直接覆盖
+      }
     }
   }
 
-  // TV_logo 小写 / 原样
-  for (const base of makeNameCandidates(raw)){
-    const lower = `${ICON_BASE}/${base.toLowerCase()}.png`, camel = `${ICON_BASE}/${base}.png`;
-    if (await probe200(lower)) return addCacheBuster(lower);
-    if (await probe200(camel)) return addCacheBuster(camel);
+  // 2) 其次：原 #EXTINF 里已有的 tvg-logo（如果有且有效）
+  if (await validLogo(currentLogo)) {
+    return addCacheBuster(currentLogo);
   }
+
+  // 3) 再次：仓库目录 TV_logo 猜测（小写/原样）
+  for (const base of makeNameCandidates(raw)){
+    const lower = `${ICON_BASE}/${base.toLowerCase()}.png`;
+    const camel = `${ICON_BASE}/${base}.png`;
+    if (await validLogo(lower)) return addCacheBuster(lower);
+    if (await validLogo(camel)) return addCacheBuster(camel);
+  }
+
+  // 4) 兜底
   return addCacheBuster(NOT_FOUND_ICON);
 }
 
@@ -372,14 +472,13 @@ async function withConcurrency(items, limit, worker){
   });
 }
 
-/* ===== 注入：收集→并发探测→CCTV去重→卫视分组→输出 ===== */
-async function injectForM3U(m3uText, iconMap, idx=0){
+/* ===== 注入：收集→并发探测→CCTV去重→分组&图标→输出 ===== */
+async function injectForM3U(m3uText, iconMap, groupsJson, idx=0){
   if (globalStop) return "";
   const lines = m3uText.split(/\r?\n/);
   const extCount = lines.filter(l=>l.startsWith("#EXTINF")).length;
   console.log(`源#${idx+1}: EXTINF = ${extCount}`);
 
-  // 先抽取候选（不探测）
   const cands = [];
   let scanned = 0;
   for (let i=0;i<lines.length;i++){
@@ -396,19 +495,22 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     const url      = findNextUrl(lines, i);
     if (!url) continue;
 
-    // 分组（卫视统一）
     const grpTitle = getAttr(header, "group-title");
     const grpTvg   = getAttr(header, "tvg-group");
-    let groupVal   = grpTitle || grpTvg || "mix";
-    if (/卫视|衛視/.test(dispName)) groupVal = "卫视";
+    const originalGroup = grpTitle || grpTvg || "mix";
+    const tvgId = getAttr(header, "tvg-id");
 
-    // 补 logo（不做图标 HTTP 校验，极大提速）
-    const curLogo = getAttr(header, "tvg-logo");
-    const needFill = !curLogo || /^https?:\/\/$/.test(curLogo) || (curLogo && curLogo.trim() === "") || /^(?:-|n\/a|none|null|empty)$/i.test(curLogo||"");
-    if (!/tvg-logo="/i.test(header) || needFill){
-      const iconUrl = await pickIconByDisplayName(iconMap, dispName);
-      header = setOrReplaceAttr(header, "tvg-logo", iconUrl);
+    // 先确定分组：优先外部 group.json
+    let groupVal = originalGroup;
+    if (groupsJson) {
+      const { groupTitle } = classifyByGroupsJSON(groupsJson, dispName, tvgId, url, originalGroup);
+      if (groupTitle) groupVal = groupTitle;
     }
+
+    // 图标：JSON → 现有直链 → 目录 → 兜底
+    const curLogo = getAttr(header, "tvg-logo");
+    const iconUrl = await pickIconByDisplayName(iconMap, dispName, curLogo);
+    header = setOrReplaceAttr(header, "tvg-logo", iconUrl);
 
     cands.push({ header, dispName, groupVal, url });
     if (cands.length >= HARD_TARGET * 3) break; // 收够 3 倍候选就停
@@ -443,7 +545,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
   const out = ["#EXTM3U"];
   for (const it of entries){
     let hdr = setOrReplaceAttr(it.header, "group-title", it.groupVal);
-    hdr = setOrReplaceAttr(hdr, "tvg-group", it.groupVal);
+    hdr     = setOrReplaceAttr(hdr, "tvg-group", it.groupVal);
     out.push(`${hdr},${it.dispName}`);
     out.push(`#EXTGRP:${it.groupVal}`);
     out.push(it.url);
@@ -454,8 +556,9 @@ async function injectForM3U(m3uText, iconMap, idx=0){
 /* ===== 主流程 ===== */
 (async function main(){
   try{
-    const [iconMap, ...srcs] = await Promise.all([
+    const [iconMap, groupsJson, ...srcs] = await Promise.all([
       loadIcons(),
+      loadGroups(),
       ...M3U_URLS.map(o=>httpGet(o.url))
     ]);
     const validM3Us = srcs.filter(r=>r?.r?.status>=200 && r.d).map(r=>r.d);
@@ -469,7 +572,7 @@ async function injectForM3U(m3uText, iconMap, idx=0){
     const injectedList = [];
     for (let si=0; si<validM3Us.length; si++){
       if (globalStop) break;
-      const injected = await injectForM3U(validM3Us[si], iconMap, si);
+      const injected = await injectForM3U(validM3Us[si], iconMap, groupsJson, si);
       injectedList.push(injected);
     }
 
