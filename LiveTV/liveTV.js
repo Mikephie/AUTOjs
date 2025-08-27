@@ -164,7 +164,7 @@ WidgetMetadata = {
             ]
         }
     ],
-    version: "2.0.0",
+    version: "2.1.0",
     requiredVersion: "0.0.1",
     description: "解析直播订阅",
     author: "MIKEPHIE",
