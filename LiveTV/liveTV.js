@@ -1,11 +1,11 @@
 // 电视直播插件
 WidgetMetadata = {
     id: "live",
-    title: "直播(电视+网络)",
+    title: "MIKE直播(电视+网络)",
     detailCacheDuration: 60,
     modules: [
         {
-            title: "直播(电视+网络)",
+            title: "MIKE直播(电视+网络)",
             requiresWebView: false,
             functionName: "loadLiveItems",
             cacheDuration: 21600,
@@ -55,6 +55,10 @@ WidgetMetadata = {
                         {
                             title: "IPTV3",
                             value: "https://cdn.jsdelivr.net/gh/Guovin/iptv-api@gd/output/result.m3u"
+                        },
+                        {
+                            title: "AKTV",
+                            value: "https://aktv.space/live.m3u"
                         },
                         {
                             title: "OTT-IPTV",
@@ -156,7 +160,7 @@ WidgetMetadata = {
             ]
         }
     ],
-    version: "1.1.1",
+    version: "2.0.0",
     requiredVersion: "0.0.1",
     description: "解析直播订阅",
     author: "MIKEPHIE",
