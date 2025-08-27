@@ -5,7 +5,7 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/owlfiles.png
 
 [Script]
-owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, timeout=60
+owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, timeout=60
 
 [MITM]
 hostname = %APPEND% skyjos.com:58080
