@@ -57,6 +57,10 @@ WidgetMetadata = {
                             value: "https://cdn.jsdelivr.net/gh/Guovin/iptv-api@gd/output/result.m3u"
                         },
                         {
+                            title: "Taobao",
+                            value: "http://m3u.sjbox.cc/113.m3u"
+                        },
+                        {
                             title: "AKTV",
                             value: "https://aktv.space/live.m3u"
                         },
@@ -90,7 +94,7 @@ WidgetMetadata = {
                     placeholders: [
                         { title: "全部频道", value: "" },
                         { title: "央视频道", value: "央视" },
-                        { title: "卫视频道", value: "卫视|中国大陆/卫视" },
+                        { title: "卫视频道", value: "中国大陆/卫视" },
                         { title: "地方频道", value: "地方" },
                         { title: "中国大陆(全部)", value: "^中国大陆" },
                         { title: "香港(全部)",     value: "^香港" },
