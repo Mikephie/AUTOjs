@@ -557,49 +557,42 @@ var WidgetMetadata = {
             ]
         },
         {
-  title: "\u65f6\u957f\u5408\u96c6\u7c7b",
-  description: "\u65f6\u957f\u4e0e\u5408\u96c6 - 3\u4e2a\u7c7b\u578b\uff0c73,839\u90e8\u5f71\u7247",
-  requiresWebView: false,
-  functionName: "loadDurationPage",  // 改用专用函数，避免影响其他栏目
-  cacheDuration: 1800,
-  params: [
-    {
-      name: "url",
-      title: "\u9009\u62e9\u7c7b\u578b",
-      type: "enumeration",
-      description: "\u9009\u62e9\u5177\u4f53\u7c7b\u578b",
-      enumOptions: [
-        { title: "4\u5c0f\u65f6\u4ee5\u4e0a (37,685\u90e8)", value: "https://missav.ai/dm37/cn/genres/4%E5%B0%8F%E6%97%B6%E4%BB%A5%E4%B8%8A" },
-        { title: "\u5408\u96c6 (36,142\u90e8)", value: "https://missav.ai/dm36/cn/genres/%E5%90%88%E9%9B%86" },
-        { title: "\u8d85\u8fc7\u5de5\u4f5c\u65f6\u95f4 4 \u5c0f\u65f6 (12\u90e8)", value: "https://missav.ai/cn/genres/%E8%B6%85%E8%BF%87%E5%B7%A5%E4%BD%9C%E6%97%B6%E9%97%B4%204%20%E5%B0%8F%E6%97%B6" }
-      ]
-    },
-    {
-      name: "sort_by",
-      title: "\u6392\u5e8f",
-      type: "enumeration",
-      description: "\u6392\u5e8f\u65b9\u5f0f",
-      value: "released_at",
-      enumOptions: [
-        { title: "\u53d1\u884c\u65e5\u671f", value: "released_at" },
-        { title: "\u6700\u8fd1\u66f4\u65b0", value: "published_at" },
-        { title: "\u6536\u85cf\u6570", value: "saved" },
-        { title: "\u4eca\u65e5\u6d4f\u89c8\u6570", value: "today_views" },
-        { title: "\u672c\u5468\u6d4f\u89c8\u6570", value: "weekly_views" },
-        { title: "\u672c\u6708\u6d4f\u89c8\u6570", value: "monthly_views" },
-        { title: "\u603b\u6d4f\u89c8\u6570", value: "views" }
-      ]
-    },
-    {
-      name: "girlfriend",
-      title: "\u5973\u53cb\u540d\u5b57",
-      type: "input",
-      description: "\u53ef\u9009\uff0c\u8f93\u5165\u5973\u53cb\uff08\u6f14\u5458\uff09\u540d\u5b57\u4ee5\u53e0\u52a0\u7b5b\u9009",
-      value: ""
-    },
-    { name: "page", title: "\u9875\u7801", type: "page", description: "\u9875\u7801", value: "1" }
-  ]
-},
+            title: "\u65f6\u957f\u5408\u96c6\u7c7b",
+            description: "\u65f6\u957f\u4e0e\u5408\u96c6 - 3\u4e2a\u7c7b\u578b，73,839\u90e8\u5f71\u7247",
+            requiresWebView: false,
+            functionName: "loadPage",
+            cacheDuration: 1800,
+            params: [
+                {
+                    name: "url",
+                    title: "\u9009\u62e9\u7c7b\u578b",
+                    type: "enumeration",
+                    description: "\u9009\u62e9\u5177\u4f53\u7c7b\u578b",
+                    enumOptions: [
+                        { title: "4\u5c0f\u65f6\u4ee5\u4e0a (37,685\u90e8)", value: "https://missav.ai/dm37/cn/genres/4%E5%B0%8F%E6%97%B6%E4%BB%A5%E4%B8%8A" },
+                        { title: "\u5408\u96c6 (36,142\u90e8)", value: "https://missav.ai/dm36/cn/genres/%E5%90%88%E9%9B%86" },
+                        { title: "\u8d85\u8fc7\u5de5\u4f5c\u65f6\u95f4 4 \u5c0f\u65f6 (12\u90e8)", value: "https://missav.ai/cn/genres/%E8%B6%85%E8%BF%87%E5%B7%A5%E4%BD%9C%E6%97%B6%E9%97%B4%204%20%E5%B0%8F%E6%97%B6" }
+                    ]
+                },
+                {
+                    name: "sort_by",
+                    title: "\u6392\u5e8f",
+                    type: "enumeration",
+                    description: "\u6392\u5e8f\u65b9\u5f0f",
+                    value: "released_at",
+                    enumOptions: [
+                        { title: "\u53d1\u884c\u65e5\u671f", value: "released_at" },
+                        { title: "\u6700\u8fd1\u66f4\u65b0", value: "published_at" },
+                        { title: "\u6536\u85cf\u6570", value: "saved" },
+                        { title: "\u4eca\u65e5\u6d4f\u89c8\u6570", value: "today_views" },
+                        { title: "\u672c\u5468\u6d4f\u89c8\u6570", value: "weekly_views" },
+                        { title: "\u672c\u6708\u6d4f\u89c8\u6570", value: "monthly_views" },
+                        { title: "\u603b\u6d4f\u89c8\u6570", value: "views" }
+                    ]
+                },
+                { name: "page", title: "\u9875\u7801", type: "page", description: "\u9875\u7801", value: "1" }
+            ]
+        },
         {
             title: "\u670d\u88c5\u9020\u578b\u7c7b",
             description: "\u670d\u88c5\u4e0e\u9020\u578b - 13\u4e2a\u7c7b\u578b，657\u90e8\u5f71\u7247",
@@ -694,39 +687,6 @@ var WidgetMetadata = {
     ]
 };
 
-async function loadDurationPage(params = {}) {
-  const baseUrl    = params.url;
-  const page       = parseInt(params.page) || 1;
-  const sortBy     = params.sort_by;
-  const girlfriend = params.girlfriend ? String(params.girlfriend).trim() : "";
-
-  let url = baseUrl;
-  let hasParams = false;
-
-  if (girlfriend) {
-    // 分类页不支持 keyword；改用全站搜索路径
-    url = `https://missav.ai/cn/search/${encodeURIComponent(girlfriend)}`;
-    if (sortBy) {
-      url += `?sort=${encodeURIComponent(sortBy)}`;
-      hasParams = true;
-    }
-    if (page > 1) {
-      url += hasParams ? `&page=${page}` : `?page=${page}`;
-    }
-    return await fetchVideoList(url);
-  }
-
-  // 没填女友名字，按原分类逻辑
-  if (sortBy) {
-    url += `?sort=${encodeURIComponent(sortBy)}`;
-    hasParams = true;
-  }
-  if (page > 1) {
-    url += hasParams ? `&page=${page}` : `?page=${page}`;
-  }
-
-  return await fetchVideoList(url);
-}
 
 async function searchVideos(params = {}) {
     const keyword = params.keyword ? params.keyword.trim() : '';
@@ -858,86 +818,37 @@ async function loadPage(params = {}) {
     return await fetchVideoList(url);
 }
 
-// 替换原来的 fetchVideoList
 async function fetchVideoList(url) {
-  // ---- 内置配置与工具（局部作用域，不污染全局）----
-  const MISSAV_DOMAINS = ["missav.ai", "missav.ws", "missav.biz"]; // 可按需增减
-  const MIN_HTML_SIZE  = 12000; // 小于此长度大概率是拦截页/占位页
-  const BLOCK_PAT = /Just a moment|风控|Access Denied|Firewall|Forbidden|verify you are human|Cloudflare/i;
-
-  const withDomain = (u, domain) => {
     try {
-      const x = new URL(u, "https://missav.ai"); // 兼容相对路径
-      x.hostname = domain;
-      return x.toString();
-    } catch {
-      return String(u).replace(/^https?:\/\/[^/]+/i, "https://" + domain);
-    }
-  };
+        const response = await Widget.http.get(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache",
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "none",
+                "Sec-Fetch-User": "?1",
+                "Upgrade-Insecure-Requests": "1",
+                "DNT": "1",
+                "Referer": "https://missav.ai/",
+                "Connection": "keep-alive"
+            },
+            allow_redirects: true
+        });
 
-  const isBlocked = (html = "") => !html || html.length < MIN_HTML_SIZE || BLOCK_PAT.test(html);
-
-  const buildTryList = (inputUrl) => {
-    try {
-      const u = new URL(inputUrl);
-      const idx = MISSAV_DOMAINS.indexOf(u.hostname);
-      if (idx >= 0) {
-        const rest = MISSAV_DOMAINS.filter(d => d !== u.hostname);
-        return [u.hostname, ...rest];
-      }
-    } catch {}
-    return [...MISSAV_DOMAINS];
-  };
-
-  const commonHeaders = (refUrl) => {
-    let referer = "https://missav.ai/";
-    try { referer = new URL(refUrl).origin + "/"; } catch {}
-    return {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-      "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-      "Cache-Control": "no-cache",
-      "Pragma": "no-cache",
-      "Connection": "keep-alive",
-      "Referer": referer
-    };
-  };
-
-  // ---- 实际请求：按域名轮换直到拿到正常页面 ---- 
-  const domains = buildTryList(url);
-
-  for (let i = 0; i < domains.length; i++) {
-    const tryDomain = domains[i];
-    const tryUrl    = withDomain(url, tryDomain);
-
-    try {
-      const resp = await Widget.http.get(tryUrl, {
-        headers: commonHeaders(tryUrl),
-        allow_redirects: true
-      });
-
-      const html = resp && resp.data ? String(resp.data) : "";
-
-      if (isBlocked(html)) {
-        if (i === domains.length - 1) {
-          return [createPlaceholderItem("访问受限，建议更换网络或稍后重试")];
+        if (!response || !response.data || response.data.length < 10000) {
+            return [createPlaceholderItem("\u7f51\u7edc\u8bf7\u6c42\u5931\u8d25\u6216\u6570\u636e\u5f02\u5e38")];
         }
-        continue; // 换下一个域名
-      }
 
-      // 正常解析
-      return parseVideoList(html);
-
-    } catch (e) {
-      if (i === domains.length - 1) {
-        return [createPlaceholderItem("网络请求失败或被限制，请稍后重试")];
-      }
-      // 继续下一个域
+        return parseVideoList(response.data);
+        
+    } catch (error) {
+        return [createPlaceholderItem("\u8bbf\u95ee\u5931\u8d25，\u53ef\u80fd\u5df2\u88ab\u98ce\u63a7")];
     }
-  }
-
-  // 兜底（理论上到不了）
-  return [createPlaceholderItem("访问受限，稍后重试")];
 }
 
 function createPlaceholderItem(message = "\u5df2\u88ab\u98ce\u63a7，\u8bf7\u7a0d\u540e\u91cd\u8bd5") {
