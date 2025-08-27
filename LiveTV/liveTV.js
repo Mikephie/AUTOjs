@@ -96,6 +96,7 @@ WidgetMetadata = {
                         { title: "央视频道", value: "央视" },
                         { title: "卫视频道", value: "中国大陆/卫视" },
                         { title: "地方频道", value: "地方" },
+                        { title: "咪咕视频", value: "咪咕视频" },
                         { title: "中国大陆(全部)", value: "^中国大陆" },
                         { title: "香港(全部)",     value: "^香港" },
                         { title: "台湾(全部)",     value: "^台湾" },
