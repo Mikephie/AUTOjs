@@ -55,13 +55,13 @@ WidgetMetadata = {
                         {
                             title: "IPTV3",
                             value: "https://cdn.jsdelivr.net/gh/Guovin/iptv-api@gd/output/result.m3u"
-                        }，
+                        },
                         {
                             title: "OTT-IPTV",
                             value: "https://sub.ottiptv.cc/iptv.m3u"
                         },
                         {
-                            title: "OTT-IPTV",
+                            title: "OTT-虎牙清晰",
                             value: "https://sub.ottiptv.cc/huyayqk.m3u"
                         },
                         {
@@ -83,38 +83,38 @@ WidgetMetadata = {
                     title: "按组关键字过滤(选填)，如央视，会筛选出所有group-title中包含央视的频道",
                     type: "input",
                     description: "输入组关键字，如央视，会筛选出所有group-title中包含央视的频道",
-                    placeholders: placeholders: [
-            { title: "全部频道", value: "" },
-            { title: "央视频道", value: "cctv" },
-            { title: "卫视频道", value: "中国大陆/卫视" },
-            { title: "地方频道", value: "地方" },
-            { title: "中国大陆(全部)", value: "^中国大陆" },
-            { title: "香港(全部)",     value: "^香港" },
-            { title: "台湾(全部)",     value: "^台湾" },
-            { title: "日本(全部)",     value: "^日本" },
-            { title: "韩国(全部)",     value: "^韩国" },
-            { title: "美国(全部)",     value: "^美国" },
-            { title: "英国(全部)",     value: "^英国" },
-            { title: "港澳台(合并)",   value: "^(香港|澳门|台湾)" },
-            { title: "综合",           value: "综合$" },
-            { title: "新闻",           value: "新闻$" },
-            { title: "体育",           value: "体育$" },
-            { title: "电影",           value: "电影$" },
-            { title: "剧集",           value: "剧集$|电视剧$|戏剧$" },
-            { title: "纪录片",         value: "纪录片$|纪实$" },
-            { title: "少儿/动漫",       value: "少儿$|儿童$|动漫$|卡通$" },
-            { title: "音乐",           value: "音乐$" },
-            { title: "综艺娱乐",       value: "综艺$|娱乐$|生活$" },
-            { title: "央视频道(关键词)", value: "央视|CCTV" },
-            { title: "卫视频道(关键词)", value: "卫视" },
-            { title: "中国大陆 · 新闻", value: "^中国大陆/.+新闻$" },
-            { title: "中国大陆 · 体育", value: "^中国大陆/.+体育$" },
-            { title: "香港 · 综合",     value: "^香港/综合$" },
-            { title: "台湾 · 新闻",     value: "^台湾/.+新闻$" },
-            { title: "日本 · 动漫",     value: "^日本/.+(少儿|动漫)$" },
-            { title: "马来西亚 · 综合", value: "^马来西亚/综合$" },
-            { title: "新加坡 · 综合",   value: "^新加坡/综合$" }
-          ]
+                    placeholders: [
+                        { title: "全部频道", value: "" },
+                        { title: "央视频道", value: "央视" },
+                        { title: "卫视频道", value: "中国大陆/卫视" },
+                        { title: "地方频道", value: "地方" },
+                        { title: "中国大陆(全部)", value: "^中国大陆" },
+                        { title: "香港(全部)",     value: "^香港" },
+                        { title: "台湾(全部)",     value: "^台湾" },
+                        { title: "日本(全部)",     value: "^日本" },
+                        { title: "韩国(全部)",     value: "^韩国" },
+                        { title: "美国(全部)",     value: "^美国" },
+                        { title: "英国(全部)",     value: "^英国" },
+                        { title: "港澳台(合并)",   value: "^(香港|澳门|台湾)" },
+                        { title: "综合",           value: "综合$" },
+                        { title: "新闻",           value: "新闻$" },
+                        { title: "体育",           value: "体育$" },
+                        { title: "电影",           value: "电影$" },
+                        { title: "剧集",           value: "剧集$|电视剧$|戏剧$" },
+                        { title: "纪录片",         value: "纪录片$|纪实$" },
+                        { title: "少儿/动漫",       value: "少儿$|儿童$|动漫$|卡通$" },
+                        { title: "音乐",           value: "音乐$" },
+                        { title: "综艺娱乐",       value: "综艺$|娱乐$|生活$" },
+                        { title: "央视频道(关键词)", value: "央视|CCTV" },
+                        { title: "卫视频道(关键词)", value: "卫视" },
+                        { title: "中国大陆 · 新闻", value: "^中国大陆/.+新闻$" },
+                        { title: "中国大陆 · 体育", value: "^中国大陆/.+体育$" },
+                        { title: "香港 · 综合",     value: "^香港/综合$" },
+                        { title: "台湾 · 新闻",     value: "^台湾/.+新闻$" },
+                        { title: "日本 · 动漫",     value: "^日本/.+(少儿|动漫)$" },
+                        { title: "马来西亚 · 综合", value: "^马来西亚/综合$" },
+                        { title: "新加坡 · 综合",   value: "^新加坡/综合$" }
+                    ]
                 },
                 // 🔄 将原来的 "name_filter" 替换为 UA 选择
                 {
@@ -156,7 +156,7 @@ WidgetMetadata = {
             ]
         }
     ],
-    version: "1.1.0",
+    version: "1.1.1",
     requiredVersion: "0.0.1",
     description: "解析直播订阅",
     author: "MIKEPHIE",
@@ -222,7 +222,7 @@ async function fetchM3UContent(url) {
     try {
         const response = await Widget.http.get(url, {
             headers: {
-                'User-Agent': CURRENT_UA, // 使用全局 UA（替换原固定 UA） [oai_citation:1‡98.js](file-service://file-14PiJAeAoWQFq2siiY2uqQ)
+                'User-Agent': CURRENT_UA, // 使用全局 UA
             }
         });
 
@@ -366,7 +366,7 @@ async function loadDetail(link) {
 
         const response = await Widget.http.get(url, {
             headers: {
-                "User-Agent": CURRENT_UA, // 使用全局 UA（替换原固定 UA） [oai_citation:2‡98.js](file-service://file-14PiJAeAoWQFq2siiY2uqQ)
+                "User-Agent": CURRENT_UA, // 使用全局 UA
             },
         });
 
