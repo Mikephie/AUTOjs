@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      3.2.1
-// @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
+// @version      3.1.5
+// @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮
 // @match        https://github.com/*
 // @match        https://script.hub/*
 // @match        http://script.hub/*
@@ -51,6 +51,7 @@
     document.body.appendChild(stack);
 
     if (location.host === "github.com") {
+      // 仅保留 Raw + ScriptHub
       stack.appendChild(makeBtn("打开 Raw", openRawLink, [0,200,83]));
       stack.appendChild(makeBtn("打开 ScriptHub", openScriptHubLink, [156,39,176]));
     }
@@ -103,47 +104,18 @@
 
   // --- 功能 ---
   function getRawUrl() {
-    // 去掉查询和 hash
-    var href = location.href.split("#")[0].split("?")[0];
-    var clean = location.origin + location.pathname;
-
-    // 已经是 raw 域名
-    if (/^https?:\/\/raw\.githubusercontent\.com\//.test(href)) {
-      return href;
-    }
-
-    // /owner/repo/blob/branch/path...
-    var m1 = clean.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)$/);
-    if (m1) {
-      return "https://raw.githubusercontent.com/" + m1[1] + "/" + m1[2] + "/" + m1[3] + "/" + m1[4];
-    }
-
-    // /owner/repo/raw/branch/path...（GitHub 某些跳转会出现）
-    var m2 = clean.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/raw\/([^\/]+)\/(.+)$/);
-    if (m2) {
-      return "https://raw.githubusercontent.com/" + m2[1] + "/" + m2[2] + "/" + m2[3] + "/" + m2[4];
-    }
-
-    // 其他视图（PR/commit/files 等）无法确定 raw，回退当前页
-    return href;
+    return location.href.replace("/blob", "").replace("github.com", "raw.githubusercontent.com");
   }
-
   function openRawLink() {
-    window.open(getRawUrl(), "_blank", "noopener,noreferrer");
+    window.open(getRawUrl(), "_blank");
   }
-
   function reEditLink() {
-    // convert/file/view -> edit
-    var url = location.href.replace(/\/(convert|file|view)\//, "/edit/");
-    window.open(url, "_blank", "noopener,noreferrer");
+    var url = location.href.replace(/\/(convert|file)\//, "/edit/");
+    window.open(url, "_blank");
   }
-
   function openScriptHubLink() {
-    var raw = getRawUrl();
-    // 必须编码，否则路径占位会被 /:?& 打断
-    var enc = encodeURIComponent(raw);
-    var url = "http://script.hub/convert/_start_/" + enc + "/_end_/plain.txt?type=plain-text&target=plain-text";
-    window.open(url, "_blank", "noopener,noreferrer");
+    var url = "http://script.hub/convert/_start_/" + getRawUrl() + "/_end_/plain.txt?type=plain-text&target=plain-text";
+    window.open(url, "_blank");
   }
 
   // --- 工具 ---
