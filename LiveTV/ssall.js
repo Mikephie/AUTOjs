@@ -1,8 +1,17 @@
 {
   "title": "🅜🅘🅚🅔®️🐲 '𝓼 𝓦𝓲𝓭𝓰𝓮𝓽𝓼",
   "description": "瑟瑟合集",
-  "icon": "https://raw.githubusercontent.com/Mikephie/icons/main/loon/heji.gif",
+  "icon": "https://img.mikephie.site/APP_logo/sese-mobile.png",
   "widgets": [
+    {
+      "id": "live",
+      "title": "MIKE直播(电视+网络)",
+      "description": "解析直播订阅+UA",
+      "requiredVersion": "0.0.2",
+      "version": "2.1.0",
+      "author": "Mikephie",
+      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/liveTV.js "
+    },
     {
       "id": "missav",
       "title": "MissAV",
