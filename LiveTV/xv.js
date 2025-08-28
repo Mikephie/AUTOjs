@@ -1204,8 +1204,8 @@ WidgetMetadata = {
                             value: 'Mandy Flores'
                         },
                         {
-                            title: 'Nancy A',
-                            value: 'Nancy A'
+                            title: 'Nancy A.',
+                            value: 'Nancy A.'
                         },
                         {
                             title: 'Eva Elfie',
