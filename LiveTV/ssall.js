@@ -1,7 +1,7 @@
 {
   "title": "🅜🅘🅚🅔®️🐲 '𝓼 𝓦𝓲𝓭𝓰𝓮𝓽𝓼",
   "description": "瑟瑟合集",
-  "icon": "https://widgets-xd.vercel.app/icon/icon.PNG",
+  "icon": "https://raw.githubusercontent.com/Mikephie/icons/main/loon/heji.gif",
   "widgets": [
     {
       "id": "missav",
