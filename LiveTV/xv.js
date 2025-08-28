@@ -1201,15 +1201,15 @@ WidgetMetadata = {
                     placeholders: [
                         {
                             title: 'Mandy Flores',
-                            value: 'Mandy Flores'
+                            value: 'mandy-flores'
                         },
                         {
-                            title: 'Nancy A.',
-                            value: 'Nancy A.'
+                            title: 'Nancy A',
+                            value: 'nancy-a'
                         },
                         {
                             title: 'Eva Elfie',
-                            value: 'Eva Elfie'
+                            value: 'eva-elfie'
                         },
                         {
                             title: 'Momoka',
