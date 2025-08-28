@@ -8,7 +8,7 @@
       "title": "MissAV",
       "description": "获取 MissAV 推荐",
       "requiredVersion": "0.0.2",
-      "version: "2.0.0",
+      "version": "2.0.0",
       "author": "Mikephie",
       "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/LiveTV/missav.js"
     },
@@ -17,7 +17,7 @@
       "title": "Pornhub",
       "description": "在线观看Pornhub",
       "requiredVersion": "0.0.1",
-      "version: "2.0.0",
+      "version": "2.0.0",
       "author": "Mikephie",
       "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/LiveTV/ph.js"
     },
@@ -26,7 +26,7 @@
       "title": "XVideos",
       "description": "在线观看XVideos",
       "requiredVersion": "0.0.1",
-      "version: "2.0.0",
+      "version": "2.0.0",
       "author": "Mikephie",
       "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/LiveTV/xv.js"
     }
