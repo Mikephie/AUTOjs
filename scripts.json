@@ -1,10 +1,10 @@
 {
-  "generatedTime": "2025-08-27T13:09:54.010Z",
+  "generatedTime": "2025-08-28T03:36:19.712Z",
   "scripts": [
     {
       "name": "adaptyhub",
       "filename": "adaptyhub.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.457Z",
       "formats": {
         "original": "input/adaptyhub.js",
         "quantumultx": "quantumultx/adaptyhub.js",
@@ -15,7 +15,7 @@
     {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.457Z",
       "formats": {
         "original": "input/axs.js",
         "quantumultx": "quantumultx/axs.js",
@@ -26,7 +26,7 @@
     {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.457Z",
       "formats": {
         "original": "input/bizhi.js",
         "quantumultx": "quantumultx/bizhi.js",
@@ -37,7 +37,7 @@
     {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.457Z",
       "formats": {
         "original": "input/caiyun.js",
         "quantumultx": "quantumultx/caiyun.js",
@@ -48,7 +48,7 @@
     {
       "name": "github",
       "filename": "github.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.458Z",
       "formats": {
         "original": "input/github.js",
         "quantumultx": "quantumultx/github.js",
@@ -59,7 +59,7 @@
     {
       "name": "ilovepdf",
       "filename": "ilovepdf.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.458Z",
       "formats": {
         "original": "input/ilovepdf.js",
         "quantumultx": "quantumultx/ilovepdf.js",
@@ -70,7 +70,7 @@
     {
       "name": "migumusic",
       "filename": "migumusic.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.458Z",
       "formats": {
         "original": "input/migumusic.js",
         "quantumultx": "quantumultx/migumusic.js",
@@ -81,7 +81,7 @@
     {
       "name": "myshiftplanner",
       "filename": "myshiftplanner.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.458Z",
       "formats": {
         "original": "input/myshiftplanner.js",
         "quantumultx": "quantumultx/myshiftplanner.js",
@@ -92,7 +92,7 @@
     {
       "name": "owlfiles",
       "filename": "owlfiles.js",
-      "updateTime": "2025-08-27T13:09:47.534Z",
+      "updateTime": "2025-08-28T03:36:15.458Z",
       "formats": {
         "original": "input/owlfiles.js",
         "quantumultx": "quantumultx/owlfiles.js",
