@@ -17,6 +17,14 @@ WidgetMetadata = {
                     description: "输入直播订阅链接地址",
                     placeholders: [
                         {
+                            title: "Sport",
+                            value: "https://tv-1.iill.top/m3u/Sport"
+                        },
+                        {
+                            title: "Gather",
+                            value: "https://tv-1.iill.top/m3u/Gather"
+                        },
+                        {
                             title: "Kimentanm",
                             value: "https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u"
                         },
