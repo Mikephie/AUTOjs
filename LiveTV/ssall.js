@@ -10,7 +10,7 @@
       "requiredVersion": "0.0.2",
       "version": "2.1.0",
       "author": "Mikephie",
-      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/liveTV.js "
+      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/liveTV.js"
     },
     {
       "id": "missav",
@@ -19,16 +19,16 @@
       "requiredVersion": "0.0.2",
       "version": "2.0.0",
       "author": "Mikephie",
-      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/LiveTV/missav.js"
+      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/missav.js"
     },
     {
-      "id": "Pornhub",
+      "id": "pornhub",
       "title": "Pornhub",
       "description": "在线观看Pornhub",
       "requiredVersion": "0.0.1",
       "version": "2.0.0",
       "author": "Mikephie",
-      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/LiveTV/ph.js"
+      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/ph.js"
     },
     {
       "id": "xvideos",
@@ -37,7 +37,7 @@
       "requiredVersion": "0.0.1",
       "version": "2.0.0",
       "author": "Mikephie",
-      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/refs/heads/main/LiveTV/xv.js"
+      "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/xv.js"
     }
   ]
 }
