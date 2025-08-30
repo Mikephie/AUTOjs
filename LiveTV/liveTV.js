@@ -141,7 +141,7 @@ WidgetMetadata = {
                     description: "选择请求 User-Agent",
                     value: "okHttp/Mod-1.1.0",
                     enumOptions: [
-                        { title: "okHttp/Mod-1.1.0", value: "okHttp/Mod-1.1.0" },
+                        { title: "okHttp/Mod-1.2.0", value: "okHttp/Mod-1.2.0" },
                         { title: "AptvPlayer/1.4.6", value: "AptvPlayer/1.4.6" }
                     ]
                 },
