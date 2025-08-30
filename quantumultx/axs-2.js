@@ -1,21 +1,25 @@
 /*
-#!name= ✨ Owlfiles ✨
-#!desc=FTP
-#!category=🔐APP
+#!name= ✨ AXS Payment ✨
+#!desc=缴费账单
+#!category=🚫广告
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
-#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/owlfiles.png
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/axs.png
 𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [rewrite_local]
-^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+) url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js
+^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ url 302 closebutton://
 
-[MITM]
-hostname = skyjos.com:58080
+# 如需顺便屏蔽 Marketplace 和 highlight（可选）
+# ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/WebView\/MarketPlace.* url reject
+# ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/highlight.* url reject
+
+[mitm]
+hostname = m-station2.axs.com.sg
 
 */
 
 // ===== 轻量通知 + 冷却 =====
-const APP_NAME = "✨ Owlfiles ✨";   // ← 只改这个显示名
-const ID = "owlfiles";              // ← 对应键名，保持纯字母数字（无 emoji）
+const APP_NAME = "✨ AXS Payment ✨";   // ← 只改这个显示名
+const ID = "axs payment";              // ← 对应键名，保持纯字母数字（无 emoji）
 
 const EN = "n:"+ID+":e";             // 开关
 const TS = "n:"+ID+":t";             // 时间戳
@@ -38,17 +42,3 @@ if (enabled) {
     $persistentStore.write(String(now), TS);
   }
 }
-
-// 主脚本函数...
-try {
-  let obj = JSON.parse($response.body);
-
-  obj.memberLevel = 3;
-  obj.expireAt = 2754094349450;
-
-  $done({ body: JSON.stringify(obj) });
-} catch (err) {
-  console.log("Skyjos 解锁失败: " + err);
-  $done({});
-}
-// 主脚本函数...
