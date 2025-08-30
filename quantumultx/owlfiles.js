@@ -29,7 +29,7 @@ function notify(t,s,b){
 }
 
 // ---- 判定逻辑 ----
-let enabled = (($persistentStore.read(EN) || "1") === "0");
+let enabled = (($persistentStore.read(EN) || "1") === "1");
 if (enabled) {
   let now  = Date.now();
   let last = parseInt($persistentStore.read(TS) || "0",10) || 0;
@@ -44,7 +44,7 @@ try {
   let obj = JSON.parse($response.body);
 
   obj.memberLevel = 3;
-  obj.expireAt = 3742762088000;
+  obj.expireAt = 2754094349450;
 
   $done({ body: JSON.stringify(obj) });
 } catch (err) {
