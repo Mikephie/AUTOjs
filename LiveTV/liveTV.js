@@ -139,7 +139,7 @@ WidgetMetadata = {
                     title: "User-Agent",
                     type: "enumeration",
                     description: "选择请求 User-Agent",
-                    value: "okHttp/Mod-1.1.0",
+                    value: "okHttp/Mod-1.2.0",
                     enumOptions: [
                         { title: "okHttp/Mod-1.2.0", value: "okHttp/Mod-1.2.0" },
                         { title: "AptvPlayer/1.4.6", value: "AptvPlayer/1.4.6" }
@@ -173,7 +173,7 @@ WidgetMetadata = {
             ]
         }
     ],
-    version: "2.1.0",
+    version: "2.2.0",
     requiredVersion: "0.0.1",
     description: "解析直播订阅",
     author: "MIKEPHIE",
@@ -181,13 +181,13 @@ WidgetMetadata = {
 };
 
 // ========= 全局 UA（loadLiveItems 选择后保存，其他接口统一使用）=========
-let CURRENT_UA = "okHttp/Mod-1.1.0";
+let CURRENT_UA = "okHttp/Mod-1.2.0";
 
 async function loadLiveItems(params = {}) {
     try {
         const url = params.url || "";
         const groupFilter = params.group_filter || "";
-        const ua = params.ua || "okHttp/Mod-1.1.0";   // 新增：UA 选择
+        const ua = params.ua || "okHttp/Mod-1.2.0";   // 新增：UA 选择
         const bgColor = params.bg_color || "";
         const direction = params.direction || "";
 
