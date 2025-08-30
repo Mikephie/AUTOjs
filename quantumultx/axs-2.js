@@ -42,3 +42,4 @@ if (enabled) {
     $persistentStore.write(String(now), TS);
   }
 }
+$done({});
