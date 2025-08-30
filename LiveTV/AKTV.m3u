@@ -1,9 +1,6 @@
 #EXTM3U
-# Generated-At: 2025-08-30T18:41:24.843Z (limit=200)
-# Stats: total=600, kept=8, filtered=588
-#EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV4.png" group-title="中国大陆/综合" tvg-group="中国大陆/综合",CCTV-4
-#EXTGRP:中国大陆/综合
-http://121.60.56.116:10001/rtp/239.69.1.138:10466
+# Generated-At: 2025-08-30T19:07:47.928Z (limit=200)
+# Stats: total=600, kept=6, filtered=591
 #EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5.png" group-title="中国大陆/体育" tvg-group="中国大陆/体育",CCTV-5
 #EXTGRP:中国大陆/体育
 http://121.60.56.116:10001/rtp/239.69.1.123:10376
@@ -22,6 +19,3 @@ http://123.116.125.121:8012/rtp/239.3.1.151:8144
 #EXTINF:-1 tvg-name="北京卫视" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/北京卫视.png" group-title="中国大陆/卫视" tvg-group="中国大陆/卫视",北京卫视
 #EXTGRP:中国大陆/卫视
 http://113.26.202.52:1299/tsfile/live/0122_1.m3u8
-#EXTINF:-1 tvg-name="新疆卫视" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/新疆卫视.png" group-title="中国大陆/卫视" tvg-group="中国大陆/卫视",新疆卫视
-#EXTGRP:中国大陆/卫视
-http://218.84.12.186:8001/hls/main/playlist.m3u8?zxinjd;http://218.84.12.186:8001/hls/main/playlist.m3u8zxinjd
