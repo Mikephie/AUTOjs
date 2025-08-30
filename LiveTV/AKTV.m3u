@@ -1,5 +1,5 @@
 #EXTM3U
-# Generated-At: 2025-08-30T18:13:12.530Z (limit=200)
+# Generated-At: 2025-08-30T18:41:24.843Z (limit=200)
 # Stats: total=600, kept=8, filtered=588
 #EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV4.png" group-title="中国大陆/综合" tvg-group="中国大陆/综合",CCTV-4
 #EXTGRP:中国大陆/综合
@@ -15,7 +15,7 @@ http://113.26.202.52:1299/tsfile/live/0008_1.m3u8
 http://121.60.56.116:10001/rtp/239.69.1.155:10566
 #EXTINF:-1 tvg-name="CCTV16" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV16.png" group-title="中国大陆/体育" tvg-group="中国大陆/体育",CCTV-16
 #EXTGRP:中国大陆/体育
-http://61.149.251.202:4022/rtp/239.3.1.184:8001
+http://121.60.56.116:10001/rtp/239.69.1.247:11124
 #EXTINF:-1 tvg-name="CCTV17" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV17.png" group-title="中国大陆/综合" tvg-group="中国大陆/综合",CCTV-17
 #EXTGRP:中国大陆/综合
 http://123.116.125.121:8012/rtp/239.3.1.151:8144
