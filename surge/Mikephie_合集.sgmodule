@@ -6,7 +6,7 @@
 [Rule]
 
 # ===== caiyun.sgmodule — [Rule] =====
-# 上传信息
+# 上传信息-01
 DOMAIN,gather.colorfulclouds.net,REJECT
 
 [Map Local]
