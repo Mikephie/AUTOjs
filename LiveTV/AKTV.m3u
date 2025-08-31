@@ -1,24 +1,21 @@
 #EXTM3U
-# Generated-At: 2025-08-30T19:32:52.534Z (limit=200)
-# Stats: total=600, kept=7, filtered=589
+# Generated-At: 2025-08-31T05:10:12.901Z (limit=200)
+# Stats: total=600, kept=6, filtered=590
 #EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV4.png" group-title="中国大陆/综合" tvg-group="中国大陆/综合",CCTV-4
 #EXTGRP:中国大陆/综合
 http://121.60.56.116:10001/rtp/239.69.1.138:10466
 #EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV5.png" group-title="中国大陆/体育" tvg-group="中国大陆/体育",CCTV-5
 #EXTGRP:中国大陆/体育
 http://121.60.56.116:10001/rtp/239.69.1.123:10376
-#EXTINF:-1 tvg-name="CCTV8" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV8.png" group-title="中国大陆/综合" tvg-group="中国大陆/综合",CCTV-8
-#EXTGRP:中国大陆/综合
-http://113.26.202.52:1299/tsfile/live/0008_1.m3u8
 #EXTINF:-1 tvg-name="CCTV15" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV15.png" group-title="中国大陆/综合" tvg-group="中国大陆/综合",CCTV-15
 #EXTGRP:中国大陆/综合
 http://121.60.56.116:10001/rtp/239.69.1.155:10566
 #EXTINF:-1 tvg-name="CCTV16" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV16.png" group-title="中国大陆/体育" tvg-group="中国大陆/体育",CCTV-16
 #EXTGRP:中国大陆/体育
-http://121.60.56.116:10001/rtp/239.69.1.247:11124
+http://61.149.251.202:4022/rtp/239.3.1.184:8001
 #EXTINF:-1 tvg-name="CCTV17" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/CCTV17.png" group-title="中国大陆/综合" tvg-group="中国大陆/综合",CCTV-17
 #EXTGRP:中国大陆/综合
-http://123.116.125.121:8012/rtp/239.3.1.151:8144
+http://61.149.251.202:4022/rtp/239.3.1.151:8144
 #EXTINF:-1 tvg-name="新疆卫视" tvg-logo="https://gh.catmak.name/https://raw.githubusercontent.com/fanmingming/live/main/tv/新疆卫视.png" group-title="中国大陆/卫视" tvg-group="中国大陆/卫视",新疆卫视
 #EXTGRP:中国大陆/卫视
 http://218.84.12.186:8001/hls/main/playlist.m3u8?zxinjd;http://218.84.12.186:8001/hls/main/playlist.m3u8zxinjd
