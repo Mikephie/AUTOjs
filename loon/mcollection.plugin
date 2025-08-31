@@ -1,0 +1,166 @@
+#!name=mcollection 🔐APP
+#!desc=自动合并生成的合集模块
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!category=🔐APP
+
+[Rule]
+
+#************************************#
+# Mikephie_合集.plugin
+
+# ===== caiyun.plugin — [Rule] =====
+# 上传信息
+DOMAIN,gather.colorfulclouds.net,REJECT
+
+[Rewrite]
+# 普通版开屏广告(此广告不定时出现)
+^https:\/\/ad\.cyapi\.cn\/v2\/req\?app_name=weather - REJECT
+# 7.1.9 限时福利Svip
+^https:\/\/biz\.cyapi\.cn\/p\/v1\/trial_card\/info - REJECT
+# 7.2.0普通版修改VIP后提示账号迁移
+^https:\/\/biz\.cyapi\.cn\/api\/v1\/token\/device$ - REJECT
+# 亲友卡
+^https:\/\/biz\.cyapi\.cn\/p\/v1\/entries - REJECT
+# 左上角+进去推荐
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config$ - REJECT
+# 通知
+^https:\/\/starplucker\.cyapi\.cn\/v3\/notification\/message_center - REJECT
+# 会员限时弹窗
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ - REJECT
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ - REJECT
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ - REJECT
+
+#************************************#
+# caiyun.plugin
+# 上传信息
+DOMAIN,gather.colorfulclouds.net,REJECT
+
+[Rewrite]
+# 普通版开屏广告(此广告不定时出现)
+^https:\/\/ad\.cyapi\.cn\/v2\/req\?app_name=weather - REJECT
+# 7.1.9 限时福利Svip
+^https:\/\/biz\.cyapi\.cn\/p\/v1\/trial_card\/info - REJECT
+# 7.2.0普通版修改VIP后提示账号迁移
+^https:\/\/biz\.cyapi\.cn\/api\/v1\/token\/device$ - REJECT
+# 亲友卡
+^https:\/\/biz\.cyapi\.cn\/p\/v1\/entries - REJECT
+# 左上角+进去推荐
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config$ - REJECT
+# 通知
+^https:\/\/starplucker\.cyapi\.cn\/v3\/notification\/message_center - REJECT
+# 会员限时弹窗
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ - REJECT
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ - REJECT
+^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ - REJECT
+
+[Script]
+
+#************************************#
+# Mikephie_合集.plugin
+
+# ===== adaptyhub.plugin — [Script] =====
+# Adapty解锁
+http-response ^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
+# Apphud解锁
+http-response ^https?:\/\/.*\.apphud\.com\/v\d\/(subscriptions|customers)$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
+# SNOW系列解锁
+http-response ^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
+
+# ===== bizhi.plugin — [Script] =====
+http-response ^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, requires-body=true, timeout=60, tag=bizhi
+
+# ===== caiyun.plugin — [Script] =====
+# 赏叶赏花模块
+http-response ^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\?app_name=weather script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 解锁旧版vip(7.20.0之前)
+http-response ^https:\/\/biz\.cyapi\.cn\/v2\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 卫星云图 48小时预报
+http-request ^https:\/\/wrapper\.cyapi\.cn\/v1\/(satellite|nafp\/origin_images) script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=false, timeout=60, tag=caiyun
+# 7.20.0版本显示VIP
+http-response ^https?:\/\/biz\.cyapi\.cn\/api\/v1\/user_detail$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 7.22.0版本 40天趋势/60天潮汐/风 等等有时候无法加载
+http-request ^https:\/\/starplucker\.cyapi\.cn\/v3\/ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=false, timeout=60, tag=caiyun
+# 发现-轮播
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/banners\?user_type=paid$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 发现-宫格
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/features\?user_type=paid$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 发现-官方活动
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 发现-瀑布流
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+
+# ===== github.plugin — [Script] =====
+http-response https://api.github.com/graphql script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, requires-body=true, timeout=60, tag=github
+
+# ===== ilovepdf.plugin — [Script] =====
+http-response ^https:\/\/service\.ilovepdf\.com\/v1\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, requires-body=true, timeout=60, tag=ilovepdf
+
+# ===== migumusic.plugin — [Script] =====
+# > 咪咕音乐vip、音质
+http-response ^https?:\/\/(u|c|app).(musicapp|(c|u).nf).migu.cn.+(user\/api|column\/startup|resource\/skin) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, requires-body=true, timeout=60, tag=migumusic
+http-request ^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/migumusic.js, requires-body=false, timeout=60, tag=migumusic
+
+# ===== myshiftplanner.plugin — [Script] =====
+http-response ^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, requires-body=true, timeout=60, tag=myshiftplanner
+
+# ===== owlfiles.plugin — [Script] =====
+http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, requires-body=true, timeout=60, tag=owlfiles
+
+#************************************#
+# adaptyhub.plugin
+# Adapty解锁
+http-response ^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
+# Apphud解锁
+http-response ^https?:\/\/.*\.apphud\.com\/v\d\/(subscriptions|customers)$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
+# SNOW系列解锁
+http-response ^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
+
+#************************************#
+# bizhi.plugin
+http-response ^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, requires-body=true, timeout=60, tag=bizhi
+
+#************************************#
+# caiyun.plugin
+# 赏叶赏花模块
+http-response ^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\?app_name=weather script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 解锁旧版vip(7.20.0之前)
+http-response ^https:\/\/biz\.cyapi\.cn\/v2\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 卫星云图 48小时预报
+http-request ^https:\/\/wrapper\.cyapi\.cn\/v1\/(satellite|nafp\/origin_images) script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=false, timeout=60, tag=caiyun
+# 7.20.0版本显示VIP
+http-response ^https?:\/\/biz\.cyapi\.cn\/api\/v1\/user_detail$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 7.22.0版本 40天趋势/60天潮汐/风 等等有时候无法加载
+http-request ^https:\/\/starplucker\.cyapi\.cn\/v3\/ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, requires-body=false, timeout=60, tag=caiyun
+# 发现-轮播
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/banners\?user_type=paid$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 发现-宫格
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/features\?user_type=paid$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 发现-官方活动
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+# 发现-瀑布流
+http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
+
+#************************************#
+# github.plugin
+http-response https://api.github.com/graphql script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, requires-body=true, timeout=60, tag=github
+
+#************************************#
+# ilovepdf.plugin
+http-response ^https:\/\/service\.ilovepdf\.com\/v1\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, requires-body=true, timeout=60, tag=ilovepdf
+
+#************************************#
+# migumusic.plugin
+# > 咪咕音乐vip、音质
+http-response ^https?:\/\/(u|c|app).(musicapp|(c|u).nf).migu.cn.+(user\/api|column\/startup|resource\/skin) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, requires-body=true, timeout=60, tag=migumusic
+http-request ^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/migumusic.js, requires-body=false, timeout=60, tag=migumusic
+
+#************************************#
+# myshiftplanner.plugin
+http-response ^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, requires-body=true, timeout=60, tag=myshiftplanner
+
+#************************************#
+# owlfiles.plugin
+http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, requires-body=true, timeout=60, tag=owlfiles
+
+[MITM]
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, api.adapty.io, api.github.com, leancloud.emotionwp.com, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, service.ilovepdf.com, skyjos.com:58080
