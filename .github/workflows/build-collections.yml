@@ -1,0 +1,45 @@
+name: Build Collections (Surge & Loon)
+
+on:
+  push:
+    paths:
+      - 'surge/*.sgmodule'
+      - 'loon/*.plugin'
+      - 'scripts/**'
+      - '.github/workflows/build-collections.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Surge Collection
+        run: node scripts/build-collection-surge.js
+
+      - name: Build Loon Collection
+        run: node scripts/build-collection-loon.js
+
+      - name: Commit & Push if changed
+        run: |
+          set -e
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name  "actions-user"
+            git config user.email "actions@users.noreply.github.com"
+            git add surge/Mikephie_合集.sgmodule || true
+            git add loon/Mikephie_合集.plugin    || true
+            git commit -m "chore: auto-build collections ($(date +'%Y-%m-%d %H:%M:%S'))"
+            git push
+          else
+            echo "No changes to commit."
+          fi
