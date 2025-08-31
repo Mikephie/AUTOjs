@@ -86,7 +86,7 @@ if (enabled) {
 
 // 主脚本函数...
 var huihui = {}, url = $request.url, headers = ObjectKeys2LowerCase($request.headers);
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1c2VyX2lkIjoiNWY1YmZjNTdkMmM2ODkwMDE0ZTI2YmI4Iiwic3ZpcF9leHBpcmVkX2F0IjoxNzA1MzMxMTY2LjQxNjc3MSwidmlwX2V4cGlyZWRfYXQiOjB9.h_Cem89QarTXxVX9Z_Wt-Mak6ZHAjAJqgv3hEY6wpps';
+const token = 'eyJhbGciOiJFUzI1NiIsImtpZCI6Ind0ZmI4NmQ5IiwidHlwIjoiSldUIn0.eyJhdWQiOlsid2VhdGhlciJdLCJleHAiOjE3NTcyNzkxODAsImlhdCI6MTc1NjY3NDM4MCwic2lkIjoiNjcwYjI4MzQ2M2QxM2VlM2ViOTVjYzkwIiwidXNlcl9pZCI6IjY1NDBkMWVjYTRmODE0MDAxODNlODU5NSIsImRldmljZV9pZCI6IkZENzVEREY3LThFMjEtNDRENS1BNTdCLTA1MjU3OTFGODBEOC0xNjk2ODM5MTg1IiwidXNlcl90eXBlIjoxLCJ2ZXJzaW9uIjozfQ.LeAaSB2_bp99FH-gs7zPqblb7fueoFAFmKwRpgs-7MDYlRhTh-3kWf0jGfUdFpe5Pq5iKJJlVIpXStSIxgCQdQ';
 if (url.includes("/v2/user")) {
     let obj = JSON.parse($response.body);
     Object.assign(obj.result, {is_vip: true, svip_expired_at: 3742732800, vip_type: "s"});
@@ -135,4 +135,4 @@ $done(huihui);
 function compareVersions(t,r){"string"!=typeof t&&(t="0"),"string"!=typeof r&&(r="0");const e=t.split(".").map(Number),n=r.split(".").map(Number);for(let t=0;t<Math.max(e.length,n.length);t++){const r=e[t]||0,i=n[t]||0;if(r>i)return 1;if(r<i)return-1}return 0}
 function ObjectKeys2LowerCase(obj){return Object.fromEntries(Object.entries(obj).map(([k,v])=>[k.toLowerCase(),v]))};
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1c2VyX2lkIjoiNWY1YmZjNTdkMmM2ODkwMDE0ZTI2YmI4Iiwic3ZpcF9leHBpcmVkX2F0IjoxNzA1MzMxMTY2LjQxNjc3MSwidmlwX2V4cGlyZWRfYXQiOjB9.h_Cem89QarTXxVX9Z_Wt-Mak6ZHAjAJqgv3hEY6wppslet //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1c2VyX2lkIjoiNWY1YmZjNTdkMmM2ODkwMDE0ZTI2YmI4Iiwic3ZpcF9leHBpcmVkX2F0IjoxNjc0MjI3MTY2LjQxNjc3MSwidmlwX2V4cGlyZWRfYXQiOjB9.wbgfCRp3W9zEvzEYsiWxerta4G-d-b0qlYCcilevOKY
+//eyJhbGciOiJFUzI1NiIsImtpZCI6Ind0ZmI4NmQ5IiwidHlwIjoiSldUIn0.eyJhdWQiOlsid2VhdGhlciJdLCJleHAiOjE3NTcyNzkxODAsImlhdCI6MTc1NjY3NDM4MCwic2lkIjoiNjcwYjI4MzQ2M2QxM2VlM2ViOTVjYzkwIiwidXNlcl9pZCI6IjY1NDBkMWVjYTRmODE0MDAxODNlODU5NSIsImRldmljZV9pZCI6IkZENzVEREY3LThFMjEtNDRENS1BNTdCLTA1MjU3OTFGODBEOC0xNjk2ODM5MTg1IiwidXNlcl90eXBlIjoxLCJ2ZXJzaW9uIjozfQ.LeAaSB2_bp99FH-gs7zPqblb7fueoFAFmKwRpgs-7MDYlRhTh-3kWf0jGfUdFpe5Pq5iKJJlVIpXStSIxgCQdQ
