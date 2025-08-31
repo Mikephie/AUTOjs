@@ -6,7 +6,7 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/filmix.png
 𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [rewrite_local]
-^https:\/\/appv3\.filmix\.com\.cn\/api\/v1\/user\/user url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/filmix.js
+^https:\/\/appv3\.filmix\.com\.cn\/api\/v2\/user\/user url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/filmix.js
 
 [MITM]
 hostname = appv3.filmix.com.cn
