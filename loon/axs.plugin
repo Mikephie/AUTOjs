@@ -1,11 +1,12 @@
-#!name=✨ AXS Payment ✨
-#!desc=缴费账单
+#!name=✨ AXS Payment (Auto-close) ✨
+#!desc=AXS 广告页自动关闭（无通知、无冷却）
 #!category=🚫广告
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/axs.png
 
 [Rewrite]
-^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.*\/whatsnew\.php.* closebutton:// 302
+# 命中 AXS 广告/公告页 → 直接跳转 closebutton:// 让 App 关闭 WebView
+^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
 
 [MITM]
 hostname = m-station2.axs.com.sg
