@@ -1,0 +1,43 @@
+#!name=Mikephie(Surge)自用合集🔐APP
+#!desc=由仓库 surge/*.sgmodule 自动合并生成
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!category=🔐APP
+
+[Rule]
+# ===== caiyun.sgmodule — [Rule] =====
+# 上传信息
+
+[Map Local]
+# ===== caiyun.sgmodule — [Map Local] =====
+# 普通版开屏广告(此广告不定时出现)
+
+# ===== migumusic.sgmodule — [Map Local] =====
+^https://app\.c\.nf\.migu\.cn/member/api/marketing/text data-type=text data="HTTP/1.1 200 OK" status-code=200
+
+[Script]
+# ===== adaptyhub.sgmodule — [Script] =====
+# Adapty解锁
+
+# ===== bizhi.sgmodule — [Script] =====
+bizhi = type=http-response, pattern=^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, timeout=60
+
+# ===== caiyun.sgmodule — [Script] =====
+# 赏叶赏花模块
+
+# ===== github.sgmodule — [Script] =====
+github = type=http-response, pattern=https://api.github.com/graphql, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, timeout=60
+
+# ===== ilovepdf.sgmodule — [Script] =====
+ilovepdf = type=http-response, pattern=^https:\/\/service\.ilovepdf\.com\/v1\/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, timeout=60
+
+# ===== migumusic.sgmodule — [Script] =====
+# > 咪咕音乐vip、音质
+
+# ===== myshiftplanner.sgmodule — [Script] =====
+myshiftplanner = type=http-response, pattern=^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, timeout=60
+
+# ===== owlfiles.sgmodule — [Script] =====
+owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, timeout=60
+
+[MITM]
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, api.adapty.io, api.github.com, leancloud.emotionwp.com, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, service.ilovepdf.com, skyjos.com:58080

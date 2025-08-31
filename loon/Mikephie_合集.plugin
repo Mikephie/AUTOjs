@@ -1,0 +1,36 @@
+#!name=Mikephie(Loon)自用合集🔐APP
+#!desc=由仓库 loon/*.plugin 自动合并生成
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!category=🔐APP
+
+[Rule]
+# ===== caiyun.plugin — [Rule] =====
+# 上传信息
+
+[Script]
+# ===== adaptyhub.plugin — [Script] =====
+# Adapty解锁
+
+# ===== bizhi.plugin — [Script] =====
+http-response ^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, requires-body=true, timeout=60, tag=bizhi
+
+# ===== caiyun.plugin — [Script] =====
+# 赏叶赏花模块
+
+# ===== github.plugin — [Script] =====
+http-response https://api.github.com/graphql script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, requires-body=true, timeout=60, tag=github
+
+# ===== ilovepdf.plugin — [Script] =====
+http-response ^https:\/\/service\.ilovepdf\.com\/v1\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, requires-body=true, timeout=60, tag=ilovepdf
+
+# ===== migumusic.plugin — [Script] =====
+# > 咪咕音乐vip、音质
+
+# ===== myshiftplanner.plugin — [Script] =====
+http-response ^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, requires-body=true, timeout=60, tag=myshiftplanner
+
+# ===== owlfiles.plugin — [Script] =====
+http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, requires-body=true, timeout=60, tag=owlfiles
+
+[MITM]
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, api.adapty.io, api.github.com, leancloud.emotionwp.com, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, service.ilovepdf.com, skyjos.com:58080
