@@ -1,13 +1,15 @@
 #!name=Mikephie(Loon)自用合集🔐APP
-#!desc=由仓库 loon/*.plugin 自动合并生成
+#!desc=由 loon/*.plugin 自动合并生成（保持原模块顺序与完整内容）
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!category=🔐APP
 
 [Rule]
+
 # ===== caiyun.plugin — [Rule] =====
 # 上传信息
 
 [Script]
+
 # ===== adaptyhub.plugin — [Script] =====
 # Adapty解锁
 
