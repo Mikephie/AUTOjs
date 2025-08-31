@@ -51,7 +51,9 @@ function collectHostFromLines(lines, hostSet){
 }
 
 function build(){
-  if(!fs.existsSync(SRC_DIR)){ console.error('[ERR] surge/ 不存在'); process.exit(1); }
+  if(!fs.existsSync(SRC_DIR)){
+  fs.mkdirSync(SRC_DIR, { recursive: true });
+}
 
   const files = fs.readdirSync(SRC_DIR)
     .filter(f => f.endsWith('.sgmodule') && !/mcollection/i.test(f))
