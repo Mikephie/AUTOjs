@@ -54,8 +54,32 @@ adaptyhub = type=http-response, pattern=^https?:\/\/.*\.apphud\.com\/v\d\/(subsc
 adaptyhub = type=http-response, pattern=^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
 
 #************************************#
+# adblockpro.sgmodule
+adblockpro = type=http-response, pattern=^https:\/\/api\.adblockpro\.app\/verify, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adblockpro.js, timeout=60
+
+#************************************#
+# aimirror.sgmodule
+aimirror = type=http-response, pattern=^https:\/\/be\.aimirror\.fun\/.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aimirror.js, timeout=60
+
+#************************************#
+# aloha.sgmodule
+aloha = type=http-response, pattern=^https:\/\/api\.alohaprofile\.com\/v1\/profile_info, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aloha.js, timeout=60
+
+#************************************#
+# appraven.sgmodule
+appraven = type=http-response, pattern=^https:\/\/appraven\.net\/appraven\/graphql, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/appraven.js, timeout=60
+
+#************************************#
 # bizhi.sgmodule
 bizhi = type=http-response, pattern=^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, timeout=60
+
+#************************************#
+# bksyds.sgmodule
+bksyds = type=http-response, pattern=^https:\/\/photoby\.hasmash\.com, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bksyds.js, timeout=60
+
+#************************************#
+# bzg.sgmodule
+bzg = type=http-response, pattern=^http:\/\/format-api\.netpock\.com\/api\/user_info, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bzg.js, timeout=60
 
 #************************************#
 # caiyun.sgmodule
@@ -79,12 +103,41 @@ caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/camp
 caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
 
 #************************************#
+# classdojo.sgmodule
+classdojo = type=http-response, pattern=^https:\/\/payments\.classdojo\.com\/v1\/subscribers\/5dc2e328587d3dcf1bee91e0, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/classdojo.js, timeout=60
+
+#************************************#
+# duetdisplaypro.sgmodule
+duetdisplaypro = type=http-response, pattern=^https:\/\/rdp\.duetdisplay\.com\/v1\/users\/validateReceipt, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/duetdisplaypro.js, timeout=60
+
+#************************************#
+# felo.sgmodule
+felo = type=http-response, pattern=^https?:\/\/(translator|accounts).felo.me, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, timeout=60
+felo = type=http-request, pattern=^https?:\/\/(translator|accounts).felo.me, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, timeout=60
+
+#************************************#
+# filmix.sgmodule
+filmix = type=http-response, pattern=^https:\/\/appv3\.filmix\.com\.cn\/api\/v1\/user\/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, timeout=60
+
+#************************************#
 # github.sgmodule
 github = type=http-response, pattern=https://api.github.com/graphql, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, timeout=60
 
 #************************************#
+# hbqj.sgmodule
+hbqj = type=http-response, pattern=^https:\/\/h5\.hunbei\.com\/m\/member\/getUserInfo\?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hbqj.js, timeout=60
+
+#************************************#
+# hljx.sgmodule
+hljx = type=http-response, pattern=^https:\/\/love\.leminet\.cn\/golove\/v05\/profile, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hljx.js, timeout=60
+
+#************************************#
 # ilovepdf.sgmodule
 ilovepdf = type=http-response, pattern=^https:\/\/service\.ilovepdf\.com\/v1\/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, timeout=60
+
+#************************************#
+# ime.sgmodule
+ime = type=http-response, pattern=https:\/\/api\.imem\.app\/api\/premium\/getOwnStatus, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ime.js, timeout=60
 
 #************************************#
 # migumusic.sgmodule
@@ -97,8 +150,13 @@ migumusic = type=http-request, pattern=^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(l
 myshiftplanner = type=http-response, pattern=^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, timeout=60
 
 #************************************#
+# notebook.sgmodule
+# VIP 订阅 & 多项权益
+notebook = type=http-response, pattern=^https:\/\/notebook\.zoho\.com\/api\/v1\/userprofile\/accounts\/payment\?action=(get_current_plan_detail|get_feature_template)(&include_expired_plans=true|&include_purchase_platform=false|&platform=ios)?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/notebook.js, timeout=60
+
+#************************************#
 # owlfiles.sgmodule
 owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, timeout=60
 
 [MITM]
-hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, api.adapty.io, api.github.com, leancloud.emotionwp.com, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, service.ilovepdf.com, skyjos.com:58080
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, appv3.filmix.com.cn, be.aimirror.fun, format-api.netpock.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, translator.felo.me
