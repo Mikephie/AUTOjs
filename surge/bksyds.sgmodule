@@ -1,0 +1,11 @@
+#!name=✨ 边框水印大师 ✨
+#!desc=图像编辑
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/bksyds.js
+
+[Script]
+bksyds = type=http-response, pattern=^https:\/\/photoby\.hasmash\.com, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bksyds.js, timeout=60
+
+[MITM]
+hostname = %APPEND% photoby.hasmash.com

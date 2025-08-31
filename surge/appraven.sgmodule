@@ -1,0 +1,11 @@
+#!name=✨ AppRaven ✨
+#!desc=应用排行榜
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/appraven.js
+
+[Script]
+appraven = type=http-response, pattern=^https:\/\/appraven\.net\/appraven\/graphql, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/appraven.js, timeout=60
+
+[MITM]
+hostname = %APPEND% appraven.net

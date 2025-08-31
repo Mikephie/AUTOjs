@@ -1,0 +1,11 @@
+#!name=✨ AIMirror ✨
+#!desc=图像编辑
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/Script/main/qx/aimirror.js
+
+[Script]
+aimirror = type=http-response, pattern=^https:\/\/be\.aimirror\.fun\/.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aimirror.js, timeout=60
+
+[MITM]
+hostname = %APPEND% be.aimirror.fun

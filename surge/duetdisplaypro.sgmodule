@@ -1,0 +1,11 @@
+#!name=✨ DuetDisplayPro ✨
+#!desc=效率
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/duetdisplaypro.js
+
+[Script]
+duetdisplaypro = type=http-response, pattern=^https:\/\/rdp\.duetdisplay\.com\/v1\/users\/validateReceipt, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/duetdisplaypro.js, timeout=60
+
+[MITM]
+hostname = %APPEND% rdp.duetdisplay.com

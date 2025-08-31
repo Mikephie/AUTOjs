@@ -1,0 +1,11 @@
+#!name=✨ 婚贝请柬 ✨
+#!desc=图像编辑
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/hbqj.png
+
+[Script]
+hbqj = type=http-response, pattern=^https:\/\/h5\.hunbei\.com\/m\/member\/getUserInfo\?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hbqj.js, timeout=60
+
+[MITM]
+hostname = %APPEND% h5.hunbei.com

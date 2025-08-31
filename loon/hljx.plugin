@@ -1,0 +1,11 @@
+#!name=✨ 婚礼精选 ✨
+#!desc=图像编辑
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/hljx.png
+
+[Script]
+http-response ^https:\/\/love\.leminet\.cn\/golove\/v05\/profile script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hljx.js, requires-body=true, timeout=60, tag=hljx
+
+[MITM]
+hostname = love.leminet.cn

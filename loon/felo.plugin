@@ -1,0 +1,12 @@
+#!name=✨ Felo ✨
+#!desc=效率
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/felo.png
+
+[Script]
+http-response ^https?:\/\/(translator|accounts).felo.me script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, requires-body=true, timeout=60, tag=felo
+http-request ^https?:\/\/(translator|accounts).felo.me script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, requires-body=true, timeout=60, tag=felo
+
+[MITM]
+hostname = accounts.felo.me,translator.felo.me

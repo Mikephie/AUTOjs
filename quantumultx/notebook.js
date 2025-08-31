@@ -1,0 +1,133 @@
+/*
+#!name= ✨ Notebook ✨
+#!desc=效率
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/notebook.png
+𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
+[rewrite_local] 
+# VIP 订阅 & 多项权益
+^https:\/\/notebook\.zoho\.com\/api\/v1\/userprofile\/accounts\/payment\?action=(get_current_plan_detail|get_feature_template)(&include_expired_plans=true|&include_purchase_platform=false|&platform=ios)? url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/notebook.js
+
+[MITM]
+hostname = notebook.zoho.com
+
+*/
+
+// ===== 轻量通知 + 冷却 =====
+const APP_NAME = "✨ Notebook ✨";   // ← 只改这个显示名
+const ID = "notebook";              // ← 对应键名，保持纯字母数字（无 emoji）
+
+const EN = "n:"+ID+":e";             // 开关
+const TS = "n:"+ID+":t";             // 时间戳
+const CD = 600000;                   // 冷却时长：10 分钟（毫秒）
+
+// ---- 通知函数（兼容 QX / Surge / Loon）----
+function notify(t,s,b){
+  if (typeof $notify==="function") $notify(t,s,b);
+  else if ($notification?.post) $notification.post(t,s,b);
+  else console.log("[Notify]", t, s, b);
+}
+
+// ---- 判定逻辑 ----
+let enabled = (($persistentStore.read(EN) || "1") === "1");
+if (enabled) {
+  let now  = Date.now();
+  let last = parseInt($persistentStore.read(TS) || "0",10) || 0;
+  if (last===0 || now-last>CD) {
+    notify(APP_NAME,"💖永久解锁 🆚 ⓿❽-⓿❽-❷⓿❽❽💗");
+    $persistentStore.write(String(now), TS);
+  }
+}
+
+// 主脚本函数...
+var url = $request.url;
+
+if (url.indexOf('get_current_plan_detail') !== -1) {
+    // VIP 订阅 (包括 notebook-subs 和 notebookMac1)
+    let response = JSON.parse($response.body);
+
+    if (!response.plan_details || response.plan_details.length === 0) {
+        response.plan_details = [{}];
+    }
+
+    let plan = response.plan_details[0];
+    plan.expiry_time = 3742762088000;
+    plan.purchase_source = "notebook";
+    plan.service_id = "107000";
+    plan.source = "PAID";
+    plan.plan_name = "Notebook Pro";
+    plan.payment_frequency = 12;
+    plan.grace_period = 999160000000;
+    plan.notebook_plan_id = "com.zoho.notebook.pro";
+    plan.plan_description = "Upgrade to Notebook Pro and stay more productive";
+    plan.zoho_store_plan_id = 107102;
+    plan.purchase_time = 1717644792301;
+
+    $done({ body: JSON.stringify(response) });
+
+} else if (url.indexOf('get_feature_template') !== -1) {
+    // VIP 多项权益 (包括 notebook-all 和 notebookMac2)
+    function createFeature(feature_name, feature_id, supported_platforms = ["android", "ios", "macos"], limits = null, source = "PAID") {
+        let feature = {
+            feature_name: feature_name,
+            feature_id: feature_id,
+            supported_platforms: supported_platforms,
+            feature_meta_data: [
+                {
+                    end_date: 3742762088000,
+                    grace_period: 999160000000,
+                    source: source,
+                    type: "PRIMARY",
+                    start_date: 1717644792301
+                }
+            ]
+        };
+        if (limits) {
+            feature.feature_meta_data[0].limits = limits;
+        }
+        return feature;
+    }
+
+    var mikephie = {
+        code: 200,
+        status: "Success",
+        message: "User profile fetched successfully",
+        feature_template: [
+            createFeature("AUDIO_CARD", "com.zoho.notebook.audiocard", ["android", "ios"], [
+                { value: "60", applied_for: "NOTE", name: "DURATION", unit: "MINUTES" }
+            ]),
+            createFeature("OCR", "com.zoho.notebook.ocr"),
+            createFeature("CHAT_WITH_US", "com.zoho.notebook.support.chat"),
+            createFeature("FLIGHT_CARD", "com.zoho.notebook.flight_card"),
+            createFeature("EMAIL_IN", "com.zoho.notebook.email_in"),
+            createFeature("CUSTOM_RECURRING_REMINDER", "com.zoho.notebook.reminder.custom"),
+            createFeature("PREMIUM_COVERS", "com.zoho.notebook.covers.premium"),
+            createFeature("NOTECARD", "com.zoho.notebook.notecard", ["android", "ios", "macos"], [
+                { value: "100", applied_for: "NOTE", name: "VERSIONS", unit: "RESOURCES" },
+                { value: "209715200", applied_for: "NOTE", name: "MAX_SIZE", unit: "BYTES" },
+                { value: "1073741824", applied_for: "NOTE", name: "MAX_FILE_SIZE", unit: "BYTES" }
+            ]),
+            createFeature("STORAGE", "com.zoho.notebook.storage", ["android", "ios"], [
+                { value: "107374182400", name: "MAX_SIZE", unit: "BYTES", user_type: "INDIVIDUAL_USER" }
+            ]),
+            createFeature("PHONE_SUPPORT", "com.zoho.notebook.support.phone_call"),
+            createFeature("NOTEBOOK_SHARING", "com.zoho.notebook.sharing", ["android", "ios"], [
+                { value: "CO_OWNER", applied_for: "NOTEBOOK", name: "PERMISSION", unit: "STRING" },
+                { value: "WRITE_DELETE", applied_for: "NOTEBOARD", name: "PERMISSION", unit: "STRING" }
+            ]),
+            createFeature("SCAN_TABLE", "com.zoho.notebook.table.scan"),
+            createFeature("TAG_SUGGESTIONS", "com.zoho.notebook.tags.suggestions"),
+            createFeature("EXPORT_AS_PDF", "com.zoho.notebook.notecard.export_as_pdf", ["android", "ios", "macos", "windows"], null, "FREE"),
+            createFeature("BCR", "com.zoho.notebook.bcr", ["android", "ios"]),
+            createFeature("SMART_SEARCH", "com.zoho.notebook.search.smart_search"),
+            createFeature("FEATURE_X", "com.zoho.notebook.feature_x", ["ios", "macos", "windows"], null, "FREE")
+        ]
+    };
+
+    $done({ body: JSON.stringify(mikephie) });
+
+} else {
+    $done({});
+}
+// 主脚本函数...

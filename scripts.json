@@ -1,10 +1,10 @@
 {
-  "generatedTime": "2025-08-31T07:26:50.822Z",
+  "generatedTime": "2025-08-31T07:53:15.234Z",
   "scripts": [
     {
       "name": "adaptyhub",
       "filename": "adaptyhub.js",
-      "updateTime": "2025-08-31T07:26:46.289Z",
+      "updateTime": "2025-08-31T07:53:11.594Z",
       "formats": {
         "original": "input/adaptyhub.js",
         "quantumultx": "quantumultx/adaptyhub.js",
@@ -13,9 +13,53 @@
       }
     },
     {
+      "name": "adblockpro",
+      "filename": "adblockpro.js",
+      "updateTime": "2025-08-31T07:53:11.594Z",
+      "formats": {
+        "original": "input/adblockpro.js",
+        "quantumultx": "quantumultx/adblockpro.js",
+        "loon": "loon/adblockpro.plugin",
+        "surge": "surge/adblockpro.sgmodule"
+      }
+    },
+    {
+      "name": "aimirror",
+      "filename": "aimirror.js",
+      "updateTime": "2025-08-31T07:53:11.594Z",
+      "formats": {
+        "original": "input/aimirror.js",
+        "quantumultx": "quantumultx/aimirror.js",
+        "loon": "loon/aimirror.plugin",
+        "surge": "surge/aimirror.sgmodule"
+      }
+    },
+    {
+      "name": "aloha",
+      "filename": "aloha.js",
+      "updateTime": "2025-08-31T07:53:11.594Z",
+      "formats": {
+        "original": "input/aloha.js",
+        "quantumultx": "quantumultx/aloha.js",
+        "loon": "loon/aloha.plugin",
+        "surge": "surge/aloha.sgmodule"
+      }
+    },
+    {
+      "name": "appraven",
+      "filename": "appraven.js",
+      "updateTime": "2025-08-31T07:53:11.594Z",
+      "formats": {
+        "original": "input/appraven.js",
+        "quantumultx": "quantumultx/appraven.js",
+        "loon": "loon/appraven.plugin",
+        "surge": "surge/appraven.sgmodule"
+      }
+    },
+    {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-08-31T07:26:46.290Z",
+      "updateTime": "2025-08-31T07:53:11.594Z",
       "formats": {
         "original": "input/axs.js",
         "quantumultx": "quantumultx/axs.js",
@@ -26,7 +70,7 @@
     {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-08-31T07:26:46.290Z",
+      "updateTime": "2025-08-31T07:53:11.594Z",
       "formats": {
         "original": "input/bizhi.js",
         "quantumultx": "quantumultx/bizhi.js",
@@ -35,9 +79,31 @@
       }
     },
     {
+      "name": "bksyds",
+      "filename": "bksyds.js",
+      "updateTime": "2025-08-31T07:53:11.594Z",
+      "formats": {
+        "original": "input/bksyds.js",
+        "quantumultx": "quantumultx/bksyds.js",
+        "loon": "loon/bksyds.plugin",
+        "surge": "surge/bksyds.sgmodule"
+      }
+    },
+    {
+      "name": "bzg",
+      "filename": "bzg.js",
+      "updateTime": "2025-08-31T07:53:11.594Z",
+      "formats": {
+        "original": "input/bzg.js",
+        "quantumultx": "quantumultx/bzg.js",
+        "loon": "loon/bzg.plugin",
+        "surge": "surge/bzg.sgmodule"
+      }
+    },
+    {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-08-31T07:26:46.290Z",
+      "updateTime": "2025-08-31T07:53:11.595Z",
       "formats": {
         "original": "input/caiyun.js",
         "quantumultx": "quantumultx/caiyun.js",
@@ -46,9 +112,53 @@
       }
     },
     {
+      "name": "classdojo",
+      "filename": "classdojo.js",
+      "updateTime": "2025-08-31T07:53:11.595Z",
+      "formats": {
+        "original": "input/classdojo.js",
+        "quantumultx": "quantumultx/classdojo.js",
+        "loon": "loon/classdojo.plugin",
+        "surge": "surge/classdojo.sgmodule"
+      }
+    },
+    {
+      "name": "duetdisplaypro",
+      "filename": "duetdisplaypro.js",
+      "updateTime": "2025-08-31T07:53:11.595Z",
+      "formats": {
+        "original": "input/duetdisplaypro.js",
+        "quantumultx": "quantumultx/duetdisplaypro.js",
+        "loon": "loon/duetdisplaypro.plugin",
+        "surge": "surge/duetdisplaypro.sgmodule"
+      }
+    },
+    {
+      "name": "felo",
+      "filename": "felo.js",
+      "updateTime": "2025-08-31T07:53:11.595Z",
+      "formats": {
+        "original": "input/felo.js",
+        "quantumultx": "quantumultx/felo.js",
+        "loon": "loon/felo.plugin",
+        "surge": "surge/felo.sgmodule"
+      }
+    },
+    {
+      "name": "filmix",
+      "filename": "filmix.js",
+      "updateTime": "2025-08-31T07:53:11.595Z",
+      "formats": {
+        "original": "input/filmix.js",
+        "quantumultx": "quantumultx/filmix.js",
+        "loon": "loon/filmix.plugin",
+        "surge": "surge/filmix.sgmodule"
+      }
+    },
+    {
       "name": "github",
       "filename": "github.js",
-      "updateTime": "2025-08-31T07:26:46.290Z",
+      "updateTime": "2025-08-31T07:53:11.595Z",
       "formats": {
         "original": "input/github.js",
         "quantumultx": "quantumultx/github.js",
@@ -57,9 +167,31 @@
       }
     },
     {
+      "name": "hbqj",
+      "filename": "hbqj.js",
+      "updateTime": "2025-08-31T07:53:11.595Z",
+      "formats": {
+        "original": "input/hbqj.js",
+        "quantumultx": "quantumultx/hbqj.js",
+        "loon": "loon/hbqj.plugin",
+        "surge": "surge/hbqj.sgmodule"
+      }
+    },
+    {
+      "name": "hljx",
+      "filename": "hljx.js",
+      "updateTime": "2025-08-31T07:53:11.595Z",
+      "formats": {
+        "original": "input/hljx.js",
+        "quantumultx": "quantumultx/hljx.js",
+        "loon": "loon/hljx.plugin",
+        "surge": "surge/hljx.sgmodule"
+      }
+    },
+    {
       "name": "ilovepdf",
       "filename": "ilovepdf.js",
-      "updateTime": "2025-08-31T07:26:46.290Z",
+      "updateTime": "2025-08-31T07:53:11.595Z",
       "formats": {
         "original": "input/ilovepdf.js",
         "quantumultx": "quantumultx/ilovepdf.js",
@@ -68,9 +200,20 @@
       }
     },
     {
+      "name": "ime",
+      "filename": "ime.js",
+      "updateTime": "2025-08-31T07:53:11.595Z",
+      "formats": {
+        "original": "input/ime.js",
+        "quantumultx": "quantumultx/ime.js",
+        "loon": "loon/ime.plugin",
+        "surge": "surge/ime.sgmodule"
+      }
+    },
+    {
       "name": "migumusic",
       "filename": "migumusic.js",
-      "updateTime": "2025-08-31T07:26:46.290Z",
+      "updateTime": "2025-08-31T07:53:11.595Z",
       "formats": {
         "original": "input/migumusic.js",
         "quantumultx": "quantumultx/migumusic.js",
@@ -81,7 +224,7 @@
     {
       "name": "myshiftplanner",
       "filename": "myshiftplanner.js",
-      "updateTime": "2025-08-31T07:26:46.290Z",
+      "updateTime": "2025-08-31T07:53:11.595Z",
       "formats": {
         "original": "input/myshiftplanner.js",
         "quantumultx": "quantumultx/myshiftplanner.js",
@@ -90,9 +233,20 @@
       }
     },
     {
+      "name": "notebook",
+      "filename": "notebook.js",
+      "updateTime": "2025-08-31T07:53:11.595Z",
+      "formats": {
+        "original": "input/notebook.js",
+        "quantumultx": "quantumultx/notebook.js",
+        "loon": "loon/notebook.plugin",
+        "surge": "surge/notebook.sgmodule"
+      }
+    },
+    {
       "name": "owlfiles",
       "filename": "owlfiles.js",
-      "updateTime": "2025-08-31T07:26:46.290Z",
+      "updateTime": "2025-08-31T07:53:11.595Z",
       "formats": {
         "original": "input/owlfiles.js",
         "quantumultx": "quantumultx/owlfiles.js",
