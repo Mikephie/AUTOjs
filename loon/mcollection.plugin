@@ -40,8 +40,32 @@ http-response ^https?:\/\/.*\.apphud\.com\/v\d\/(subscriptions|customers)$ scrip
 http-response ^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
 
 #************************************#
+# adblockpro.plugin
+http-response ^https:\/\/api\.adblockpro\.app\/verify script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adblockpro.js, requires-body=true, timeout=60, tag=adblockpro
+
+#************************************#
+# aimirror.plugin
+http-response ^https:\/\/be\.aimirror\.fun\/.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aimirror.js, requires-body=true, timeout=60, tag=aimirror
+
+#************************************#
+# aloha.plugin
+http-response ^https:\/\/api\.alohaprofile\.com\/v1\/profile_info script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aloha.js, requires-body=true, timeout=60, tag=aloha
+
+#************************************#
+# appraven.plugin
+http-response ^https:\/\/appraven\.net\/appraven\/graphql script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/appraven.js, requires-body=true, timeout=60, tag=appraven
+
+#************************************#
 # bizhi.plugin
 http-response ^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, requires-body=true, timeout=60, tag=bizhi
+
+#************************************#
+# bksyds.plugin
+http-response ^https:\/\/photoby\.hasmash\.com script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bksyds.js, requires-body=true, timeout=60, tag=bksyds
+
+#************************************#
+# bzg.plugin
+http-response ^http:\/\/format-api\.netpock\.com\/api\/user_info script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bzg.js, requires-body=true, timeout=60, tag=bzg
 
 #************************************#
 # caiyun.plugin
@@ -65,12 +89,41 @@ http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$ script-path=http
 http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 
 #************************************#
+# classdojo.plugin
+http-response ^https:\/\/payments\.classdojo\.com\/v1\/subscribers\/5dc2e328587d3dcf1bee91e0 script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/classdojo.js, requires-body=true, timeout=60, tag=classdojo
+
+#************************************#
+# duetdisplaypro.plugin
+http-response ^https:\/\/rdp\.duetdisplay\.com\/v1\/users\/validateReceipt script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/duetdisplaypro.js, requires-body=true, timeout=60, tag=duetdisplaypro
+
+#************************************#
+# felo.plugin
+http-response ^https?:\/\/(translator|accounts).felo.me script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, requires-body=true, timeout=60, tag=felo
+http-request ^https?:\/\/(translator|accounts).felo.me script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, requires-body=true, timeout=60, tag=felo
+
+#************************************#
+# filmix.plugin
+http-response ^https:\/\/appv3\.filmix\.com\.cn\/api\/v1\/user\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, requires-body=true, timeout=60, tag=filmix
+
+#************************************#
 # github.plugin
 http-response https://api.github.com/graphql script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, requires-body=true, timeout=60, tag=github
 
 #************************************#
+# hbqj.plugin
+http-response ^https:\/\/h5\.hunbei\.com\/m\/member\/getUserInfo\? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hbqj.js, requires-body=true, timeout=60, tag=hbqj
+
+#************************************#
+# hljx.plugin
+http-response ^https:\/\/love\.leminet\.cn\/golove\/v05\/profile script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hljx.js, requires-body=true, timeout=60, tag=hljx
+
+#************************************#
 # ilovepdf.plugin
 http-response ^https:\/\/service\.ilovepdf\.com\/v1\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, requires-body=true, timeout=60, tag=ilovepdf
+
+#************************************#
+# ime.plugin
+http-response https:\/\/api\.imem\.app\/api\/premium\/getOwnStatus script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ime.js, requires-body=true, timeout=60, tag=ime
 
 #************************************#
 # migumusic.plugin
@@ -83,8 +136,13 @@ http-request ^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQuer
 http-response ^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, requires-body=true, timeout=60, tag=myshiftplanner
 
 #************************************#
+# notebook.plugin
+# VIP 订阅 & 多项权益
+http-response ^https:\/\/notebook\.zoho\.com\/api\/v1\/userprofile\/accounts\/payment\?action=(get_current_plan_detail|get_feature_template)(&include_expired_plans=true|&include_purchase_platform=false|&platform=ios)? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/notebook.js, requires-body=true, timeout=60, tag=notebook
+
+#************************************#
 # owlfiles.plugin
 http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, requires-body=true, timeout=60, tag=owlfiles
 
 [MITM]
-hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, api.adapty.io, api.github.com, leancloud.emotionwp.com, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, service.ilovepdf.com, skyjos.com:58080
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, appv3.filmix.com.cn, be.aimirror.fun, format-api.netpock.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, translator.felo.me
