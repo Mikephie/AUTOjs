@@ -118,8 +118,7 @@ felo = type=http-request, pattern=^https?:\/\/(translator|accounts).felo.me, req
 
 #************************************#
 # filmix.sgmodule
-filmix = type=http-response, pattern=^https:\/\/appv3\.filmix\.com\.cn\/api\/v1\/user\/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, timeout=60
-filmix = type=http-response, pattern=^https:\/\/appv3\.filmix\.com\.cn\/api\/v2\/user\/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, timeout=60
+filmix = type=http-response, pattern=^https://appv3\.filmix\.com\.cn/api/v\d+/user/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, timeout=60
 
 #************************************#
 # github.sgmodule
