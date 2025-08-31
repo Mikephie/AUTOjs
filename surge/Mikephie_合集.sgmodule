@@ -1,13 +1,15 @@
 #!name=Mikephie(Surge)自用合集🔐APP
-#!desc=由仓库 surge/*.sgmodule 自动合并生成
+#!desc=由 surge/*.sgmodule 自动合并生成（保持原模块顺序与完整内容）
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!category=🔐APP
 
 [Rule]
+
 # ===== caiyun.sgmodule — [Rule] =====
 # 上传信息
 
 [Map Local]
+
 # ===== caiyun.sgmodule — [Map Local] =====
 # 普通版开屏广告(此广告不定时出现)
 
@@ -15,6 +17,7 @@
 ^https://app\.c\.nf\.migu\.cn/member/api/marketing/text data-type=text data="HTTP/1.1 200 OK" status-code=200
 
 [Script]
+
 # ===== adaptyhub.sgmodule — [Script] =====
 # Adapty解锁
 
