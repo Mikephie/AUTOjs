@@ -6,49 +6,11 @@
 [Rule]
 
 #************************************#
-# Mikephie_合集.sgmodule
-
-# ===== caiyun.sgmodule — [Rule] =====
-# 上传信息-02
-DOMAIN,gather.colorfulclouds.net,REJECT
-
-#************************************#
 # caiyun.sgmodule
 # 上传信息
 DOMAIN,gather.colorfulclouds.net,REJECT
 
 [Map Local]
-
-#************************************#
-# Mikephie_合集.sgmodule
-
-# ===== caiyun.sgmodule — [Map Local] =====
-# 普通版开屏广告(此广告不定时出现)
-^https:\/\/ad\.cyapi\.cn\/v2\/req\?app_name=weather data-type=text data="{}" status-code=200
-# 7.1.9 限时福利Svip
-^https:\/\/biz\.cyapi\.cn\/p\/v1\/trial_card\/info data-type=text data="{}" status-code=200
-# 7.2.0普通版修改VIP后提示账号迁移
-^https:\/\/biz\.cyapi\.cn\/api\/v1\/token\/device$ data-type=text data="{}" status-code=200
-# 亲友卡
-^https:\/\/biz\.cyapi\.cn\/p\/v1\/entries data-type=text data="{}" status-code=200
-# 左上角+进去推荐
-^https:\/\/starplucker\.cyapi\.cn\/v3\/config$ data-type=text data="{}" status-code=200
-# 通知
-^https:\/\/starplucker\.cyapi\.cn\/v3\/notification\/message_center data-type=text data="{}" status-code=200
-# 会员限时弹窗
-^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ data-type=text data="{}" status-code=200
-^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ data-type=text data="{}" status-code=200
-^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ data-type=text data="{}" status-code=200
-
-# ===== migumusic.sgmodule — [Map Local] =====
-^https://app\.c\.nf\.migu\.cn/member/api/marketing/text data-type=text data="HTTP/1.1 200 OK" status-code=200
-^https://app\.c.nf\.migu\.cn/payment/watch-ad data-type=text data="HTTP/1.1 200 OK
-Content-Type: image/png
-Content-Length: 0" status-code=200
-
-[URL Rewrite]
-# > 去广告
-^https://app\.c\.nf.migu\.cn/strategy/listen-url/v2.5 https://app.c.nf.migu.cn/strategy/listen-url/v2.4 302
 
 #************************************#
 # caiyun.sgmodule
@@ -81,57 +43,6 @@ Content-Length: 0" status-code=200
 ^https://app\.c\.nf.migu\.cn/strategy/listen-url/v2.5 https://app.c.nf.migu.cn/strategy/listen-url/v2.4 302
 
 [Script]
-
-#************************************#
-# Mikephie_合集.sgmodule
-
-# ===== adaptyhub.sgmodule — [Script] =====
-# Adapty解锁
-adaptyhub = type=http-response, pattern=^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
-# Apphud解锁
-adaptyhub = type=http-response, pattern=^https?:\/\/.*\.apphud\.com\/v\d\/(subscriptions|customers)$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
-# SNOW系列解锁
-adaptyhub = type=http-response, pattern=^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
-
-# ===== bizhi.sgmodule — [Script] =====
-bizhi = type=http-response, pattern=^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, timeout=60
-
-# ===== caiyun.sgmodule — [Script] =====
-# 赏叶赏花模块
-caiyun = type=http-response, pattern=^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\?app_name=weather, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
-# 解锁旧版vip(7.20.0之前)
-caiyun = type=http-response, pattern=^https:\/\/biz\.cyapi\.cn\/v2\/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
-# 卫星云图 48小时预报
-caiyun = type=http-request, pattern=^https:\/\/wrapper\.cyapi\.cn\/v1\/(satellite|nafp\/origin_images), requires-body=0, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, timeout=60
-# 7.20.0版本显示VIP
-caiyun = type=http-response, pattern=^https?:\/\/biz\.cyapi\.cn\/api\/v1\/user_detail$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
-# 7.22.0版本 40天趋势/60天潮汐/风 等等有时候无法加载
-caiyun = type=http-request, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/, requires-body=0, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js, timeout=60
-# 发现-轮播
-caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/banners\?user_type=paid$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
-# 发现-宫格
-caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/features\?user_type=paid$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
-# 发现-官方活动
-caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
-# 发现-瀑布流
-caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
-
-# ===== github.sgmodule — [Script] =====
-github = type=http-response, pattern=https://api.github.com/graphql, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, timeout=60
-
-# ===== ilovepdf.sgmodule — [Script] =====
-ilovepdf = type=http-response, pattern=^https:\/\/service\.ilovepdf\.com\/v1\/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, timeout=60
-
-# ===== migumusic.sgmodule — [Script] =====
-# > 咪咕音乐vip、音质
-migumusic = type=http-response, pattern=^https?:\/\/(u|c|app).(musicapp|(c|u).nf).migu.cn.+(user\/api|column\/startup|resource\/skin), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, timeout=60
-migumusic = type=http-request, pattern=^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$, requires-body=0, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/migumusic.js, timeout=60
-
-# ===== myshiftplanner.sgmodule — [Script] =====
-myshiftplanner = type=http-response, pattern=^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, timeout=60
-
-# ===== owlfiles.sgmodule — [Script] =====
-owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, timeout=60
 
 #************************************#
 # adaptyhub.sgmodule
