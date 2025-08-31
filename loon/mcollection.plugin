@@ -105,10 +105,15 @@ http-request ^https?:\/\/(translator|accounts).felo.me script-path=https://raw.g
 #************************************#
 # filmix.plugin
 http-response ^https:\/\/appv3\.filmix\.com\.cn\/api\/v1\/user\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, requires-body=true, timeout=60, tag=filmix
+http-response ^https:\/\/appv3\.filmix\.com\.cn\/api\/v2\/user\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, requires-body=true, timeout=60, tag=filmix
 
 #************************************#
 # github.plugin
 http-response https://api.github.com/graphql script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, requires-body=true, timeout=60, tag=github
+
+#************************************#
+# grammarly.plugin
+http-response ^https?:\/\/subscription\.grammarly\.com\/api\/v1\/subscription$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/grammarly.js, requires-body=true, timeout=60, tag=grammarly
 
 #************************************#
 # hbqj.plugin
@@ -146,4 +151,4 @@ http-response ^https:\/\/notebook\.zoho\.com\/api\/v1\/userprofile\/accounts\/pa
 http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, requires-body=true, timeout=60, tag=owlfiles
 
 [MITM]
-hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, appv3.filmix.com.cn, be.aimirror.fun, format-api.netpock.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, translator.felo.me
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, appv3.filmix.com.cn, be.aimirror.fun, format-api.netpock.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
