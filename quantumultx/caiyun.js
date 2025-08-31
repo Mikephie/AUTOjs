@@ -38,16 +38,16 @@ host, gather.colorfulclouds.net ,reject
 # 解锁旧版vip(7.20.0之前)
 ^https:\/\/biz\.cyapi\.cn\/v2\/user url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
 # 卫星云图 48小时预报
-^https:\/\/wrapper\.cyapi\.cn\/v1\/(satellite|nafp\/origin_images) url script-request-header https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js
+^https:\/\/wrapper\.cyapi\.cn\/v1\/(satellite|nafp\/origin_images) url script-request-header https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
 # 7.20.0版本显示VIP
 ^https?:\/\/biz\.cyapi\.cn\/api\/v1\/user_detail$ url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
 # 7.22.0版本 40天趋势/60天潮汐/风 等等有时候无法加载
-^https:\/\/starplucker\.cyapi\.cn\/v3\/ url script-request-header https://raw.githubusercontent.com/Mikephie/Script/main/qx/caiyun.js
+^https:\/\/starplucker\.cyapi\.cn\/v3\/ url script-request-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
 
 # 发现-轮播
-^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/banners\?user_type=paid$ url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
+^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/banners\?user_type= url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
 # 发现-宫格
-^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/features\?user_type=paid$ url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
+^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/features\?user_type= url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
 # 发现-官方活动
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$ url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js
 # 发现-瀑布流
@@ -104,12 +104,15 @@ if (url.includes("/v2/user")) {
     Object.assign(obj.vip_info.svip, {is_auto_renewal: true, expires_time: '3742732800'});
     huihui.body = JSON.stringify(obj)
 } else if (url.includes('starplucker.cyapi.cn/v3/')) {
-    huihui.headers = headers;
-    huihui.headers['authorization'] = `Bearer ${token}`;
+    if (!url.includes('starplucker.cyapi.cn/v3/favorite_places')) {
+        headers['authorization'] = `Bearer ${token}`;
+        huihui.headers = headers;
+    }
 }
+
 // 轮播
 if (url.includes('/operation/banners')) {
-    huihui.body = `{"data": [{"avatar": "","url": "","title": "","banner_type": ""}],"interval": 5000}`
+    huihui.body = `{"data": [{"avatar": "https://cdn-w.caiyunapp.com/p/app/operation/prod/banner/668502d5c3a2362582a2a5da/d9f198473e7f387d13ea892719959ddb.jpg","url": "https://cdn-w.caiyunapp.com/p/app/operation/prod/article/66850143c3a2362582a2a5d9/index.html","title": "暴雨来袭，这些避险"秘籍"你学会了吗？","banner_type": "article"}],"interval": 5000}`
 }
 // 宫格
 if (url.includes('/operation/features')) {
@@ -131,6 +134,5 @@ $done(huihui);
 
 function compareVersions(t,r){"string"!=typeof t&&(t="0"),"string"!=typeof r&&(r="0");const e=t.split(".").map(Number),n=r.split(".").map(Number);for(let t=0;t<Math.max(e.length,n.length);t++){const r=e[t]||0,i=n[t]||0;if(r>i)return 1;if(r<i)return-1}return 0}
 function ObjectKeys2LowerCase(obj){return Object.fromEntries(Object.entries(obj).map(([k,v])=>[k.toLowerCase(),v]))};
-// 主脚本函数...
 
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1c2VyX2lkIjoiNWY1YmZjNTdkMmM2ODkwMDE0ZTI2YmI4Iiwic3ZpcF9leHBpcmVkX2F0IjoxNzA1MzMxMTY2LjQxNjc3MSwidmlwX2V4cGlyZWRfYXQiOjB9.h_Cem89QarTXxVX9Z_Wt-Mak6ZHAjAJqgv3hEY6wppslet //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2ZXJzaW9uIjoxLCJ1c2VyX2lkIjoiNWY1YmZjNTdkMmM2ODkwMDE0ZTI2YmI4Iiwic3ZpcF9leHBpcmVkX2F0IjoxNjc0MjI3MTY2LjQxNjc3MSwidmlwX2V4cGlyZWRfYXQiOjB9.wbgfCRp3W9zEvzEYsiWxerta4G-d-b0qlYCcilevOKY
