@@ -14,10 +14,6 @@ DOMAIN,gather.colorfulclouds.net,REJECT
 [Rewrite]
 
 #************************************#
-# axs-2.plugin
-^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
-
-#************************************#
 # axs.plugin
 # 命中 AXS 广告/公告页 → 直接跳转 closebutton:// 让 App 关闭 WebView
 ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
