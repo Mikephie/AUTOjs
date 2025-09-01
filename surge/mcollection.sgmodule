@@ -33,6 +33,13 @@ DOMAIN,gather.colorfulclouds.net,REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ data-type=text data="{}" status-code=200
 
 #************************************#
+# igv.sgmodule
+# 拦截广告图片
+^https:\/\/media\.gv\.com\.sg\/cms\/images\/ads\/.*\.(?:jpg|png|gif)$ data-type=text data="HTTP/1.1 200 OK
+Content-Type: image/png
+Content-Length: 0" status-code=200
+
+#************************************#
 # migumusic.sgmodule
 ^https://app\.c\.nf\.migu\.cn/member/api/marketing/text data-type=text data="HTTP/1.1 200 OK" status-code=200
 ^https://app\.c.nf\.migu\.cn/payment/watch-ad data-type=text data="HTTP/1.1 200 OK
@@ -45,6 +52,11 @@ Content-Length: 0" status-code=200
 # axs.sgmodule
 # 命中 AXS 广告/公告页 → 直接跳转 closebutton:// 让 App 关闭 WebView
 ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
+
+#************************************#
+# igv.sgmodule
+# 命中 iGV 广告页 → 直接关闭 WebView
+^https?:\/\/m\.gv\.com\.sg\/iGV2\/general\/advpage\.html(?:\?.*)?$ closebutton:// 302
 
 #************************************#
 # migumusic.sgmodule
@@ -217,4 +229,4 @@ yygdsc = type=http-response, pattern=^https?:\/\/apps-api\.(lianaishouce|lingege
 zypg = type=http-response, pattern=^https?:\/\/appss\.(rhinoxky|baomingding|rhinoxlab)\.com\/app\/account\/getAccountInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/zypg.js, timeout=60
 
 [MITM]
-hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, gql-fed.reddit.com, gql.reddit.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, paperwork.szshht.cn, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, gql-fed.reddit.com, gql.reddit.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, paperwork.szshht.cn, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
