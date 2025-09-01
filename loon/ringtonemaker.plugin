@@ -1,0 +1,11 @@
+#!name=✨ Ringtonemaker ✨
+#!desc=娱乐
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/ringtonemaker.png
+
+[Script]
+http-response ^http:\/\/clip\.tto321\.cn\/v1\/api\/query\/userInfo script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ringtonemaker.js, requires-body=true, timeout=60, tag=ringtonemaker
+
+[MITM]
+hostname = clip.tto321.cn

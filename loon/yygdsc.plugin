@@ -1,0 +1,12 @@
+#!name=✨ 雅俗共赏/高定素材大师 ✨
+#!desc=影像编辑
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/scds.png
+
+[Script]
+# >雅俗共赏/高定素材大师（永久会员）需要登录！
+http-response ^https?:\/\/apps-api\.(lianaishouce|lingege)\.cn\/user\/getUserInfo script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/yygdsc.js, requires-body=true, timeout=60, tag=yygdsc
+
+[MITM]
+hostname = apps-api.lianaishouce.cn, apps-api.lingege.cn

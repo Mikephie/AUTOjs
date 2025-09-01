@@ -1,0 +1,11 @@
+#!name=✨ 亲戚计算器 ✨
+#!desc=效率
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/qqjxq.png
+
+[Script]
+http-response ^http:\/\/chenghu\.kuaixuanwo\.com\/user\/info script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqjsq.js, requires-body=true, timeout=60, tag=qqjsq
+
+[MITM]
+hostname = chenghu.kuaixuanwo.com

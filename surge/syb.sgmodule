@@ -1,0 +1,11 @@
+#!name=✨ 水印宝 ✨
+#!desc=影视编辑
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/syb.png
+
+[Script]
+syb = type=http-response, pattern=^https:\/\/newappapi\.fntmob\.com\/api\/v1\/qsy\/user-info(.?)+, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/syb.js, timeout=60
+
+[MITM]
+hostname = %APPEND% newappapi.fntmob.com

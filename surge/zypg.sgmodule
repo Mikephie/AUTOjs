@@ -1,0 +1,11 @@
+#!name=✨ 作业批改|试卷扫描|错题打印机 ✨
+#!desc=效率
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/zypg.png
+
+[Script]
+zypg = type=http-response, pattern=^https?:\/\/appss\.(rhinoxky|baomingding|rhinoxlab)\.com\/app\/account\/getAccountInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/zypg.js, timeout=60
+
+[MITM]
+hostname = %APPEND% appss.rhinoxlab.com, appss.baomingding.com

@@ -1,0 +1,11 @@
+#!name=✨ 英语音标 ✨
+#!desc=图像壁纸
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/yinbiao.png
+
+[Script]
+http-response ^https:\/\/flipped\.binfenyingyu\.com script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/yinbiao.js, requires-body=true, timeout=60, tag=yinbiao
+
+[MITM]
+hostname = flipped.binfenyingyu.com

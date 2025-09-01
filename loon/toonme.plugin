@@ -1,0 +1,11 @@
+#!name=✨ ToonMe ✨
+#!desc=图像编辑
+#!category=🔐APP
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/toonme.png
+
+[Script]
+http-response ^https?:\/\/purchases\.ws\.pho\.to\/api\/v2\/apple\/verifyReceipt script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/toonme.js, requires-body=true, timeout=60, tag=toonme
+
+[MITM]
+hostname = purchases.ws.pho.to
