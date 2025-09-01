@@ -1,16 +1,25 @@
 name: Build mcollection (Surge & Loon)
 
 on:
+  # A 工作流完成后自动触发
+  workflow_run:
+    workflows: ["自动脚本转换与更新列表"]
+    types: [completed]
+
+  # 目录级 push 触发（新增/修改/删除 surge/ 与 loon/ 都会触发）
   push:
-    # 目录级匹配，任何新增/修改/删除都触发
     paths:
       - 'surge/**'
       - 'loon/**'
       - 'scripts/**'
       - '.github/workflows/build-mcollection.yml'
+
+  # 手动触发兜底
   workflow_dispatch: {}
+
+  # 可选：每天跑一次兜底
   schedule:
-    - cron: '18 * * * *'   # 可选：每天 00:00 UTC 再跑一次，兜底
+    - cron: '18 * * * *'   # 00:00 UTC
 
 permissions:
   contents: write
