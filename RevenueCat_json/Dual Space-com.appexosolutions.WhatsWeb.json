@@ -1,0 +1,46 @@
+{
+  "user_agent": "Dual%20Space",
+  "bundle_id": "com.appexosolutions.WhatsWeb",
+  "data": {
+    "dualspace.lifetime": {
+      "entitlements": [
+        "lifetime"
+      ],
+      "product_identifier": "dualspace.lifetime"
+    },
+    "whatsweb.annual": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "whatsweb.annual"
+    },
+    "whatsweb.annual_with_lifetime_offer": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "whatsweb.annual_with_lifetime_offer"
+    },
+    "whatsweb.annual_with_month_offer": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "whatsweb.annual_with_month_offer"
+    },
+    "whatsweb.monthly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "whatsweb.monthly"
+    },
+    "whatsweb.password": {
+      "entitlements": [],
+      "product_identifier": "whatsweb.password"
+    },
+    "whatsweb.weekly": {
+      "entitlements": [
+        "pro"
+      ],
+      "product_identifier": "whatsweb.weekly"
+    }
+  }
+}
