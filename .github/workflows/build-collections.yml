@@ -1,12 +1,12 @@
 name: Build mcollection (Surge & Loon)
 
 on:
-  # A 工作流完成后自动触发
+  # 1. 上游完成后触发（仅当成功，下面 job 里会判断）
   workflow_run:
     workflows: ["自动脚本转换与更新列表"]
     types: [completed]
 
-  # 目录级 push 触发（新增/修改/删除 surge/ 与 loon/ 都会触发）
+  # 2. 目录级 push 触发（新增/修改/删除 surge/ 与 loon/ 都会触发）
   push:
     paths:
       - 'surge/**'
@@ -14,20 +14,30 @@ on:
       - 'scripts/**'
       - '.github/workflows/build-mcollection.yml'
 
-  # 手动触发兜底
+  # 3. 手动触发兜底
   workflow_dispatch: {}
 
-  # 可选：每天跑一次兜底
+  # 4. 每小时第 18 分钟 (UTC) 触发
   schedule:
-    - cron: '18 * * * *'   # 00:00 UTC
+    - cron: '18 * * * *'
 
 permissions:
   contents: write
 
+concurrency:
+  group: build-mcollection-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
+    # 仅当 workflow_run 且上游成功时才执行；其它触发照常执行
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+
     steps:
+      - name: Show UTC time
+        run: date -u +"UTC %Y-%m-%d %H:%M:%S"
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -43,6 +53,9 @@ jobs:
 
       - name: Build Loon mcollection
         run: node scripts/build-collection-loon.js
+
+      - name: Show changed files (debug)
+        run: git status --porcelain && echo "---" && git diff --name-only || true
 
       - name: Commit & Push if changed
         run: |
