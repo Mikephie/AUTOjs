@@ -33,6 +33,13 @@ DOMAIN,gather.colorfulclouds.net,REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ data-type=text data="{}" status-code=200
 
 #************************************#
+# igv.sgmodule
+# Ad Image Blocking - Intercept and reject ad images
+^https:\/\/media\.gv\.com\.sg\/cms\/images\/ads\/.*\.(jpg|png|gif) data-type=text data="HTTP/1.1 200 OK
+Content-Type: image/png
+Content-Length: 0" status-code=200
+
+#************************************#
 # migumusic.sgmodule
 ^https://app\.c\.nf\.migu\.cn/member/api/marketing/text data-type=text data="HTTP/1.1 200 OK" status-code=200
 ^https://app\.c.nf\.migu\.cn/payment/watch-ad data-type=text data="HTTP/1.1 200 OK
@@ -45,11 +52,6 @@ Content-Length: 0" status-code=200
 # axs.sgmodule
 # 命中 AXS 广告/公告页 → 直接跳转 closebutton:// 让 App 关闭 WebView
 ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
-
-#************************************#
-# igv.sgmodule
-# 命中 iGV 广告页 → 直接关闭 WebView
-^https?:\/\/m\.gv\.com\.sg\/iGV2\/general\/advpage\.html(?:\?.*)?$ closebutton:// 302
 
 #************************************#
 # migumusic.sgmodule
@@ -148,6 +150,13 @@ hbqj = type=http-response, pattern=^https:\/\/h5\.hunbei\.com\/m\/member\/getUse
 #************************************#
 # hljx.sgmodule
 hljx = type=http-response, pattern=^https:\/\/love\.leminet\.cn\/golove\/v05\/profile, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hljx.js, timeout=60
+
+#************************************#
+# igv.sgmodule
+# Script - Auto-click "Skip Ad" button on ad page
+igv = type=http-response, pattern=^https:\/\/m\.gv\.com\.sg\/iGV2\/general\/advpage\.html, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/igv.js, timeout=60
+# Script - Auto-click "Guest" button on login page
+igv = type=http-response, pattern=^https:\/\/m\.gv\.com\.sg\/iGV2\/general\/login\.html, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/igv.js, timeout=60
 
 #************************************#
 # ilovepdf.sgmodule
