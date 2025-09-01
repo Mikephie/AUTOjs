@@ -10,7 +10,7 @@ on:
       - '.github/workflows/build-mcollection.yml'
   workflow_dispatch: {}
   schedule:
-    - cron: '0 0 * * *'   # 可选：每天 00:00 UTC 再跑一次，兜底
+    - cron: '18 * * * *'   # 可选：每天 00:00 UTC 再跑一次，兜底
 
 permissions:
   contents: write
