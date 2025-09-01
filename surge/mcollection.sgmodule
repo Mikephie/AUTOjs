@@ -163,5 +163,46 @@ notebook = type=http-response, pattern=^https:\/\/notebook\.zoho\.com\/api\/v1\/
 # owlfiles.sgmodule
 owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, timeout=60
 
+#************************************#
+# paperwork.sgmodule
+paperwork = type=http-response, pattern=^https:\/\/paperwork\.szshht\.cn\/api\/User\/(getUserInfo|getVipInfo), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/paperwork.js, timeout=60
+
+#************************************#
+# qqjsq.sgmodule
+qqjsq = type=http-response, pattern=^http:\/\/chenghu\.kuaixuanwo\.com\/user\/info, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqjsq.js, timeout=60
+
+#************************************#
+# ringtonemaker.sgmodule
+ringtonemaker = type=http-response, pattern=^http:\/\/clip\.tto321\.cn\/v1\/api\/query\/userInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ringtonemaker.js, timeout=60
+
+#************************************#
+# syb.sgmodule
+syb = type=http-response, pattern=^https:\/\/newappapi\.fntmob\.com\/api\/v1\/qsy\/user-info(.?)+, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/syb.js, timeout=60
+
+#************************************#
+# toonme.sgmodule
+toonme = type=http-response, pattern=^https?:\/\/purchases\.ws\.pho\.to\/api\/v2\/apple\/verifyReceipt, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/toonme.js, timeout=60
+
+#************************************#
+# tpzwz.sgmodule
+tpzwz = type=http-response, pattern=^http://api\.528529\.com/apple_product/, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/tpzwz.js, timeout=60
+
+#************************************#
+# wall.sgmodule
+wall = type=http-response, pattern=^https:\/\/billing-ios\.wallpaperscraft\.com\/v1\/(?:verify_receipt|products)\/remove_ads, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/wall.js, timeout=60
+
+#************************************#
+# yinbiao.sgmodule
+yinbiao = type=http-response, pattern=^https:\/\/flipped\.binfenyingyu\.com, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/yinbiao.js, timeout=60
+
+#************************************#
+# yygdsc.sgmodule
+# >雅俗共赏/高定素材大师（永久会员）需要登录！
+yygdsc = type=http-response, pattern=^https?:\/\/apps-api\.(lianaishouce|lingege)\.cn\/user\/getUserInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/yygdsc.js, timeout=60
+
+#************************************#
+# zypg.sgmodule
+zypg = type=http-response, pattern=^https?:\/\/appss\.(rhinoxky|baomingding|rhinoxlab)\.com\/app\/account\/getAccountInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/zypg.js, timeout=60
+
 [MITM]
-hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, appv3.filmix.com.cn, be.aimirror.fun, format-api.netpock.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, paperwork.szshht.cn, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
