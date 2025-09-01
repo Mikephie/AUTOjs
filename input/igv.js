@@ -9,7 +9,7 @@
 ^https?:\/\/m\.gv\.com\.sg\/iGV2\/general\/advpage\.html(?:\?.*)?$ url 302 closebutton://
 
 # 拦截广告图片
-^https:\/\/media\.gv\.com\.sg\/cms\/images\/ads\/.*\.(?:jpg|png|gif)$ url reject-img
+#^https:\/\/media\.gv\.com\.sg\/cms\/images\/ads\/.*\.(?:jpg|png|gif)$ url reject-img
 
 [mitm]
 hostname = m.gv.com.sg, media.gv.com.sg
