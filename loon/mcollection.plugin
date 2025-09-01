@@ -12,6 +12,18 @@
 DOMAIN,gather.colorfulclouds.net,REJECT
 
 [Rewrite]
+
+#************************************#
+# axs-2.plugin
+^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
+
+#************************************#
+# axs.plugin
+# 命中 AXS 广告/公告页 → 直接跳转 closebutton:// 让 App 关闭 WebView
+^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
+
+#************************************#
+# caiyun.plugin
 # 普通版开屏广告(此广告不定时出现)
 ^https:\/\/ad\.cyapi\.cn\/v2\/req\?app_name=weather - REJECT
 # 7.1.9 限时福利Svip
@@ -28,6 +40,13 @@ DOMAIN,gather.colorfulclouds.net,REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ - REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ - REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ - REJECT
+
+#************************************#
+# migumusic.plugin
+# > 去广告
+^https://app\.c\.nf.migu\.cn/strategy/listen-url/v2.5 https://app.c.nf.migu.cn/strategy/listen-url/v2.4 302
+^https://app\.c\.nf\.migu\.cn/member/api/marketing/text - REJECT
+^https://app\.c.nf\.migu\.cn/payment/watch-ad - reject-200
 
 [Script]
 

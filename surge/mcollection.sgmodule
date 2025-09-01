@@ -40,6 +40,14 @@ Content-Type: image/png
 Content-Length: 0" status-code=200
 
 [URL Rewrite]
+
+#************************************#
+# axs.sgmodule
+# 命中 AXS 广告/公告页 → 直接跳转 closebutton:// 让 App 关闭 WebView
+^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
+
+#************************************#
+# migumusic.sgmodule
 # > 去广告
 ^https://app\.c\.nf.migu\.cn/strategy/listen-url/v2.5 https://app.c.nf.migu.cn/strategy/listen-url/v2.4 302
 
