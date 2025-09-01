@@ -33,13 +33,6 @@ DOMAIN,gather.colorfulclouds.net,REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ data-type=text data="{}" status-code=200
 
 #************************************#
-# igv.sgmodule
-# 拦截广告图片
-^https:\/\/media\.gv\.com\.sg\/cms\/images\/ads\/.*\.(?:jpg|png|gif)$ data-type=text data="HTTP/1.1 200 OK
-Content-Type: image/png
-Content-Length: 0" status-code=200
-
-#************************************#
 # migumusic.sgmodule
 ^https://app\.c\.nf\.migu\.cn/member/api/marketing/text data-type=text data="HTTP/1.1 200 OK" status-code=200
 ^https://app\.c.nf\.migu\.cn/payment/watch-ad data-type=text data="HTTP/1.1 200 OK
