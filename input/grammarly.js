@@ -19,7 +19,7 @@ const ID = "grammarly";              // ← 对应键名，保持纯字母数字
 
 const EN = "n:"+ID+":e";             // 开关
 const TS = "n:"+ID+":t";             // 时间戳
-const CD = 600000;                   // 冷却时长：10 分钟（毫秒）
+const CD = 60000000;                   // 冷却时长：10 分钟（毫秒）
 
 // ---- 通知函数（兼容 QX / Surge / Loon）----
 function notify(t,s,b){
@@ -29,7 +29,7 @@ function notify(t,s,b){
 }
 
 // ---- 判定逻辑 ----
-let enabled = (($persistentStore.read(EN) || "1") === "0");
+let enabled = (($persistentStore.read(EN) || "1") === "1");
 if (enabled) {
   let now  = Date.now();
   let last = parseInt($persistentStore.read(TS) || "0",10) || 0;
