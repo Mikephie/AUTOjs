@@ -1,9 +1,0 @@
-#!name=Custom 脚本
-#!desc=配置信息
-#!author=Converter
-
-[Script]
-paperwork = type=http-response, pattern=^https:\/\/paperwork\.szshht\.cn\/api\/User\/(getUserInfo|getVipInfo), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/paperwork.js, timeout=60
-
-[MITM]
-hostname = %APPEND% paperwork.szshht.cn
