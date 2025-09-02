@@ -110,7 +110,8 @@ function build(){
     '#!name=✨ mcollection (Quantumult X) ✨',
     '#!desc=自动合并生成的 Quantumult X 合集',
     '#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ',
-    '#!category=🔐APP'
+    '#!category=🔐APP',
+    '#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/loon/heji.gif'
   ].join('\n');
 
   let out = header + '\n';
