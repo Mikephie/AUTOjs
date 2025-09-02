@@ -190,6 +190,10 @@ owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(v
 qqjsq = type=http-response, pattern=^http:\/\/chenghu\.kuaixuanwo\.com\/user\/info, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqjsq.js, timeout=60
 
 #************************************#
+# redditpremium.sgmodule
+redditvip-qx = type=http-response, pattern=^https?:\/\/gql-fed\.reddit\.com\/$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditvip-qx.js, timeout=60
+
+#************************************#
 # ringtonemaker.sgmodule
 ringtonemaker = type=http-response, pattern=^http:\/\/clip\.tto321\.cn\/v1\/api\/query\/userInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ringtonemaker.js, timeout=60
 
@@ -223,4 +227,4 @@ yygdsc = type=http-response, pattern=^https?:\/\/apps-api\.(lianaishouce|lingege
 zypg = type=http-response, pattern=^https?:\/\/appss\.(rhinoxky|baomingding|rhinoxlab)\.com\/app\/account\/getAccountInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/zypg.js, timeout=60
 
 [MITM]
-hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, gql-fed.reddit.com, gql.reddit.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me

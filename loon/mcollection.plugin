@@ -181,6 +181,10 @@ http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|a
 http-response ^http:\/\/chenghu\.kuaixuanwo\.com\/user\/info script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqjsq.js, requires-body=true, timeout=60, tag=qqjsq
 
 #************************************#
+# redditpremium.plugin
+http-response ^https?:\/\/gql-fed\.reddit\.com\/$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditvip-qx.js, requires-body=true, timeout=60, tag=redditvip-qx
+
+#************************************#
 # ringtonemaker.plugin
 http-response ^http:\/\/clip\.tto321\.cn\/v1\/api\/query\/userInfo script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ringtonemaker.js, requires-body=true, timeout=60, tag=ringtonemaker
 
@@ -214,4 +218,4 @@ http-response ^https?:\/\/apps-api\.(lianaishouce|lingege)\.cn\/user\/getUserInf
 http-response ^https?:\/\/appss\.(rhinoxky|baomingding|rhinoxlab)\.com\/app\/account\/getAccountInfo script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/zypg.js, requires-body=true, timeout=60, tag=zypg
 
 [MITM]
-hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, gql-fed.reddit.com, gql.reddit.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
