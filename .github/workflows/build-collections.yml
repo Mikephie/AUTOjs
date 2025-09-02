@@ -15,6 +15,7 @@ on:
     paths:
       - 'surge/**'
       - 'loon/**'
+      - 'quantumultx/**'       # ← 新增
       - 'scripts/**'
       - '.github/workflows/build-mcollection.yml'
 
@@ -64,6 +65,9 @@ jobs:
       - name: Build Loon mcollection
         run: node scripts/build-collection-loon.js
 
+      - name: Build Quantumult X mcollection
+        run: node scripts/build-collection-qx.js
+
       - name: Commit & Push if changed
         run: |
           set -e
@@ -72,6 +76,7 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add surge/mcollection.sgmodule || true
             git add loon/mcollection.plugin    || true
+            git add quantumultx/mcollection.conf || true
             git commit -m "chore: auto-build mcollection ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))"
             git push
           else
