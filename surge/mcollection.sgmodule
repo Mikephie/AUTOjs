@@ -1,10 +1,20 @@
-#!name=✨ mcollection (Quantumult X) ✨
-#!desc=自动合并生成的 Quantumult X 合集
-#!category=🔐APP
+#!name=mcollection 🔐APP
+#!desc=自动合并生成的合集模块 (Surge)
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!category=🔐APP
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/loon/heji.gif
 
+[Rule]
+
+#************************************#
+# caiyun.sgmodule
+# 上传信息
+DOMAIN,gather.colorfulclouds.net,REJECT
+
 [Map Local]
+
+#************************************#
+# caiyun.sgmodule
 # 普通版开屏广告(此广告不定时出现)
 ^https:\/\/ad\.cyapi\.cn\/v2\/req\?app_name=weather data-type=text data="{}" status-code=200
 # 7.1.9 限时福利Svip
@@ -21,42 +31,74 @@
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ data-type=text data="{}" status-code=200
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ data-type=text data="{}" status-code=200
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ data-type=text data="{}" status-code=200
+
+#************************************#
+# igv.sgmodule
 # Ad Image Blocking - Intercept and reject ad images
 ^https:\/\/media\.gv\.com\.sg\/cms\/images\/ads\/.*\.(jpg|png|gif) data-type=text data="HTTP/1.1 200 OK
 Content-Type: image/png
 Content-Length: 0" status-code=200
+
+#************************************#
+# migumusic.sgmodule
 ^https://app\.c\.nf\.migu\.cn/member/api/marketing/text data-type=text data="HTTP/1.1 200 OK" status-code=200
 ^https://app\.c.nf\.migu\.cn/payment/watch-ad data-type=text data="HTTP/1.1 200 OK
 Content-Type: image/png
 Content-Length: 0" status-code=200
 
 [URL Rewrite]
+
+#************************************#
+# axs.sgmodule
 # 命中 AXS 广告/公告页 → 直接跳转 closebutton:// 让 App 关闭 WebView
 ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
+
+#************************************#
+# migumusic.sgmodule
 # > 去广告
 ^https://app\.c\.nf.migu\.cn/strategy/listen-url/v2.5 https://app.c.nf.migu.cn/strategy/listen-url/v2.4 302
 
 [Script]
+
+#************************************#
+# adaptyhub.sgmodule
 # Adapty解锁
 adaptyhub = type=http-response, pattern=^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
 # Apphud解锁
 adaptyhub = type=http-response, pattern=^https?:\/\/.*\.apphud\.com\/v\d\/(subscriptions|customers)$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
 # SNOW系列解锁
 adaptyhub = type=http-response, pattern=^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
-# adblockpro.js
+
+#************************************#
+# adblockpro.sgmodule
 adblockpro = type=http-response, pattern=^https:\/\/api\.adblockpro\.app\/verify, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adblockpro.js, timeout=60
-# aimirror.js
+
+#************************************#
+# aimirror.sgmodule
 aimirror = type=http-response, pattern=^https:\/\/be\.aimirror\.fun\/.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aimirror.js, timeout=60
-# aloha.js
+
+#************************************#
+# aloha.sgmodule
 aloha = type=http-response, pattern=^https:\/\/api\.alohaprofile\.com\/v1\/profile_info, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aloha.js, timeout=60
-# appraven.js
+
+#************************************#
+# appraven.sgmodule
 appraven = type=http-response, pattern=^https:\/\/appraven\.net\/appraven\/graphql, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/appraven.js, timeout=60
-# bizhi.js
+
+#************************************#
+# bizhi.sgmodule
 bizhi = type=http-response, pattern=^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, timeout=60
-# bksyds.js
+
+#************************************#
+# bksyds.sgmodule
 bksyds = type=http-response, pattern=^https:\/\/photoby\.hasmash\.com, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bksyds.js, timeout=60
-# bzg.js
+
+#************************************#
+# bzg.sgmodule
 bzg = type=http-response, pattern=^http:\/\/format-api\.netpock\.com\/api\/user_info, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bzg.js, timeout=60
+
+#************************************#
+# caiyun.sgmodule
 # 赏叶赏花模块
 caiyun = type=http-response, pattern=^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\?app_name=weather, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
 # 解锁旧版vip(7.20.0之前)
@@ -75,56 +117,116 @@ caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/oper
 caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
 # 发现-瀑布流
 caiyun = type=http-response, pattern=^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, timeout=60
-# classdojo.js
+
+#************************************#
+# classdojo.sgmodule
 classdojo = type=http-response, pattern=^https:\/\/payments\.classdojo\.com\/v1\/subscribers\/5dc2e328587d3dcf1bee91e0, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/classdojo.js, timeout=60
-# duetdisplaypro.js
+
+#************************************#
+# duetdisplaypro.sgmodule
 duetdisplaypro = type=http-response, pattern=^https:\/\/rdp\.duetdisplay\.com\/v1\/users\/validateReceipt, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/duetdisplaypro.js, timeout=60
-# felo.js
+
+#************************************#
+# felo.sgmodule
 felo = type=http-response, pattern=^https?:\/\/(translator|accounts).felo.me, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, timeout=60
 felo = type=http-request, pattern=^https?:\/\/(translator|accounts).felo.me, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, timeout=60
-# filmix.js
+
+#************************************#
+# filmix.sgmodule
 filmix = type=http-response, pattern=^https://appv3\.filmix\.com\.cn/api/v\d+/user/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, timeout=60
-# github.js
+
+#************************************#
+# github.sgmodule
 github = type=http-response, pattern=https://api.github.com/graphql, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, timeout=60
-# grammarly.js
+
+#************************************#
+# grammarly.sgmodule
 grammarly = type=http-response, pattern=^https?:\/\/subscription\.grammarly\.com\/api\/v1\/subscription$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/grammarly.js, timeout=60
-# hbqj.js
+
+#************************************#
+# hbqj.sgmodule
 hbqj = type=http-response, pattern=^https:\/\/h5\.hunbei\.com\/m\/member\/getUserInfo\?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hbqj.js, timeout=60
-# hljx.js
+
+#************************************#
+# hljx.sgmodule
 hljx = type=http-response, pattern=^https:\/\/love\.leminet\.cn\/golove\/v05\/profile, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hljx.js, timeout=60
+
+#************************************#
+# igv.sgmodule
 # Script - Auto-click "Skip Ad" button on ad page
 igv = type=http-response, pattern=^https:\/\/m\.gv\.com\.sg\/iGV2\/general\/advpage\.html, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/igv.js, timeout=60
 # Script - Auto-click "Guest" button on login page
 igv = type=http-response, pattern=^https:\/\/m\.gv\.com\.sg\/iGV2\/general\/login\.html, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/igv.js, timeout=60
-# ilovepdf.js
+
+#************************************#
+# ilovepdf.sgmodule
 ilovepdf = type=http-response, pattern=^https:\/\/service\.ilovepdf\.com\/v1\/user, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, timeout=60
-# ime.js
+
+#************************************#
+# ime.sgmodule
 ime = type=http-response, pattern=https:\/\/api\.imem\.app\/api\/premium\/getOwnStatus, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ime.js, timeout=60
+
+#************************************#
+# migumusic.sgmodule
 # > 咪咕音乐vip、音质
 migumusic = type=http-response, pattern=^https?:\/\/(u|c|app).(musicapp|(c|u).nf).migu.cn.+(user\/api|column\/startup|resource\/skin), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, timeout=60
 migumusic = type=http-request, pattern=^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$, requires-body=0, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/migumusic.js, timeout=60
-# myshiftplanner.js
+
+#************************************#
+# myshiftplanner.sgmodule
 myshiftplanner = type=http-response, pattern=^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, timeout=60
+
+#************************************#
+# notebook.sgmodule
 # VIP 订阅 & 多项权益
 notebook = type=http-response, pattern=^https:\/\/notebook\.zoho\.com\/api\/v1\/userprofile\/accounts\/payment\?action=(get_current_plan_detail|get_feature_template)(&include_expired_plans=true|&include_purchase_platform=false|&platform=ios)?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/notebook.js, timeout=60
-# owlfiles.js
+
+#************************************#
+# owlfiles.sgmodule
 owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, timeout=60
-# qqjsq.js
+
+#************************************#
+# qqjsq.sgmodule
 qqjsq = type=http-response, pattern=^http:\/\/chenghu\.kuaixuanwo\.com\/user\/info, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqjsq.js, timeout=60
-# redditpremium.js
-redditpremium = type=http-response, pattern=^https?:\/\/gql-fed\.reddit\.com\/$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, timeout=60
-# ringtonemaker.js
+
+#************************************#
+# redditpremium.sgmodule
+# 同时覆盖 gql / gql-fed / gateway，根路径与带查询都能命中
+redditpremium = type=http-request, pattern=^https?:\/\/(?:gql(?:-fed)?|gateway)\.reddit\.com\/?.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, timeout=60
+redditpremium = type=http-response, pattern=^https?:\/\/(?:gql(?:-fed)?|gateway)\.reddit\.com\/?.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, timeout=60
+
+#************************************#
+# ringtonemaker.sgmodule
 ringtonemaker = type=http-response, pattern=^http:\/\/clip\.tto321\.cn\/v1\/api\/query\/userInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ringtonemaker.js, timeout=60
-# syb.js
+
+#************************************#
+# syb.sgmodule
 syb = type=http-response, pattern=^https:\/\/newappapi\.fntmob\.com\/api\/v1\/qsy\/user-info(.?)+, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/syb.js, timeout=60
-# toonme.js
+
+#************************************#
+# toonme.sgmodule
 toonme = type=http-response, pattern=^https?:\/\/purchases\.ws\.pho\.to\/api\/v2\/apple\/verifyReceipt, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/toonme.js, timeout=60
-# tpzwz.js
+
+#************************************#
+# tpzwz.sgmodule
 tpzwz = type=http-response, pattern=^http://api\.528529\.com/apple_product/, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/tpzwz.js, timeout=60
-# wall.js
+
+#************************************#
+# wall.sgmodule
 wall = type=http-response, pattern=^https:\/\/billing-ios\.wallpaperscraft\.com\/v1\/(?:verify_receipt|products)\/remove_ads, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/wall.js, timeout=60
+
+#************************************#
+# yinbiao.sgmodule
+yinbiao = type=http-response, pattern=^https:\/\/flipped\.binfenyingyu\.com, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/yinbiao.js, timeout=60
+
+#************************************#
+# yygdsc.sgmodule
 # >雅俗共赏/高定素材大师（永久会员）需要登录！
 yygdsc = type=http-response, pattern=^https?:\/\/apps-api\.(lianaishouce|lingege)\.cn\/user\/getUserInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/yygdsc.js, timeout=60
 
+#************************************#
+# zypg.sgmodule
+zypg = type=http-response, pattern=^https?:\/\/appss\.(rhinoxky|baomingding|rhinoxlab)\.com\/app\/account\/getAccountInfo, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/zypg.js, timeout=60
+
 [MITM]
-hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, gql-fed.reddit.com, gql.reddit.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, gateway.reddit.com, gql-fed.reddit.com, gql.reddit.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
