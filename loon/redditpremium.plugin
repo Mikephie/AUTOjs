@@ -1,13 +1,11 @@
 #!name=✨ Reddit Premium ✨
-#!desc=Reddit Premium 解锁 & 去广告（首屏兼容，广谱过滤，带兜底）
+#!desc=Reddit Premium 解锁&去广告
 #!category=🚫广告
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/reddit.png
 
 [Script]
-# 同时覆盖 gql / gql-fed / gateway，根路径与带查询都能命中
-http-request ^https?:\/\/(?:gql(?:-fed)?|gateway)\.reddit\.com\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, requires-body=true, timeout=60, tag=redditpremium
-http-response ^https?:\/\/(?:gql(?:-fed)?|gateway)\.reddit\.com\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, requires-body=true, timeout=60, tag=redditpremium
+http-response ^https?:\/\/gql-fed\.reddit\.com\/$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, requires-body=true, timeout=60, tag=redditpremium
 
 [MITM]
-hostname = gql.reddit.com, gql-fed.reddit.com, gateway.reddit.com
+hostname = gql.reddit.com, gql-fed.reddit.com
