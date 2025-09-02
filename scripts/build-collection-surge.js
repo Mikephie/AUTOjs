@@ -116,7 +116,8 @@ function build(){
     '#!name=mcollection 🔐APP',
     '#!desc=自动合并生成的合集模块 (Surge)',
     '#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ',
-    '#!category=🔐APP'
+    '#!category=🔐APP',
+    '#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/loon/heji.gif'
   ].join('\n');
 
   let out = header + '\n';
