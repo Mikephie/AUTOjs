@@ -1,9 +1,0 @@
-#!name=Custom 脚本
-#!desc=配置信息
-#!author=Converter
-
-[Script]
-redditvip = type=http-response, pattern=^https?:\/\/gql(-fed)?\.reddit\.com, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditvip.js, timeout=60
-
-[MITM]
-hostname = %APPEND% gql.reddit.com, gql-fed.reddit.com
