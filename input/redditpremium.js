@@ -6,7 +6,7 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/reddit.png
 𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [rewrite_local]
-^https?:\/\/gql-fed\.reddit\.com\/$ url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/redditvip-qx.js
+^https?:\/\/gql-fed\.reddit\.com\/$ url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/redditpremium.js
 
 [MITM]
 hostname = gql.reddit.com, gql-fed.reddit.com
