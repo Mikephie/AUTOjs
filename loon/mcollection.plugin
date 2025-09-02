@@ -1,12 +1,25 @@
-#!name=✨ mcollection (Quantumult X) ✨
-#!desc=自动合并生成的 Quantumult X 合集
-#!category=🔐APP
+#!name=mcollection 🔐APP
+#!desc=自动合并生成的合集模块 (Loon)
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!category=🔐APP
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/loon/heji.gif
 
+[Rule]
+
+#************************************#
+# caiyun.plugin
+# 上传信息
+DOMAIN,gather.colorfulclouds.net,REJECT
+
 [Rewrite]
+
+#************************************#
+# axs.plugin
 # 命中 AXS 广告/公告页 → 直接跳转 closebutton:// 让 App 关闭 WebView
 ^https?:\/\/m-station2\.axs\.com\.sg\/AXSMobile\/InfoPage\/.+\/whatsnew\.php(?:\?.*)?$ closebutton:// 302
+
+#************************************#
+# caiyun.plugin
 # 普通版开屏广告(此广告不定时出现)
 ^https:\/\/ad\.cyapi\.cn\/v2\/req\?app_name=weather - REJECT
 # 7.1.9 限时福利Svip
@@ -23,34 +36,60 @@
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home\/conditions\/local$ - REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/home_activity\/conditions$ - REJECT
 ^https:\/\/starplucker\.cyapi\.cn\/v3\/config\/cypage\/40day\/conditions\/local$ - REJECT
+
+#************************************#
+# igv.plugin
 # Ad Image Blocking - Intercept and reject ad images
 ^https:\/\/media\.gv\.com\.sg\/cms\/images\/ads\/.*\.(jpg|png|gif) - REJECT
+
+#************************************#
+# migumusic.plugin
 # > 去广告
 ^https://app\.c\.nf.migu\.cn/strategy/listen-url/v2.5 https://app.c.nf.migu.cn/strategy/listen-url/v2.4 302
 ^https://app\.c\.nf\.migu\.cn/member/api/marketing/text - REJECT
 ^https://app\.c.nf\.migu\.cn/payment/watch-ad - reject-200
 
 [Script]
+
+#************************************#
+# adaptyhub.plugin
 # Adapty解锁
 http-response ^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
 # Apphud解锁
 http-response ^https?:\/\/.*\.apphud\.com\/v\d\/(subscriptions|customers)$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
 # SNOW系列解锁
 http-response ^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, requires-body=true, timeout=60, tag=adaptyhub
-# adblockpro.js
+
+#************************************#
+# adblockpro.plugin
 http-response ^https:\/\/api\.adblockpro\.app\/verify script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adblockpro.js, requires-body=true, timeout=60, tag=adblockpro
-# aimirror.js
+
+#************************************#
+# aimirror.plugin
 http-response ^https:\/\/be\.aimirror\.fun\/.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aimirror.js, requires-body=true, timeout=60, tag=aimirror
-# aloha.js
+
+#************************************#
+# aloha.plugin
 http-response ^https:\/\/api\.alohaprofile\.com\/v1\/profile_info script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/aloha.js, requires-body=true, timeout=60, tag=aloha
-# appraven.js
+
+#************************************#
+# appraven.plugin
 http-response ^https:\/\/appraven\.net\/appraven\/graphql script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/appraven.js, requires-body=true, timeout=60, tag=appraven
-# bizhi.js
+
+#************************************#
+# bizhi.plugin
 http-response ^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, requires-body=true, timeout=60, tag=bizhi
-# bksyds.js
+
+#************************************#
+# bksyds.plugin
 http-response ^https:\/\/photoby\.hasmash\.com script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bksyds.js, requires-body=true, timeout=60, tag=bksyds
-# bzg.js
+
+#************************************#
+# bzg.plugin
 http-response ^http:\/\/format-api\.netpock\.com\/api\/user_info script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bzg.js, requires-body=true, timeout=60, tag=bzg
+
+#************************************#
+# caiyun.plugin
 # 赏叶赏花模块
 http-response ^https:\/\/wrapper\.cyapi\.cn\/v1\/activity\?app_name=weather script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 # 解锁旧版vip(7.20.0之前)
@@ -69,57 +108,114 @@ http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/features\?user_t
 http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/campaigns$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
 # 发现-瀑布流
 http-response ^https:\/\/starplucker\.cyapi\.cn\/v3\/operation\/feeds script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/caiyun.js, requires-body=true, timeout=60, tag=caiyun
-# classdojo.js
+
+#************************************#
+# classdojo.plugin
 http-response ^https:\/\/payments\.classdojo\.com\/v1\/subscribers\/5dc2e328587d3dcf1bee91e0 script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/classdojo.js, requires-body=true, timeout=60, tag=classdojo
-# duetdisplaypro.js
+
+#************************************#
+# duetdisplaypro.plugin
 http-response ^https:\/\/rdp\.duetdisplay\.com\/v1\/users\/validateReceipt script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/duetdisplaypro.js, requires-body=true, timeout=60, tag=duetdisplaypro
-# felo.js
+
+#************************************#
+# felo.plugin
 http-response ^https?:\/\/(translator|accounts).felo.me script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, requires-body=true, timeout=60, tag=felo
 http-request ^https?:\/\/(translator|accounts).felo.me script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/felo.js, requires-body=true, timeout=60, tag=felo
-# filmix.js
+
+#************************************#
+# filmix.plugin
 http-response ^https://appv3\.filmix\.com\.cn/api/v\d+/user/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/filmix.js, requires-body=true, timeout=60, tag=filmix
-# github.js
+
+#************************************#
+# github.plugin
 http-response https://api.github.com/graphql script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/github.js, requires-body=true, timeout=60, tag=github
-# grammarly.js
+
+#************************************#
+# grammarly.plugin
 http-response ^https?:\/\/subscription\.grammarly\.com\/api\/v1\/subscription$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/grammarly.js, requires-body=true, timeout=60, tag=grammarly
-# hbqj.js
+
+#************************************#
+# hbqj.plugin
 http-response ^https:\/\/h5\.hunbei\.com\/m\/member\/getUserInfo\? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hbqj.js, requires-body=true, timeout=60, tag=hbqj
-# hljx.js
+
+#************************************#
+# hljx.plugin
 http-response ^https:\/\/love\.leminet\.cn\/golove\/v05\/profile script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/hljx.js, requires-body=true, timeout=60, tag=hljx
+
+#************************************#
+# igv.plugin
 # Script - Auto-click "Skip Ad" button on ad page
 http-response ^https:\/\/m\.gv\.com\.sg\/iGV2\/general\/advpage\.html script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/igv.js, requires-body=true, timeout=60, tag=igv
 # Script - Auto-click "Guest" button on login page
 http-response ^https:\/\/m\.gv\.com\.sg\/iGV2\/general\/login\.html script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/igv.js, requires-body=true, timeout=60, tag=igv
-# ilovepdf.js
+
+#************************************#
+# ilovepdf.plugin
 http-response ^https:\/\/service\.ilovepdf\.com\/v1\/user script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ilovepdf.js, requires-body=true, timeout=60, tag=ilovepdf
-# ime.js
+
+#************************************#
+# ime.plugin
 http-response https:\/\/api\.imem\.app\/api\/premium\/getOwnStatus script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ime.js, requires-body=true, timeout=60, tag=ime
+
+#************************************#
+# migumusic.plugin
 # > 咪咕音乐vip、音质
 http-response ^https?:\/\/(u|c|app).(musicapp|(c|u).nf).migu.cn.+(user\/api|column\/startup|resource\/skin) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, requires-body=true, timeout=60, tag=migumusic
 http-request ^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/migumusic.js, requires-body=false, timeout=60, tag=migumusic
-# myshiftplanner.js
+
+#************************************#
+# myshiftplanner.plugin
 http-response ^https:\/\/myshiftplannercloud-live\.azurewebsites\.net\/api\/Purchase\/(validatereceipt|Get)\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/myshiftplanner.js, requires-body=true, timeout=60, tag=myshiftplanner
+
+#************************************#
+# notebook.plugin
 # VIP 订阅 & 多项权益
 http-response ^https:\/\/notebook\.zoho\.com\/api\/v1\/userprofile\/accounts\/payment\?action=(get_current_plan_detail|get_feature_template)(&include_expired_plans=true|&include_purchase_platform=false|&platform=ios)? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/notebook.js, requires-body=true, timeout=60, tag=notebook
-# owlfiles.js
+
+#************************************#
+# owlfiles.plugin
 http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|app_store\/[a-z_]+) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/owlfiles.js, requires-body=true, timeout=60, tag=owlfiles
-# qqjsq.js
+
+#************************************#
+# qqjsq.plugin
 http-response ^http:\/\/chenghu\.kuaixuanwo\.com\/user\/info script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqjsq.js, requires-body=true, timeout=60, tag=qqjsq
-# 同时覆盖 gql / gql-fed / gateway，根路径与带查询都能命中
-http-request ^https?:\/\/(?:gql(?:-fed)?|gateway)\.reddit\.com\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, requires-body=true, timeout=60, tag=redditpremium
-http-response ^https?:\/\/(?:gql(?:-fed)?|gateway)\.reddit\.com\/?.* script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, requires-body=true, timeout=60, tag=redditpremium
-# ringtonemaker.js
+
+#************************************#
+# redditpremium.plugin
+http-response ^https?:\/\/gql-fed\.reddit\.com\/$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, requires-body=true, timeout=60, tag=redditpremium
+
+#************************************#
+# ringtonemaker.plugin
 http-response ^http:\/\/clip\.tto321\.cn\/v1\/api\/query\/userInfo script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/ringtonemaker.js, requires-body=true, timeout=60, tag=ringtonemaker
-# syb.js
+
+#************************************#
+# syb.plugin
 http-response ^https:\/\/newappapi\.fntmob\.com\/api\/v1\/qsy\/user-info(.?)+ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/syb.js, requires-body=true, timeout=60, tag=syb
-# toonme.js
+
+#************************************#
+# toonme.plugin
 http-response ^https?:\/\/purchases\.ws\.pho\.to\/api\/v2\/apple\/verifyReceipt script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/toonme.js, requires-body=true, timeout=60, tag=toonme
-# tpzwz.js
+
+#************************************#
+# tpzwz.plugin
 http-response ^http://api\.528529\.com/apple_product/ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/tpzwz.js, requires-body=true, timeout=60, tag=tpzwz
-# wall.js
+
+#************************************#
+# wall.plugin
 http-response ^https:\/\/billing-ios\.wallpaperscraft\.com\/v1\/(?:verify_receipt|products)\/remove_ads script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/wall.js, requires-body=true, timeout=60, tag=wall
+
+#************************************#
+# yinbiao.plugin
+http-response ^https:\/\/flipped\.binfenyingyu\.com script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/yinbiao.js, requires-body=true, timeout=60, tag=yinbiao
+
+#************************************#
+# yygdsc.plugin
 # >雅俗共赏/高定素材大师（永久会员）需要登录！
 http-response ^https?:\/\/apps-api\.(lianaishouce|lingege)\.cn\/user\/getUserInfo script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/yygdsc.js, requires-body=true, timeout=60, tag=yygdsc
 
+#************************************#
+# zypg.plugin
+http-response ^https?:\/\/appss\.(rhinoxky|baomingding|rhinoxlab)\.com\/app\/account\/getAccountInfo script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/zypg.js, requires-body=true, timeout=60, tag=zypg
+
 [MITM]
-hostname = *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, gateway.reddit.com, gql-fed.reddit.com, gql.reddit.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
+hostname = %APPEND% *.apphud.com, *.cyapi.cn, *.migu.cn, *.snow.me, accounts.felo.me, api.528529.com, api.adapty.io, api.adblockpro.app, api.alohaprofile.com, api.github.com, api.imem.app, appraven.net, apps-api.lianaishouce.cn, apps-api.lingege.cn, appss.baomingding.com, appss.rhinoxlab.com, appv3.filmix.com.cn, be.aimirror.fun, billing-ios.wallpaperscraft.com, chenghu.kuaixuanwo.com, clip.tto321.cn, flipped.binfenyingyu.com, format-api.netpock.com, gql-fed.reddit.com, gql.reddit.com, h5.hunbei.com, leancloud.emotionwp.com, love.leminet.cn, m-station2.axs.com.sg, m.gv.com.sg, media.gv.com.sg, myshiftplannercloud-live.azurewebsites.net, newappapi.fntmob.com, notebook.zoho.com, payments.classdojo.com, photoby.hasmash.com, purchases.ws.pho.to, rdp.duetdisplay.com, service.ilovepdf.com, skyjos.com:58080, subscription.grammarly.com, translator.felo.me
