@@ -1,33 +1,12 @@
-name: Cron Dispatch (hourly at :18)
+name: Cron Dispatch (smoke)
 
 on:
   schedule:
-    - cron: '18 * * * *'   # 每小时第18分钟（UTC/SGT）
-  workflow_dispatch: {}     # 手动兜底
-
-permissions:
-  contents: read
+    - cron: '18 * * * *'
+  workflow_dispatch:
 
 jobs:
-  ping:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Show UTC & SGT time (debug)
-        run: |
-          echo "UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
-          echo "SGT: $(TZ=Asia/Singapore date '+%Y-%m-%d %H:%M:%S')"
-          echo "Repo: ${{ github.repository }}"
-
-      - name: Fire repository_dispatch: kick_mcollection
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          if [ -z "$GH_TOKEN" ]; then
-            echo "ERROR: secrets.GH_TOKEN not set (needs repo+workflow scopes)"
-            exit 1
-          fi
-          curl -sS -X POST \
-            -H "Authorization: token ${GH_TOKEN}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/dispatches \
-            -d '{"event_type":"kick_mcollection","client_payload":{"source":"cron-18"}}'
+      - run: echo "cron yaml ok"
