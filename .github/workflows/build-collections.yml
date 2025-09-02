@@ -1,4 +1,4 @@
-=name: Build mcollection (Surge & Loon & Quantumultx)
+name: Build mcollection (Surge & Loon & Quantumultx)
 
 on:
   # 上游工作流成功完成后触发
