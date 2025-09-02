@@ -2,13 +2,26 @@ name: Cron Dispatch (hourly at :18)
 
 on:
   schedule:
-    - cron: '18 * * * *'   # 每小时第18分钟（UTC/SGT）
+    - cron: '18 * * * *'   # 每小时第 18 分钟（UTC/SGT）
   workflow_dispatch:
+
+permissions:
+  actions: write           # 关键：允许触发其它工作流
+  contents: read
 
 jobs:
   dispatch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@v7
+      - name: Run build-mcollection by workflow_dispatch
+        uses: actions/github-script@v7
         with:
-          script: "await github.request('POST /repos/{owner}/{repo}/dispatches', {owner: context.repo.owner, repo: context.repo.repo, event_type: 'kick_mcollection', client_payload: { source: 'cron-18' }})"
+          script: |
+            await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              // 用文件名即可（也可换成 workflow 的数值 ID）
+              workflow_id: 'build-mcollection.yml',
+              ref: 'main',              // 改成你的默认分支
+              inputs: {}                // 如需 inputs 可在此传
+            })
