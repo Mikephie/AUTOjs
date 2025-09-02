@@ -2,7 +2,7 @@ name: Cron Dispatch (hourly at :18)
 
 on:
   schedule:
-    - cron: '18 * * * *'   # 每小时第18分钟（UTC；新加坡同为 :18）
+    - cron: '18 * * * *'   # 每小时第18分钟（UTC/SGT）
   workflow_dispatch: {}     # 手动兜底
 
 permissions:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Fire repository_dispatch: kick_mcollection
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # ← 你已有的token名
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           if [ -z "$GH_TOKEN" ]; then
             echo "ERROR: secrets.GH_TOKEN not set (needs repo+workflow scopes)"
