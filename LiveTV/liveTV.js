@@ -21,6 +21,10 @@ WidgetMetadata = {
                             value: "https://tv-1.iill.top/m3u/Sport"
                         },
                         {
+                            title: "风云TV",
+                            value: "http://iptv.4666888.xyz/FYTV.m3u"
+                        },
+                        {
                             title: "Gather",
                             value: "https://tv-1.iill.top/m3u/Gather"
                         },
@@ -107,12 +111,12 @@ WidgetMetadata = {
                         { title: "咪咕视频", value: "咪咕视频" },
                         { title: "中国大陆(全部)", value: "^中国大陆" },
                         { title: "香港(全部)",     value: "^香港" },
-                        { title: "台湾(全部)",     value: "^台湾" },
+                        { title: "台湾(全部)",     value: "^台湾|台湾频道" },
                         { title: "日本(全部)",     value: "^日本" },
                         { title: "韩国(全部)",     value: "^韩国" },
                         { title: "美国(全部)",     value: "^美国" },
                         { title: "英国(全部)",     value: "^英国" },
-                        { title: "港澳台(合并)",   value: "^(香港|澳门|台湾)" },
+                        { title: "港澳台(合并)",   value: "^(香港|澳门|台湾|港澳频道)" },
                         { title: "综合",           value: "综合$" },
                         { title: "新闻",           value: "新闻$" },
                         { title: "体育",           value: "体育$" },
@@ -173,7 +177,7 @@ WidgetMetadata = {
             ]
         }
     ],
-    version: "2.2.0",
+    version: "2.3.0",
     requiredVersion: "0.0.1",
     description: "解析直播订阅",
     author: "MIKEPHIE",
