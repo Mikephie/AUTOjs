@@ -1,0 +1,38 @@
+{
+  "user_agent": "RingtoneMaker",
+  "bundle_id": "com.appexosolutions.RingtoneMaker",
+  "data": {
+    "ring.annual": {
+      "entitlements": [],
+      "product_identifier": "ring.annual"
+    },
+    "ring.annual2": {
+      "entitlements": [
+        "PRO"
+      ],
+      "product_identifier": "ring.annual2"
+    },
+    "ring.lifetime": {
+      "entitlements": [
+        "lifetime"
+      ],
+      "product_identifier": "ring.lifetime"
+    },
+    "ring.monthly2": {
+      "entitlements": [
+        "PRO"
+      ],
+      "product_identifier": "ring.monthly2"
+    },
+    "ring.weekly": {
+      "entitlements": [],
+      "product_identifier": "ring.weekly"
+    },
+    "ring.weekly2": {
+      "entitlements": [
+        "PRO"
+      ],
+      "product_identifier": "ring.weekly2"
+    }
+  }
+}
