@@ -181,10 +181,6 @@ http-response ^https:\/\/www\.skyjos\.com:58080\/ws\/(validate|loadaccountinfo|a
 http-response ^http:\/\/chenghu\.kuaixuanwo\.com\/user\/info script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqjsq.js, requires-body=true, timeout=60, tag=qqjsq
 
 #************************************#
-# qqreader.plugin
-http-response ^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account? script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, requires-body=true, timeout=60, tag=bizhi
-
-#************************************#
 # qqyd.plugin
 http-response ^https?:\/\/(detailadr|commontgw).reader.qq.com\/(book\/queryDetailPage|.+nativepage\/personal|.+vip\/viptxt) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqyd.js, requires-body=true, timeout=60, tag=qqyd
 http-request ^https?:\/\/newminerva-tgw.reader.qq.com\/ChapBatAuthWithPD script-path=https://raw.githubusercontent.com/Mikephie/AutomatedJS/main/QuantumultX/qqyd.js, requires-body=false, timeout=60, tag=qqyd
