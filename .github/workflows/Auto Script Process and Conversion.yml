@@ -32,7 +32,17 @@ jobs:
           mkdir -p input quantumultx loon surge
 
       - name: 📥 安装依赖
-        run: npm install
+  run: |
+    if [ -f package.json ]; then
+      if [ -f package-lock.json ]; then
+        npm ci || npm install --legacy-peer-deps --no-audit --no-fund
+      else
+        npm install --legacy-peer-deps --no-audit --no-fund
+      fi
+    else
+      echo "skip npm install: no package.json"
+    fi
+
 
       - name: 🧩 处理 input → quantumultx
         run: |
