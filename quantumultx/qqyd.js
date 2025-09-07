@@ -1,6 +1,6 @@
 /*
 #!name= ✨ QQ阅读 ✨
-#!desc=办公
+#!desc=办公阅读
 #!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/qqyd.png
