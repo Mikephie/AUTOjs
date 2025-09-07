@@ -8,7 +8,7 @@
       "title": "MIKE直播(电视+网络)",
       "description": "解析直播订阅+UA",
       "requiredVersion": "0.0.2",
-      "version": "2.1.0",
+      "version": "2.3.0",
       "author": "Mikephie",
       "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/liveTV.js"
     },
@@ -35,7 +35,7 @@
       "title": "XVideos",
       "description": "在线观看XVideos",
       "requiredVersion": "0.0.1",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "author": "Mikephie",
       "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/xv.js"
     }
