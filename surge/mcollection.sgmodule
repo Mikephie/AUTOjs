@@ -190,10 +190,6 @@ owlfiles = type=http-response, pattern=^https:\/\/www\.skyjos\.com:58080\/ws\/(v
 qqjsq = type=http-response, pattern=^http:\/\/chenghu\.kuaixuanwo\.com\/user\/info, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqjsq.js, timeout=60
 
 #************************************#
-# qqreader.sgmodule
-bizhi = type=http-response, pattern=^https:\/\/leancloud\.emotionwp\.com\/1\.1\/classes\/wpf_account?, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/bizhi.js, timeout=60
-
-#************************************#
 # qqyd.sgmodule
 qqyd = type=http-response, pattern=^https?:\/\/(detailadr|commontgw).reader.qq.com\/(book\/queryDetailPage|.+nativepage\/personal|.+vip\/viptxt), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqyd.js, timeout=60
 qqyd = type=http-request, pattern=^https?:\/\/newminerva-tgw.reader.qq.com\/ChapBatAuthWithPD, requires-body=0, script-path=https://raw.githubusercontent.com/Mikephie/AutomatedJS/main/QuantumultX/qqyd.js, timeout=60
