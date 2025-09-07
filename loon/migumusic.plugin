@@ -13,7 +13,7 @@
 [Script]
 # > 咪咕音乐vip、音质
 http-response ^https?:\/\/(u|c|app).(musicapp|(c|u).nf).migu.cn.+(user\/api|column\/startup|resource\/skin) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, requires-body=true, timeout=60, tag=migumusic
-http-request ^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$ script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/migumusic.js, requires-body=false, timeout=60, tag=migumusic
+http-request ^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$ script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, requires-body=false, timeout=60, tag=migumusic
 
 [MITM]
 hostname = *.migu.cn

@@ -17,7 +17,7 @@ Content-Length: 0" status-code=200
 [Script]
 # > 咪咕音乐vip、音质
 migumusic = type=http-response, pattern=^https?:\/\/(u|c|app).(musicapp|(c|u).nf).migu.cn.+(user\/api|column\/startup|resource\/skin), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, timeout=60
-migumusic = type=http-request, pattern=^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$, requires-body=0, script-path=https://raw.githubusercontent.com/Mikephie/Script/main/qx/migumusic.js, timeout=60
+migumusic = type=http-request, pattern=^https?:\/\/app.(c|pd).nf.migu.cn\/.*\/(listen-url|music\/batchQueryMusicPolicy|download-url).*$, requires-body=0, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/migumusic.js, timeout=60
 
 [MITM]
 hostname = %APPEND% *.migu.cn

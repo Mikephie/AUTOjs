@@ -7,7 +7,7 @@
 𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [rewrite_local]
 ^https?:\/\/(detailadr|commontgw).reader.qq.com\/(book\/queryDetailPage|.+nativepage\/personal|.+vip\/viptxt) url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqyd.js
-^https?:\/\/newminerva-tgw.reader.qq.com\/ChapBatAuthWithPD url script-request-header https://raw.githubusercontent.com/Mikephie/Script/main/qx/qqyd.js
+^https?:\/\/newminerva-tgw.reader.qq.com\/ChapBatAuthWithPD url script-request-header https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/qqyd.js
 
 [mitm] 
 hostname = *.reader.qq.com,newminerva-tgw.reader.qq.com,detailadr.reader.qq.com,commontgw.reader.qq.com
