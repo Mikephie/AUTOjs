@@ -113,12 +113,12 @@ if ($request.url.indexOf("ChapBatAuthWithPD") != -1) {
     "body": _0x46628c
   });
 } else if ($request.url.indexOf("/book/queryDetailPage") != -1) {
-  var _0x531bbb = JSON.parse($response.body);
-  _0x531bbb.vipStatus = 1;
-  _0x531bbb.introinfo.detailmsg.equityTxt = "本书已解锁";
-  _0x531bbb.introinfo.detailmsg.txtStyle = 2;
-  _0x531bbb.introinfo.detailmsg.equityDisplay = true;
-  var _0x25aefe = JSON.stringify(_0x531bbb);
+  var obj = JSON.parse($response.body);
+  obj.vipStatus = 1;
+  obj.introinfo.detailmsg.equityTxt = "本书已解锁";
+  obj.introinfo.detailmsg.txtStyle = 2;
+  obj.introinfo.detailmsg.equityDisplay = true;
+  var _0x25aefe = JSON.stringify(obj);
   $done({
     "body": _0x25aefe
   });
