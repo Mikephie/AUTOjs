@@ -95,20 +95,20 @@ if ($request.url.indexOf("ChapBatAuthWithPD") != -1) {
     "headers": _0x39a195
   });
 } else if ($request.url.indexOf("/nativepage/personal") != -1) {
-  var _0x47be26 = JSON.parse($response.body);
-  _0x47be26.personal.monthUser.paidVipStatus = 2;
-  _0x47be26.personal.monthUser.monthStatus = 1;
-  _0x47be26.personal.monthUser.smsVip = 1;
-  _0x47be26.personal.monthUser.mVipType = 1;
-  _0x47be26.personal.accountInfo.balance = 88888888;
-  _0x47be26.personal.accountInfo.bookTicket = 88888888;
-  _0x47be26.personal.monthUser.title = "年卡会员";
-  _0x47be26.personal.monthUser.label = "2088-8-08到期";
-  _0x47be26.personal.userInfo.vipLevel = 1;
-  _0x47be26.personal.userInfo.nick = "MIKEPHIE";
-  _0x47be26.personal.userInfo.icon = "https://zhongdu.oss-cn-beijing.aliyuncs.com/app/20250723/17532551159065978.jpg";
-  delete _0x47be26.personal.confList;
-  var _0x46628c = JSON.stringify(_0x47be26);
+  var obj = JSON.parse($response.body);
+  obj.personal.monthUser.paidVipStatus = 2;
+  obj.personal.monthUser.monthStatus = 1;
+  obj.personal.monthUser.smsVip = 1;
+  obj.personal.monthUser.mVipType = 1;
+  obj.personal.accountInfo.balance = 88888888;
+  obj.personal.accountInfo.bookTicket = 88888888;
+  obj.personal.monthUser.title = "年卡会员";
+  obj.personal.monthUser.label = "2088-8-08到期";
+  obj.personal.userInfo.vipLevel = 1;
+  obj.personal.userInfo.nick = "MIKEPHIE";
+  obj.personal.userInfo.icon = "https://zhongdu.oss-cn-beijing.aliyuncs.com/app/20250723/17532551159065978.jpg";
+  delete obj.personal.confList;
+  var _0x46628c = JSON.stringify(obj);
   $done({
     "body": _0x46628c
   });
