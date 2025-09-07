@@ -58,6 +58,7 @@ jobs:
                 sub(parts[3], remote_url);
                 print "📝 替换: " parts[3] " -> " remote_url > "/dev/stderr";
               }
+            }
             /script-(response|request)-header/ {
               match($0, /(script-(response|request)-header\s+)([^ \n]+)/, parts);
               if (parts[3]) {
