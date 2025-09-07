@@ -123,9 +123,9 @@ if ($request.url.indexOf("ChapBatAuthWithPD") != -1) {
     "body": _0x25aefe
   });
 } else if ($request.url.indexOf("/vip/viptxt") != -1) {
-  var _0x5bfe6f = JSON.parse($response.body);
-  _0x5bfe6f.allowMonthlyPay = 2;
-  var _0x1e45ec = JSON.stringify(_0x5bfe6f);
+  var obj = JSON.parse($response.body);
+  obj.allowMonthlyPay = 2;
+  var _0x1e45ec = JSON.stringify(obj);
   $done({
     "body": _0x1e45ec
   });
