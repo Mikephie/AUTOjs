@@ -1,0 +1,121 @@
+name: 自动脚本转换与更新列表
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'input/**'
+      - 'scripts/**'
+      - 'index.js'
+  schedule:
+    - cron: '0 3 * * *'  # 每天凌晨 3 点执行
+
+jobs:
+  convert-and-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📦 检出仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🧱 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 🧰 安装 gawk（用于更稳的 awk 特性）
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gawk
+
+      - name: 🗂️ 创建目录结构
+        run: |
+          mkdir -p input quantumultx loon surge
+
+      - name: 📥 安装依赖
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: 🧹 清理旧的 conf/txt（避免遗留干扰）
+        run: |
+          rm -f quantumultx/*.conf quantumultx/*.txt || true
+
+      - name: 🧩 处理 input → quantumultx
+        run: |
+          echo "查找 JS 文件并复制到 quantumultx/"
+          find input -type f -name "*.js" | while read file; do
+            cp "$file" "quantumultx/$(basename "$file")"
+          done
+
+          echo "查找配置文件（.conf/.txt）并规范脚本引用 URL"
+          find input -type f \( -name "*.conf" -o -name "*.txt" \) | while read file; do
+            fname=$(basename "$file")
+            ofile="quantumultx/$fname"
+
+            # 复制到目标目录
+            cp "$file" "$ofile"
+
+            # 统一规范脚本 URL 到 AUTOjs/quantumultx/<文件名>
+            gawk -v base="https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx" '
+BEGIN { IGNORECASE = 1 }
+{
+  line = $0
+  # 同行可能多处命中：逐一替换
+  while (match(line, /(url[[:space:]]+script-(response-body|request-body|request-header)[[:space:]]+)([^[:space:]]+)/, m)) {
+    target = m[3]
+
+    # 去除 query/fragment
+    gsub(/\?.*$/, "", target)
+    gsub(/#.*/, "", target)
+
+    # 取脚本文件名
+    n = split(target, a, "/")
+    fname = a[n]
+
+    if (fname == "") { break }
+
+    newurl = base "/" fname
+
+    # 输出替换日志到 stderr
+    print "📝 替换: " target " -> " newurl > "/dev/stderr"
+
+    # 拼回本次替换，并继续 while 处理后续命中
+    pre  = substr(line, 1, RSTART-1)
+    post = substr(line, RSTART + RLENGTH)
+    line = pre m[1] newurl post
+  }
+
+  print line
+}
+' "$ofile" > "$ofile.tmp" && mv "$ofile.tmp" "$ofile"
+          done
+
+      - name: 🚀 转换 quantumultx → loon/surge
+        run: node index.js
+        env:
+          INPUT_DIR: 'quantumultx'
+          OUTPUT_FORMAT: 'loon,surge'
+
+      - name: 📄 生成 scripts.json
+        run: |
+          node scripts/generate-script-list.js
+          echo "📁 检查生成文件:"
+          ls -l scripts.json || echo "scripts.json 不存在"
+
+      - name: 📤 提交所有更改
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+
+          git add quantumultx/ loon/ surge/ scripts.json
+          git commit -m "🛠️ 自动转换与更新脚本列表 $(date '+%Y-%m-%d %H:%M:%S')" || echo "⚠️ 无需提交"
+          git pull --no-rebase || echo "⚠️ 拉取失败，继续执行"
+          git push || echo "⚠️ 推送失败，请手动处理"
