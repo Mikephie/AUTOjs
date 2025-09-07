@@ -32,17 +32,7 @@ jobs:
           mkdir -p input quantumultx loon surge
 
       - name: 📥 安装依赖
-  run: |
-    if [ -f package.json ]; then
-      if [ -f package-lock.json ]; then
-        npm ci || npm install --legacy-peer-deps --no-audit --no-fund
-      else
-        npm install --legacy-peer-deps --no-audit --no-fund
-      fi
-    else
-      echo "skip npm install: no package.json"
-    fi
-
+        run: npm install
 
       - name: 🧩 处理 input → quantumultx
         run: |
@@ -61,16 +51,6 @@ jobs:
             awk '
             /script-(response|request)-body/ {
               match($0, /(script-(response|request)-body\s+)([^ \n]+)/, parts);
-              if (parts[3]) {
-                split(parts[3], path_parts, "/");
-                script_name = path_parts[length(path_parts)];
-                remote_url = "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/" script_name;
-                sub(parts[3], remote_url);
-                print "📝 替换: " parts[3] " -> " remote_url > "/dev/stderr";
-              }
-            }
-            /script-(response|request)-header/ {
-              match($0, /(script-(response|request)-header\s+)([^ \n]+)/, parts);
               if (parts[3]) {
                 split(parts[3], path_parts, "/");
                 script_name = path_parts[length(path_parts)];
