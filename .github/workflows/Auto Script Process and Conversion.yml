@@ -22,6 +22,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Env debug
+        run: |
+          set -x
+          node -v
+          npm -v
+          uname -a
+          ls -la
+          echo "PWD=$(pwd)"
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -36,15 +45,30 @@ jobs:
         run: |
           mkdir -p input quantumultx loon surge
 
-      - name: Install deps
+      - name: Install deps (with logs on failure)
         run: |
+          set -euxo pipefail
           if [ -f package-lock.json ]; then
             npm ci
           else
             npm install
           fi
+        shell: bash
 
-      - name: Clean old conf/txt
+      - name: Dump npm logs if present (non-fatal)
+        run: |
+          if compgen -G "$HOME/.npm/_logs/*-debug-*.log" > /dev/null; then
+            echo "===== npm debug logs ====="
+            for f in $HOME/.npm/_logs/*-debug-*.log; do
+              echo "::group::${f}"
+              sed -n '1,400p' "$f"
+              echo "::endgroup::"
+            done
+          else
+            echo "No npm debug logs found."
+          fi
+
+      - name: Clean old conf/txt (optional)
         run: |
           rm -f quantumultx/*.conf quantumultx/*.txt || true
 
@@ -55,55 +79,60 @@ jobs:
       - name: Normalize script URLs in conf/txt
         shell: bash
         run: |
+          set -euxo pipefail
           BASE="https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx"
 
           cat > normalize.awk <<'AWK'
 BEGIN { IGNORECASE = 1 }
 {
   line = $0
-  # replace all matches in the same line
   while (match(line, /(url[[:space:]]+script-(response-body|request-body|request-header)[[:space:]]+)([^[:space:]]+)/, m)) {
     target = m[3]
-
-    gsub(/\?.*$/, "", target)  # strip query
-    gsub(/#.*/, "", target)    # strip fragment
-
+    gsub(/\?.*$/, "", target)
+    gsub(/#.*/, "", target)
     n = split(target, a, "/")
     fname = a[n]
     if (fname == "") { break }
-
     newurl = ENVIRON["BASE"] "/" fname
-
     pre  = substr(line, 1, RSTART-1)
     post = substr(line, RSTART + RLENGTH)
     line = pre m[1] newurl post
-
     print "replace: " target " -> " newurl > "/dev/stderr"
   }
   print line
 }
 AWK
 
-          # only normalize .conf/.txt to avoid changing plain .js
           find input -type f \( -name "*.conf" -o -name "*.txt" \) | while read -r f; do
             of="quantumultx/$(basename "$f")"
             cp "$f" "$of"
             gawk -f normalize.awk "$of" > "$of.tmp" && mv "$of.tmp" "$of"
           done
 
+      - name: List quantumultx
+        run: |
+          echo "====== quantumultx ======"
+          ls -la quantumultx || true
+          echo "========================="
+
       - name: Convert to loon/surge
         env:
           INPUT_DIR: 'quantumultx'
           OUTPUT_FORMAT: 'loon,surge'
-        run: node index.js
+        run: |
+          set -euxo pipefail
+          test -f index.js || { echo "index.js not found"; exit 1; }
+          node index.js
 
       - name: Generate scripts.json
         run: |
+          set -euxo pipefail
           node scripts/generate-script-list.js || true
           ls -l scripts.json || echo "no scripts.json"
 
       - name: Commit and push
         run: |
+          set -euxo pipefail
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
           git add quantumultx/ loon/ surge/ scripts.json || true
