@@ -1,4 +1,4 @@
-name: auto-script-convert
+name: 自动脚本转换与更新列表
 
 on:
   workflow_dispatch:
@@ -8,134 +8,89 @@ on:
       - 'scripts/**'
       - 'index.js'
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 3 * * *'  # 每天凌晨 3 点执行
 
 jobs:
-  build:
+  convert-and-update:
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: Checkout
+      - name: 📦 检出仓库
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Env debug
-        run: |
-          set -x
-          node -v
-          npm -v
-          uname -a
-          ls -la
-          echo "PWD=$(pwd)"
-
-      - name: Setup Node
+      - name: 🧱 设置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install gawk
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gawk
-
-      - name: Ensure dirs
+      - name: 🗂️ 创建目录结构
         run: |
           mkdir -p input quantumultx loon surge
 
-      - name: Install deps (with logs on failure)
+      - name: 📥 安装依赖
+        run: npm install
+
+      - name: 🧩 处理 input → quantumultx
         run: |
-          set -euxo pipefail
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
-        shell: bash
-
-      - name: Dump npm logs if present (non-fatal)
-        run: |
-          if compgen -G "$HOME/.npm/_logs/*-debug-*.log" > /dev/null; then
-            echo "===== npm debug logs ====="
-            for f in $HOME/.npm/_logs/*-debug-*.log; do
-              echo "::group::${f}"
-              sed -n '1,400p' "$f"
-              echo "::endgroup::"
-            done
-          else
-            echo "No npm debug logs found."
-          fi
-
-      - name: Clean old conf/txt (optional)
-        run: |
-          rm -f quantumultx/*.conf quantumultx/*.txt || true
-
-      - name: Copy JS to quantumultx
-        run: |
-          find input -type f -name "*.js" -print0 | xargs -0 -I{} cp "{}" "quantumultx/$(basename "{}")"
-
-      - name: Normalize script URLs in conf/txt
-        shell: bash
-        run: |
-          set -euxo pipefail
-          BASE="https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx"
-
-          cat > normalize.awk <<'AWK'
-BEGIN { IGNORECASE = 1 }
-{
-  line = $0
-  while (match(line, /(url[[:space:]]+script-(response-body|request-body|request-header)[[:space:]]+)([^[:space:]]+)/, m)) {
-    target = m[3]
-    gsub(/\?.*$/, "", target)
-    gsub(/#.*/, "", target)
-    n = split(target, a, "/")
-    fname = a[n]
-    if (fname == "") { break }
-    newurl = ENVIRON["BASE"] "/" fname
-    pre  = substr(line, 1, RSTART-1)
-    post = substr(line, RSTART + RLENGTH)
-    line = pre m[1] newurl post
-    print "replace: " target " -> " newurl > "/dev/stderr"
-  }
-  print line
-}
-AWK
-
-          find input -type f \( -name "*.conf" -o -name "*.txt" \) | while read -r f; do
-            of="quantumultx/$(basename "$f")"
-            cp "$f" "$of"
-            gawk -f normalize.awk "$of" > "$of.tmp" && mv "$of.tmp" "$of"
+          echo "查找 JS 文件并复制到 quantumultx/"
+          find input -type f -name "*.js" | while read file; do
+            cp "$file" "quantumultx/$(basename "$file")"
           done
 
-      - name: List quantumultx
-        run: |
-          echo "====== quantumultx ======"
-          ls -la quantumultx || true
-          echo "========================="
+          echo "查找配置文件并处理脚本引用"
+          find input -type f \( -name "*.conf" -o -name "*.txt" -o -name "*.js" \) | while read file; do
+            fname=$(basename "$file")
+            ofile="quantumultx/$fname"
 
-      - name: Convert to loon/surge
+            cp "$file" "$ofile"
+
+            awk '
+            /script-(response|request)-body/ {
+              match($0, /(script-(response|request)-body\s+)([^ \n]+)/, parts);
+              if (parts[3]) {
+                split(parts[3], path_parts, "/");
+                script_name = path_parts[length(path_parts)];
+                remote_url = "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/" script_name;
+                sub(parts[3], remote_url);
+                print "📝 替换: " parts[3] " -> " remote_url > "/dev/stderr";
+              }
+            }
+            /script-(response|request)-header/ {
+              match($0, /(script-(response|request)-header\s+)([^ \n]+)/, parts);
+              if (parts[3]) {
+                split(parts[3], path_parts, "/");
+                script_name = path_parts[length(path_parts)];
+                remote_url = "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/" script_name;
+                sub(parts[3], remote_url);
+                print "📝 替换: " parts[3] " -> " remote_url > "/dev/stderr";
+              }
+            }
+            { print }
+            ' "$ofile" > "$ofile.tmp" && mv "$ofile.tmp" "$ofile"
+          done
+
+      - name: 🚀 转换 quantumultx → loon/surge
+        run: node index.js
         env:
           INPUT_DIR: 'quantumultx'
           OUTPUT_FORMAT: 'loon,surge'
-        run: |
-          set -euxo pipefail
-          test -f index.js || { echo "index.js not found"; exit 1; }
-          node index.js
 
-      - name: Generate scripts.json
+      - name: 📄 生成 scripts.json
         run: |
-          set -euxo pipefail
-          node scripts/generate-script-list.js || true
-          ls -l scripts.json || echo "no scripts.json"
+          node scripts/generate-script-list.js
+          echo "📁 检查生成文件:"
+          ls -l scripts.json || echo "scripts.json 不存在"
 
-      - name: Commit and push
+      - name: 📤 提交所有更改
         run: |
-          set -euxo pipefail
           git config --local user.name "GitHub Actions"
           git config --local user.email "actions@github.com"
-          git add quantumultx/ loon/ surge/ scripts.json || true
-          git commit -m "auto: convert & update $(date '+%Y-%m-%d %H:%M:%S')" || true
-          git pull --no-rebase || true
-          git push || true
+
+          git add quantumultx/ loon/ surge/ scripts.json
+          git commit -m "🛠️ 自动转换与更新脚本列表 $(date '+%Y-%m-%d %H:%M:%S')" || echo "⚠️ 无需提交"
+          git pull --no-rebase || echo "⚠️ 拉取失败，继续执行"
+          git push || echo "⚠️ 推送失败，请手动处理"
