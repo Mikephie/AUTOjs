@@ -8,7 +8,7 @@
       "title": "MIKE直播(电视+网络)",
       "description": "解析直播订阅+UA",
       "requiredVersion": "0.0.2",
-      "version": "2.3.0",
+      "version": "2.4.0",
       "author": "Mikephie",
       "url": "https://raw.githubusercontent.com/Mikephie/AUTOjs/main/LiveTV/liveTV.js"
     },
