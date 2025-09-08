@@ -1,0 +1,108 @@
+{
+  "user_agent": "Fridge%20Buddy",
+  "bundle_id": "com.charlesadrienfournier.FridgeScan",
+  "data": {
+    "FridgeBuddy_lifetime": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "FridgeBuddy_lifetime"
+    },
+    "UnlockProLifetime": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "UnlockProLifetime"
+    },
+    "fridgebuddy_0199_1w_3d0": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "fridgebuddy_0199_1w_3d0"
+    },
+    "fridgebuddy_0299_1w_3d0": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "fridgebuddy_0299_1w_3d0"
+    },
+    "fridgebuddy_2999_1y": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "fridgebuddy_2999_1y"
+    },
+    "subscription_monthly_1": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_monthly_1"
+    },
+    "subscription_monthly_2": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_monthly_2"
+    },
+    "subscription_monthly_3": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_monthly_3"
+    },
+    "subscription_monthly_trial_1": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_monthly_trial_1"
+    },
+    "subscription_yearly_1": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_yearly_1"
+    },
+    "subscription_yearly_sales_1": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_yearly_sales_1"
+    },
+    "subscription_yearly_trial_1": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_yearly_trial_1"
+    },
+    "subscription_yearly_trial_2": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_yearly_trial_2"
+    },
+    "subscription_yearly_trial_3": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "subscription_yearly_trial_3"
+    },
+    "unlockProAmazingTip": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "unlockProAmazingTip"
+    },
+    "unlockProGenerousTip": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "unlockProGenerousTip"
+    },
+    "unlockProSmallTip": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "unlockProSmallTip"
+    }
+  }
+}
