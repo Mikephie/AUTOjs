@@ -1,6 +1,6 @@
 /*
 #!name= ✨ Classdojo ✨
-#!desc=天气预测
+#!desc=社交
 #!category=🔐APP
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/classdojo.js
