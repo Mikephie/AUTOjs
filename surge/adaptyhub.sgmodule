@@ -1,6 +1,8 @@
-#!name=Custom rewrite
-#!desc=配置信息
-#!author=Converter
+#!name=✨ AdaptyHub ✨
+#!desc=AdaptyHub合集解锁🔓
+#!category=通杀脚本
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/adaptyhub.png
 
 [Script]
 # Adapty - 更宽的路径匹配（v1/v2/v3）
