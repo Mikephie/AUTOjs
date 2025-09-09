@@ -1,6 +1,6 @@
 /*
 #!name= ✨ iTunes ✨
-#!desc=iTunes合集解锁
+#!desc=iTunes合集解锁🔓
 #!category=通杀脚本
 #!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
 #!icon = https://raw.githubusercontent.com/Mikephie/icons/main/icon/itunes.png
