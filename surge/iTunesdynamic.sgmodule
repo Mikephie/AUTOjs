@@ -1,0 +1,11 @@
+#!name=✨ iTunes ✨
+#!desc=iTunes合集解锁
+#!category=通杀脚本
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/itunes.png
+
+[Script]
+iTunesdynamic = type=http-response, pattern=^https?:\/\/buy\.itunes\.apple\.com\/verifyReceipt$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/iTunesdynamic.js, timeout=60
+
+[MITM]
+hostname = %APPEND% buy.itunes.apple.com

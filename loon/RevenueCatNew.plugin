@@ -1,0 +1,12 @@
+#!name=✨ RevenueCat ✨
+#!desc=RevenueCat合集解锁
+#!category=通杀脚本
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/revenuecat.png
+
+[Script]
+http-response ^https:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/?(.*?)*$) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/RevenueCatNew.js, requires-body=true, timeout=60, tag=RevenueCatNew
+http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/?(.*?)*$) script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/RevenueCatNew.js, requires-body=false, timeout=60, tag=RevenueCatNew
+
+[MITM]
+hostname = api.revenuecat.com, api.rc-backup.com
