@@ -1,16 +1,14 @@
-#!name=✨ AdaptyHub ✨
-#!desc=Adapty/Apphub/Snow 通杀
-#!category=🔐APP
-#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
-#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/adaptyhub.png
+#!name=Custom rewrite
+#!desc=配置信息
+#!author=Converter
 
 [Script]
-# Adapty解锁
-adaptyhub = type=http-response, pattern=^https?:\/\/api\.adapty\.io\/api\/v\d\/(sdk\/(analytics\/profiles|in-apps\/(apple\/receipt\/validate|purchase-containers)|purchase\/app-store)), requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
-# Apphud解锁
-adaptyhub = type=http-response, pattern=^https?:\/\/.*\.apphud\.com\/v\d\/(subscriptions|customers)$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
-# SNOW系列解锁
-adaptyhub = type=http-response, pattern=^https?:\/\/.*\.snow\.me\/v\d\/purchase\/subscription\/subscriber\/status, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/adaptyhub.js, timeout=60
+# Adapty - 更宽的路径匹配（v1/v2/v3）
+adaptyhub = type=http-response, pattern=^https?:\/\/api\.adapty\.io\/api\/v\d+\/sdk\/(?:analytics\/profiles(?:\/.*)?|in-apps\/(?:apple\/receipt\/validate|purchase(?:-containers|\/app-store)(?:\/.*)?)), requires-body=1, script-path=Scripts/adaptyhub.js, timeout=60
+# Apphud - 兼容 api 或 {tenant}.apphud.com
+adaptyhub = type=http-response, pattern=^https?:\/\/(?:api|\w+)\.apphud\.com\/v\d+\/(?:subscriptions|customers)(?:\?.*)?$, requires-body=1, script-path=Scripts/adaptyhub.js, timeout=60
+# SNOW - 末尾可能带更多段或查询
+adaptyhub = type=http-response, pattern=^https?:\/\/[\w\-\.]+\.snow\.me\/v\d+\/purchase\/subscription\/subscriber\/status(?:\/.*)?(?:\?.*)?$, requires-body=1, script-path=Scripts/adaptyhub.js, timeout=60
 
 [MITM]
 hostname = %APPEND% api.adapty.io, *.apphud.com, *.snow.me
