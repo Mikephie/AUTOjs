@@ -106,7 +106,7 @@ if ($request.url.indexOf("ChapBatAuthWithPD") != -1) {
   obj.personal.monthUser.label = "2088-8-08到期";
   obj.personal.userInfo.vipLevel = 1;
   obj.personal.userInfo.nick = "MIKEPHIE";
-  obj.personal.userInfo.icon = "https://zhongdu.oss-cn-beijing.aliyuncs.com/app/20250723/17532551159065978.jpg";
+  obj.personal.userInfo.icon = "https://img.mikephie.site/APP_logo/mikecartoon-mobile.png";
   delete obj.personal.confList;
   var _0x46628c = JSON.stringify(obj);
   $done({
