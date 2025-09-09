@@ -1,8 +1,10 @@
 /*
-📜 统一订阅解锁框架
-📅 更新时间：2025-04-03
-🔓 功能：自动识别服务类型并解锁永久 VIP
-
+#!name= ✨ AdaptyHub ✨
+#!desc=AdaptyHub合集解锁🔓
+#!category=通杀脚本
+#!author=🅜ⓘ🅚ⓔ🅟ⓗ🅘ⓔ
+#!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/adaptyhub.png
+𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 目前支持服务：
 - Adapty (adapty.io)
 - Apphud (apphud.com)
@@ -22,6 +24,7 @@
 hostname = api.adapty.io, *.apphud.com, *.snow.me
 
 */
+
 
 // ================ 配置区域 ================
 // ==UserScript==
