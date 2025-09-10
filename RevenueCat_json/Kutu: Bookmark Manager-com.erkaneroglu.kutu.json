@@ -1,0 +1,30 @@
+{
+  "user_agent": "Kutu%3A%20Bookmark%20Manager",
+  "bundle_id": "com.erkaneroglu.kutu",
+  "data": {
+    "erkaneroglu.kutu.lifetime": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "erkaneroglu.kutu.lifetime"
+    },
+    "kutu_monthly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "kutu_monthly"
+    },
+    "kutu_weekly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "kutu_weekly"
+    },
+    "kutu_yearly": {
+      "entitlements": [
+        "Pro"
+      ],
+      "product_identifier": "kutu_yearly"
+    }
+  }
+}
