@@ -5,7 +5,7 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/itunes.png
 
 [Script]
-iTunesdynamic = type=http-response, pattern=^https?:\/\/buy\.itunes\.apple\.com\/verifyReceipt$, requires-body=1, script-path=Scripts/iTunesdynamic.js, timeout=60
+script = type=http-response, pattern=^https?:\/\/buy\.itunes\.apple\.com\/verifyReceipt$, requires-body=1, script-path=iTunesdynamic.js, timeout=60
 
 [MITM]
 hostname = %APPEND% buy.itunes.apple.com

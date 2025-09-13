@@ -6,7 +6,7 @@
 #!icon = https://raw.githubusercontent.com/Mikephie/icons/main/icon/itunes.png
 𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [rewrite_local]
-^https?:\/\/buy\.itunes\.apple\.com\/verifyReceipt$ url script-response-body Scripts/iTunesdynamic.js
+^https?:\/\/buy\.itunes\.apple\.com\/verifyReceipt$ url script-response-body iTunesdynamic.js
 
 [mitm]
 hostname = buy.itunes.apple.com

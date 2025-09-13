@@ -5,8 +5,8 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/revenuecat.png
 
 [Script]
-http-response ^https:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/?(.*?)*$) script-path=Scripts/RevenueCatNew.js, requires-body=true, timeout=60, tag=RevenueCatNew
-http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/?(.*?)*$) script-path=Scripts/RevenueCatNew.js, requires-body=false, timeout=60, tag=RevenueCatNew
+http-response ^https:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/?(.*?)*$) script-path=RevenueCatNew.js, requires-body=true, timeout=60, tag=script
+http-request ^https:\/\/api\.(revenuecat|rc-backup)\.com\/.+\/(receipts$|subscribers\/?(.*?)*$) script-path=RevenueCatNew.js, requires-body=false, timeout=60, tag=script
 
 [MITM]
 hostname = api.revenuecat.com, api.rc-backup.com
