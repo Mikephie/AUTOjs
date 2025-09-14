@@ -241,11 +241,12 @@
   else scanAll();
 })();
 
+/* === GitHubPlus 徽标替换 v2（稳定位右下角） === */
 (function () {
   'use strict';
 
-  /* ---------- 样式：猫图标 + 霓虹高光（暗黑更亮） ---------- */
-  const STYLE_ID = '__ghplus_badge_style__';
+  // 样式：暗黑高亮更强
+  const STYLE_ID = '__ghplus_badge_style_v2__';
   const svgCat = encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
       <path d="M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z" fill="currentColor"/>
@@ -259,100 +260,78 @@
       .ghplus-badge{
         display:inline-flex; align-items:center; gap:.5em;
         font-weight:600; letter-spacing:.2px;
-        border-radius:12px; padding:.45em .8em;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        transition: transform .08s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+        border-radius:12px; padding:.46em .84em;
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         cursor:pointer; user-select:none;
+        transition: transform .08s ease, box-shadow .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
       }
-      /* 明暗两套基色：暗黑更亮、更有霓虹感 */
       @media (prefers-color-scheme: dark){
-        .ghplus-badge{
-          color:#e6f9ff;
-          background: rgba(120,245,255,.10);
-          border: 1px solid rgba(120,245,255,.45);
-          box-shadow: 0 8px 22px rgba(0,0,0,.35), 0 0 20px rgba(120,245,255,.20);
-        }
-        .ghplus-badge:hover{
-          box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 28px rgba(120,245,255,.35);
-        }
-        .ghplus-badge:active{
-          transform: translateY(1px) scale(.985);
-          background: rgba(120,245,255,.18);
-          border-color: rgba(120,245,255,.75);
-          box-shadow: inset 0 1px 3px rgba(0,0,0,.45), 0 0 32px rgba(120,245,255,.45);
-        }
+        .ghplus-badge{ color:#e6f9ff; background:rgba(120,245,255,.10); border:1px solid rgba(120,245,255,.45); box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 20px rgba(120,245,255,.20); }
+        .ghplus-badge:hover{ box-shadow:0 10px 26px rgba(0,0,0,.40),0 0 28px rgba(120,245,255,.35); }
+        .ghplus-badge:active{ transform:translateY(1px) scale(.985); background:rgba(120,245,255,.18); border-color:rgba(120,245,255,.75); box-shadow:inset 0 1px 3px rgba(0,0,0,.45), 0 0 32px rgba(120,245,255,.45); }
       }
       @media (prefers-color-scheme: light){
-        .ghplus-badge{
-          color:#0a2230;
-          background: rgba(0,128,192,.10);
-          border: 1px solid rgba(0,128,192,.35);
-          box-shadow: 0 8px 18px rgba(0,0,0,.15);
-        }
-        .ghplus-badge:hover{
-          box-shadow: 0 10px 22px rgba(0,0,0,.2), 0 0 16px rgba(0,128,192,.25);
-        }
-        .ghplus-badge:active{
-          transform: translateY(1px) scale(.985);
-          background: rgba(0,128,192,.16);
-          border-color: rgba(0,128,192,.6);
-        }
+        .ghplus-badge{ color:#0a2230; background:rgba(0,128,192,.10); border:1px solid rgba(0,128,192,.35); box-shadow:0 8px 18px rgba(0,0,0,.15); }
+        .ghplus-badge:hover{ box-shadow:0 10px 22px rgba(0,0,0,.2),0 0 16px rgba(0,128,192,.25); }
+        .ghplus-badge:active{ transform:translateY(1px) scale(.985); background:rgba(0,128,192,.16); border-color:rgba(0,128,192,.6); }
       }
-      /* 猫图标：用 mask 呈现，可随文字颜色自动换色 */
       .ghplus-icon{
-        width:18px; height:18px; flex:0 0 18px;
-        background: currentColor;
-        -webkit-mask: url("data:image/svg+xml,${svgCat}") no-repeat center / contain;
-                mask: url("data:image/svg+xml,${svgCat}") no-repeat center / contain;
-        filter: drop-shadow(0 0 2px rgba(255,255,255,.25));
+        width:18px;height:18px;flex:0 0 18px;background:currentColor;
+        -webkit-mask:url("data:image/svg+xml,${svgCat}") no-repeat center/contain;
+                mask:url("data:image/svg+xml,${svgCat}") no-repeat center/contain;
+        filter:drop-shadow(0 0 2px rgba(255,255,255,.25));
       }
     `;
     document.head.appendChild(s);
   }
 
-  /* ---------- 查找并替换右下角浮标 ---------- */
-  function tweakBadgeIn(root){
-    const all = (root.querySelectorAll ? root.querySelectorAll('*') : []);
-    for (const el of all) {
-      const txt = (el.textContent || '').trim();
-      const looksLike = /fix\s*github/i.test(txt) || /github\s*helper/i.test(txt);
-      const maybeBadge = looksLike || (el.className && /fix-github|github-helper|githubplus/i.test(el.className));
-      if (!maybeBadge) continue;
+  const TEXT_RE = /fix\s*github/i;
 
-      // 已经处理过
-      if (el.__ghplusDone) return;
-      el.__ghplusDone = true;
+  function nearBottomRight(el){
+    const r = el.getBoundingClientRect();
+    const right = window.innerWidth - r.right;
+    const bottom = window.innerHeight - r.bottom;
+    return right >= -4 && right <= 160 && bottom >= -4 && bottom <= 160;
+  }
+  function looksLikeBadge(el){
+    if (!el || el.nodeType !== 1) return false;
+    const txt = (el.textContent || '').replace(/\s+/g,' ').trim();
+    if (!TEXT_RE.test(txt)) return false;
+    const cs = getComputedStyle(el);
+    if (!(cs.position === 'fixed' || cs.position === 'sticky' || cs.position === 'absolute')) return false;
+    const w = el.getBoundingClientRect().width, h = el.getBoundingClientRect().height;
+    if (w < 70 || h < 24) return false;
+    return nearBottomRight(el);
+  }
 
-      // 清空并重建内容
-      el.textContent = '';
-      el.classList.add('ghplus-badge');
-      const icon = document.createElement('span');
-      icon.className = 'ghplus-icon';
-      const label = document.createElement('span');
-      label.textContent = 'GitHubPlus';
+  function rebuild(el){
+    if (el.__ghplusDone) return;
+    el.__ghplusDone = true;
+    el.innerHTML = '';
+    el.classList.add('ghplus-badge');
+    el.style.zIndex = Math.max(9999, +(getComputedStyle(el).zIndex || 0)) + '';
+    const icon = document.createElement('span'); icon.className = 'ghplus-icon';
+    const label = document.createElement('span'); label.textContent = 'GitHubPlus';
+    el.append(icon, label);
+  }
 
-      el.appendChild(icon);
-      el.appendChild(label);
-      return;
-    }
+  function scanRoot(root){
+    const list = root.querySelectorAll ? root.querySelectorAll('a,button,div,span') : [];
+    for (const el of list) { if (looksLikeBadge(el)) { rebuild(el); return; } }
   }
 
   function scanAll(){
-    // 主文档
-    tweakBadgeIn(document);
+    scanRoot(document);
     // Shadow DOM
     const walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT);
-    let n; while ((n = walker.nextNode())) {
-      if (n.shadowRoot) tweakBadgeIn(n.shadowRoot);
-    }
+    let n; while ((n = walker.nextNode())) if (n.shadowRoot) scanRoot(n.shadowRoot);
   }
 
   const mo = new MutationObserver(scanAll);
-  mo.observe(document.documentElement, {childList:true, subtree:true});
+  mo.observe(document.documentElement, { childList: true, subtree: true });
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', scanAll, {once:true});
+    document.addEventListener('DOMContentLoaded', scanAll, { once: true });
   } else {
     scanAll();
   }
