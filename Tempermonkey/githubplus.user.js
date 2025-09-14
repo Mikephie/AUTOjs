@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub 助手增强版完善版
 // @namespace    https://github.com/
-// @version      8.0
+// @version      8.1
 // @author       Mr.Eric
 // @license      MIT
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
@@ -6954,7 +6954,7 @@ init();
   const ORIG_PANEL_ID = '__gh_rescue_panel__';
   const ORIG_BTN_ID   = '__gh_rescue_btn__';
   const NEW_PANEL_ID  = '__gh_rescue_panel__ghplus'; // 隔离用的新 ID
-  const RAF_INTERVAL  = 60;   // 守护节流间隔（毫秒）: 60 更灵敏，120 更省电
+  const RAF_INTERVAL  = 40;   // 守护节流间隔（毫秒）: 60 更灵敏，120 更省电
   const REOPEN_DEBOUNCE = 140; // 连续重开防抖间隔
 
   /*** ====== 样式（玻璃 + 徽标霓虹 + ScriptHub 按钮） ====== ***/
@@ -7210,4 +7210,42 @@ init();
   // 控制台手动调试（可选）
   window.GHPlusPinOn  = pinOn;
   window.GHPlusPinOff = pinOff;
+})();
+
+/* === Glass Hard-Force Patch (inline + !important) === */
+(function () {
+  'use strict';
+  const NEW_ID='__gh_rescue_panel__ghplus';
+  const ORIG_ID='__gh_rescue_panel__';
+
+  function forceGlassInline(p){
+    if (!p) return;
+    // 关键：用 setProperty 第三个参数 'important'
+    p.style.setProperty('backdrop-filter', 'blur(16px) saturate(1.15)', 'important');
+    p.style.setProperty('-webkit-backdrop-filter', 'blur(16px) saturate(1.15)', 'important');
+    p.style.setProperty('background', 'linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.02))', 'important');
+    p.style.setProperty('border', '1px solid rgba(255,255,255,.26)', 'important');
+    p.style.setProperty('border-radius', '16px', 'important');
+    p.style.setProperty('box-shadow', '0 18px 50px rgba(0,0,0,.35)', 'important');
+
+    // 若有内部按钮容器，也做一点按钮玻璃（可选）
+    p.querySelectorAll('button, a.btn, a.Button').forEach(el=>{
+      el.style.setProperty('background','rgba(255,255,255,.10)','important');
+      el.style.setProperty('border','1px solid rgba(255,255,255,.26)','important');
+      el.style.setProperty('border-radius','12px','important');
+      el.style.setProperty('backdrop-filter','blur(8px)','important');
+      el.style.setProperty('-webkit-backdrop-filter','blur(8px)','important');
+    });
+  }
+
+  function apply(){
+    const panel = document.getElementById(NEW_ID) || document.getElementById(ORIG_ID);
+    if (panel) forceGlassInline(panel);
+  }
+
+  // 初次与后续都强制一遍
+  apply();
+  const mo = new MutationObserver(apply);
+  mo.observe(document.documentElement, {childList:true, subtree:true});
+  window.addEventListener('resize', apply, {passive:true});
 })();
