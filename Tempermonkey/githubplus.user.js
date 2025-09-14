@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         GitHub 助手增强版完善版
+// @name         GitHub 助手增强版MIKE完善版
 // @namespace    https://github.com/
 // @version      6.0.28
 // @author       Mr.Eric
@@ -6956,199 +6956,319 @@ function openSelectedFiles(type) {
 init();
 })();
 
-/* ===== [Glass + ScriptHub Patch for Alex github.user.js] v1.2.1 =====
- * 修复: iOS 无 GM_addStyle 时样式不生效；总是提供右下角玻璃浮窗按钮
- */
+// ==UserScript==
+// @name         GitHubPlus (Alex 追加整合) v3.0
+// @namespace    https://github.com/
+// @version      3.0.0
+// @description  直接"追加"在 Alex 原脚本之后：玻璃风格 + ScriptHub 按钮内嵌 + 自有 GitHubPlus 浮标（青蓝霓虹）+ 面板常驻开关；iOS Userscripts 兼容，无@require/GM_*。
+// @match        https://github.com/*
+// @match        https://raw.githubusercontent.com/*
+// @run-at       document-end
+// @grant        none
+// ==/UserScript==
+
 (function () {
   'use strict';
 
-  /* ========== 统一样式注入（不依赖 GM_addStyle） ========== */
-  const STYLE_ID = '__alex_glass_sh_style__';
-  function addStyle(css) {
-    let el = document.getElementById(STYLE_ID);
-    if (!el) {
-      el = document.createElement('style');
-      el.id = STYLE_ID;
-      document.head.appendChild(el);
-    }
-    el.textContent = css;
+  /* ------------------------------ 样式（玻璃 + 青蓝霓虹 + 隐藏原徽标） ------------------------------ */
+  const STYLE_ID = '__ghplus_allin_v30__';
+  if (!document.getElementById(STYLE_ID)) {
+    const s = document.createElement('style'); s.id = STYLE_ID;
+    s.textContent = `
+      :root{
+        --glass-bg: rgba(255,255,255,.10);
+        --glass-stroke: rgba(255,255,255,.26);
+        --glass-shadow: 0 18px 50px rgba(0,0,0,.35);
+        --glass-fg: #e6edf3;
+        --btn-bg: rgba(255,255,255,.10);
+      }
+      @media (prefers-color-scheme: light){
+        :root{ --glass-fg:#111; --btn-bg: rgba(0,0,0,.06); }
+      }
+
+      /* 玻璃容器（尽量只命中 Alex 面板/对话框/卡片；附兜底 .x-glassified） */
+      .gh-panel, .gh-dialog, .gh-popup, .gh-modal,
+      .gh-release-item, .gh-asset-item, .gh-gists-header,
+      .x-glassified{
+        border-radius:16px !important; border:1px solid var(--glass-stroke) !important;
+        background:linear-gradient(135deg,var(--glass-bg),rgba(255,255,255,.02)) !important;
+        backdrop-filter:blur(16px) saturate(1.15) !important; -webkit-backdrop-filter:blur(16px) saturate(1.15) !important;
+        box-shadow:var(--glass-shadow) !important;
+      }
+
+      /* Alex 按钮基样式（内发光 + 反馈） */
+      .gh-header-btn, .gh-download-btn, .gh-copy-btn,
+      .gh-actions .btn, .gh-actions .Button {
+        background:var(--btn-bg) !important; color:var(--glass-fg) !important;
+        border:1px solid var(--glass-stroke) !important; border-radius:12px !important;
+        height:34px !important; padding:0 12px !important; line-height:34px !important;
+        display:inline-flex !important; align-items:center; gap:8px;
+        backdrop-filter:blur(8px) !important; -webkit-backdrop-filter:blur(8px) !important;
+        transition:transform .08s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease !important;
+        box-shadow:inset 0 1px 2px rgba(255,255,255,.22), 0 4px 12px rgba(0,0,0,.22) !important;
+      }
+      .gh-header-btn:hover, .gh-download-btn:hover, .gh-copy-btn:hover,
+      .gh-actions .btn:hover, .gh-actions .Button:hover { transform:translateY(-1px) !important; }
+
+      /* 自有浮标（右下角） */
+      .ghplus-fab{
+        position:fixed; right:16px; bottom:16px; z-index:2147483647;
+        display:inline-flex; align-items:center; gap:.5em;
+        font:600 14px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+        border-radius:12px; padding:.52em .9em;
+        backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+        cursor:pointer; user-select:none;
+        transition:transform .08s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+      }
+      @media (prefers-color-scheme: dark){
+        .ghplus-fab{ color:#e6f9ff; background:rgba(0,247,255,.10); border:1px solid rgba(0,247,255,.45); box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 20px rgba(0,247,255,.20); }
+        .ghplus-fab:hover{ box-shadow:0 10px 26px rgba(0,0,0,.40),0 0 28px rgba(0,247,255,.35); }
+        .ghplus-fab:active{ transform:translateY(1px) scale(.985); background:rgba(0,247,255,.18); border-color:rgba(0,247,255,.75); box-shadow:inset 0 1px 3px rgba(0,0,0,.45), 0 0 32px rgba(0,247,255,.45); }
+      }
+      @media (prefers-color-scheme: light){
+        .ghplus-fab{ color:#0a2230; background:rgba(0,160,200,.10); border:1px solid rgba(0,160,200,.35); box-shadow:0 8px 18px rgba(0,0,0,.15); }
+        .ghplus-fab:hover{ box-shadow:0 10px 22px rgba(0,0,0,.2),0 0 16px rgba(0,160,200,.25); }
+        .ghplus-fab:active{ transform:translateY(1px) scale(.985); background:rgba(0,160,200,.16); border-color:rgba(0,160,200,.6); }
+      }
+      .ghplus-fab .icon{
+        width:18px;height:18px;flex:0 0 18px;background:currentColor; position:relative;
+        -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z' fill='currentColor'/%3E%3C/svg%3E") no-repeat center/contain;
+                mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a 4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z' fill='currentColor'/%3E%3C/svg%3E") no-repeat center/contain;
+      }
+      .ghplus-fab .icon::before{
+        content:""; position:absolute; inset:-4px; border-radius:999px; pointer-events:none;
+        background: radial-gradient(closest-side, rgba(0,247,255,.70), rgba(0,247,255,0) 70%);
+        opacity:.6; filter: blur(6px);
+        animation: ghplus-pulse 2.2s ease-in-out infinite;
+      }
+      @media (prefers-color-scheme: light){
+        .ghplus-fab .icon::before{ background: radial-gradient(closest-side, rgba(0,160,200,.55), rgba(0,160,200,0) 70%); opacity:.5; }
+      }
+      @keyframes ghplus-pulse{
+        0%{ transform: scale(.85); opacity:.3; }
+        40%{ transform: scale(1.15); opacity:.75; }
+        100%{ transform: scale(.85); opacity:.3; }
+      }
+
+      /* 强制隐藏原 Fix GitHub 徽标（即使被还原） */
+      .__ghplus_hide_badge__{ opacity:0 !important; pointer-events:none !important; }
+
+      /* ScriptHub 转换按钮统一外观 */
+      .ghplus-sh-btn{
+        background:var(--btn-bg) !important; color:var(--glass-fg) !important;
+        border:1px solid var(--glass-stroke) !important; border-radius:12px !important;
+        height:34px !important; padding:0 12px !important; line-height:34px !important;
+        display:inline-flex !important; align-items:center; gap:8px;
+        backdrop-filter:blur(8px) !important; -webkit-backdrop-filter:blur(8px) !important;
+      }
+    `;
+    document.head.appendChild(s);
   }
 
-  addStyle(`
-    :root{
-      --glass-bg: rgba(255,255,255,.10);
-      --glass-stroke: rgba(255,255,255,.28);
-      --glass-shadow: 0 12px 34px rgba(0,0,0,.35);
-      --glass-fg: #111;
-      --btn-bg: rgba(255,255,255,.12);
-    }
-    [data-color-mode="dark"] :root, [data-dark-theme] :root{
-      --glass-bg: rgba(13,16,23,.38);
-      --glass-stroke: rgba(255,255,255,.16);
-      --glass-shadow: 0 14px 40px rgba(0,0,0,.55);
-      --glass-fg: #e6edf3;
-      --btn-bg: rgba(255,255,255,.08);
-    }
+  /* ------------------------------ 工具函数 ------------------------------ */
+  const TEXT_FIX = /fix\s*github/i;
+  const BTN_TEXTS = ['打开Raw文件','打开 Raw','Raw','Open Raw','下载文件','下载','Download','编辑文件','编辑','Edit'];
 
-    /* 玻璃化 Alex 的主要 UI 容器（不改布局） */
-    .gh-panel,
-    .gh-gists-header,
-    .gh-release-item,
-    .gh-release-header,
-    .gh-release-body,
-    .gh-release-assets,
-    .gh-asset-item,
-    .gh-dialog,
-    .gh-popup {
-      backdrop-filter: blur(16px) saturate(1.15);
-      -webkit-backdrop-filter: blur(16px) saturate(1.15);
-      background: linear-gradient(135deg, var(--glass-bg), rgba(255,255,255,0.02));
-      border: 1px solid var(--glass-stroke);
-      box-shadow: var(--glass-shadow);
-    }
-    .gh-gists-title,
-    .gh-release-title,
-    .gh-asset-name { color: var(--glass-fg) !important; }
+  const looksFixedBR = (el) => {
+    const r = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    if (!['fixed','absolute','sticky'].includes(cs.position)) return false;
+    const right = innerWidth - r.right;
+    const bottom = innerHeight - r.bottom;
+    return right >= -4 && right <= 220 && bottom >= -4 && bottom <= 220 && r.width >= 70 && r.height >= 24;
+  };
 
-    .gh-header-btn,
-    .gh-download-btn,
-    .gh-copy-btn,
-    .btn, .Button--secondary {
-      background: var(--btn-bg) !important;
-      border-color: var(--glass-stroke) !important;
-      color: var(--glass-fg) !important;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      transition: transform .08s ease;
-    }
-    .gh-header-btn:hover,
-    .gh-download-btn:hover,
-    .gh-copy-btn:hover { transform: translateY(-1px); }
+  const looksPanel = (el) => {
+    const cs = getComputedStyle(el);
+    if (!['fixed','absolute'].includes(cs.position)) return false;
+    if ((+cs.zIndex || 0) < 10) return false;
+    const { width:w, height:h } = el.getBoundingClientRect();
+    const r = Math.max(...['borderTopLeftRadius','borderTopRightRadius','borderBottomLeftRadius','borderBottomRightRadius'].map(k => parseFloat(cs[k] || '0')));
+    return w >= 200 && h >= 120 && r >= 8;
+  };
 
-    /* 右下角玻璃浮窗 */
-    #__alex_glass_fab__{
-      position:fixed;
-      right:16px;
-      bottom:calc(16px + env(safe-area-inset-bottom,0px));
-      z-index:2147483647;
-      display:flex; flex-direction:column; gap:8px;
-      padding:12px;
-      border-radius:16px;
-      border:1px solid var(--glass-stroke);
-      background: linear-gradient(135deg, var(--glass-bg), rgba(255,255,255,0.02));
-      box-shadow: var(--glass-shadow);
-      backdrop-filter: blur(14px) saturate(1.2);
-      -webkit-backdrop-filter: blur(14px) saturate(1.2);
-      color:var(--glass-fg);
-      max-width:90vw;
-    }
-    #__alex_glass_fab__ .fab-title{ font-size:12px; font-weight:600; opacity:.85; }
-    #__alex_glass_fab__ .fab-row{ display:flex; flex-wrap:wrap; gap:8px; }
-    #__alex_glass_fab__ .fab-btn{
-      appearance:none; border:1px solid var(--glass-stroke);
-      background: var(--btn-bg); color:var(--glass-fg);
-      padding:8px 12px; border-radius:12px; font-size:12px; line-height:1;
-      cursor:pointer; user-select:none; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      transition: transform .08s ease;
-    }
-    #__alex_glass_fab__ .fab-btn:hover{ transform: translateY(-1px); }
-  `);
-
-  /* ========== Raw 链接解析（独立，不干扰原逻辑） ========== */
-  function getRawUrl(href) {
+  const getRawUrl = (href, scope) => {
     href = (href || location.href).split('#')[0].split('?')[0];
     if (/^https?:\/\/raw\.githubusercontent\.com\//.test(href)) return href;
-
     let m = href.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)$/);
     if (m) return `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}/${m[4]}`;
-
     m = href.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/raw\/([^\/]+)\/(.+)$/);
     if (m) return `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}/${m[4]}`;
-
-    const a = document.querySelector('a.Link--primary[href*="/blob/"]');
-    if (a) return getRawUrl(a.href);
+    const a = scope?.querySelector?.('a.Link--primary[href*="/blob/"]');
+    if (a) return getRawUrl(a.href, scope);
     return null;
+  };
+
+  /* ------------------------------ 1) 玻璃化（含 Shadow DOM） ------------------------------ */
+  function forceGlass(el){
+    if (el.__xGlass) return; el.__xGlass = true;
+    el.classList.add('x-glassified');
+    const st = el.style;
+    st.background='linear-gradient(135deg,var(--glass-bg),rgba(255,255,255,.02))';
+    st.backdropFilter='blur(16px) saturate(1.15)'; st.webkitBackdropFilter='blur(16px) saturate(1.15)';
+    st.border='1px solid var(--glass-stroke)'; if(!st.borderRadius) st.borderRadius='16px';
+    st.boxShadow='var(--glass-shadow)';
+  }
+  function sweepGlass(root){
+    root.querySelectorAll?.('.gh-panel, .gh-dialog, .gh-popup, .gh-modal').forEach(forceGlass);
+    // 兜底：形状像弹窗的也打玻璃
+    root.querySelectorAll?.('div,section,dialog').forEach(el=>{ try{ if (looksPanel(el)) forceGlass(el); }catch(e){} });
   }
 
-  /* ========== 操作函数 ========== */
-  function notify(msg) {
-    try { GM_notification && GM_notification({ title:'GitHub+', text:msg, timeout:2000 }); } catch(e){ console.log('[GitHub+]', msg); }
-  }
-  function copyText(text){
-    try{ GM_setClipboard && GM_setClipboard(text,'text'); notify('已复制：'+text); return; }catch(_){}
-    const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.left='-9999px';
-    document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy') && notify('已复制：'+text); }catch(_){ alert(text); }
-    ta.remove();
-  }
-  function openRaw(){ const raw=getRawUrl(); raw ? window.open(raw,'_blank','noopener,noreferrer') : notify('未找到 Raw'); }
-  function openSH(){ const raw=getRawUrl(); raw ? window.open(`http://script.hub/convert/_start_/${encodeURIComponent(raw)}/_end_/plain.txt?type=plain-text&target=plain-text`,'_blank','noopener,noreferrer') : notify('未找到 Raw'); }
-  function copyRaw(){ const raw=getRawUrl(); raw ? copyText(raw) : notify('未找到 Raw'); }
-  function editFile(){
-    const url = location.href.replace(/\/(convert|file|view)\//, '/edit/');
-    if (url !== location.href) { window.open(url, '_blank', 'noopener,noreferrer'); return; }
-    const btn = document.querySelector('a[aria-label="Edit this file"], a[href*="/edit/"]');
-    btn ? window.open(btn.href, '_blank', 'noopener,noreferrer') : notify('未找到编辑入口');
-  }
-  function downloadRaw(){
-    const raw=getRawUrl(); if (!raw) return notify('未找到 Raw');
-    const a=document.createElement('a'); a.href=raw; a.download=(raw.split('/').pop()||'download.txt');
-    document.body.appendChild(a); a.click(); a.remove();
-  }
-
-  /* ========== 右下角玻璃浮窗（始终存在） ========== */
-  const FAB_ID='__alex_glass_fab__';
-  function ensureFab(){
-    if (!document.body) return;
-    let box = document.getElementById(FAB_ID);
-    if (!box){
-      box = document.createElement('div');
-      box.id = FAB_ID;
-      box.innerHTML = `
-        <div class="fab-title">Raw / ScriptHub · 工具</div>
-        <div class="fab-row">
-          <button class="fab-btn" data-act="raw">打开 Raw</button>
-          <button class="fab-btn" data-act="sh">ScriptHub 转换</button>
-          <button class="fab-btn" data-act="copy">复制 Raw</button>
-          <button class="fab-btn" data-act="edit">重新编辑</button>
-          <button class="fab-btn" data-act="down">下载 Raw</button>
-        </div>`;
-      box.addEventListener('click', (e)=>{
-        const act = e.target && e.target.getAttribute('data-act');
-        if (!act) return;
-        e.preventDefault();
-        ({ raw:openRaw, sh:openSH, copy:copyRaw, edit:editFile, down:downloadRaw }[act] || (()=>{}))();
-      });
-      document.body.appendChild(box);
+  /* ------------------------------ 2) ScriptHub 按钮内嵌 ------------------------------ */
+  function insertScriptHub(scope){
+    // 优先找 Alex 面板的 actions 区
+    let host = scope.querySelector?.('.gh-panel .gh-actions, .gh-dialog .gh-actions, .gh-gists-header-buttons, .gh-header-actions');
+    if (!host) {
+      // 退化：找 Raw/下载/编辑 按钮，并插到它旁边
+      const hit = Array.from(scope.querySelectorAll?.('button,a') || []).find(el => BTN_TEXTS.includes((el.textContent||'').trim()));
+      if (hit) host = hit.parentElement || hit.closest('div,span,section');
     }
-    return box;
-  }
+    if (!host || host.querySelector?.('[data-ghplus-sh]')) return;
 
-  /* ========== 同步插入到 Alex 按钮区（可用时） ========== */
-  function tryInjectHeaderButton(){
-    const host = document.querySelector('.gh-gists-header-buttons, .gh-header-actions');
-    if (!host || host.querySelector('[data-alex-sh-btn]')) return;
-    const btn = document.createElement('button');
-    btn.setAttribute('data-alex-sh-btn','1');
-    btn.className = 'gh-header-btn';
+    const btn = (scope.ownerDocument || document).createElement('button');
+    btn.className = 'ghplus-sh-btn';
+    btn.setAttribute('data-ghplus-sh','1');
     btn.textContent = 'ScriptHub 转换';
-    btn.style.marginLeft = '8px';
-    btn.addEventListener('click', openSH);
+    btn.addEventListener('click', ()=>{
+      const raw = getRawUrl(undefined, scope);
+      if (!raw) return;
+      const url = `http://script.hub/convert/_start_/${encodeURIComponent(raw)}/_end_/plain.txt?type=plain-text&target=plain-text`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+    });
     host.appendChild(btn);
   }
 
-  /* ========== 适配 GitHub SPA 路由变化 ========== */
-  function render(){
-    ensureFab();
-    tryInjectHeaderButton();
+  /* ------------------------------ 3) 自有 GitHubPlus 徽标 + 隐藏原徽标 ------------------------------ */
+  function ensureFab(){
+    if (document.querySelector('.ghplus-fab')) return;
+    const fab = document.createElement('button');
+    fab.className = 'ghplus-fab';
+    fab.innerHTML = `<span class="icon"></span><span>GitHubPlus</span>`;
+    document.body.appendChild(fab);
+    wireFabToggle(fab);
   }
-  const _p = history.pushState, _r = history.replaceState;
-  history.pushState = function(){ const ret=_p.apply(this, arguments); queueMicrotask(render); return ret; };
-  history.replaceState = function(){ const ret=_r.apply(this, arguments); queueMicrotask(render); return ret; };
-  window.addEventListener('popstate', render, false);
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render, { once:true });
-  } else {
-    render();
+  function hideOldBadge(){
+    document.querySelectorAll('a,button,div,span').forEach(el=>{
+      const txt = (el.textContent||'').replace(/\s+/g,' ').trim();
+      if (looksFixedBR(el) && (TEXT_FIX.test(txt) || /fix-github/i.test(el.className||''))) {
+        el.classList.add('__ghplus_hide_badge__');
+        el.style.setProperty('opacity','0','important');
+        el.style.setProperty('pointer-events','none','important');
+      }
+    });
   }
+
+  /* ------------------------------ 4) 常驻守护（真·停留） ------------------------------ */
+  const STATE = { pinned:false, guardTimer:null, removeObs:null, reopenTs:0 };
+
+  function findPanel(){
+    // 越后加入的越有可能是面板，倒序找
+    const nodes = Array.from(document.querySelectorAll('div,section,dialog')).reverse();
+    return nodes.find(looksPanel) || null;
+  }
+
+  function openViaOldBadgeOnce(){
+    const old = Array.from(document.querySelectorAll('a,button,div,span'))
+      .find(el=>{
+        const t=(el.textContent||'').replace(/\s+/g,' ').trim();
+        return looksFixedBR(el) && (TEXT_FIX.test(t) || /fix-github/i.test(el.className||''));
+      });
+    if (old) old.click();
+  }
+
+  function guard(panel){
+    if (!panel) return;
+    panel.setAttribute('data-ghplus-sticky','1');
+    panel.style.display='block'; panel.style.opacity='1'; panel.style.visibility='visible';
+    panel.style.pointerEvents='auto'; panel.style.zIndex='2147483647';
+
+    // 阻断自动关闭的常见事件
+    ['mouseleave','pointerleave','mouseout','blur','transitionend','animationend'].forEach(ev=>{
+      panel.addEventListener(ev, e=>{ if (STATE.pinned) e.stopImmediatePropagation(); }, true);
+    });
+
+    // 周期修复隐藏
+    if (STATE.guardTimer) clearInterval(STATE.guardTimer);
+    STATE.guardTimer = setInterval(()=>{
+      if (!document.body.contains(panel)) { // 被移除
+        clearInterval(STATE.guardTimer); STATE.guardTimer=null;
+        if (STATE.pinned) reopen();
+        return;
+      }
+      if (panel.hasAttribute('hidden')) panel.removeAttribute('hidden');
+      if (panel.getAttribute('aria-hidden')==='true') panel.setAttribute('aria-hidden','false');
+      const cs = getComputedStyle(panel);
+      if (cs.display==='none') panel.style.display='block';
+      if (cs.visibility==='hidden') panel.style.visibility='visible';
+      if (+cs.opacity===0) panel.style.opacity='1';
+    }, 250);
+
+    // 监听"被从父节点移除"
+    if (STATE.removeObs) { STATE.removeObs.disconnect(); STATE.removeObs=null; }
+    const parent = panel.parentNode || document.body;
+    STATE.removeObs = new MutationObserver(muts=>{
+      if (!STATE.pinned) return;
+      for (const m of muts) for (const n of m.removedNodes) if (n===panel) { reopen(); return; }
+    });
+    STATE.removeObs.observe(parent, { childList:true });
+  }
+
+  function reopen(){
+    const now = Date.now(); if (now - STATE.reopenTs < 120) return;
+    STATE.reopenTs = now;
+    openViaOldBadgeOnce();
+    setTimeout(()=>{ const p=findPanel(); if (p && STATE.pinned) guard(p); }, 60);
+  }
+
+  function pinOn(){
+    STATE.pinned = true;
+    let p = findPanel();
+    if (p) guard(p);
+    else { openViaOldBadgeOnce(); setTimeout(()=>{ p=findPanel(); if (p && STATE.pinned) guard(p); }, 80); }
+  }
+  function pinOff(){
+    STATE.pinned = false;
+    if (STATE.guardTimer) { clearInterval(STATE.guardTimer); STATE.guardTimer=null; }
+    if (STATE.removeObs) { STATE.removeObs.disconnect(); STATE.removeObs=null; }
+    const p = findPanel(); if (p) { p.removeAttribute('data-ghplus-sticky'); p.style.display='none'; }
+  }
+
+  function wireFabToggle(fab){
+    if (fab.__wired) return; fab.__wired=true;
+    fab.addEventListener('click', (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      if (STATE.pinned) pinOff(); else pinOn();
+    }, {passive:false});
+  }
+
+  /* ------------------------------ 启动：轮询+观察，保证生效 ------------------------------ */
+  function processRoot(root){
+    // 玻璃 + ScriptHub（面板出现后再插）
+    sweepGlass(root);
+    insertScriptHub(root);
+  }
+
+  function scanAll(){
+    processRoot(document);
+    const w = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT);
+    let n; while ((n = w.nextNode())) if (n.shadowRoot) processRoot(n.shadowRoot);
+  }
+
+  // 初始执行
+  ensureFab();
+  hideOldBadge();
+  scanAll();
+
+  // 持续保证
+  setInterval(()=>{ ensureFab(); hideOldBadge(); scanAll(); }, 600);
+  const mo = new MutationObserver(()=>{ ensureFab(); hideOldBadge(); scanAll(); });
+  mo.observe(document.documentElement, { childList:true, subtree:true });
+
+  // 路由切换
+  const _p=history.pushState,_r=history.replaceState;
+  history.pushState=function(){ const ret=_p.apply(this,arguments); queueMicrotask(()=>{ ensureFab(); hideOldBadge(); scanAll(); }); return ret; };
+  history.replaceState=function(){ const ret=_r.apply(this,arguments); queueMicrotask(()=>{ ensureFab(); hideOldBadge(); scanAll(); }); return ret; };
+  window.addEventListener('popstate', ()=>{ ensureFab(); hideOldBadge(); scanAll(); }, false);
 })();
