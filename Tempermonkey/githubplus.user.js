@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub 助手增强版完善版
 // @namespace    https://github.com/
-// @version      7.2
+// @version      7.3
 // @author       Mr.Eric
 // @license      MIT
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
@@ -6936,19 +6936,192 @@ function openSelectedFiles(type) {
 init();
 })();
 
-// === 禁用所有外部点击/鼠标移出触发的自动关闭 ===
+/* ===== GitHubPlus Sticky Guard vFinal ===== */
 (function(){
-  const stopper = e => {
-    const panel = document.getElementById('__gh_rescue_panel__');
-    const btn   = document.getElementById('__gh_rescue_btn__');
-    if (panel && panel.style.display === 'block' 
-        && !panel.contains(e.target) 
-        && e.target !== btn) {
-      // 阻止原脚本的关闭逻辑
-      e.stopImmediatePropagation();
-    }
+  'use strict';
+
+  const BTN_ID = '__gh_rescue_btn__';
+  const PANEL_ID = '__gh_rescue_panel__';
+  const ATTR = 'data-ghplus-sticky';
+
+  // 1) 强制样式（当 sticky=1 时）
+  const STYLE_ID = '__ghplus_force_sticky_css__';
+  if (!document.getElementById(STYLE_ID)) {
+    const css = `
+      #${PANEL_ID}[${ATTR}="1"]{
+        display:block !important;
+        visibility:visible !important;
+        opacity:1 !important;
+        pointer-events:auto !important;
+        z-index:2147483647 !important;
+        backdrop-filter:blur(16px) saturate(1.15);
+        -webkit-backdrop-filter:blur(16px) saturate(1.15);
+      }
+      /* 避免父容器 overflow 隐藏导致看不见 */
+      #${PANEL_ID}[${ATTR}="1"] *{ contain:layout paint style; }
+    `.trim();
+    const s = document.createElement('style'); s.id = STYLE_ID; s.textContent = css;
+    document.head.appendChild(s);
+  }
+
+  const S = {
+    pinned: false,
+    loop: null,
+    remoObs: null,
+    reopenLock: 0,
+    stopHandlers: []
   };
-  document.addEventListener('click', stopper, true);
-  document.addEventListener('mouseleave', stopper, true);
-  document.addEventListener('blur', stopper, true);
+
+  const btn = () => document.getElementById(BTN_ID);
+  const panel = () => document.getElementById(PANEL_ID);
+
+  // 2) 打开（置 sticky）
+  function stickOn(){
+    const p = panel();
+    const b = btn();
+    S.pinned = true;
+    if (p){
+      p.setAttribute(ATTR, '1');
+      baseShow(p);
+      armGuards(p);
+    } else if (b){
+      // 没面板就模拟一次原始点击打开
+      safeClick(b);
+      setTimeout(()=>{
+        const p2 = panel();
+        if (p2){ p2.setAttribute(ATTR,'1'); baseShow(p2); armGuards(p2); }
+      }, 50);
+    }
+  }
+
+  // 3) 关闭（解除 sticky）
+  function stickOff(){
+    const p = panel();
+    S.pinned = false;
+    if (S.loop){ clearInterval(S.loop); S.loop = null; }
+    if (S.remoObs){ S.remoObs.disconnect(); S.remoObs = null; }
+    removeGlobalStoppers();
+    if (p){
+      p.removeAttribute(ATTR);
+      // 礼貌交还原脚本：直接隐藏
+      p.style.display = 'none';
+      p.style.visibility = '';
+      p.style.opacity = '';
+    }
+  }
+
+  // 4) 绑定按钮：第一次点击→让原脚本打开后 stickOn；再次点击→我们拦截并 stickOff
+  function wireBtn(){
+    const b = btn();
+    if (!b || b.__ghplusStickyWired) return;
+    b.__ghplusStickyWired = true;
+
+    b.addEventListener('click', (e)=>{
+      if (S.pinned){
+        // 关闭：阻止原脚本重新打开
+        e.preventDefault(); e.stopPropagation();
+        stickOff();
+      } else {
+        // 打开：不拦截，等原脚本把面板创建好后再置 sticky
+        setTimeout(stickOn, 0);
+      }
+    }, { passive:false });
+  }
+
+  // 5) 守护：反隐藏 / 被移除即重开
+  function armGuards(p){
+    // 阻断"自动关闭"类事件（仅 sticky 时）
+    addGlobalStopper('click', p);
+    addGlobalStopper('mousedown', p);
+    addGlobalStopper('touchstart', p);
+    addGlobalStopper('mouseleave', p);
+    addGlobalStopper('pointerleave', p);
+    addGlobalStopper('mouseout', p);
+    addGlobalStopper('blur', p);
+    addGlobalStopper('transitionend', p);
+    addGlobalStopper('animationend', p);
+
+    // 定时反隐藏
+    if (S.loop) clearInterval(S.loop);
+    S.loop = setInterval(()=>{
+      if (!S.pinned) return;
+      const node = panel();
+      if (!node){
+        // 被移除：重开
+        tryReopen();
+        return;
+      }
+      node.setAttribute(ATTR,'1');
+      baseShow(node);
+      // 常驻时也顺手清掉 aria 隐藏
+      if (node.hasAttribute('hidden')) node.removeAttribute('hidden');
+      if (node.getAttribute('aria-hidden') === 'true') node.setAttribute('aria-hidden','false');
+    }, 200);
+
+    // 监听父节点移除
+    if (S.remoObs) { S.remoObs.disconnect(); S.remoObs = null; }
+    const parent = (p && p.parentNode) || document.body;
+    S.remoObs = new MutationObserver(muts=>{
+      if (!S.pinned) return;
+      for (const m of muts){
+        for (const n of m.removedNodes){
+          if (n === p){ tryReopen(); return; }
+        }
+      }
+    });
+    S.remoObs.observe(parent, { childList:true });
+  }
+
+  // 6) 基本显示
+  function baseShow(p){
+    p.style.display = 'block';
+    p.style.visibility = 'visible';
+    p.style.opacity = '1';
+    p.style.pointerEvents = 'auto';
+    p.style.zIndex = '2147483647';
+  }
+
+  // 7) 拦截器：在捕获阶段阻断"点击外部就关"的监听
+  function addGlobalStopper(type, p){
+    const stopper = (e)=>{
+      if (!S.pinned) return;
+      const b = btn();
+      // 外部点击 & 面板已开 → 阻断后续监听执行
+      if (p && p.getAttribute(ATTR)==='1' && !p.contains(e.target) && e.target !== b){
+        e.stopImmediatePropagation();
+      }
+    };
+    document.addEventListener(type, stopper, true);
+    S.stopHandlers.push({type, fn: stopper});
+  }
+  function removeGlobalStoppers(){
+    S.stopHandlers.forEach(({type, fn})=> document.removeEventListener(type, fn, true));
+    S.stopHandlers.length = 0;
+  }
+
+  // 8) 重开
+  function tryReopen(){
+    const now = Date.now();
+    if (now - S.reopenLock < 150) return;
+    S.reopenLock = now;
+    const b = btn();
+    if (b) { safeClick(b); }
+    setTimeout(()=>{
+      const p = panel();
+      if (p && S.pinned){ p.setAttribute(ATTR,'1'); baseShow(p); }
+    }, 50);
+  }
+
+  function safeClick(el){
+    el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true }));
+  }
+
+  // 9) 初始化：按钮可能异步插入 → 轮询一次 + 监听 DOM
+  wireBtn();
+  const mo = new MutationObserver(()=> wireBtn());
+  mo.observe(document.documentElement, { childList:true, subtree:true });
+
+  // Debug 开关（可在控制台用）
+  window.GHPlusStickOn = stickOn;
+  window.GHPlusStickOff = stickOff;
 })();
