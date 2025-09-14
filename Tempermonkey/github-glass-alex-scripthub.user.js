@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ (Alex版) 玻璃风格 + ScriptHub（嵌入式, 自适配 v1.8.3）
 // @namespace    https://mikephie.site/
-// @version      1.8.7
+// @version      1.8.8
 // @description  不改 Alex 逻辑；弹窗玻璃；按钮"彩色外圈高亮 + 更强点击反馈"；ScriptHub 仅嵌入按钮区/Raw旁；适配 document / shadowRoot / 同域 iframe；iOS OK。
 // @author       Mikephie
 // @match        https://github.com/*
@@ -241,160 +241,136 @@
   else scanAll();
 })();
 
-/* === GitHubPlus 徽标补丁 v2.1（稳：轮询绑定 + 霓虹 + 点击开关常驻） === */
+/* === GitHubPlus 浮标 v2.5：自有浮标 + 青蓝霓虹 + 原浮标隐藏 + 点击开/关常驻 === */
 (function () {
   'use strict';
 
-  /* ---------- 样式（一次性注入） ---------- */
-  const STYLE_ID = '__ghplus_badge_v21__';
+  /* ---------- 样式（青蓝霓虹 + 玻璃） ---------- */
+  const STYLE_ID = '__ghplus_fab_v25_blue__';
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID;
     s.textContent = `
-      .ghplus-badge{
+      .ghplus-fab{
+        position:fixed; right:16px; bottom:16px; z-index:1000000;
         display:inline-flex; align-items:center; gap:.5em;
-        font-weight:600; letter-spacing:.2px;
-        border-radius:12px; padding:.46em .84em;
-        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        font:600 14px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        border-radius:12px; padding:.52em .9em;
+        backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
         cursor:pointer; user-select:none;
-        transition: transform .08s ease, box-shadow .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+        transition:transform .08s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
       }
       @media (prefers-color-scheme: dark){
-        .ghplus-badge{ color:#e6f9ff; background:rgba(120,245,255,.10); border:1px solid rgba(120,245,255,.45); box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 20px rgba(120,245,255,.20); }
-        .ghplus-badge:hover{ box-shadow:0 10px 26px rgba(0,0,0,.40),0 0 28px rgba(120,245,255,.35); }
-        .ghplus-badge:active{ transform:translateY(1px) scale(.985); background:rgba(120,245,255,.18); border-color:rgba(120,245,255,.75); box-shadow:inset 0 1px 3px rgba(0,0,0,.45), 0 0 32px rgba(120,245,255,.45); }
+        .ghplus-fab{ color:#e6f9ff; background:rgba(0,247,255,.10); border:1px solid rgba(0,247,255,.45); box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 20px rgba(0,247,255,.20); }
+        .ghplus-fab:hover{ box-shadow:0 10px 26px rgba(0,0,0,.40),0 0 28px rgba(0,247,255,.35); }
+        .ghplus-fab:active{ transform:translateY(1px) scale(.985); background:rgba(0,247,255,.18); border-color:rgba(0,247,255,.75); box-shadow:inset 0 1px 3px rgba(0,0,0,.45), 0 0 32px rgba(0,247,255,.45); }
       }
       @media (prefers-color-scheme: light){
-        .ghplus-badge{ color:#0a2230; background:rgba(0,128,192,.10); border:1px solid rgba(0,128,192,.35); box-shadow:0 8px 18px rgba(0,0,0,.15); }
-        .ghplus-badge:hover{ box-shadow:0 10px 22px rgba(0,0,0,.2),0 0 16px rgba(0,128,192,.25); }
-        .ghplus-badge:active{ transform:translateY(1px) scale(.985); background:rgba(0,128,192,.16); border-color:rgba(0,128,192,.6); }
+        .ghplus-fab{ color:#0a2230; background:rgba(0,160,200,.10); border:1px solid rgba(0,160,200,.35); box-shadow:0 8px 18px rgba(0,0,0,.15); }
+        .ghplus-fab:hover{ box-shadow:0 10px 22px rgba(0,0,0,.2),0 0 16px rgba(0,160,200,.25); }
+        .ghplus-fab:active{ transform:translateY(1px) scale(.985); background:rgba(0,160,200,.16); border-color:rgba(0,160,200,.6); }
       }
-      .ghplus-icon{
-        width:18px;height:18px;flex:0 0 18px;background:currentColor;
+      .ghplus-fab .icon{
+        width:18px;height:18px;flex:0 0 18px;background:currentColor; position:relative;
         -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z' fill='currentColor'/%3E%3C/svg%3E") no-repeat center/contain;
                 mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z' fill='currentColor'/%3E%3C/svg%3E") no-repeat center/contain;
       }
-      /* 霓虹脉冲（只给徽标图标） */
-      .ghplus-badge .ghplus-icon{ position:relative; }
-      .ghplus-badge .ghplus-icon::before{
+      /* 青蓝霓虹脉冲 */
+      .ghplus-fab .icon::before{
         content:""; position:absolute; inset:-4px; border-radius:999px; pointer-events:none;
-        background: radial-gradient(closest-side, rgba(120,245,255,.60), rgba(120,245,255,0) 70%);
-        opacity:.55; filter: blur(6px);
+        background: radial-gradient(closest-side, rgba(0,247,255,.70), rgba(0,247,255,0) 70%);
+        opacity:.6; filter: blur(6px);
         animation: ghplus-pulse 2.2s ease-in-out infinite;
       }
       @media (prefers-color-scheme: light){
-        .ghplus-badge .ghplus-icon::before{
-          background: radial-gradient(closest-side, rgba(0,128,192,.55), rgba(0,128,192,0) 70%);
-          opacity:.45;
-        }
+        .ghplus-fab .icon::before{ background: radial-gradient(closest-side, rgba(0,160,200,.55), rgba(0,160,200,0) 70%); opacity:.5; }
       }
       @keyframes ghplus-pulse{
-        0%{ transform: scale(.85); opacity:.25; }
-        40%{ transform: scale(1.15); opacity:.65; }
-        100%{ transform: scale(.85); opacity:.25; }
+        0%{ transform: scale(.85); opacity:.3; }
+        40%{ transform: scale(1.15); opacity:.75; }
+        100%{ transform: scale(.85); opacity:.3; }
       }
+      .__ghplus_hide_badge__{ opacity:0 !important; pointer-events:none !important; }
     `;
     document.head.appendChild(s);
   }
 
-  /* ---------- 找右下角原徽标（文本含 Fix GitHub，且固定在右下） ---------- */
+  /* ---------- 新建浮标 ---------- */
+  function ensureFab(){
+    if (document.querySelector('.ghplus-fab')) return;
+    const fab = document.createElement('button');
+    fab.className = 'ghplus-fab';
+    fab.innerHTML = `<span class="icon"></span><span>GitHubPlus</span>`;
+    document.body.appendChild(fab);
+    wireToggle(fab);
+  }
+
+  /* ---------- 隐藏原 Fix GitHub ---------- */
   const TEXT_RE = /fix\s*github/i;
   function nearBR(el){
     const r = el.getBoundingClientRect();
-    const right = window.innerWidth - r.right;
-    const bottom = window.innerHeight - r.bottom;
-    return right >= -4 && right <= 180 && bottom >= -4 && bottom <= 180;
+    const right = innerWidth - r.right;
+    const bottom = innerHeight - r.bottom;
+    return right >= -4 && right <= 200 && bottom >= -4 && bottom <= 200;
   }
-  function isBadge(el){
-    if (!el || el.nodeType !== 1) return false;
+  function looksLikeOld(el){
+    if (!el) return false;
     const cs = getComputedStyle(el);
-    if (!(cs.position === 'fixed' || cs.position === 'absolute' || cs.position === 'sticky')) return false;
+    if (!(cs.position==='fixed'||cs.position==='absolute'||cs.position==='sticky')) return false;
     if (!nearBR(el)) return false;
-    const w = el.getBoundingClientRect().width, h = el.getBoundingClientRect().height;
-    if (w < 70 || h < 24) return false;
-    const txt = (el.textContent || '').replace(/\s+/g,' ').trim();
+    const txt = (el.textContent||'').trim();
     return TEXT_RE.test(txt) || /fix-github/i.test(el.className||'');
   }
-
-  /* ---------- 重建为 GitHubPlus（保留原事件） ---------- */
-  function rebuild(el){
-    if (el.__ghplusDone) return el;
-    el.__ghplusDone = true;
-    // 保存原子节点（为了保留原上的事件绑定），只清内容
-    while (el.firstChild) el.removeChild(el.firstChild);
-    el.classList.add('ghplus-badge');
-    const icon = document.createElement('span'); icon.className = 'ghplus-icon';
-    const label = document.createElement('span'); label.textContent = 'GitHubPlus';
-    el.append(icon, label);
-    return el;
+  function hideOld(){
+    document.querySelectorAll('a,button,div,span').forEach(el=>{
+      if (looksLikeOld(el)){
+        el.classList.add('__ghplus_hide_badge__');
+      }
+    });
   }
 
-  /* ---------- 面板点击开/关（保持常驻） ---------- */
-  let stickyTimer = null;
-  let pinned = false;
+  setInterval(()=>{ ensureFab(); hideOld(); },500);
+  const mo=new MutationObserver(()=>{ ensureFab(); hideOld(); });
+  mo.observe(document.documentElement,{childList:true,subtree:true});
 
-  function looksLikePanel(node){
-    const cs = getComputedStyle(node);
-    const pos = cs.position; if (!(pos==='fixed'||pos==='absolute')) return false;
-    const z = +cs.zIndex || 0; if (z < 10) return false;
-    const r = Math.max(...['borderTopLeftRadius','borderTopRightRadius','borderBottomLeftRadius','borderBottomRightRadius'].map(k=>parseFloat(cs[k]||'0')));
-    const {width:w,height:h} = node.getBoundingClientRect();
-    return r>=8 && w>=200 && h>=120;
+  /* ---------- 点击开关常驻 ---------- */
+  let pinned=false, keepTimer=null;
+  function looksLikePanel(n){
+    const cs=getComputedStyle(n);
+    const pos=cs.position; if(!(pos==='fixed'||pos==='absolute')) return false;
+    const z=+cs.zIndex||0; if(z<10) return false;
+    const {width:w,height:h}=n.getBoundingClientRect();
+    return w>=200&&h>=120;
   }
-  function findPanel(root=document){
-    const nodes = root.querySelectorAll ? root.querySelectorAll('div,section,dialog') : [];
-    for (const n of nodes) if (looksLikePanel(n)) return n;
-    return null;
+  function findPanel(){
+    return Array.from(document.querySelectorAll('div,section,dialog')).find(looksLikePanel)||null;
   }
-  function keepAlive(panel){
-    if (!panel) return;
-    panel.setAttribute('data-ghplus-sticky','1');
-    panel.style.opacity='1'; panel.style.visibility='visible'; panel.style.display='block';
-    panel.style.pointerEvents='auto';
-    panel.style.zIndex = Math.max(9999, +getComputedStyle(panel).zIndex || 0);
-    if (stickyTimer) clearInterval(stickyTimer);
-    stickyTimer = setInterval(()=>{
-      if (!document.body.contains(panel)) { clearInterval(stickyTimer); stickyTimer=null; pinned=false; return; }
-      panel.removeAttribute('hidden'); panel.removeAttribute('aria-hidden');
-      panel.style.opacity='1'; panel.style.visibility='visible'; panel.style.display='block';
-    }, 300);
-    panel.__ghplusCleanup = () => { if (stickyTimer) { clearInterval(stickyTimer); stickyTimer=null; } panel.removeAttribute('data-ghplus-sticky'); };
+  function keep(panel){
+    if(!panel) return;
+    panel.style.display='block'; panel.style.opacity='1'; panel.style.visibility='visible';
+    if(keepTimer) clearInterval(keepTimer);
+    keepTimer=setInterval(()=>{
+      if(!document.body.contains(panel)){clearInterval(keepTimer);keepTimer=null;pinned=false;return;}
+      panel.style.display='block'; panel.style.opacity='1'; panel.style.visibility='visible';
+    },300);
+    panel.__unstick=()=>{if(keepTimer){clearInterval(keepTimer);keepTimer=null;}};
   }
   function release(panel){
-    if (!panel) return;
-    if (panel.__ghplusCleanup) panel.__ghplusCleanup();
-    panel.style.display='none'; panel.style.opacity=''; panel.style.visibility='';
-    pinned=false;
+    if(!panel)return;
+    if(panel.__unstick) panel.__unstick();
+    panel.style.display='none'; pinned=false;
+  }
+  function wireToggle(fab){
+    if(fab.__wired)return; fab.__wired=true;
+    fab.addEventListener('click',e=>{
+      e.preventDefault(); e.stopPropagation();
+      const panel=findPanel();
+      if(panel&&pinned){ release(panel); return; }
+      // 触发原按钮点击
+      const old=Array.from(document.querySelectorAll('a,button,div,span')).find(looksLikeOld);
+      if(old) old.click();
+      setTimeout(()=>{const p=findPanel(); if(p){pinned=true; keep(p);} },0);
+    });
   }
 
-  function wireToggle(el){
-    if (el.__ghplusWired) return;
-    el.__ghplusWired = true;
-    el.addEventListener('click', (ev)=>{
-      ev.preventDefault(); ev.stopPropagation();
-      const panel = findPanel();
-      if (panel && pinned) { release(panel); return; }
-      // 触发原点击（让原脚本创建/打开面板）
-      setTimeout(()=>{
-        const p = findPanel();
-        if (p) { pinned = true; keepAlive(p); }
-      }, 0);
-    }, {passive:false});
-    el.addEventListener('touchstart', (e)=>{ e.preventDefault(); e.stopPropagation(); }, {passive:false});
-  }
-
-  /* ---------- 轮询查找并绑定（最稳） ---------- */
-  let tries = 0;
-  const MAX_TRIES = 120; // 约 1 分钟
-  const poll = setInterval(()=>{
-    tries++;
-    // 从右下角附近的 a/button/div/span 里找
-    const candidates = Array.from(document.querySelectorAll('a,button,div,span')).filter(isBadge);
-    if (candidates.length) {
-      const el = rebuild(candidates[0]);
-      wireToggle(el);
-      clearInterval(poll);
-    } else if (tries >= MAX_TRIES) {
-      clearInterval(poll);
-    }
-  }, 500);
+  ensureFab(); hideOld();
 })();
