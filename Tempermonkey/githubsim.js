@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ 玻璃风格 + ScriptHub（固定工具条·移动横滑修复·结构复刻）
 // @namespace    https://mikephie.site/
-// @version      2.7.0
+// @version      2.8.0
 // @description  固定横向工具条（桌面顶部 / 移动底部横滑）；ScriptHub 路由完全复刻避免 Invalid URL；暗黑高对比霓虹；短标签；快捷键 r/d/p/u/f/s/h；Alt+点徽标切换"仅文件页/全站"；徽标不遮挡按钮。
 // @author       You
 // @match        https://github.com/*
