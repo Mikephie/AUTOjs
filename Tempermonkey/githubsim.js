@@ -189,11 +189,21 @@
     return location.protocol === 'https:' ? 'https://script.hub' : 'http://script.hub';
   }
   function buildScriptHubURL(){
-    const raw = getRawURL(); if(!raw) return null;
-    const enc = encodeURIComponent(raw);  // 仅编码一次
+  const raw = getRawURL();
+  if (!raw) return null;
+
+  // 只编码路径，保留协议和主机，避免 Invalid URL
+  try {
+    const u = new URL(raw);
+    const safeRaw = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
+
     const base = pickHubBase();
-    return `${base}/convert/_start_/${enc}/_end_/plain.txt?type=plain-text&target=plain-text`;
+    return `${base}/convert/_start_/${safeRaw}/_end_/plain.txt?type=plain-text&target=plain-text`;
+  } catch (e) {
+    console.error("ScriptHub URL build error:", e);
+    return null;
   }
+}
 
   /* ===== 动作 ===== */
   async function downloadCurrent(){
