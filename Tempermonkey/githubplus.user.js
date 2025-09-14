@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub 助手增强版完善版
 // @namespace    https://github.com/
-// @version      7.3
+// @version      7.4
 // @author       Mr.Eric
 // @license      MIT
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
@@ -6936,192 +6936,176 @@ function openSelectedFiles(type) {
 init();
 })();
 
-/* ===== GitHubPlus Sticky Guard vFinal ===== */
-(function(){
+/* ===== GitHubPlus v3.2 面板隔离：改ID + 隐身原查询 + 守护显示 ===== */
+(function () {
   'use strict';
+  const ORIG_ID = '__gh_rescue_panel__';
+  const BTN_ID  = '__gh_rescue_btn__';
+  const NEW_ID  = '__gh_rescue_panel__ghplus';
+  const ATTR    = 'data-ghplus-sticky';
+  if (window.__ghplus_isolate_v32__) return; window.__ghplus_isolate_v32__ = true;
 
-  const BTN_ID = '__gh_rescue_btn__';
-  const PANEL_ID = '__gh_rescue_panel__';
-  const ATTR = 'data-ghplus-sticky';
-
-  // 1) 强制样式（当 sticky=1 时）
-  const STYLE_ID = '__ghplus_force_sticky_css__';
+  // 1) 强制可见样式
+  const STYLE_ID = '__ghplus_isolate_css__';
   if (!document.getElementById(STYLE_ID)) {
-    const css = `
-      #${PANEL_ID}[${ATTR}="1"]{
-        display:block !important;
-        visibility:visible !important;
-        opacity:1 !important;
-        pointer-events:auto !important;
-        z-index:2147483647 !important;
-        backdrop-filter:blur(16px) saturate(1.15);
-        -webkit-backdrop-filter:blur(16px) saturate(1.15);
+    const s = document.createElement('style'); s.id = STYLE_ID;
+    s.textContent = `
+      #${NEW_ID}[${ATTR}="1"]{
+        display:block!important; visibility:visible!important; opacity:1!important;
+        pointer-events:auto!important; z-index:2147483647!important;
+        backdrop-filter:blur(16px) saturate(1.15); -webkit-backdrop-filter:blur(16px) saturate(1.15);
       }
-      /* 避免父容器 overflow 隐藏导致看不见 */
-      #${PANEL_ID}[${ATTR}="1"] *{ contain:layout paint style; }
-    `.trim();
-    const s = document.createElement('style'); s.id = STYLE_ID; s.textContent = css;
+    `;
     document.head.appendChild(s);
   }
 
-  const S = {
-    pinned: false,
-    loop: null,
-    remoObs: null,
-    reopenLock: 0,
-    stopHandlers: []
-  };
+  const S = { pinned:false, loop:null, obs:null, patched:false, lastOpenTs:0 };
+  const btn   = () => document.getElementById(BTN_ID);
+  const panel = () => document.getElementById(NEW_ID) || document.getElementById(ORIG_ID);
 
-  const btn = () => document.getElementById(BTN_ID);
-  const panel = () => document.getElementById(PANEL_ID);
+  // 2) 隔离：把面板 id 改成 NEW_ID，并加上 sticky 标记
+  function isolatePanel(p){
+    if (!p) return null;
+    try {
+      if (p.id !== NEW_ID) p.id = NEW_ID; // 改ID让原脚本找不到
+    } catch {}
+    p.setAttribute(ATTR,'1');
+    p.removeAttribute('hidden');
+    p.setAttribute('aria-hidden','false');
+    p.style.display='block';
+    p.style.visibility='visible';
+    p.style.opacity='1';
+    p.style.pointerEvents='auto';
+    p.style.zIndex='2147483647';
+    return p;
+  }
 
-  // 2) 打开（置 sticky）
-  function stickOn(){
-    const p = panel();
-    const b = btn();
+  // 3) 打补丁：让原脚本"找不到"旧ID的面板
+  function patchDOMFinders(){
+    if (S.patched) return;
+    S.patched = true;
+    const _get = Document.prototype.getElementById;
+    Document.prototype.getElementById = function(id){
+      if (S.pinned && id === ORIG_ID) return null;
+      return _get.call(this, id);
+    };
+    const _qs = Document.prototype.querySelector;
+    Document.prototype.querySelector = function(sel){
+      if (S.pinned && (sel === `#${ORIG_ID}` || sel.includes(`[id="${ORIG_ID}"]`))) return null;
+      return _qs.call(this, sel);
+    };
+    const _qsa = Document.prototype.querySelectorAll;
+    Document.prototype.querySelectorAll = function(sel){
+      if (S.pinned && (sel === `#${ORIG_ID}` || sel.includes(`[id="${ORIG_ID}"]`))) return Object.freeze([]);
+      return _qsa.call(this, sel);
+    };
+  }
+
+  // 4) 打开并隔离
+  function pinOn(){
     S.pinned = true;
-    if (p){
-      p.setAttribute(ATTR, '1');
-      baseShow(p);
-      armGuards(p);
-    } else if (b){
-      // 没面板就模拟一次原始点击打开
-      safeClick(b);
-      setTimeout(()=>{
-        const p2 = panel();
-        if (p2){ p2.setAttribute(ATTR,'1'); baseShow(p2); armGuards(p2); }
-      }, 50);
+    patchDOMFinders();
+    let p = panel();
+    if (!p) {
+      const b = btn();
+      if (b) { safeClick(b); S.lastOpenTs = Date.now(); }
+      setTimeout(()=>{ p = panel(); if (p) { isolatePanel(p); guard(p); } }, 60);
+    } else {
+      isolatePanel(p); guard(p);
     }
   }
 
-  // 3) 关闭（解除 sticky）
-  function stickOff(){
-    const p = panel();
+  // 5) 关闭并还原（只关闭我们改过的 NEW_ID）
+  function pinOff(){
     S.pinned = false;
-    if (S.loop){ clearInterval(S.loop); S.loop = null; }
-    if (S.remoObs){ S.remoObs.disconnect(); S.remoObs = null; }
-    removeGlobalStoppers();
+    if (S.loop){ clearInterval(S.loop); S.loop=null; }
+    if (S.obs){ S.obs.disconnect(); S.obs=null; }
+    const p = document.getElementById(NEW_ID);
     if (p){
       p.removeAttribute(ATTR);
-      // 礼貌交还原脚本：直接隐藏
-      p.style.display = 'none';
-      p.style.visibility = '';
-      p.style.opacity = '';
+      p.style.display='none'; p.style.visibility=''; p.style.opacity='';
+      // 如需完全还原给原脚本，可把 id 改回去：p.id = ORIG_ID;
     }
   }
 
-  // 4) 绑定按钮：第一次点击→让原脚本打开后 stickOn；再次点击→我们拦截并 stickOff
-  function wireBtn(){
-    const b = btn();
-    if (!b || b.__ghplusStickyWired) return;
-    b.__ghplusStickyWired = true;
-
-    b.addEventListener('click', (e)=>{
-      if (S.pinned){
-        // 关闭：阻止原脚本重新打开
-        e.preventDefault(); e.stopPropagation();
-        stickOff();
-      } else {
-        // 打开：不拦截，等原脚本把面板创建好后再置 sticky
-        setTimeout(stickOn, 0);
-      }
-    }, { passive:false });
-  }
-
-  // 5) 守护：反隐藏 / 被移除即重开
-  function armGuards(p){
-    // 阻断"自动关闭"类事件（仅 sticky 时）
-    addGlobalStopper('click', p);
-    addGlobalStopper('mousedown', p);
-    addGlobalStopper('touchstart', p);
-    addGlobalStopper('mouseleave', p);
-    addGlobalStopper('pointerleave', p);
-    addGlobalStopper('mouseout', p);
-    addGlobalStopper('blur', p);
-    addGlobalStopper('transitionend', p);
-    addGlobalStopper('animationend', p);
-
-    // 定时反隐藏
+  // 6) 守护：反隐藏 & 反移除 & 反样式破坏，若被删就重开再隔离
+  function guard(p){
     if (S.loop) clearInterval(S.loop);
     S.loop = setInterval(()=>{
       if (!S.pinned) return;
-      const node = panel();
+      let node = document.getElementById(NEW_ID);
       if (!node){
-        // 被移除：重开
-        tryReopen();
-        return;
+        reopenAndIsolate(); return;
       }
-      node.setAttribute(ATTR,'1');
-      baseShow(node);
-      // 常驻时也顺手清掉 aria 隐藏
+      isolatePanel(node);
+      // 防止被加隐藏属性/类
+      if (node.getAttribute('aria-hidden')==='true') node.setAttribute('aria-hidden','false');
       if (node.hasAttribute('hidden')) node.removeAttribute('hidden');
-      if (node.getAttribute('aria-hidden') === 'true') node.setAttribute('aria-hidden','false');
+      // 某些脚本会不断改样式，这里每轮都纠正
+      const cs = getComputedStyle(node);
+      if (cs.display==='none') node.style.display='block';
+      if (cs.visibility==='hidden') node.style.visibility='visible';
+      if (+cs.opacity===0) node.style.opacity='1';
     }, 200);
 
-    // 监听父节点移除
-    if (S.remoObs) { S.remoObs.disconnect(); S.remoObs = null; }
-    const parent = (p && p.parentNode) || document.body;
-    S.remoObs = new MutationObserver(muts=>{
+    if (S.obs) S.obs.disconnect();
+    const parent = p.parentNode || document.body;
+    S.obs = new MutationObserver(muts=>{
       if (!S.pinned) return;
       for (const m of muts){
         for (const n of m.removedNodes){
-          if (n === p){ tryReopen(); return; }
+          if (n === p || (n.nodeType===1 && n.querySelector && n.querySelector(`#${NEW_ID}`))){
+            reopenAndIsolate(); return;
+          }
         }
       }
     });
-    S.remoObs.observe(parent, { childList:true });
-  }
+    S.obs.observe(parent, { childList:true, subtree:false });
 
-  // 6) 基本显示
-  function baseShow(p){
-    p.style.display = 'block';
-    p.style.visibility = 'visible';
-    p.style.opacity = '1';
-    p.style.pointerEvents = 'auto';
-    p.style.zIndex = '2147483647';
-  }
-
-  // 7) 拦截器：在捕获阶段阻断"点击外部就关"的监听
-  function addGlobalStopper(type, p){
-    const stopper = (e)=>{
+    // 捕获阶段阻断"外部点击/移出"等关闭触发（仅常驻时）
+    const stopper = e=>{
       if (!S.pinned) return;
+      const node = document.getElementById(NEW_ID);
       const b = btn();
-      // 外部点击 & 面板已开 → 阻断后续监听执行
-      if (p && p.getAttribute(ATTR)==='1' && !p.contains(e.target) && e.target !== b){
+      if (node && !node.contains(e.target) && e.target !== b){
         e.stopImmediatePropagation();
       }
     };
-    document.addEventListener(type, stopper, true);
-    S.stopHandlers.push({type, fn: stopper});
-  }
-  function removeGlobalStoppers(){
-    S.stopHandlers.forEach(({type, fn})=> document.removeEventListener(type, fn, true));
-    S.stopHandlers.length = 0;
+    ['click','mousedown','mouseup','touchstart','pointerdown','mouseleave','pointerleave','mouseout','blur','transitionend','animationend']
+      .forEach(t => document.addEventListener(t, stopper, true));
   }
 
-  // 8) 重开
-  function tryReopen(){
+  function reopenAndIsolate(){
     const now = Date.now();
-    if (now - S.reopenLock < 150) return;
-    S.reopenLock = now;
-    const b = btn();
-    if (b) { safeClick(b); }
-    setTimeout(()=>{
-      const p = panel();
-      if (p && S.pinned){ p.setAttribute(ATTR,'1'); baseShow(p); }
-    }, 50);
+    if (now - S.lastOpenTs < 120) return;
+    S.lastOpenTs = now;
+    const b = btn(); if (b) safeClick(b);
+    setTimeout(()=>{ const p = panel(); if (p) { isolatePanel(p); } }, 60);
   }
 
   function safeClick(el){
     el.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true }));
   }
 
-  // 9) 初始化：按钮可能异步插入 → 轮询一次 + 监听 DOM
+  // 7) 绑定按钮：单击开/关（开=隔离+守护；关=仅我们关闭）
+  function wireBtn(){
+    const b = btn(); if (!b || b.__ghplus_iso_wired) return;
+    b.__ghplus_iso_wired = true;
+    b.addEventListener('click', (e)=>{
+      if (S.pinned){
+        e.preventDefault(); e.stopPropagation();
+        pinOff();
+      } else {
+        setTimeout(pinOn, 0); // 让原脚本先创建，再隔离
+      }
+    }, { passive:false });
+  }
+
   wireBtn();
-  const mo = new MutationObserver(()=> wireBtn());
+  const mo = new MutationObserver(wireBtn);
   mo.observe(document.documentElement, { childList:true, subtree:true });
 
-  // Debug 开关（可在控制台用）
-  window.GHPlusStickOn = stickOn;
-  window.GHPlusStickOff = stickOff;
+  // 手动开关（调试）
+  window.GHPlusPinOn  = pinOn;
+  window.GHPlusPinOff = pinOff;
 })();
