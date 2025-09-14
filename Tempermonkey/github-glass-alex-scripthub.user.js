@@ -337,160 +337,85 @@
   }
 })();
 
-/* === GitHubPlus 常驻补丁 for v1.8.9 + Badge v2（点击开→常驻；再点→关闭） === */
+/* === GitHubPlus 热修 v3.0.1：徽标非破坏装饰（修复无法弹窗） === */
 (function () {
   'use strict';
 
-  // ---- 识别"像 Alex 面板"的元素 ----
-  function looksLikePanel(el){
+  const STYLE_ID = '__ghplus_badge_hotfix_v301__';
+  if (!document.getElementById(STYLE_ID)) {
+    const s = document.createElement('style'); s.id = STYLE_ID;
+    s.textContent = `
+      /* 保留原结构：只加类与装饰，不改原文字/子节点 */
+      .ghplus-badge{ 
+        display:inline-flex; align-items:center; gap:.5em;
+        border-radius:12px; padding:.46em .84em;
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        position:relative; overflow:visible;
+      }
+      /* 猫图标装饰：不遮挡原节点的点击 */
+      .ghplus-badge .ghplus-icon-dec {
+        width:18px; height:18px; flex:0 0 18px; background: currentColor;
+        -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z' fill='currentColor'/%3E%3C/svg%3E") no-repeat center/contain;
+                mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z' fill='currentColor'/%3E%3C/svg%3E") no-repeat center/contain;
+        position:relative; pointer-events:none; /* 不抢点击 */
+      }
+      /* 霓虹脉冲（青蓝） */
+      .ghplus-badge .ghplus-icon-dec::before{
+        content:""; position:absolute; inset:-4px; border-radius:999px; pointer-events:none;
+        background: radial-gradient(closest-side, rgba(0,247,255,.70), rgba(0,247,255,0) 70%);
+        opacity:.6; filter: blur(6px);
+        animation: ghplus-pulse 2.2s ease-in-out infinite;
+      }
+      @media (prefers-color-scheme: light){
+        .ghplus-badge .ghplus-icon-dec::before{
+          background: radial-gradient(closest-side, rgba(0,160,200,.55), rgba(0,160,200,0) 70%);
+          opacity:.5;
+        }
+      }
+      @keyframes ghplus-pulse{
+        0%{ transform: scale(.85); opacity:.3; }
+        40%{ transform: scale(1.15); opacity:.75; }
+        100%{ transform: scale(.85); opacity:.3; }
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
+  const TEXT_RE = /fix\s*github/i;
+  function nearBR(el){
+    const r = el.getBoundingClientRect();
+    const right = innerWidth - r.right;
+    const bottom = innerHeight - r.bottom;
+    return right >= -4 && right <= 220 && bottom >= -4 && bottom <= 220 && r.width >= 70 && r.height >= 24;
+  }
+  function isOldBadge(el){
     if (!el || el.nodeType !== 1) return false;
     const cs = getComputedStyle(el);
-    const pos = cs.position;
-    if (!(pos === 'fixed' || pos === 'absolute')) return false;
-    if ((+cs.zIndex || 0) < 10) return false;
-    const r = Math.max(
-      parseFloat(cs.borderTopLeftRadius||'0'),
-      parseFloat(cs.borderTopRightRadius||'0'),
-      parseFloat(cs.borderBottomLeftRadius||'0'),
-      parseFloat(cs.borderBottomRightRadius||'0')
-    );
-    const {width:w,height:h} = el.getBoundingClientRect();
-    return r >= 8 && w >= 200 && h >= 120;
-  }
-  function findPanel(){
-    const nodes = Array.from(document.querySelectorAll('div,section,dialog')).reverse();
-    return nodes.find(looksLikePanel) || null;
+    if (!['fixed','absolute','sticky'].includes(cs.position)) return false;
+    const txt = (el.textContent || '').replace(/\s+/g,' ').trim();
+    return nearBR(el) && (TEXT_RE.test(txt) || /fix-github/i.test(el.className||''));
   }
 
-  // ---- 找到右下角"GitHubPlus 徽标"（你已用 v2 重建为 .ghplus-badge） ----
-  function findBadge(){
-    // 主文档
-    const el = document.querySelector('.ghplus-badge');
-    if (el) return el;
-    // Shadow DOM（以防后续在 shadowRoot 里）
-    const walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT);
-    let n; while ((n = walker.nextNode())) {
-      if (n.shadowRoot) {
-        const hit = n.shadowRoot.querySelector?.('.ghplus-badge');
-        if (hit) return hit;
-      }
+  function decorateNonDestructively(el){
+    if (!el || el.__ghplusDecorated) return;
+    el.__ghplusDecorated = true;
+    // 仅添加类与装饰图标；不改 text、不删子节点
+    el.classList.add('ghplus-badge');
+    const icon = document.createElement('span');
+    icon.className = 'ghplus-icon-dec';
+    // 插在最前，但不影响原点击（icon pointer-events:none）
+    el.insertBefore(icon, el.firstChild || null);
+  }
+
+  function run(){
+    const candidates = document.querySelectorAll('a,button,div,span');
+    for (const el of candidates) {
+      if (isOldBadge(el)) { decorateNonDestructively(el); break; }
     }
-    return null;
   }
 
-  // ---- 常驻守护（反隐藏 / 反移除 / 阻断自动关闭事件） ----
-  const STATE = { pinned:false, guardTimer:null, removeObs:null, reopenTs:0, badge:null };
-
-  function armGuardian(panel){
-    if (!panel) return;
-    // 基本显示
-    panel.style.display = 'block';
-    panel.style.opacity = '1';
-    panel.style.visibility = 'visible';
-    panel.style.pointerEvents = 'auto';
-    panel.style.zIndex = '2147483647';
-    panel.setAttribute('data-ghplus-sticky','1');
-
-    // 阻断常见"自动收起"的事件（只在 pinned 时阻断）
-    const stopper = (e)=>{ if (STATE.pinned) e.stopImmediatePropagation(); };
-    ['mouseleave','pointerleave','mouseout','blur','transitionend','animationend']
-      .forEach(ev => panel.addEventListener(ev, stopper, true));
-
-    // 周期修复隐藏
-    if (STATE.guardTimer) clearInterval(STATE.guardTimer);
-    STATE.guardTimer = setInterval(()=>{
-      if (!document.body.contains(panel)) { // 被移除 → 重开
-        clearInterval(STATE.guardTimer); STATE.guardTimer=null;
-        if (STATE.pinned) reopenViaBadge();
-        return;
-      }
-      if (panel.hasAttribute('hidden')) panel.removeAttribute('hidden');
-      if (panel.getAttribute('aria-hidden') === 'true') panel.setAttribute('aria-hidden','false');
-      const cs = getComputedStyle(panel);
-      if (cs.display === 'none') panel.style.display = 'block';
-      if (cs.visibility === 'hidden') panel.style.visibility = 'visible';
-      if (+cs.opacity === 0) panel.style.opacity = '1';
-    }, 250);
-
-    // 监听父节点移除
-    if (STATE.removeObs) { STATE.removeObs.disconnect(); STATE.removeObs = null; }
-    const parent = panel.parentNode || document.body;
-    STATE.removeObs = new MutationObserver(muts=>{
-      if (!STATE.pinned) return;
-      for (const m of muts) for (const n of m.removedNodes) {
-        if (n === panel) { reopenViaBadge(); return; }
-      }
-    });
-    STATE.removeObs.observe(parent, { childList:true });
-
-    // 卸载器
-    panel.__ghplus_unstick = ()=>{
-      if (STATE.guardTimer){ clearInterval(STATE.guardTimer); STATE.guardTimer=null; }
-      if (STATE.removeObs){ STATE.removeObs.disconnect(); STATE.removeObs=null; }
-      panel.removeAttribute('data-ghplus-sticky');
-      ['mouseleave','pointerleave','mouseout','blur','transitionend','animationend']
-        .forEach(ev => panel.removeEventListener(ev, stopper, true));
-    };
-  }
-
-  // ---- 用"内部点击"触发原始打开（避免和我们的点击互相干扰） ----
-  function reopenViaBadge(){
-    const now = Date.now(); if (now - STATE.reopenTs < 120) return; // 防抖
-    STATE.reopenTs = now;
-    const badge = STATE.badge || findBadge();
-    if (!badge) return;
-    badge.setAttribute('data-ghplus-internal','1');
-    badge.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true }));
-    setTimeout(()=>{
-      badge.removeAttribute('data-ghplus-internal');
-      const p = findPanel(); if (p && STATE.pinned) armGuardian(p);
-    }, 60);
-  }
-
-  function pinOn(){
-    STATE.pinned = true;
-    let p = findPanel();
-    if (p) { armGuardian(p); }
-    else { reopenViaBadge(); }
-  }
-
-  function pinOff(){
-    STATE.pinned = false;
-    const p = findPanel();
-    if (p && p.__ghplus_unstick) p.__ghplus_unstick();
-    if (p) { p.style.display = 'none'; p.style.opacity = ''; p.style.visibility = ''; }
-  }
-
-  // ---- 绑定徽标点击：开→常驻；再点→关闭 ----
-  function wireBadge(){
-    const b = findBadge();
-    if (!b || b.__ghplusWired) return;
-    STATE.badge = b;
-    b.__ghplusWired = true;
-
-    b.addEventListener('click', (e)=>{
-      // 内部点击（我们主动触发的）仅用于"打开"，不做拦截
-      if (b.hasAttribute('data-ghplus-internal')) return;
-
-      const pane = findPanel();
-      if (STATE.pinned) {
-        // 关闭：阻止原脚本可能的"再次打开"
-        e.preventDefault(); e.stopPropagation();
-        pinOff();
-      } else {
-        // 打开：让原脚本先处理（不阻止），我们随后守护
-        setTimeout(()=>{ const p = findPanel(); if (p) { pinOn(); } else { reopenViaBadge(); } }, 0);
-      }
-    }, { passive:false });
-  }
-
-  // ---- 监听 DOM，确保随时绑定 ----
-  const mo = new MutationObserver(()=>wireBadge());
+  // 初次与持续保证
+  run();
+  const mo = new MutationObserver(run);
   mo.observe(document.documentElement, { childList:true, subtree:true });
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', wireBadge, { once:true });
-  } else {
-    wireBadge();
-  }
 })();
