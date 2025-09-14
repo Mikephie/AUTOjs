@@ -6213,7 +6213,7 @@ wrap.appendChild(workflowReleaseSection);
     
     var btn = document.createElement('button');
     btn.id = '__gh_rescue_btn__';
-    btn.textContent = '👾 Fix GitHub';
+    btn.textContent = '👾 GitHubPlus';
     Object.assign(btn.style, {
       position: 'fixed',
       right: '10px',
