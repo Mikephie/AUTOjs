@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃风格 + ScriptHub（vercel首选·自动带入Raw）
+// @name         GitHub+ 玻璃风格 + ScriptHub（vercel/?src + 原站/本地 convert 自动分流）
 // @namespace    https://mikephie.site/
-// @version      2.9.0
-// @description  固定横向工具条（桌面顶部 / 移动底部横滑）；Hub 按钮走 convert 路由，自动带入 Raw；首选 scripthub.vercel.app，失败回退；暗黑高对比；短标签；快捷键 r/d/p/u/f/s/h；徽标不遮挡。
+// @version      2.9.1
+// @description  固定工具条（桌面顶部 / 移动底部横滑）；Hub 按钮自动根据基址选择 ?src 或 convert 路由；默认 vercel，Shift=script.hub，Alt=127.0.0.1；失败自动回退；暗黑高对比；短标签；快捷键 r/d/p/u/f/s/h；徽标不遮挡。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  /* ========== 样式 ========== */
+  /* ==================== 样式 ==================== */
   const STYLE = `
   :root{
     --fg:#EAF2FF; --fg-dim:#B7C2D9;
@@ -80,9 +80,9 @@
     box-shadow:0 12px 28px rgba(0,0,0,.45);
     cursor:pointer;user-select:none;font-size:12px;
   }`;
-  document.head.appendChild(Object.assign(document.createElement('style'),{textContent:STYLE}));
+  document.head.appendChild(Object.assign(document.createElement('style'), { textContent: STYLE }));
 
-  /* ========== 工具函数 ========== */
+  /* ==================== 工具函数 ==================== */
   function getRawUrl(){
     const href=location.href.split('#')[0].split('?')[0];
     const clean=location.origin+location.pathname;
@@ -99,19 +99,37 @@
   async function copyText(t){if(!t)return;try{await navigator.clipboard.writeText(t);toast("Copied");}catch{prompt("Copy manually:",t);}}
   function toast(msg){const d=document.createElement("div");d.textContent=msg;Object.assign(d.style,{position:"fixed",left:"50%",top:"18px",transform:"translateX(-50%)",background:"rgba(0,0,0,.65)",color:"#fff",padding:"6px 10px",borderRadius:"8px",zIndex:2147483647,fontSize:"12px"});document.body.appendChild(d);setTimeout(()=>d.remove(),1200);}
 
-  /* ========== ScriptHub 打开（convert 路由，自动带入 Raw） ========== */
+  /* ==================== ScriptHub 打开（vercel 用 ?src，原站/本地用 convert） ==================== */
+  function pickBases(e){
+    // 默认优先 vercel；Shift：script.hub；Alt：本地
+    if (e && e.altKey)   return ['http://127.0.0.1:9101','https://scripthub.vercel.app','https://script.hub'];
+    if (e && e.shiftKey) return ['https://script.hub','https://scripthub.vercel.app','http://127.0.0.1:9101'];
+    return ['https://scripthub.vercel.app','https://script.hub','http://127.0.0.1:9101'];
+  }
+
+  function buildHubUrl(base, raw){
+    if (base.includes('scripthub.vercel.app')) {
+      // vercel 部署：只识别 ?src=
+      return `${base}/?src=${encodeURIComponent(raw)}`;
+    }
+    // 原站 / 本地：支持 convert 自动带入
+    return `${base}/convert/_start_/${encodeURIComponent(raw)}/_end_/plain.txt?type=plain-text&target=plain-text`;
+  }
+
   function openScriptHub(e){
     const raw=getRawUrl(); if(!raw){toast("Not a file view");return;}
-    const tail="/convert/_start_/"+encodeURIComponent(raw)+"/_end_/plain.txt?type=plain-text&target=plain-text";
-    let bases=["https://scripthub.vercel.app","https://script.hub","http://127.0.0.1:9101"];
-    if(e&&e.shiftKey) bases=["https://script.hub","https://scripthub.vercel.app","http://127.0.0.1:9101"];
-    if(e&&e.altKey) bases=["http://127.0.0.1:9101","https://scripthub.vercel.app","https://script.hub"];
-    (function tryOpen(i){if(i>=bases.length){copyText(raw);toast("已复制 Raw，手动粘贴");return;}
-      const url=bases[i]+tail; try{const w=window.open(url,"_blank","noopener");if(!w)location.assign(url);}catch{tryOpen(i+1);}
+    const bases=pickBases(e);
+    (function tryOpen(i){
+      if(i>=bases.length){copyText(raw);toast("已复制 Raw，手动粘贴到 ScriptHub");return;}
+      const url=buildHubUrl(bases[i], raw);
+      try{
+        const w=window.open(url,'_blank','noopener');
+        if(!w) location.assign(url);
+      }catch{ tryOpen(i+1); }
     })(0);
   }
 
-  /* ========== 工具条 UI ========== */
+  /* ==================== 工具条 UI ==================== */
   function buildBar(){
     const bar=document.createElement("div");bar.className="gplus-shbar";
     bar.innerHTML=`
@@ -123,17 +141,20 @@
       <button class="gplus-btn" data-act="s"   title="s">Repo</button>
       <button class="gplus-btn" data-act="hub" title="h">Hub</button>`;
     bar.addEventListener("click",e=>{
-      const act=e.target.dataset.act;
-      if(act==="raw"){const r=getRawUrl();if(r)open(r,"_blank");}
-      if(act==="dl"){const r=getRawUrl();if(r)open(r,"_blank");}
-      if(act==="p") copyText(getRepoPath());
-      if(act==="u") copyText(getRawUrl());
-      if(act==="f") copyText(getFileName());
-      if(act==="s") copyText(getRepoSlug());
-      if(act==="hub") openScriptHub(e);
+      const btn=e.target.closest('.gplus-btn'); if(!btn) return;
+      const act=btn.dataset.act;
+      if(act==="raw"){const r=getRawUrl(); if(r) open(r,"_blank"); else toast('Not a file view');}
+      if(act==="dl"){const r=getRawUrl(); if(r) open(r,"_blank"); else toast('Not a file view');}
+      if(act==="p"){const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view');}
+      if(act==="u"){const r=getRawUrl(); if(r) copyText(r); else toast('Not a file view');}
+      if(act==="f"){const fn=getFileName(); if(fn) copyText(fn); else toast('Not a file view');}
+      if(act==="s"){const rp=getRepoSlug(); if(rp) copyText(rp); else toast('Not in repo');}
+      if(act==="hub"){openScriptHub(e);}
     });
     document.body.appendChild(bar);
   }
+
+  /* ==================== 徽标 ==================== */
   function ensureBadge(){
     if(document.querySelector(".gplus-badge")) return;
     const b=document.createElement("div");b.className="gplus-badge";b.textContent="GitHubPlus";
@@ -141,13 +162,13 @@
     document.body.appendChild(b);
   }
 
-  /* ========== 快捷键 ========== */
+  /* ==================== 快捷键 ==================== */
   function hotkeys(e){
     const tag=(e.target.tagName||"").toLowerCase();
     if(/(input|textarea|select)/.test(tag)||e.target.isContentEditable)return;
     const k=(e.key||"").toLowerCase();
-    if(k==="r"){const r=getRawUrl();if(r)open(r,"_blank");}
-    if(k==="d"){const r=getRawUrl();if(r)open(r,"_blank");}
+    if(k==="r"){const r=getRawUrl(); if(r) open(r,"_blank");}
+    if(k==="d"){const r=getRawUrl(); if(r) open(r,"_blank");}
     if(k==="p") copyText(getRepoPath());
     if(k==="u") copyText(getRawUrl());
     if(k==="f") copyText(getFileName());
@@ -155,7 +176,7 @@
     if(k==="h") openScriptHub(e);
   }
 
-  /* ========== 启动 ========== */
+  /* ==================== 启动 ==================== */
   (function boot(){
     buildBar(); ensureBadge();
     window.addEventListener("keydown",hotkeys,{passive:true});
