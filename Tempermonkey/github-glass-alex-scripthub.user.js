@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ (Alex版) 玻璃风格 + ScriptHub（嵌入式, 自适配 v1.8.3）
 // @namespace    https://mikephie.site/
-// @version      1.8.3
+// @version      1.8.4
 // @description  不改 Alex 逻辑；弹窗玻璃；按钮"彩色外圈高亮 + 更强点击反馈"；ScriptHub 仅嵌入按钮区/Raw旁；适配 document / shadowRoot / 同域 iframe；iOS OK。
 // @author       Mikephie
 // @match        https://github.com/*
@@ -239,4 +239,121 @@
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',scanAll,{once:true});
   else scanAll();
+})();
+
+(function () {
+  'use strict';
+
+  /* ---------- 样式：猫图标 + 霓虹高光（暗黑更亮） ---------- */
+  const STYLE_ID = '__ghplus_badge_style__';
+  const svgCat = encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+      <path d="M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z" fill="currentColor"/>
+    </svg>`
+  );
+
+  if (!document.getElementById(STYLE_ID)) {
+    const s = document.createElement('style');
+    s.id = STYLE_ID;
+    s.textContent = `
+      .ghplus-badge{
+        display:inline-flex; align-items:center; gap:.5em;
+        font-weight:600; letter-spacing:.2px;
+        border-radius:12px; padding:.45em .8em;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: transform .08s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+        cursor:pointer; user-select:none;
+      }
+      /* 明暗两套基色：暗黑更亮、更有霓虹感 */
+      @media (prefers-color-scheme: dark){
+        .ghplus-badge{
+          color:#e6f9ff;
+          background: rgba(120,245,255,.10);
+          border: 1px solid rgba(120,245,255,.45);
+          box-shadow: 0 8px 22px rgba(0,0,0,.35), 0 0 20px rgba(120,245,255,.20);
+        }
+        .ghplus-badge:hover{
+          box-shadow: 0 10px 26px rgba(0,0,0,.40), 0 0 28px rgba(120,245,255,.35);
+        }
+        .ghplus-badge:active{
+          transform: translateY(1px) scale(.985);
+          background: rgba(120,245,255,.18);
+          border-color: rgba(120,245,255,.75);
+          box-shadow: inset 0 1px 3px rgba(0,0,0,.45), 0 0 32px rgba(120,245,255,.45);
+        }
+      }
+      @media (prefers-color-scheme: light){
+        .ghplus-badge{
+          color:#0a2230;
+          background: rgba(0,128,192,.10);
+          border: 1px solid rgba(0,128,192,.35);
+          box-shadow: 0 8px 18px rgba(0,0,0,.15);
+        }
+        .ghplus-badge:hover{
+          box-shadow: 0 10px 22px rgba(0,0,0,.2), 0 0 16px rgba(0,128,192,.25);
+        }
+        .ghplus-badge:active{
+          transform: translateY(1px) scale(.985);
+          background: rgba(0,128,192,.16);
+          border-color: rgba(0,128,192,.6);
+        }
+      }
+      /* 猫图标：用 mask 呈现，可随文字颜色自动换色 */
+      .ghplus-icon{
+        width:18px; height:18px; flex:0 0 18px;
+        background: currentColor;
+        -webkit-mask: url("data:image/svg+xml,${svgCat}") no-repeat center / contain;
+                mask: url("data:image/svg+xml,${svgCat}") no-repeat center / contain;
+        filter: drop-shadow(0 0 2px rgba(255,255,255,.25));
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
+  /* ---------- 查找并替换右下角浮标 ---------- */
+  function tweakBadgeIn(root){
+    const all = (root.querySelectorAll ? root.querySelectorAll('*') : []);
+    for (const el of all) {
+      const txt = (el.textContent || '').trim();
+      const looksLike = /fix\s*github/i.test(txt) || /github\s*helper/i.test(txt);
+      const maybeBadge = looksLike || (el.className && /fix-github|github-helper|githubplus/i.test(el.className));
+      if (!maybeBadge) continue;
+
+      // 已经处理过
+      if (el.__ghplusDone) return;
+      el.__ghplusDone = true;
+
+      // 清空并重建内容
+      el.textContent = '';
+      el.classList.add('ghplus-badge');
+      const icon = document.createElement('span');
+      icon.className = 'ghplus-icon';
+      const label = document.createElement('span');
+      label.textContent = 'GitHubPlus';
+
+      el.appendChild(icon);
+      el.appendChild(label);
+      return;
+    }
+  }
+
+  function scanAll(){
+    // 主文档
+    tweakBadgeIn(document);
+    // Shadow DOM
+    const walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT);
+    let n; while ((n = walker.nextNode())) {
+      if (n.shadowRoot) tweakBadgeIn(n.shadowRoot);
+    }
+  }
+
+  const mo = new MutationObserver(scanAll);
+  mo.observe(document.documentElement, {childList:true, subtree:true});
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scanAll, {once:true});
+  } else {
+    scanAll();
+  }
 })();
