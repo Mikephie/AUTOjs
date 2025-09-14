@@ -6937,10 +6937,10 @@ init();
 })();
 
 // ==UserScript==
-// @name         GitHubPlus Final -- Glass + ScriptHub + Fast Sticky Guard
+// @name         GitHubPlus Final v4.0（Alex 追加整合：常驻 + ScriptHub + 玻璃 + 霓虹）
 // @namespace    https://github.com/
-// @version      3.3.1
-// @description  追加式整合：玻璃风格、非破坏徽标（青蓝霓虹）、ScriptHub 内嵌、快速常驻守护（开→常驻；再点→关闭）。不改 Alex 源码，iOS Userscripts 兼容。
+// @version      4.0.0
+// @description  仅此一个补丁：非破坏装饰徽标、面板点开常驻/再点关闭、ScriptHub嵌入、玻璃风格；单套守护逻辑，降低卡顿。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -6950,11 +6950,29 @@ init();
 (function () {
   'use strict';
 
-  /* ========================= 样式（徽标非破坏装饰 + ScriptHub 按钮） ========================= */
-  const STYLE_ID = '__ghplus_final_style__';
+  /*** ====== 可调参数 ====== ***/
+  const ORIG_PANEL_ID = '__gh_rescue_panel__';
+  const ORIG_BTN_ID   = '__gh_rescue_btn__';
+  const NEW_PANEL_ID  = '__gh_rescue_panel__ghplus'; // 隔离用的新 ID
+  const RAF_INTERVAL  = 60;   // 守护节流间隔（毫秒）: 60 更灵敏，120 更省电
+  const REOPEN_DEBOUNCE = 140; // 连续重开防抖间隔
+
+  /*** ====== 样式（玻璃 + 徽标霓虹 + ScriptHub 按钮） ====== ***/
+  const STYLE_ID='__ghplus_final_v40_css__';
   if (!document.getElementById(STYLE_ID)) {
-    const s = document.createElement('style'); s.id = STYLE_ID;
+    const s=document.createElement('style'); s.id=STYLE_ID;
     s.textContent = `
+      /* 面板玻璃 & 强制可见（仅在 sticky 状态） */
+      #${NEW_PANEL_ID}[data-ghplus-sticky="1"]{
+        display:block!important; visibility:visible!important; opacity:1!important;
+        pointer-events:auto!important; z-index:2147483647!important;
+        backdrop-filter:blur(16px) saturate(1.15);
+        -webkit-backdrop-filter:blur(16px) saturate(1.15);
+        background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+        border:1px solid rgba(255,255,255,.26); border-radius:16px;
+        box-shadow:0 18px 50px rgba(0,0,0,.35);
+      }
+      /* 徽标非破坏装饰（不清空原DOM，不抢点击） */
       .ghplus-badge{
         display:inline-flex; align-items:center; gap:.5em;
         border-radius:12px; padding:.46em .84em;
@@ -6974,13 +6992,11 @@ init();
         animation: ghplus-pulse 2.2s ease-in-out infinite;
       }
       @media (prefers-color-scheme: light){
-        .ghplus-badge .ghplus-icon-dec::before{
-          background: radial-gradient(closest-side, rgba(0,160,200,.55), rgba(0,160,200,0) 70%);
-          opacity:.5;
-        }
+        .ghplus-badge .ghplus-icon-dec::before{ background: radial-gradient(closest-side, rgba(0,160,200,.55), rgba(0,160,200,0) 70%); opacity:.5; }
       }
       @keyframes ghplus-pulse{ 0%{ transform:scale(.85); opacity:.3 } 40%{ transform:scale(1.15); opacity:.75 } 100%{ transform:scale(.85); opacity:.3 } }
 
+      /* ScriptHub 按钮视觉 */
       .ghplus-sh-btn{
         background:rgba(255,255,255,.10); color:inherit;
         border:1px solid rgba(255,255,255,.26); border-radius:12px;
@@ -6989,20 +7005,31 @@ init();
         backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
         cursor:pointer;
       }
-      /* 粗暴兜底玻璃：若你的主脚本已加玻璃，这里不影响；否则给面板一点质感 */
-      #__gh_rescue_panel__, #__gh_rescue_panel__ghplus{
-        background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
-        border:1px solid rgba(255,255,255,.26);
-        border-radius:16px;
-        box-shadow:0 18px 50px rgba(0,0,0,.35);
-        backdrop-filter:blur(16px) saturate(1.15); -webkit-backdrop-filter:blur(16px) saturate(1.15);
-      }
     `;
     document.head.appendChild(s);
   }
 
-  /* ========================= 徽标非破坏装饰（保留原 click 事件） ========================= */
+  /*** ====== 工具 & 状态 ====== ***/
   const TEXT_RE = /fix\s*github/i;
+  const BTN_TEXTS = ['打开Raw文件','打开 Raw','Raw','Open Raw','下载文件','下载','Download','编辑文件','编辑','Edit'];
+
+  const S = { pinned:false, rafId:0, lastTick:0, hiddenCount:0, reopenTs:0, stopperWired:false, createMO:null };
+
+  const btn   = () => document.getElementById(ORIG_BTN_ID);
+  const panel = () => document.getElementById(NEW_PANEL_ID) || document.getElementById(ORIG_PANEL_ID);
+
+  // 只 Hook getElementById：常驻时让源码"看不见"旧 ID
+  (function hookGEBI(){
+    if (Document.prototype.__ghplus_gebi_patched__) return;
+    const _get = Document.prototype.getElementById;
+    Document.prototype.getElementById = function(id){
+      if (S.pinned && id === ORIG_PANEL_ID) return null;
+      return _get.call(this, id);
+    };
+    Document.prototype.__ghplus_gebi_patched__ = true;
+  })();
+
+  /*** ====== 徽标非破坏装饰 ====== ***/
   function nearBR(el){
     const r = el.getBoundingClientRect();
     const right = innerWidth - r.right, bottom = innerHeight - r.bottom;
@@ -7012,12 +7039,12 @@ init();
     if (!el || el.nodeType !== 1) return false;
     const cs = getComputedStyle(el);
     if (!['fixed','absolute','sticky'].includes(cs.position)) return false;
-    const txt = (el.textContent||'').replace(/\s+/g,' ').trim();
+    const txt = (el.textContent || '').replace(/\s+/g,' ').trim();
     return nearBR(el) && (TEXT_RE.test(txt) || /fix-github/i.test(el.className||''));
   }
   function decorateBadge(){
     const nodes = document.querySelectorAll('a,button,div,span');
-    for (const el of nodes){
+    for (const el of nodes) {
       if (isOldBadge(el) && !el.__ghplusDecorated){
         el.__ghplusDecorated = true;
         el.classList.add('ghplus-badge');
@@ -7029,8 +7056,7 @@ init();
     }
   }
 
-  /* ========================= ScriptHub 注入（面板内优先；否则 Raw/下载/编辑旁） ========================= */
-  const BTN_TEXTS = ['打开Raw文件','打开 Raw','Raw','Open Raw','下载文件','下载','Download','编辑文件','编辑','Edit'];
+  /*** ====== ScriptHub 注入 ====== ***/
   function getRawUrl(href, scope){
     href=(href||location.href).split('#')[0].split('?')[0];
     if (/^https?:\/\/raw\.githubusercontent\.com\//.test(href)) return href;
@@ -7047,11 +7073,12 @@ init();
     let host = panel.querySelector?.('.gh-actions, .gh-header-actions, .gh-gists-header-buttons');
     if (!host) {
       const hit = Array.from(panel.querySelectorAll?.('button,a')||[])
-        .find(el => BTN_TEXTS.includes((el.textContent||'').trim()));
+        .find(el=>BTN_TEXTS.includes((el.textContent||'').trim()));
       if (hit) host = hit.parentElement || hit.closest('div,span,section');
     }
     if (!host || host.querySelector?.('[data-ghplus-sh]')) return;
-    const btn = (panel.ownerDocument||document).createElement('button');
+
+    const btn = (panel.ownerDocument || document).createElement('button');
     btn.className = 'ghplus-sh-btn'; btn.setAttribute('data-ghplus-sh','1');
     btn.textContent = 'ScriptHub 转换';
     btn.addEventListener('click', ()=>{
@@ -7063,140 +7090,124 @@ init();
     host.appendChild(btn);
   }
 
-  /* ========================= 快速常驻守护 v3.3（60ms + 即时重开） ========================= */
-  const ORIG_ID='__gh_rescue_panel__', BTN_ID='__gh_rescue_btn__', NEW_ID='__gh_rescue_panel__ghplus', ATTR='data-ghplus-sticky';
-  const STATE = { pinned:false, rafId:0, lastTick:0, hiddenCount:0, reopenTs:0, stopperWired:false, mo:null };
-
-  const btn  = ()=>document.getElementById(BTN_ID);
-  const pane = ()=>document.getElementById(NEW_ID) || document.getElementById(ORIG_ID);
-
-  // 只 Hook getElementById：pinned 时让源码"看不见"旧 ID
-  (function hookGEBI(){
-    if (Document.prototype.__ghplus_gebi_patched__) return;
-    const _get = Document.prototype.getElementById;
-    Document.prototype.getElementById = function(id){
-      if (STATE.pinned && id === ORIG_ID) return null;
-      return _get.call(this, id);
-    };
-    Document.prototype.__ghplus_gebi_patched__ = true;
-  })();
-
+  /*** ====== 隔离 + 置顶 ====== ***/
   function glassAndSticky(p){
     if (!p) return p;
-    if (p.id !== NEW_ID) { try { p.id = NEW_ID; } catch(_){} }
-    p.setAttribute(ATTR,'1');
+    if (p.id !== NEW_PANEL_ID) { try { p.id = NEW_PANEL_ID; } catch(_){} }
+    p.setAttribute('data-ghplus-sticky','1');
     p.removeAttribute('hidden'); p.setAttribute('aria-hidden','false');
     p.style.display='block'; p.style.visibility='visible'; p.style.opacity='1';
     p.style.pointerEvents='auto'; p.style.zIndex='2147483647';
-    // 面板出现时顺手注入 ScriptHub
-    injectScriptHub(p);
     return p;
   }
 
+  /*** ====== 关闭触发短路（捕获阶段） ====== ***/
   function wireStopperOnce(){
-    if (STATE.stopperWired) return;
-    STATE.stopperWired = true;
+    if (S.stopperWired) return; S.stopperWired=true;
     const stopper = e=>{
-      if (!STATE.pinned) return;
-      const p = document.getElementById(NEW_ID);
-      const b = btn();
+      if (!S.pinned) return;
+      const p = document.getElementById(NEW_PANEL_ID), b = btn();
       if (p && !p.contains(e.target) && e.target !== b) e.stopImmediatePropagation();
     };
-    ['click','mousedown','mouseup','touchstart','pointerdown',
-     'mouseleave','pointerleave','mouseout','blur','transitionend','animationend'
-    ].forEach(t => document.addEventListener(t, stopper, true));
+    ['click','mousedown','mouseup','touchstart','pointerdown','mouseleave','pointerleave','mouseout','blur','transitionend','animationend']
+      .forEach(t => document.addEventListener(t, stopper, true));
   }
 
+  /*** ====== 面板创建瞬时接管 ====== ***/
   function wireCreateObserver(){
-    if (STATE.mo) return;
-    STATE.mo = new MutationObserver(muts=>{
-      if (!STATE.pinned) return;
+    if (S.createMO) return;
+    S.createMO = new MutationObserver(muts=>{
+      if (!S.pinned) return;
       for (const m of muts){
         for (const n of m.addedNodes){
           if (n && n.nodeType===1){
-            if (n.id === ORIG_ID) { glassAndSticky(n); return; }
-            const hit = n.querySelector && n.querySelector('#'+ORIG_ID);
+            if (n.id === ORIG_PANEL_ID) { glassAndSticky(n); return; }
+            const hit = n.querySelector && n.querySelector('#'+ORIG_PANEL_ID);
             if (hit) { glassAndSticky(hit); return; }
           }
         }
       }
     });
-    STATE.mo.observe(document.documentElement, {childList:true, subtree:true});
+    S.createMO.observe(document.documentElement, {childList:true, subtree:true});
   }
 
+  /*** ====== 轻守护（rAF ~60ms） ====== ***/
   function guardLoop(ts){
-    if (!STATE.pinned) { STATE.rafId = requestAnimationFrame(guardLoop); return; }
-    if (ts - STATE.lastTick < 60) { STATE.rafId = requestAnimationFrame(guardLoop); return; } // 60ms 更快响应
-    STATE.lastTick = ts;
+    if (!S.pinned) { S.rafId = requestAnimationFrame(guardLoop); return; }
+    if (ts - S.lastTick < RAF_INTERVAL) { S.rafId = requestAnimationFrame(guardLoop); return; }
+    S.lastTick = ts;
 
-    let p = pane();
+    let p = document.getElementById(NEW_PANEL_ID) || document.getElementById(ORIG_PANEL_ID);
     if (!p){
-      STATE.hiddenCount++;
-      if (STATE.hiddenCount >= 2) reopen(); // 连续两次缺席才重开
-      STATE.rafId = requestAnimationFrame(guardLoop);
+      S.hiddenCount++;
+      if (S.hiddenCount >= 2) reopen();
+      S.rafId = requestAnimationFrame(guardLoop);
       return;
     }
-    STATE.hiddenCount = 0;
+    S.hiddenCount = 0;
 
-    // 纠正隐藏
     glassAndSticky(p);
     const cs = getComputedStyle(p);
     if (cs.display==='none' || cs.visibility==='hidden' || +cs.opacity===0) {
       p.style.display='block'; p.style.visibility='visible'; p.style.opacity='1';
     }
 
-    STATE.rafId = requestAnimationFrame(guardLoop);
+    // 面板里补一次 ScriptHub（存在即跳过）
+    injectScriptHub(p);
+
+    S.rafId = requestAnimationFrame(guardLoop);
   }
 
   function reopen(){
-    const now = Date.now(); if (now - STATE.reopenTs < 120) return;
-    STATE.reopenTs = now;
+    const now = Date.now(); if (now - S.reopenTs < REOPEN_DEBOUNCE) return;
+    S.reopenTs = now;
     const b = btn(); if (b) b.dispatchEvent(new MouseEvent('click', {bubbles:true, cancelable:true}));
-    // 立刻尝试隔离（不等下一帧）
-    setTimeout(()=>{ const p = pane(); if (p) glassAndSticky(p); }, 0);
+    // 立刻尝试接管一次
+    setTimeout(()=>{ const p=panel(); if (p) glassAndSticky(p); }, 0);
   }
 
+  /*** ====== 开/关 ====== ***/
   function pinOn(){
-    if (STATE.pinned) return;
-    STATE.pinned = true;
+    if (S.pinned) return;
+    S.pinned = true;
     wireStopperOnce();
     wireCreateObserver();
-    const p = pane(); if (p) glassAndSticky(p); else reopen();
+    const p = panel(); if (p) glassAndSticky(p); else reopen();
   }
   function pinOff(){
-    if (!STATE.pinned) return;
-    STATE.pinned = false;
-    const p = document.getElementById(NEW_ID);
+    if (!S.pinned) return;
+    S.pinned = false;
+    const p = document.getElementById(NEW_PANEL_ID);
     if (p){
-      p.removeAttribute(ATTR);
+      p.removeAttribute('data-ghplus-sticky');
       p.style.display='none'; p.style.visibility=''; p.style.opacity='';
     }
   }
 
-  function findBadge(){ return document.querySelector('.ghplus-badge'); }
-
-  function wireToggle(){
-    // 徽标非破坏装饰 + 绑定点击开/关
+  /*** ====== 绑定徽标（单击：开↔关；让源码先处理，我们接管显示） ====== ***/
+  function wireBadge(){
+    // 非破坏装饰
     decorateBadge();
-    const b = findBadge(); if (!b || b.__ghplus_final_wired) return;
+    // 单击开关
+    const b = btn(); if (!b || b.__ghplus_final_wired) return;
     b.__ghplus_final_wired = true;
     b.addEventListener('click', (e)=>{
-      if (STATE.pinned){ e.preventDefault(); e.stopPropagation(); pinOff(); }
+      if (S.pinned){ e.preventDefault(); e.stopPropagation(); pinOff(); }
       else { setTimeout(pinOn, 0); }
     }, {passive:false});
   }
 
+  /*** ====== 初始化 & 监听 ====== ***/
   function sweep(){
-    wireToggle();
-    // 面板未开时，仓库文件页也放一个 ScriptHub（Raw/下载/编辑旁）
+    wireBadge();
+    // 面板出现前也放一个 ScriptHub（如文件页）
     injectScriptHub(document);
   }
-
   sweep();
   new MutationObserver(sweep).observe(document.documentElement, {childList:true, subtree:true});
-  STATE.rafId = requestAnimationFrame(guardLoop);
+  S.rafId = requestAnimationFrame(guardLoop);
 
-  // 手动控制（可选）
+  // 控制台手动调试（可选）
   window.GHPlusPinOn  = pinOn;
   window.GHPlusPinOff = pinOff;
 })();
