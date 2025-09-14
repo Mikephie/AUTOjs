@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ (Alex版) 玻璃风格 + ScriptHub（嵌入式, 自适配 v1.8.3）
 // @namespace    https://mikephie.site/
-// @version      1.8.6
+// @version      1.8.7
 // @description  不改 Alex 逻辑；弹窗玻璃；按钮"彩色外圈高亮 + 更强点击反馈"；ScriptHub 仅嵌入按钮区/Raw旁；适配 document / shadowRoot / 同域 iframe；iOS OK。
 // @author       Mikephie
 // @match        https://github.com/*
@@ -241,23 +241,42 @@
   else scanAll();
 })();
 
-/* === GitHubPlus 加强补丁：霓虹猫图标 + 面板点击开/关（防自动关闭） === */
+/* === GitHubPlus 徽标补丁 v2.1（稳：轮询绑定 + 霓虹 + 点击开关常驻） === */
 (function () {
   'use strict';
 
-  /* ---------- 1) 猫图标霓虹脉冲（暗黑更亮） ---------- */
-  const STYLE_ID = '__ghplus_neon_and_sticky__';
+  /* ---------- 样式（一次性注入） ---------- */
+  const STYLE_ID = '__ghplus_badge_v21__';
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID;
     s.textContent = `
-      /* 霓虹脉冲只给右下角徽标的图标做 */
-      .ghplus-badge .ghplus-icon{
-        position: relative;
+      .ghplus-badge{
+        display:inline-flex; align-items:center; gap:.5em;
+        font-weight:600; letter-spacing:.2px;
+        border-radius:12px; padding:.46em .84em;
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        cursor:pointer; user-select:none;
+        transition: transform .08s ease, box-shadow .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
       }
+      @media (prefers-color-scheme: dark){
+        .ghplus-badge{ color:#e6f9ff; background:rgba(120,245,255,.10); border:1px solid rgba(120,245,255,.45); box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 20px rgba(120,245,255,.20); }
+        .ghplus-badge:hover{ box-shadow:0 10px 26px rgba(0,0,0,.40),0 0 28px rgba(120,245,255,.35); }
+        .ghplus-badge:active{ transform:translateY(1px) scale(.985); background:rgba(120,245,255,.18); border-color:rgba(120,245,255,.75); box-shadow:inset 0 1px 3px rgba(0,0,0,.45), 0 0 32px rgba(120,245,255,.45); }
+      }
+      @media (prefers-color-scheme: light){
+        .ghplus-badge{ color:#0a2230; background:rgba(0,128,192,.10); border:1px solid rgba(0,128,192,.35); box-shadow:0 8px 18px rgba(0,0,0,.15); }
+        .ghplus-badge:hover{ box-shadow:0 10px 22px rgba(0,0,0,.2),0 0 16px rgba(0,128,192,.25); }
+        .ghplus-badge:active{ transform:translateY(1px) scale(.985); background:rgba(0,128,192,.16); border-color:rgba(0,128,192,.6); }
+      }
+      .ghplus-icon{
+        width:18px;height:18px;flex:0 0 18px;background:currentColor;
+        -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z' fill='currentColor'/%3E%3C/svg%3E") no-repeat center/contain;
+                mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M20 10c2 0 6 4 8 6h8c2-2 6-6 8-6 1 0 2 1 2 2v10c6 6 8 13 8 18 0 13-12 22-28 22S8 53 8 40c0-5 2-12 8-18V12c0-1 1-2 2-2zM24 40a4 4 0 1 0 0 8h16a4 4 0 1 0 0-8H24z' fill='currentColor'/%3E%3C/svg%3E") no-repeat center/contain;
+      }
+      /* 霓虹脉冲（只给徽标图标） */
+      .ghplus-badge .ghplus-icon{ position:relative; }
       .ghplus-badge .ghplus-icon::before{
-        content:""; position:absolute; inset:-4px; border-radius:999px;
-        pointer-events:none;
-        /* 暗黑/亮色不同的基色 */
+        content:""; position:absolute; inset:-4px; border-radius:999px; pointer-events:none;
         background: radial-gradient(closest-side, rgba(120,245,255,.60), rgba(120,245,255,0) 70%);
         opacity:.55; filter: blur(6px);
         animation: ghplus-pulse 2.2s ease-in-out infinite;
@@ -277,121 +296,105 @@
     document.head.appendChild(s);
   }
 
-  /* ---------- 2) 面板点击开/关（sticky），阻止 2~3 秒自动收起 ---------- */
-  let stickyTimer = null;   // keep-alive 的定时器
-  let isPinned = false;     // 当前是否处于"常驻"状态
+  /* ---------- 找右下角原徽标（文本含 Fix GitHub，且固定在右下） ---------- */
+  const TEXT_RE = /fix\s*github/i;
+  function nearBR(el){
+    const r = el.getBoundingClientRect();
+    const right = window.innerWidth - r.right;
+    const bottom = window.innerHeight - r.bottom;
+    return right >= -4 && right <= 180 && bottom >= -4 && bottom <= 180;
+  }
+  function isBadge(el){
+    if (!el || el.nodeType !== 1) return false;
+    const cs = getComputedStyle(el);
+    if (!(cs.position === 'fixed' || cs.position === 'absolute' || cs.position === 'sticky')) return false;
+    if (!nearBR(el)) return false;
+    const w = el.getBoundingClientRect().width, h = el.getBoundingClientRect().height;
+    if (w < 70 || h < 24) return false;
+    const txt = (el.textContent || '').replace(/\s+/g,' ').trim();
+    return TEXT_RE.test(txt) || /fix-github/i.test(el.className||'');
+  }
 
-  /** 找到 Alex 面板（宽>200 且 fixed/absolute 的圆角盒子） */
-  function findAlexPanel(root=document){
-    const list = root.querySelectorAll ? root.querySelectorAll('div,section,dialog') : [];
-    for (const el of list) {
-      const cs = getComputedStyle(el);
-      const pos = cs.position;
-      if (!(pos === 'fixed' || pos === 'absolute')) continue;
-      const z = +cs.zIndex || 0;
-      if (z < 10) continue;
-      const r = Math.max(
-        parseFloat(cs.borderTopLeftRadius||'0'),
-        parseFloat(cs.borderTopRightRadius||'0'),
-        parseFloat(cs.borderBottomLeftRadius||'0'),
-        parseFloat(cs.borderBottomRightRadius||'0')
-      );
-      const {width:w,height:h} = el.getBoundingClientRect();
-      if (r >= 8 && w >= 200 && h >= 120) return el; // 符合我们看到的弹窗特征
-    }
+  /* ---------- 重建为 GitHubPlus（保留原事件） ---------- */
+  function rebuild(el){
+    if (el.__ghplusDone) return el;
+    el.__ghplusDone = true;
+    // 保存原子节点（为了保留原上的事件绑定），只清内容
+    while (el.firstChild) el.removeChild(el.firstChild);
+    el.classList.add('ghplus-badge');
+    const icon = document.createElement('span'); icon.className = 'ghplus-icon';
+    const label = document.createElement('span'); label.textContent = 'GitHubPlus';
+    el.append(icon, label);
+    return el;
+  }
+
+  /* ---------- 面板点击开/关（保持常驻） ---------- */
+  let stickyTimer = null;
+  let pinned = false;
+
+  function looksLikePanel(node){
+    const cs = getComputedStyle(node);
+    const pos = cs.position; if (!(pos==='fixed'||pos==='absolute')) return false;
+    const z = +cs.zIndex || 0; if (z < 10) return false;
+    const r = Math.max(...['borderTopLeftRadius','borderTopRightRadius','borderBottomLeftRadius','borderBottomRightRadius'].map(k=>parseFloat(cs[k]||'0')));
+    const {width:w,height:h} = node.getBoundingClientRect();
+    return r>=8 && w>=200 && h>=120;
+  }
+  function findPanel(root=document){
+    const nodes = root.querySelectorAll ? root.querySelectorAll('div,section,dialog') : [];
+    for (const n of nodes) if (looksLikePanel(n)) return n;
     return null;
   }
-
-  /** 让面板常驻：不断清除隐藏样式/类名，避免脚本的自动关闭 */
-  function keepPanelAlive(panel){
+  function keepAlive(panel){
     if (!panel) return;
     panel.setAttribute('data-ghplus-sticky','1');
-    panel.style.opacity = '1';
-    panel.style.visibility = 'visible';
-    panel.style.display = 'block';
-    panel.style.pointerEvents = 'auto';
+    panel.style.opacity='1'; panel.style.visibility='visible'; panel.style.display='block';
+    panel.style.pointerEvents='auto';
     panel.style.zIndex = Math.max(9999, +getComputedStyle(panel).zIndex || 0);
-
-    // 每 300ms 清一次隐藏痕迹（某些脚本会加 hidden/aria-hidden/opacity）
     if (stickyTimer) clearInterval(stickyTimer);
     stickyTimer = setInterval(()=>{
-      if (!document.body.contains(panel)) { clearInterval(stickyTimer); stickyTimer = null; isPinned = false; return; }
-      panel.removeAttribute('hidden');
-      panel.removeAttribute('aria-hidden');
-      panel.style.opacity = '1';
-      panel.style.visibility = 'visible';
-      panel.style.display = 'block';
+      if (!document.body.contains(panel)) { clearInterval(stickyTimer); stickyTimer=null; pinned=false; return; }
+      panel.removeAttribute('hidden'); panel.removeAttribute('aria-hidden');
+      panel.style.opacity='1'; panel.style.visibility='visible'; panel.style.display='block';
     }, 300);
-
-    // 阻止"点击页面其它区域关闭 / mouseleave 关闭"
-    const stopClose = e => {
-      if (!panel.contains(e.target)) return;
-      e.stopPropagation();
-    };
-    document.addEventListener('click', stopClose, true);
-    document.addEventListener('touchstart', stopClose, true);
-
-    // 把清理器挂到元素上，后面关闭时移除
-    panel.__ghplus_cleanup = () => {
-      document.removeEventListener('click', stopClose, true);
-      document.removeEventListener('touchstart', stopClose, true);
-      if (stickyTimer) { clearInterval(stickyTimer); stickyTimer = null; }
-      panel.removeAttribute('data-ghplus-sticky');
-    };
+    panel.__ghplusCleanup = () => { if (stickyTimer) { clearInterval(stickyTimer); stickyTimer=null; } panel.removeAttribute('data-ghplus-sticky'); };
   }
-
-  /** 关闭（解除常驻） */
-  function releasePanel(panel){
+  function release(panel){
     if (!panel) return;
-    if (panel.__ghplus_cleanup) panel.__ghplus_cleanup();
-    // 交还给原脚本：直接隐藏
-    panel.style.display = 'none';
-    panel.style.opacity = '';
-    panel.style.visibility = '';
-    isPinned = false;
+    if (panel.__ghplusCleanup) panel.__ghplusCleanup();
+    panel.style.display='none'; panel.style.opacity=''; panel.style.visibility='';
+    pinned=false;
   }
 
-  /** 点击徽标：若面板在、且已 pinned -> 关闭；否则打开并置 sticky */
-  function onBadgeClick(){
-    // 找现有面板
-    let panel = findAlexPanel();
-    if (panel && isPinned) { releasePanel(panel); return; }
-
-    // 若当前没面板，触发一次原始打开（保留原脚本的 click 行为）
-    const badge = document.querySelector('.ghplus-badge');
-    if (badge && typeof badge.click === 'function') {
-      // 触发一次原本的 click，保证面板生成
-      // 这里用 setTimeout 保证原脚本先运行
+  function wireToggle(el){
+    if (el.__ghplusWired) return;
+    el.__ghplusWired = true;
+    el.addEventListener('click', (ev)=>{
+      ev.preventDefault(); ev.stopPropagation();
+      const panel = findPanel();
+      if (panel && pinned) { release(panel); return; }
+      // 触发原点击（让原脚本创建/打开面板）
       setTimeout(()=>{
-        const p = findAlexPanel();
-        if (p) {
-          isPinned = true;
-          keepPanelAlive(p);
-        }
+        const p = findPanel();
+        if (p) { pinned = true; keepAlive(p); }
       }, 0);
-    } else {
-      // 找不到 badge（极少数页面），直接尝试现有面板
-      const p = findAlexPanel();
-      if (p) { isPinned = true; keepPanelAlive(p); }
+    }, {passive:false});
+    el.addEventListener('touchstart', (e)=>{ e.preventDefault(); e.stopPropagation(); }, {passive:false});
+  }
+
+  /* ---------- 轮询查找并绑定（最稳） ---------- */
+  let tries = 0;
+  const MAX_TRIES = 120; // 约 1 分钟
+  const poll = setInterval(()=>{
+    tries++;
+    // 从右下角附近的 a/button/div/span 里找
+    const candidates = Array.from(document.querySelectorAll('a,button,div,span')).filter(isBadge);
+    if (candidates.length) {
+      const el = rebuild(candidates[0]);
+      wireToggle(el);
+      clearInterval(poll);
+    } else if (tries >= MAX_TRIES) {
+      clearInterval(poll);
     }
-  }
-
-  /** 给右下角徽标绑定 toggle 行为 */
-  function wireBadge(){
-    const b = document.querySelector('.ghplus-badge');
-    if (!b || b.__ghplus_wired) return;
-    b.__ghplus_wired = true;
-    b.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); onBadgeClick(); });
-    b.addEventListener('touchstart', (e)=>{ e.preventDefault(); e.stopPropagation(); }, {passive:false});
-  }
-
-  // 观察 DOM 变化，保证随时绑定与常驻
-  const mo = new MutationObserver(()=>{ wireBadge(); });
-  mo.observe(document.documentElement, {childList:true, subtree:true});
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', wireBadge, {once:true});
-  } else {
-    wireBadge();
-  }
+  }, 500);
 })();
