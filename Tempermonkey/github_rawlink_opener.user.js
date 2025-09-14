@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      3.4
+// @version      3.5
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -142,20 +142,21 @@
   var raw = getRawUrl();
   if (!raw) return;
 
-  // 带 Raw 到输入框（不再使用 /convert，避免首击 Invalid URL）
-  var prefer = 'https://scripthub.vercel.app';
-  var backup = 'https://script.hub';
-  var local  = 'http://127.0.0.1:9101';
+  // 默认 vercel，Shift=script.hub，Alt=本地
+  var base = "https://scripthub.vercel.app";
+  if (e && e.shiftKey) base = "https://script.hub";
+  if (e && e.altKey)   base = "http://127.0.0.1:9101";
 
-  // Shift=原站，Alt=本地；默认 vercel
-  var base = prefer;
-  if (e && e.shiftKey) base = backup;
-  if (e && e.altKey)   base = local;
+  var url;
+  if (base.includes("scripthub.vercel.app")) {
+    // vercel 只认 ?src
+    url = base + "/?src=" + encodeURIComponent(raw);
+  } else {
+    // 原站 / 本地要用 convert 路由
+    url = base + "/convert/_start_/" + encodeURIComponent(raw) + "/_end_/plain.txt?type=plain-text&target=plain-text";
+  }
 
-  var url = base + '/?src=' + encodeURIComponent(raw);
-
-  // 新标签失败时，用当前页打开
-  var w = window.open(url, '_blank', 'noopener,noreferrer');
+  var w = window.open(url, "_blank", "noopener,noreferrer");
   if (!w) location.assign(url);
 }
 
