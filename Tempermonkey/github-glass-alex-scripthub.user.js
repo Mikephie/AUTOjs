@@ -1,33 +1,21 @@
 // ==UserScript==
-// @name         GitHub+ (Alex版) 玻璃风格 + ScriptHub（嵌入式）
+// @name         GitHub+ (Alex版) 玻璃风格 + ScriptHub（嵌入式, 无@require）
 // @namespace    https://mikephie.site/
-// @version      1.5.1
-// @description  基于 Alex 源脚本：应用玻璃拟态风格，并在面板按钮区嵌入 ScriptHub 转换按钮。无额外悬浮窗/顶部Tab，整体 UI 一致。
+// @version      1.6.0
+// @description  不改 Alex 逻辑：应用玻璃拟态样式，并把 ScriptHub 转换按钮"只嵌进 Alex 面板按钮区"。无悬浮窗/无顶部Tab；iOS Userscripts 兼容（无 @require / 无 GM_*）。
 // @author       Mikephie
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
 // @grant        none
 // @license      MIT
-// @require      https://gist.githubusercontent.com/Alex0510/a7fe6be108d1b303d25301413dd125cb/raw/github.user.js
 // ==/UserScript==
 
 (function () {
   'use strict';
 
-  /* ============ 玻璃风格 + 按钮发光/反馈 ============ */
-  const STYLE_ID = '__alex_glass_style_all__';
-  function injectStyle(id, css) {
-    let el = document.getElementById(id);
-    if (!el) {
-      el = document.createElement('style');
-      el.id = id;
-      document.head.appendChild(el);
-    }
-    el.textContent = css;
-  }
-
-  injectStyle(STYLE_ID, `
+  /* ---------------- 样式（玻璃 + 按钮内发光/按压反馈） ---------------- */
+  const CSS = `
   :root{
     --glass-bg: rgba(255,255,255,.10);
     --glass-stroke: rgba(255,255,255,.26);
@@ -47,7 +35,7 @@
     --divider: rgba(255,255,255,.10);
   }
 
-  /* 容器玻璃化 */
+  /* Alex 渲染容器/弹窗/Box 等 */
   .gh-panel,
   .gh-gists-header,
   .gh-release-item,
@@ -76,7 +64,7 @@
     background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)) !important;
   }
 
-  /* 标题 */
+  /* 标题/副标题 */
   .gh-gists-title, .gh-release-title, .markdown-title, .h1, .h2, h1, h2 {
     color: var(--glass-fg) !important;
     letter-spacing: .2px;
@@ -89,7 +77,7 @@
   /* 分割线 */
   hr, .Box-row--drag-hide::after { border-color: var(--divider) !important; opacity: .6 !important; }
 
-  /* 按钮玻璃化 + 内发光 + 点击反馈 */
+  /* Alex 原按钮统一玻璃化 + 内发光 + 反馈 */
   .gh-header-btn,
   .gh-download-btn,
   .gh-copy-btn,
@@ -122,7 +110,7 @@
     box-shadow: inset 0 1px 3px rgba(0,0,0,.4);
   }
 
-  /* Chip/Tag */
+  /* Tag/Chip */
   .Label, .IssueLabel, .Counter, .topic-tag {
     border-radius: 10px !important;
     background: var(--chip-bg) !important;
@@ -142,12 +130,31 @@
     -webkit-backdrop-filter: blur(8px);
   }
   input::placeholder, textarea::placeholder { color: rgba(127,127,127,.8) !important; }
+  `;
 
-  /* 弹窗动作区间距 */
-  .gh-dialog .gh-actions, .gh-popup .gh-actions, .gh-modal .gh-actions { gap: 8px !important; }
-  `);
+  function injectStyle(css, id='__alex_glass_v16__'){
+    if (document.getElementById(id)) return;
+    const s = document.createElement('style');
+    s.id = id; s.textContent = css;
+    document.head.appendChild(s);
+  }
 
-  /* ============ ScriptHub 按钮注入（仅面板内） ============ */
+  /* ---------------- ScriptHub 仅嵌入 Alex 按钮区 ---------------- */
+  const HOST_SELECTORS = [
+    '.gh-gists-header-buttons',
+    '.gh-header-actions',
+    '.gh-dialog .gh-actions',
+    '.gh-panel .gh-actions',
+  ];
+
+  function findHost() {
+    for (const sel of HOST_SELECTORS) {
+      const node = document.querySelector(sel);
+      if (node) return node;
+    }
+    return null;
+  }
+
   function getRawUrl(href) {
     href = (href || location.href).split('#')[0].split('?')[0];
     if (/^https?:\/\/raw\.githubusercontent\.com\//.test(href)) return href;
@@ -170,21 +177,8 @@
     window.open(url, '_blank', 'noopener,noreferrer');
   }
 
-  const TARGET_SELECTORS = [
-    '.gh-gists-header-buttons',
-    '.gh-header-actions',
-    '.gh-dialog .gh-actions',
-    '.gh-panel .gh-actions',
-  ];
-
-  function injectSHButton() {
-    let host = null;
-    for (const sel of TARGET_SELECTORS) {
-      host = document.querySelector(sel);
-      if (host) break;
-    }
+  function injectButton(host) {
     if (!host || host.querySelector('[data-alex-sh-btn]')) return;
-
     const btn = document.createElement('button');
     btn.setAttribute('data-alex-sh-btn', '1');
     btn.className = 'gh-header-btn';
@@ -194,15 +188,26 @@
     host.appendChild(btn);
   }
 
-  function render(){ injectSHButton(); }
+  /* ---------------- 渲染 & 监听（适配 SPA） ---------------- */
+  function tryRender() {
+    injectStyle(CSS);
+    const host = findHost();
+    if (host) injectButton(host);
+  }
+
+  // 初次 & DOM 变化（等待 Alex 面板挂载）
+  const mo = new MutationObserver(() => tryRender());
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+
+  // 路由变化
   const _p = history.pushState, _r = history.replaceState;
-  history.pushState = function(){ const ret=_p.apply(this, arguments); queueMicrotask(render); return ret; };
-  history.replaceState = function(){ const ret=_r.apply(this, arguments); queueMicrotask(render); return ret; };
-  window.addEventListener('popstate', render, false);
+  history.pushState = function(){ const ret=_p.apply(this, arguments); queueMicrotask(tryRender); return ret; };
+  history.replaceState = function(){ const ret=_r.apply(this, arguments); queueMicrotask(tryRender); return ret; };
+  window.addEventListener('popstate', tryRender, false);
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render, { once:true });
+    document.addEventListener('DOMContentLoaded', tryRender, { once:true });
   } else {
-    render();
+    tryRender();
   }
 })();
