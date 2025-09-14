@@ -6260,24 +6260,8 @@ wrap.appendChild(workflowReleaseSection);
     });
 
     document.addEventListener('click', function (e) {
-  const panel = document.getElementById('__gh_rescue_panel__');
-  const btn = document.getElementById('__gh_rescue_btn__');
-  
-  // 如果点击了面板外部，设置20秒后自动关闭
-  if (panel && panel.style.display === 'block' && !panel.contains(e.target) && e.target !== btn) {
-    // 清除之前的定时器（如果有）
-    if (panel.autoCloseTimer) {
-      clearTimeout(panel.autoCloseTimer);
-    }
-    
-    // 设置20秒后自动关闭
-    panel.autoCloseTimer = setTimeout(() => {
-      if (panel && panel.style.display === 'block') {
-        panel.style.display = 'none';
-      }
-    }, 20000); // 20秒
-  }
-});
+  // 禁用自动关闭：点击外部不再触发倒计时
+}, true);
 
 // 当面板显示时，清除任何现有的自动关闭定时器
 const originalUpdateRescuePanel = updateRescuePanel;
