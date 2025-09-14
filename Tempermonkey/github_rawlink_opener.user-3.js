@@ -139,70 +139,12 @@
   }
 
   function openScriptHubLink() {
-  var raw = getRawUrl();
-  if (!raw) return;
-
-  var bases = [
-    'https://script.hub',            // 优先 https 原站
-    'https://scripthub.vercel.app',  // vercel（只支持 ?src）
-    'http://127.0.0.1:9101'          // 本地
-  ];
-
-  function buildConvert(base, mode) {
-    if (base.indexOf('scripthub.vercel.app') !== -1) {
-      // vercel 不走 /convert，改用 ?src=，进入首页并自动带入
-      return base + '/?src=' + encodeURIComponent(raw);
-    }
-    if (mode === 'PATH') {
-      try {
-        var u = new URL(raw);
-        var safe = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
-        return base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
-      } catch (e) { /* 解析失败则退回 FULL */ }
-    }
-    // FULL：整条 raw 一次编码（你原来的做法）
-    return base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
+    var raw = getRawUrl();
+    // 必须编码，否则路径占位会被 /:?& 打断
+    var enc = encodeURIComponent(raw);
+    var url = "http://script.hub/convert/_start_/" + enc + "/_end_/plain.txt?type=plain-text&target=plain-text";
+    window.open(url, "_blank", "noopener,noreferrer");
   }
-
-  function goto(url) {
-    try {
-      var w = window.open(url, '_blank', 'noopener,noreferrer');
-      if (!w) location.assign(url);
-      return w || null;
-    } catch (e) {
-      location.assign(url);
-      return null;
-    }
-  }
-
-  // 顺序尝试：
-  var url1 = buildConvert(bases[0], 'FULL'); // 原站 FULL
-  var url2 = buildConvert(bases[0], 'PATH'); // 原站 PATH（更稳）
-  var url3 = buildConvert(bases[1], 'FULL'); // vercel ?src
-  var url4 = buildConvert(bases[2], 'FULL'); // 本地 FULL
-
-  var win = goto(url1);
-
-  // 轻量自动重试：先 PATH，再 vercel，再本地
-  setTimeout(function () {
-    try {
-      if (win && !win.closed) win.location.href = url2; else location.replace(url2);
-    } catch (e) {
-      setTimeout(function () {
-        try {
-          if (win && !win.closed) win.location.href = url3; else location.replace(url3);
-        } catch (e2) {
-          try {
-            if (win && !win.closed) win.location.href = url4; else location.replace(url4);
-          } catch (e3) {
-            try { navigator.clipboard.writeText(raw); } catch (_) {}
-            alert('ScriptHub 打开失败：已复制 Raw 到剪贴板，请手动粘贴。');
-          }
-        }
-      }, 350);
-    }
-  }, 550);
-}
 
   // --- 工具 ---
   function onReady(fn) {
