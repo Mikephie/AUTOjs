@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub 助手增强版完善版
 // @namespace    https://github.com/
-// @version      7.1
+// @version      7.2
 // @author       Mr.Eric
 // @license      MIT
 // @description  修复 GitHub 下载 ZIP / Raw 链接，自动获取所有分支选择下载，添加文件编辑和保存功能。Gist面板显示私库和公库，增加复制Git链接功能（兼容旧浏览器剪贴板）。添加Sync Fork按钮，修复Mac Safari背景适配问题。支持面板拖拽和调整大小，特别添加iOS设备支持。新增Actions工作流及编辑功能。
@@ -6934,4 +6934,21 @@ function openSelectedFiles(type) {
 	 }
 
 init();
+})();
+
+// === 禁用所有外部点击/鼠标移出触发的自动关闭 ===
+(function(){
+  const stopper = e => {
+    const panel = document.getElementById('__gh_rescue_panel__');
+    const btn   = document.getElementById('__gh_rescue_btn__');
+    if (panel && panel.style.display === 'block' 
+        && !panel.contains(e.target) 
+        && e.target !== btn) {
+      // 阻止原脚本的关闭逻辑
+      e.stopImmediatePropagation();
+    }
+  };
+  document.addEventListener('click', stopper, true);
+  document.addEventListener('mouseleave', stopper, true);
+  document.addEventListener('blur', stopper, true);
 })();
