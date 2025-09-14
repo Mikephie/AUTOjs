@@ -6259,10 +6259,6 @@ wrap.appendChild(workflowReleaseSection);
       if (panel.style.display === 'block') updateRescuePanel();
     });
 
-    document.addEventListener('click', function (e) {
-  // 禁用自动关闭：点击外部不再触发倒计时
-}, true);
-
 // 当面板显示时，清除任何现有的自动关闭定时器
 const originalUpdateRescuePanel = updateRescuePanel;
 updateRescuePanel = async function() {
