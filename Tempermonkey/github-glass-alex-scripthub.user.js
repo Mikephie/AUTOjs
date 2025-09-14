@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ (Alex版) 玻璃风格 + ScriptHub（嵌入式, 自适配 v1.8.2）
+// @name         GitHub+ (Alex版) 玻璃风格 + ScriptHub（嵌入式, 自适配 v1.8.3）
 // @namespace    https://mikephie.site/
-// @version      1.8.2
-// @description  不改 Alex 逻辑；面板/弹窗强制玻璃 + 面板内按钮"外圈高亮 + 点击变色"；ScriptHub 仅嵌入按钮区或 Raw/下载/编辑旁；适配 document/shadowRoot/同域 iframe；iOS OK。
+// @version      1.8.3
+// @description  不改 Alex 逻辑；弹窗玻璃；按钮"彩色外圈高亮 + 更强点击反馈"；ScriptHub 仅嵌入按钮区/Raw旁；适配 document / shadowRoot / 同域 iframe；iOS OK。
 // @author       Mikephie
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
@@ -14,7 +14,7 @@
 (function () {
   'use strict';
 
-  /* ========== 基础 CSS（玻璃容器 + 按钮光晕/按压配方） ========== */
+  /* ========== 基础 CSS（玻璃容器 + 强化高亮/按压） ========== */
   const BASE_CSS = `
   :root{
     --glass-bg: rgba(255,255,255,.10);
@@ -34,48 +34,67 @@
     box-shadow:var(--glass-shadow) !important;
   }
 
-  /* 统一按钮基样式（在 JS 里会给按钮加 .xg-btn 和 data-tone） */
+  /* 统一按钮（.xg-btn） */
   .x-glassified .xg-btn{
+    --tone:255,255,255; /* 默认白 */
     background:var(--btn-bg) !important; color:var(--glass-fg) !important;
-    border:1px solid var(--glass-stroke) !important; border-radius:12px !important;
+    border:1.5px solid var(--glass-stroke) !important; border-radius:12px !important;
     height:34px !important; line-height:34px !important; padding:0 12px !important;
     display:inline-flex !important; align-items:center; gap:8px;
     backdrop-filter:blur(8px) !important; -webkit-backdrop-filter:blur(8px) !important;
-    transition:transform .08s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease !important;
-    box-shadow:inset 0 1px 2px rgba(255,255,255,.22),0 4px 12px rgba(0,0,0,.22) !important;
-    position:relative;
+    transition:transform .08s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease, filter .18s ease !important;
+    box-shadow:inset 0 1px 2px rgba(255,255,255,.22), 0 4px 12px rgba(0,0,0,.22) !important;
+    position:relative; overflow:visible;
   }
+  /* 彩色映射 */
+  .xg-btn[data-tone="primary"]{ --tone:  80,160,255; }  /* 蓝 */
+  .xg-btn[data-tone="success"]{ --tone:  82,255,168; }  /* 绿 */
+  .xg-btn[data-tone="danger"] { --tone: 255, 96, 96; }  /* 红 */
+  .xg-btn[data-tone="neutral"]{ --tone: 255,255,255; }  /* 白 */
 
-  /* tone 颜色（用于高亮/按下变色） */
-  .xg-btn[data-tone="neutral"]{ --tone: 255,255,255; }
-  .xg-btn[data-tone="primary"]{ --tone:  80,160,255; }   /* 蓝 */
-  .xg-btn[data-tone="success"]{ --tone:  82,255,168; }   /* 绿 */
-  .xg-btn[data-tone="danger"] { --tone: 255, 96, 96; }   /* 红 */
-
-  /* 外圈高亮（hover/focus-visible/触控激活时显示 halo） */
+  /* 外圈高亮：彩色边框+光环（hover/聚焦/触控激活） */
+  .xg-btn::after{
+    content:""; position:absolute; inset:-3px; border-radius:inherit; pointer-events:none;
+    box-shadow:0 0 0 0 rgba(var(--tone),0);
+    transition:box-shadow .18s ease;
+  }
   .xg-btn[data-armed="1"],
   .xg-btn:hover,
   .xg-btn:focus-visible{
+    border-color:rgba(var(--tone), .75) !important;
     box-shadow:
-      0 0 0 1px rgba(255,255,255,.35) inset,
-      0 0 0 2px rgba(var(--tone), .30),
-      0 8px 22px rgba(0,0,0,.28) !important;
-    outline:none !important;
+      inset 0 1px 2px rgba(255,255,255,.24),
+      0 6px 18px rgba(0,0,0,.26) !important;
+    filter:saturate(1.08);
+  }
+  .xg-btn[data-armed="1"]::after,
+  .xg-btn:hover::after,
+  .xg-btn:focus-visible::after{
+    box-shadow:
+      0 0 0 2px rgba(var(--tone), .45),
+      0 0 18px 2px rgba(var(--tone), .28);
   }
 
-  /* 点击变色（按下态：加色彩蒙层与更深边框） */
+  /* 点击反馈：更深色、加粗边框、第二层亮圈、轻微下压与缩放 */
   .xg-btn[data-pressed="1"],
   .xg-btn:active{
-    transform:translateY(1px) !important;
+    transform:translateY(1px) scale(0.985) !important;
     background:
-      linear-gradient(0deg, rgba(var(--tone), .14), rgba(var(--tone), .06)),
+      linear-gradient(0deg, rgba(var(--tone), .18), rgba(var(--tone), .08)),
       var(--btn-bg) !important;
-    border-color:rgba(var(--tone), .46) !important;
+    border-color:rgba(var(--tone), .95) !important;
     box-shadow:inset 0 1px 3px rgba(0,0,0,.42), 0 2px 8px rgba(0,0,0,.22) !important;
+    filter:saturate(1.18);
+  }
+  .xg-btn[data-pressed="1"]::after,
+  .xg-btn:active::after{
+    box-shadow:
+      0 0 0 3px rgba(var(--tone), .60),
+      0 0 22px 3px rgba(var(--tone), .35);
   }
   `;
 
-  function injectStyle(root, id='__alex_glass_v182__'){
+  function injectStyle(root, id='__alex_glass_v183__'){
     const doc = root instanceof ShadowRoot ? root : document;
     if (doc.getElementById && doc.getElementById(id)) return;
     const s = document.createElement('style'); s.id = id; s.textContent = BASE_CSS;
@@ -104,7 +123,7 @@
     st.boxShadow='var(--glass-shadow)';
   }
 
-  /* ========== 面板内按钮美化 + 外圈高亮/点击变色（iOS 触控事件） ========== */
+  /* ========== 面板内按钮：赋色 & 状态切换（iOS 触控也有效） ========== */
   const BTN_TEXT_TONE = [
     {keys:['删除','Delete'], tone:'danger'},
     {keys:['Fork','Fork仓库'], tone:'primary'},
@@ -122,6 +141,23 @@
     return 'neutral';
   }
 
+  function wireButtonStates(el){
+    if (el.__xgWired) return;
+    el.__xgWired = true;
+    const arm   = () => el.setAttribute('data-armed','1');
+    const clear = () => { el.removeAttribute('data-armed'); el.removeAttribute('data-pressed'); };
+    const press = () => el.setAttribute('data-pressed','1');
+    const rel   = () => el.removeAttribute('data-pressed');
+    el.addEventListener('mouseenter', arm);
+    el.addEventListener('mouseleave', clear);
+    el.addEventListener('focus', arm);
+    el.addEventListener('blur', clear);
+    el.addEventListener('touchstart', ()=>{ arm(); press(); }, {passive:true});
+    el.addEventListener('touchend',   ()=>{ rel(); }, {passive:true});
+    el.addEventListener('mousedown',  press);
+    el.addEventListener('mouseup',    rel);
+  }
+
   function beautifyButtons(scope){
     const btns = scope.querySelectorAll?.('button, a.btn, a.Button, .gh-header-btn, .gh-download-btn, .gh-copy-btn') || [];
     btns.forEach(el=>{
@@ -129,22 +165,7 @@
       el.__btnGlassified = true;
       el.classList.add('xg-btn');
       el.dataset.tone = pickTone(el);
-
-      // iOS：触控/悬停/焦点状态切换
-      const arm = () => el.setAttribute('data-armed','1');
-      const disarm = () => el.removeAttribute('data-armed');
-      const press = () => el.setAttribute('data-pressed','1');
-      const release = () => el.removeAttribute('data-pressed');
-
-      el.addEventListener('mouseenter', arm);
-      el.addEventListener('mouseleave', ()=>{disarm(); release();});
-      el.addEventListener('focus', arm);
-      el.addEventListener('blur', ()=>{disarm(); release();});
-
-      el.addEventListener('touchstart', ()=>{ arm(); press(); }, {passive:true});
-      el.addEventListener('touchend',   ()=>{ release(); }, {passive:true});
-      el.addEventListener('mousedown',  press);
-      el.addEventListener('mouseup',    release);
+      wireButtonStates(el);
     });
   }
 
@@ -174,9 +195,7 @@
     btn.textContent='ScriptHub 转换';
     btn.className='xg-btn'; btn.dataset.tone='primary';
     host.appendChild(btn);
-
-    // 走同样的交互态
-    beautifyButtons(host);
+    wireButtonStates(btn);
 
     btn.addEventListener('click', ()=>{
       const raw = getRawUrl(undefined, scope);
@@ -186,10 +205,9 @@
     });
   }
 
-  /* ========== 在每个根里处理：注入 CSS、识别面板、按钮美化 & SH ======== */
+  /* ========== 处理每个根：注入 CSS、识别面板、按钮美化、嵌入 SH ========== */
   function processRoot(root){
     injectStyle(root);
-    // 找出弹窗/面板并覆盖 + 美化按钮 + 注入 SH
     root.querySelectorAll?.('*').forEach(el=>{
       try{
         if (looksLikePanel(el)) {
@@ -199,7 +217,6 @@
         }
       }catch(e){}
     });
-    // 二次兜底（异步渲染的按钮）
     setTimeout(()=>{ root.querySelectorAll?.('.x-glassified').forEach(p=>{ beautifyButtons(p); injectSH(p); }); }, 60);
   }
 
