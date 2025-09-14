@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ (Alex版) 玻璃风格 + ScriptHub（嵌入式, 自适配 v1.8.3）
 // @namespace    https://mikephie.site/
-// @version      1.8.8
+// @version      1.8.9
 // @description  不改 Alex 逻辑；弹窗玻璃；按钮"彩色外圈高亮 + 更强点击反馈"；ScriptHub 仅嵌入按钮区/Raw旁；适配 document / shadowRoot / 同域 iframe；iOS OK。
 // @author       Mikephie
 // @match        https://github.com/*
@@ -241,19 +241,19 @@
   else scanAll();
 })();
 
-/* === GitHubPlus 浮标 v2.5：自有浮标 + 青蓝霓虹 + 原浮标隐藏 + 点击开/关常驻 === */
+/* === GitHubPlus v2.6：青蓝霓虹 + 真·常驻（自动重开 + 反隐藏 + 反移除） === */
 (function () {
   'use strict';
 
   /* ---------- 样式（青蓝霓虹 + 玻璃） ---------- */
-  const STYLE_ID = '__ghplus_fab_v25_blue__';
+  const STYLE_ID = '__ghplus_fab_v26_blue__';
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID;
     s.textContent = `
       .ghplus-fab{
-        position:fixed; right:16px; bottom:16px; z-index:1000000;
+        position:fixed; right:16px; bottom:16px; z-index:2147483647;
         display:inline-flex; align-items:center; gap:.5em;
-        font:600 14px/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        font:600 14px/1.2 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
         border-radius:12px; padding:.52em .9em;
         backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
         cursor:pointer; user-select:none;
@@ -289,12 +289,13 @@
         40%{ transform: scale(1.15); opacity:.75; }
         100%{ transform: scale(.85); opacity:.3; }
       }
+      /* 永远隐藏原 Fix GitHub */
       .__ghplus_hide_badge__{ opacity:0 !important; pointer-events:none !important; }
     `;
     document.head.appendChild(s);
   }
 
-  /* ---------- 新建浮标 ---------- */
+  /* ---------- 我们自己的青蓝霓虹浮标 ---------- */
   function ensureFab(){
     if (document.querySelector('.ghplus-fab')) return;
     const fab = document.createElement('button');
@@ -304,73 +305,180 @@
     wireToggle(fab);
   }
 
-  /* ---------- 隐藏原 Fix GitHub ---------- */
+  /* ---------- 隐藏原 Fix GitHub（即使被还原也会继续隐藏） ---------- */
   const TEXT_RE = /fix\s*github/i;
   function nearBR(el){
     const r = el.getBoundingClientRect();
     const right = innerWidth - r.right;
     const bottom = innerHeight - r.bottom;
-    return right >= -4 && right <= 200 && bottom >= -4 && bottom <= 200;
+    return right >= -4 && right <= 220 && bottom >= -4 && bottom <= 220;
   }
   function looksLikeOld(el){
-    if (!el) return false;
+    if (!el || el.nodeType !== 1) return false;
     const cs = getComputedStyle(el);
     if (!(cs.position==='fixed'||cs.position==='absolute'||cs.position==='sticky')) return false;
     if (!nearBR(el)) return false;
-    const txt = (el.textContent||'').trim();
+    const txt = (el.textContent||'').replace(/\s+/g,' ').trim();
     return TEXT_RE.test(txt) || /fix-github/i.test(el.className||'');
   }
   function hideOld(){
     document.querySelectorAll('a,button,div,span').forEach(el=>{
       if (looksLikeOld(el)){
         el.classList.add('__ghplus_hide_badge__');
+        el.style.setProperty('opacity','0','important');
+        el.style.setProperty('pointer-events','none','important');
       }
     });
   }
 
-  setInterval(()=>{ ensureFab(); hideOld(); },500);
+  // 持续确保：浮标存在 & 原标隐藏
+  setInterval(()=>{ ensureFab(); hideOld(); }, 500);
   const mo=new MutationObserver(()=>{ ensureFab(); hideOld(); });
   mo.observe(document.documentElement,{childList:true,subtree:true});
 
-  /* ---------- 点击开关常驻 ---------- */
-  let pinned=false, keepTimer=null;
+  /* ---------- 常驻逻辑（真·停留） ---------- */
+  const STATE = {
+    pinned: false,
+    guardianTimer: null,
+    removalObserver: null,
+    reopenCooldown: 0
+  };
+
   function looksLikePanel(n){
+    if (!n || n.nodeType !== 1) return false;
     const cs=getComputedStyle(n);
     const pos=cs.position; if(!(pos==='fixed'||pos==='absolute')) return false;
     const z=+cs.zIndex||0; if(z<10) return false;
-    const {width:w,height:h}=n.getBoundingClientRect();
-    return w>=200&&h>=120;
-  }
-  function findPanel(){
-    return Array.from(document.querySelectorAll('div,section,dialog')).find(looksLikePanel)||null;
-  }
-  function keep(panel){
-    if(!panel) return;
-    panel.style.display='block'; panel.style.opacity='1'; panel.style.visibility='visible';
-    if(keepTimer) clearInterval(keepTimer);
-    keepTimer=setInterval(()=>{
-      if(!document.body.contains(panel)){clearInterval(keepTimer);keepTimer=null;pinned=false;return;}
-      panel.style.display='block'; panel.style.opacity='1'; panel.style.visibility='visible';
-    },300);
-    panel.__unstick=()=>{if(keepTimer){clearInterval(keepTimer);keepTimer=null;}};
-  }
-  function release(panel){
-    if(!panel)return;
-    if(panel.__unstick) panel.__unstick();
-    panel.style.display='none'; pinned=false;
-  }
-  function wireToggle(fab){
-    if(fab.__wired)return; fab.__wired=true;
-    fab.addEventListener('click',e=>{
-      e.preventDefault(); e.stopPropagation();
-      const panel=findPanel();
-      if(panel&&pinned){ release(panel); return; }
-      // 触发原按钮点击
-      const old=Array.from(document.querySelectorAll('a,button,div,span')).find(looksLikeOld);
-      if(old) old.click();
-      setTimeout(()=>{const p=findPanel(); if(p){pinned=true; keep(p);} },0);
-    });
+    const rect=n.getBoundingClientRect();
+    const r = Math.max(
+      parseFloat(cs.borderTopLeftRadius||'0'),
+      parseFloat(cs.borderTopRightRadius||'0'),
+      parseFloat(cs.borderBottomLeftRadius||'0'),
+      parseFloat(cs.borderBottomRightRadius||'0')
+    );
+    return rect.width>=200 && rect.height>=120 && r>=8;
   }
 
-  ensureFab(); hideOld();
+  function findPanel(){
+    // 优先找最近出现的高层元素
+    const list = Array.from(document.querySelectorAll('div,section,dialog')).reverse();
+    return list.find(looksLikePanel) || null;
+  }
+
+  function openPanelViaOldBadge(){
+    // 稍微"点"一下原浮标来打开面板（即使它被隐藏）
+    const old = Array.from(document.querySelectorAll('a,button,div,span')).find(looksLikeOld);
+    if (old) old.click();
+  }
+
+  function armGuardian(panel){
+    // 基本显示
+    panel.style.display='block';
+    panel.style.opacity='1';
+    panel.style.visibility='visible';
+    panel.style.pointerEvents='auto';
+    panel.style.zIndex = '2147483647';
+    panel.setAttribute('data-ghplus-sticky','1');
+
+    // 阻断常见的"自动关闭"触发
+    ['mouseleave','pointerleave','mouseout','blur','transitionend','animationend'].forEach(ev=>{
+      panel.addEventListener(ev, e=>{ e.stopImmediatePropagation(); }, true);
+    });
+
+    // 守护：每 250ms 修正隐藏属性
+    if (STATE.guardianTimer) clearInterval(STATE.guardianTimer);
+    STATE.guardianTimer = setInterval(()=>{
+      if (!document.body.contains(panel)) { // 被移除了
+        clearInterval(STATE.guardianTimer); STATE.guardianTimer=null;
+        if (STATE.pinned) tryReopen();
+        return;
+      }
+      // 被隐藏则还原
+      if (panel.hasAttribute('hidden')) panel.removeAttribute('hidden');
+      if (panel.getAttribute('aria-hidden') === 'true') panel.setAttribute('aria-hidden','false');
+      const cs = getComputedStyle(panel);
+      if (cs.display === 'none') panel.style.display = 'block';
+      if (cs.visibility === 'hidden') panel.style.visibility = 'visible';
+      if (+cs.opacity === 0) panel.style.opacity = '1';
+    }, 250);
+
+    // 监听移除：如果父节点把它删了 → 立刻重开
+    if (STATE.removalObserver) { STATE.removalObserver.disconnect(); STATE.removalObserver=null; }
+    const parent = panel.parentNode || document.body;
+    STATE.removalObserver = new MutationObserver(muts=>{
+      if (!STATE.pinned) return;
+      for (const m of muts){
+        for (const node of m.removedNodes){
+          if (node === panel) { // 被删了
+            tryReopen();
+            return;
+          }
+        }
+      }
+    });
+    STATE.removalObserver.observe(parent, {childList:true});
+
+    // 只在"停留开启"时屏蔽"点击外部关闭"的捕获
+    const blockOutsideClose = (e)=>{
+      if (!STATE.pinned) return;
+      // 不阻断正常的页面点击，只阻断那些全局捕获监听（通过提前 stopImmediatePropagation）
+      e.stopImmediatePropagation();
+    };
+    document.addEventListener('click', blockOutsideClose, true);
+    document.addEventListener('touchstart', blockOutsideClose, true);
+
+    // 卸载函数
+    panel.__ghplus_unstick = ()=>{
+      if (STATE.guardianTimer){ clearInterval(STATE.guardianTimer); STATE.guardianTimer=null; }
+      if (STATE.removalObserver){ STATE.removalObserver.disconnect(); STATE.removalObserver=null; }
+      document.removeEventListener('click', blockOutsideClose, true);
+      document.removeEventListener('touchstart', blockOutsideClose, true);
+      panel.removeAttribute('data-ghplus-sticky');
+    };
+  }
+
+  function tryReopen(){
+    const now = Date.now();
+    if (now - STATE.reopenCooldown < 400) return; // 防抖
+    STATE.reopenCooldown = now;
+    openPanelViaOldBadge();
+    setTimeout(()=>{
+      const p = findPanel();
+      if (p && STATE.pinned) armGuardian(p);
+    }, 50);
+  }
+
+  function pinOn(){
+    STATE.pinned = true;
+    // 若已有面板 → 直接守护；否则"点"原浮标触发一次创建
+    let p = findPanel();
+    if (p) { armGuardian(p); }
+    else {
+      openPanelViaOldBadge();
+      setTimeout(()=>{ p=findPanel(); if (p && STATE.pinned) armGuardian(p); }, 80);
+    }
+  }
+
+  function pinOff(){
+    STATE.pinned = false;
+    const p = findPanel();
+    if (p && p.__ghplus_unstick) p.__ghplus_unstick();
+    if (p) { // 礼貌地"关闭"
+      p.style.display='none';
+      p.style.opacity=''; p.style.visibility='';
+    }
+  }
+
+  function wireToggle(fab){
+    if (fab.__wired) return;
+    fab.__wired = true;
+    fab.addEventListener('click', (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      if (STATE.pinned) pinOff(); else pinOn();
+    }, {passive:false});
+  }
+
+  // 启动
+  ensureFab();
+  hideOld();
 })();
