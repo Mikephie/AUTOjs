@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ ScriptHub Glass Bar (thin bottom, centered, draggable badge)
+// @name         GitHub+ ScriptHub Glass Bar (themes via badge double-tap)
 // @namespace    https://mikephie.site/
-// @version      3.8.3
-// @description  底部超薄玻璃工具条：文件页启用/目录禁用；Raw(单击复制/双击Raw/长按下载) · DL(下载) · Path · Edit/Cancel · Name · Action · Hub；徽标可拖拽&点按显隐；方向修正；去抖；SPA 兼容。
+// @version      3.8.4
+// @description  底部超薄玻璃工具条：文件页启用/目录禁用；Raw(单击复制/双击Raw/长按下载) · DL(下载) · Path · Edit/Cancel · Name · Action · Hub；徽标可拖拽，单击显隐，双击切换主题（Neon/Blue/Pink/White）；SPA兼容、去抖。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -11,33 +11,49 @@
 (() => {
   'use strict';
 
-  /* ================= CSS ================= */
+  /* ============== 主题 ============== */
+  const THEMES = ['neon','blue','pink','white'];
+  function getTheme(){
+    return localStorage.getItem('gplus_theme') || 'neon';
+  }
+  function applyTheme(name){
+    THEMES.includes(name) || (name='neon');
+    document.body.classList.remove(...THEMES.map(t=>'gplus-theme-'+t));
+    document.body.classList.add('gplus-theme-'+name);
+    localStorage.setItem('gplus_theme', name);
+  }
+
+  /* ============== 样式 ============== */
   const STYLE = `
   :root{
     --fg:#fff;
-    --glass-bg:rgba(20,22,30,.07);           /* 更透明 */
+    --glass-bg:rgba(20,22,30,.07);
     --glass-stroke:rgba(255,255,255,.16);
-    --bar-h:56px;                            /* 固定高度 */
+    --bar-h:56px;
+    --edge1:#ff00ff; --edge2:#00ffff; /* 默认 Neon */
   }
   @media (prefers-color-scheme:light){
     :root{ --fg:#111; --glass-bg:rgba(255,255,255,.65); --glass-stroke:rgba(0,0,0,.12) }
   }
 
+  /* 主题变量 */
+  .gplus-theme-neon  { --edge1:#ff00ff; --edge2:#00ffff; }
+  .gplus-theme-blue  { --edge1:#60a5fa; --edge2:#22d3ee; }
+  .gplus-theme-pink  { --edge1:#f472b6; --edge2:#c084fc; }
+  .gplus-theme-white { --edge1:#ffffff; --edge2:#ffffff; }
+
   .gplus-shbar{
     position:fixed; left:0; right:0;
     bottom:calc(0px + env(safe-area-inset-bottom,0));
     z-index:2147483600;
-
     height:var(--bar-h);
     display:flex; align-items:center; justify-content:center;
     gap:10px; padding:0 12px;
-
     background:var(--glass-bg);
     -webkit-backdrop-filter:blur(20px) saturate(180%);
     backdrop-filter:blur(20px) saturate(180%);
     border-top:1px solid var(--glass-stroke);
     box-shadow:0 -10px 28px rgba(0,0,0,.18);
-
     overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; scrollbar-width:none;
     scroll-snap-type:x proximity; will-change:transform;
   }
@@ -58,7 +74,7 @@
   }
   .gplus-btn::after{
     content:""; position:absolute; inset:-2px; border-radius:16px; padding:2px;
-    background:linear-gradient(135deg,#ff00ff,#00ffff);
+    background:linear-gradient(135deg,var(--edge1),var(--edge2));
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
     -webkit-mask-composite:xor; mask-composite:exclude;
     filter:blur(1.5px); opacity:.9; pointer-events:none;
@@ -68,7 +84,6 @@
   .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25) }
   .gplus-btn[disabled]::after{ opacity:.25 }
 
-  /* 徽标：默认避开底栏；可拖拽 */
   .gplus-badge{
     position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom,0));
     z-index:2147483700;
@@ -81,7 +96,7 @@
   }`;
   document.head.appendChild(Object.assign(document.createElement('style'), { textContent: STYLE }));
 
-  /* ================= 工具 ================= */
+  /* ============== 小工具 ============== */
   const $ = (s, r=document) => r.querySelector(s);
   function toast(msg){const d=document.createElement('div');d.textContent=msg;
     Object.assign(d.style,{position:'fixed',left:'50%',top:'18px',transform:'translateX(-50%)',background:'rgba(0,0,0,.65)',color:'#fff',padding:'6px 10px',borderRadius:'8px',zIndex:2147483800,fontSize:'12px'});document.body.appendChild(d);setTimeout(()=>d.remove(),1200);}
@@ -127,7 +142,7 @@
   }
   function openActions(){ const slug=getRepoSlug(); slug?window.open(`https://github.com/${slug}/actions`,'_blank'):toast('Not in repo'); }
 
-  /* ================= 事件 ================= */
+  /* ============== 事件（按钮） ============== */
   function handleClick(e){
     const btn=e.target.closest('.gplus-btn'); if(!btn || btn.hasAttribute('disabled')) return;
     const act=btn.dataset.act;
@@ -148,7 +163,7 @@
     if(btn.dataset.act==='raw'){ e.preventDefault(); downloadRaw(); }
   }
 
-  /* ================= UI：工具条 ================= */
+  /* ============== UI：工具条 ============== */
   function buildBar(){
     if($('.gplus-shbar')) return;
     const bar=document.createElement('div'); bar.className='gplus-shbar';
@@ -173,7 +188,7 @@
     });
   }
 
-  /* ================= UI：徽标（拖拽+点按显隐，方向修正） ================= */
+  /* ============== UI：徽标（拖拽、单击显隐、双击换主题） ============== */
   function ensureBadge(){
     if ($('.gplus-badge')) return;
 
@@ -186,7 +201,8 @@
 
     let dragging=false, moved=false;
     let sx=0, sy=0, startRight=0, startBottom=0, downAt=0;
-    const TAP_MS = 250, MOVE_PX = 6;
+    let lastTap=0;                 // 双击判定
+    const TAP_MS = 250, DBL_MS=300, MOVE_PX = 6;
 
     function onDown(ev){
       const e=(ev.touches&&ev.touches[0])||ev;
@@ -198,7 +214,7 @@
       startBottom= window.innerHeight - rect.bottom;
 
       if (badge.setPointerCapture && ev.pointerId!=null) badge.setPointerCapture(ev.pointerId);
-      ev.preventDefault(); // 我们自己处理"点按"
+      ev.preventDefault(); // 我们自定义 tap/drag，不用原生 click
     }
     function onMove(ev){
       if(!dragging) return;
@@ -206,14 +222,25 @@
       const dx=e.clientX-sx, dy=e.clientY-sy;
       if(Math.abs(dx)+Math.abs(dy)>MOVE_PX) moved=true;
 
-      // 方向自然：上拖↑ => bottom 增大；下拖↓ => bottom 减小
       badge.style.right  = Math.max(6, startRight - dx) + 'px';
       badge.style.bottom = Math.max(6, startBottom - dy) + 'px';
     }
     function onUp(){
       if(!dragging) return; dragging=false;
       const isTap = !moved && (performance.now() - downAt < TAP_MS);
-      if(isTap){ const bar=getBar(); if(bar) bar.classList.toggle('gplus-hidden'); }
+      if(isTap){
+        const now = performance.now();
+        if(now - lastTap < DBL_MS){  // ---- 双击：切换主题 ----
+          const cur = getTheme();
+          const next = THEMES[(THEMES.indexOf(cur)+1)%THEMES.length];
+          applyTheme(next);
+          toast('Theme: '+next);
+          lastTap = 0;  // 重置
+        }else{          // ---- 单击：显隐工具条 ----
+          const bar=getBar(); if(bar) bar.classList.toggle('gplus-hidden');
+          lastTap = now;
+        }
+      }
     }
 
     if('onpointerdown' in window){
@@ -232,7 +259,7 @@
     badge.addEventListener('contextmenu', e=>e.preventDefault(), {capture:true});
   }
 
-  /* ================= 启用/禁用（文件/目录） ================= */
+  /* ============== 启用/禁用（文件/目录） ============== */
   function refreshAvailability(){
     const fileMode = isFileView();
     const editMode = isEditView();
@@ -245,7 +272,7 @@
     if (q('edit')) q('edit').textContent = editMode ? 'Cancel' : 'Edit';
   }
 
-  /* ================= SPA & 观察去抖 ================= */
+  /* ============== SPA & 观察去抖 ============== */
   function hookHistory(){
     const _ps=history.pushState,_rs=history.replaceState;
     const fire=debounce(()=>{ refreshAvailability(); },120);
@@ -254,10 +281,12 @@
     window.addEventListener('popstate', fire, false);
   }
 
-  /* ================= 启动 ================= */
+  /* ============== 启动 ============== */
   function boot(){
-    buildBar(); ensureBadge(); refreshAvailability();
-    hookHistory();
+    applyTheme(getTheme());     // 读取并应用主题
+    buildBar(); ensureBadge();  // UI
+    refreshAvailability();      // 状态
+    hookHistory();              // SPA
     const mo=new MutationObserver(debounce(()=>refreshAvailability(),120));
     mo.observe(document.body,{childList:true,subtree:true});
   }
