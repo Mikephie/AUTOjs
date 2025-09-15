@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      4.3
+// @version      4.4
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -143,14 +143,14 @@
     var raw = getRawUrl();
     if (!raw) return;
 
-    // 基址：默认原站；按住 Alt → 本地
+    // 基址：默认原站 https；Alt = 本地
     var base = 'https://script.hub';
     if (e && e.altKey) base = 'http://127.0.0.1:9101';
 
-    // A) 整串编码（原写法）
+    // A) 你原来的整串编码（FULL）
     var urlFull = base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
 
-    // B) 仅编码路径（部分环境首击更稳）
+    // B) 仅对路径编码（PATH）----保留协议主机，部分环境更稳
     var urlPath = urlFull;
     try {
       var u = new URL(raw);
@@ -158,14 +158,20 @@
       urlPath = base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
     } catch (_) {}
 
-    // 在同一个新标签里依次尝试（不会开一堆标签）
+    // 先打开 FULL（新标签；若被拦截就用当前页）
     var win = window.open(urlFull, '_blank', 'noopener,noreferrer') || window;
 
-    // 立即做一次兜底替换（如果 FULL 被后端拒绝，这一步会把它切到 PATH 版本）
+    // 700ms 后自动"再按一次"同一链接（等效你第二次点击）
+    setTimeout(function () {
+      try { win.location.href = urlFull; }
+      catch { location.assign(urlFull); }
+    }, 700);
+
+    // 1300ms 再切 PATH 版本兜底（多数首击报错到这里就稳定了）
     setTimeout(function () {
       try { win.location.replace(urlPath); }
       catch { location.assign(urlPath); }
-    }, 120);
+    }, 1300);
 
   } catch (err) {
     console.error('[ScriptHub] open error:', err);
