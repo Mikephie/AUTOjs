@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      3.7
+// @version      3.8
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -142,35 +142,97 @@
   var raw = getRawUrl();
   if (!raw) return;
 
-  // 解析 Raw，保留协议和主机，仅编码路径+查询+hash，避免部分后端首次解析失败
-  var url;
+  // ---- 1) 预热基站（尽量走 https 原站；Alt=本地；Shift=vercel） ----
+  var base = 'https://script.hub';
+  if (e && e.altKey)   base = 'http://127.0.0.1:9101';
+  if (e && e.shiftKey) base = 'https://scripthub.vercel.app';
+
+  // vercel 不支持 /convert，放到兜底流程，预热仍先用原站/本地
+  var warmBase = (base.indexOf('scripthub.vercel.app') !== -1) ? 'https://script.hub' : base;
+
+  // ---- 2) 准备多组 RAW 镜像，解决 DNS 解析失败 ----
+  // raw：https://raw.githubusercontent.com/owner/repo/branch/path...
+  var mirrors = [raw];
   try {
     var u = new URL(raw);
-    var safe = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
+    var segs = u.pathname.split('/').filter(Boolean); // [owner, repo, branch, ...path]
+    if (u.hostname === 'raw.githubusercontent.com' && segs.length >= 4) {
+      var owner  = segs[0], repo = segs[1], branch = segs[2], rest = segs.slice(3).join('/');
 
-    // 选择基址：默认 https 原站；按住 Shift 用 vercel（仅首页），按住 Alt 用本地
-    var base = 'https://script.hub';
-    if (e && e.shiftKey) base = 'https://scripthub.vercel.app';
-    if (e && e.altKey)   base = 'http://127.0.0.1:9101';
-
-    if (base.indexOf('scripthub.vercel.app') !== -1) {
-      // vercel 部署不支持 /convert 路由，只能进首页；它不会自动带入，只能粘贴
-      // 如果你之后要自动填充，只能让 vercel 实现 ?src= 识别
-      url = base + '/';
-      // 贴心：顺手把 raw 复制到剪贴板，进去即可粘贴
-      try { navigator.clipboard && navigator.clipboard.writeText(raw); } catch(_) {}
-    } else {
-      // 原站 / 本地：支持 convert 路由（一次带入）
-      url = base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
+      // 常用镜像（顺序按稳定性排）
+      mirrors.push('https://ghproxy.net/https://raw.githubusercontent.com/' + owner + '/' + repo + '/' + branch + '/' + rest);
+      mirrors.push('https://cdn.jsdelivr.net/gh/' + owner + '/' + repo + '@' + branch + '/' + rest);
+      mirrors.push('https://gcore.jsdelivr.net/gh/' + owner + '/' + repo + '@' + branch + '/' + rest);
+      mirrors.push('https://raw.kgithub.com/' + owner + '/' + repo + '/' + branch + '/' + rest);
+      mirrors.push('https://raw.fastgit.org/' + owner + '/' + repo + '/' + branch + '/' + rest);
     }
-  } catch (err) {
-    // 如果 URL 解析失败，退回最原始（整串编码）方案
-    var enc = encodeURIComponent(raw);
-    url = 'https://script.hub/convert/_start_/' + enc + '/_end_/plain.txt?type=plain-text&target=plain-text';
+  } catch (_) { /* 保底只用原始 raw */ }
+
+  // ---- 3) 生成 convert URL（两种编码方式：FULL / PATH 更兼容）----
+  function makeConvertUrl(baseHost, rawUrl, mode) {
+    if (baseHost.indexOf('scripthub.vercel.app') !== -1) {
+      // vercel 兜底：它不支持 convert，走 ?src=，仅把链接带到输入框
+      return baseHost + '/?src=' + encodeURIComponent(rawUrl);
+    }
+    if (mode === 'PATH') {
+      try {
+        var u = new URL(rawUrl);
+        var safe = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
+        return baseHost + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
+      } catch (e) {
+        // 解析失败回退 FULL
+      }
+    }
+    // FULL：整串 encode
+    return baseHost + '/convert/_start_/' + encodeURIComponent(rawUrl) + '/_end_/plain.txt?type=plain-text&target=plain-text';
   }
 
-  var w = window.open(url, '_blank', 'noopener,noreferrer');
-  if (!w) location.assign(url);
+  // ---- 4) 单标签轮流尝试（原站 FULL → 原站 PATH → 镜像们 FULL → 镜像们 PATH → vercel ?src → 本地）----
+  var queue = [];
+
+  // 当前（或预热）基站优先
+  queue.push({ url: makeConvertUrl(warmBase, mirrors[0], 'FULL') });
+  queue.push({ url: makeConvertUrl(warmBase, mirrors[0], 'PATH') });
+
+  // 尝试所有镜像（FULL→PATH）
+  for (var i = 1; i < mirrors.length; i++) {
+    queue.push({ url: makeConvertUrl(warmBase, mirrors[i], 'FULL') });
+    queue.push({ url: makeConvertUrl(warmBase, mirrors[i], 'PATH') });
+  }
+
+  // vercel 兜底（只会到首页并把链接填到输入框；不报错）
+  queue.push({ url: makeConvertUrl('https://scripthub.vercel.app', raw, 'FULL') });
+
+  // 若预热走的是原站，则再加一个本地作为最后兜底
+  if (warmBase !== 'http://127.0.0.1:9101') {
+    queue.push({ url: makeConvertUrl('http://127.0.0.1:9101', mirrors[0], 'FULL') });
+    queue.push({ url: makeConvertUrl('http://127.0.0.1:9101', mirrors[0], 'PATH') });
+  }
+
+  // ---- 5) 先打开一个"预热页"，再在同一标签里轮流跳转（避免多标签）----
+  var win = window.open(warmBase + '/', '_blank', 'noopener,noreferrer');
+  if (!win) { win = window; } // 被拦截就用当前页
+
+  var idx = 0;
+  function step() {
+    if (idx >= queue.length) {
+      try { navigator.clipboard.writeText(raw); } catch (_) {}
+      alert('ScriptHub 暂时无法解析 raw.githubusercontent.com；已复制 RAW 到剪贴板，请手动粘贴。');
+      return;
+    }
+    try {
+      win.location.href = queue[idx].url;
+    } catch (_) {
+      // 如果被同源策略阻挡，也直接在当前页替换
+      location.assign(queue[idx].url);
+    }
+    idx += 1;
+    // 每 600ms 切一次候选（足够快，又能给后端一定时间）
+    setTimeout(step, 600);
+  }
+
+  // 给预热页 300ms 再开始切换
+  setTimeout(step, 300);
 }
 
   // --- 工具 ---
