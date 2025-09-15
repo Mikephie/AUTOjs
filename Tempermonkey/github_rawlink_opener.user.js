@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      4.6
+// @version      4.7
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -128,31 +128,20 @@
     return href;
   }
 
-  function openRawLink() {
-    window.open(getRawUrl(), "_blank", "noopener,noreferrer");
-  }
-
-  function reEditLink() {
-    // convert/file/view -> edit
-    var url = location.href.replace(/\/(convert|file|view)\//, "/edit/");
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
-
-  // 一次点击 => 自动重试同一链接，必要时换 PATH 编码，确保写入地址
+  // 一次点击 -> 打开一个中转页，在中转页内自动重试 convert 链接（FULL -> FULL -> PATH）
 function openScriptHubLink(e) {
   try {
     var raw = getRawUrl();
     if (!raw) return;
 
-    // 基址：默认走原站 https；按住 Alt = 本地
+    // 基址：默认原站 https；按住 Alt 用本地
     var base = 'https://script.hub';
     if (e && e.altKey) base = 'http://127.0.0.1:9101';
 
-    // 构造两种 /convert 链接
-    // A) FULL：整条 raw 一次 encode（和你原脚本一致）
+    // A) FULL：整条 raw 一次 encode（与你原版一致）
     var urlFull = base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
 
-    // B) PATH：仅编码 path+search+hash，保留协议和主机（部分环境首击更稳）
+    // B) PATH：只编码 path+search+hash，保留协议和主机（部分环境更稳）
     var urlPath = urlFull;
     try {
       var u = new URL(raw);
@@ -160,20 +149,52 @@ function openScriptHubLink(e) {
       urlPath = base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
     } catch (_) {}
 
-    // 第一步：直接打开 FULL（有些环境这里会出现 "Invalid URL."）
-    var win = window.open(urlFull, '_blank', 'noopener,noreferrer') || window;
+    // ---- 关键：用"中转页"在新标签内自己做重试（iOS 不会把它挂起）----
+    var relay = window.open('', '_blank', 'noopener,noreferrer');  // 为空白页，同源可写
+    if (!relay) { // 被拦截就直接当前页跳 FULL，再由后端返回
+      location.href = urlFull;
+      return;
+    }
 
-    // 第二步：等同"再点一次"----过 700ms 重新加载同一链接（通常这步就能成功带入）
-    setTimeout(function () {
-      try { win.location.href = urlFull; }
-      catch { location.assign(urlFull); }
-    }, 700);
-
-    // 第三步：再兜底一次 PATH 版本（1100~1400ms 对多数网络更稳）
-    setTimeout(function () {
-      try { win.location.replace(urlPath); }
-      catch { location.assign(urlPath); }
-    }, 1300);
+    var html = `
+<!doctype html>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ScriptHub · Redirecting…</title>
+<style>
+  html,body{height:100%;margin:0;background:#0b0f17;color:#eaf2ff;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;}
+  .wrap{display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:10px}
+  .dot{width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 12px #22c55e}
+  .muted{opacity:.7}
+</style>
+<div class="wrap">
+  <div class="dot"></div>
+  <div>Opening ScriptHub…</div>
+  <div class="muted">If this page stays, it is retrying automatically.</div>
+</div>
+<script>
+  (function(){
+    var urls = ${JSON.stringify([urlFull, urlFull, urlPath])}; // 依次尝试：FULL -> FULL(再试一次) -> PATH
+    var i = 0;
+    function go(){
+      try{
+        // 使用 replace 保持同一标签，不产生历史记录
+        location.replace(urls[i]);
+      }catch(e){
+        location.href = urls[i];
+      }
+      i++;
+      if(i < urls.length){
+        // 给后端一点时间（可按需要调大，如 1000/1600）
+        setTimeout(go, 900);
+      }
+    }
+    // 开始
+    setTimeout(go, 100); // 100ms 后跳第一次
+  })();
+</script>`;
+    relay.document.open();
+    relay.document.write(html);
+    relay.document.close();
 
   } catch (err) {
     console.error('[ScriptHub] open error:', err);
