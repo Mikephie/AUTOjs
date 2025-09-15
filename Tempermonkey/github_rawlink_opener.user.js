@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      4.5
+// @version      4.6
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -138,40 +138,42 @@
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  function openScriptHubLink(e) {
+  // 一次点击 => 自动重试同一链接，必要时换 PATH 编码，确保写入地址
+function openScriptHubLink(e) {
   try {
     var raw = getRawUrl();
     if (!raw) return;
 
-    // 基址：默认原站 https；按住 Alt 用本地
+    // 基址：默认走原站 https；按住 Alt = 本地
     var base = 'https://script.hub';
     if (e && e.altKey) base = 'http://127.0.0.1:9101';
 
     // 构造两种 /convert 链接
-    // ① PATH：只编码 path+search+hash，协议与主机保留（首击更稳）
-    var urlPath, urlFull;
+    // A) FULL：整条 raw 一次 encode（和你原脚本一致）
+    var urlFull = base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
+
+    // B) PATH：仅编码 path+search+hash，保留协议和主机（部分环境首击更稳）
+    var urlPath = urlFull;
     try {
       var u = new URL(raw);
       var safe = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
       urlPath = base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
-    } catch(_) {
-      // 解析失败时，让 PATH 先等于 FULL（下面会赋值）
-    }
-    // ② FULL：整条 raw 一次 encode（兼容你的原始写法）
-    urlFull = base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
-    if (!urlPath) urlPath = urlFull;
+    } catch (_) {}
 
-    // 关键：先开"首页"，避免直接落在错误页
-    var w = window.open(base + '/', '_blank', 'noopener,noreferrer') || window;
+    // 第一步：直接打开 FULL（有些环境这里会出现 "Invalid URL."）
+    var win = window.open(urlFull, '_blank', 'noopener,noreferrer') || window;
 
-    // 先跳 PATH 版本（更稳），再兜底 FULL；时间可以按网络状况微调
+    // 第二步：等同"再点一次"----过 700ms 重新加载同一链接（通常这步就能成功带入）
     setTimeout(function () {
-      try { w.location.href = urlPath; } catch { location.assign(urlPath); }
-    }, 150);      // 0.15s 后跳 convert（用户基本看不到首页）
+      try { win.location.href = urlFull; }
+      catch { location.assign(urlFull); }
+    }, 700);
 
+    // 第三步：再兜底一次 PATH 版本（1100~1400ms 对多数网络更稳）
     setTimeout(function () {
-      try { w.location.replace(urlFull); } catch { location.assign(urlFull); }
-    }, 900);      // 0.9s 后兜底一次 FULL（如果 PATH 也没解析好）
+      try { win.location.replace(urlPath); }
+      catch { location.assign(urlPath); }
+    }, 1300);
 
   } catch (err) {
     console.error('[ScriptHub] open error:', err);
