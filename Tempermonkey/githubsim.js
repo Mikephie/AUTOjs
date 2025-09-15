@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（双击徽标切换主题+真下载+拖拽徽标）+ ScriptHub
+// @name         GitHub+ 玻璃工具条（单击徽标开关+双击换主题+真下载+拖拽徽标）+ ScriptHub
 // @namespace    https://mikephie.site/
-// @version      3.5.0
-// @description  顶部/移动端底部玻璃工具条：Raw / DL / Path / URL / Name / Repo / Hub。双击"GitHubPlus"徽标切换主题（霓虹/蓝/粉/白边，记忆）；Hub 点击跳 ScriptHub、长按 Hub 亦可切主题；更通透玻璃；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/u/f/s/h；GitHub SPA 兼容。
+// @version      3.5.1
+// @description  顶部/移动端底部玻璃工具条：Raw / DL / Path / URL / Name / Repo / Hub。单击"GitHubPlus"徽标折叠/展开；双击徽标切主题（霓虹/蓝/粉/白，记忆）；Hub 点击跳 ScriptHub、长按 Hub 亦可切主题；更通透玻璃；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/u/f/s/h；GitHub SPA 兼容。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -159,24 +159,19 @@
   async function downloadRaw(){
     const url = getRawUrl();
     if (!url) { toast('Not a file view'); return; }
-
     let filename = getFileName() || url.split('/').pop() || 'download.txt';
     toast('Downloading…');
-
     try {
       const res = await fetch(url, { mode: 'cors', credentials: 'omit', cache: 'no-store' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-
       const buf  = await res.arrayBuffer();
       const blob = new Blob([buf], { type: 'application/octet-stream' });
-
       const a = document.createElement('a');
       const obj = URL.createObjectURL(blob);
       a.href = obj; a.download = filename; a.style.display = 'none';
       document.body.appendChild(a); a.click();
       setTimeout(() => { URL.revokeObjectURL(obj); a.remove(); }, 1200);
       toast('Saved: ' + filename);
-
     } catch (err) {
       console.error('[DL] error:', err);
       const r = getRawUrl(); r && window.open(r,'_blank');
@@ -189,11 +184,9 @@
     const raw=getRawUrl(); if(!raw){ toast('Not a file view'); return; }
     try{ navigator.clipboard && navigator.clipboard.writeText(raw); toast('RAW 已复制'); }
     catch(_){ try{ prompt('Copy manually:',raw); }catch(__){} }
-
     let base='https://scripthub.vercel.app';
     if (e && e.shiftKey) base='https://script.hub';
     if (e && e.altKey)   base='http://127.0.0.1:9101';
-
     const url=base.replace(/\/+$/,'')+'/';
     const w=window.open(url,'_blank','noopener'); if(!w) location.assign(url);
   }
@@ -211,10 +204,8 @@
   function attachHubLongPress(){
     const hubBtn = document.querySelector('.gplus-btn[data-act="hub"]');
     if (!hubBtn) return;
-
     let timer = null, longPressed = false;
     const THRESHOLD = 520;
-
     const start = () => {
       longPressed = false;
       timer = setTimeout(() => {
@@ -224,57 +215,39 @@
       }, THRESHOLD);
     };
     const cancel = () => { if (timer) clearTimeout(timer); };
-
     hubBtn.addEventListener('pointerdown', start);
     ['pointerup','pointerleave','pointercancel'].forEach(t=>hubBtn.addEventListener(t, cancel));
     hubBtn.addEventListener('click', (e) => { if (longPressed) { e.preventDefault(); e.stopPropagation(); } }, true);
     hubBtn.addEventListener('contextmenu', (e)=>{ e.preventDefault(); }, {capture:true});
   }
 
-  /* ================= 徽标：创建/单击折叠/双击切主题 ================= */
+  /* ================= 徽标：创建 + 手势（单击/双击/拖拽） ================= */
   function ensureBadge(){
     if (document.querySelector('.gplus-badge')) return;
     const b=document.createElement('div');
     b.className='gplus-badge';
     b.textContent='GitHubPlus';
     document.body.appendChild(b);
-
-    // 单击与双击分离：单击延迟执行，若发生双击则取消单击行为
-    let clickTimer = null;
-    b.addEventListener('click', (e)=>{
-      if (clickTimer) return;
-      clickTimer = setTimeout(()=>{
-        clickTimer = null;
-        const bar=document.querySelector('.gplus-shbar');
-        if (bar) bar.classList.toggle('gplus-hidden');
-      }, 220);
-    });
-
-    b.addEventListener('dblclick', (e)=>{
-      if (clickTimer) { clearTimeout(clickTimer); clickTimer = null; }
-      e.preventDefault(); e.stopPropagation();
-      const i = THEMES.indexOf(currentTheme);
-      applyTheme(THEMES[(i+1)%THEMES.length]);
-    });
+    attachBadgeGestures(b);
   }
 
-  // 徽标拖拽（不影响单击/双击）
-  function attachBadgeDrag(){
-    const badge = document.querySelector('.gplus-badge');
-    if (!badge) return;
-
-    let dragging = false, sx=0, sy=0, startRight=0, startBottom=0, moved=false;
+  // 统一用 Pointer 实现：拖拽 / 单击 / 双击（避免移动端 click/dblclick 兼容问题）
+  function attachBadgeGestures(badge){
+    let dragging=false, moved=false;
+    let sx=0, sy=0, startRight=0, startBottom=0;
+    let lastTap=0, singleTimer=null;
+    const TAP_GAP = 280;      // 双击判定窗口
+    const MOVE_THRESH = 6;    // 拖拽阈值
 
     const onDown = (e) => {
-      dragging = true; moved = false;
       const ev = (e.touches && e.touches[0]) || e;
+      dragging = true; moved = false;
       sx = ev.clientX; sy = ev.clientY;
       const rect = badge.getBoundingClientRect();
       startRight = window.innerWidth - rect.right;
       startBottom = window.innerHeight - rect.bottom;
       badge.setPointerCapture?.(e.pointerId || 1);
-      // 避免与点击/双击冲突
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
     };
 
     const onMove = (e) => {
@@ -282,7 +255,7 @@
       const ev = (e.touches && e.touches[0]) || e;
       const dx = ev.clientX - sx;
       const dy = ev.clientY - sy;
-      if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+      if (Math.abs(dx) + Math.abs(dy) > MOVE_THRESH) moved = true;
       badge.style.right = Math.max(6, startRight - dx) + 'px';
       badge.style.bottom = Math.max(6, startBottom + dy) + 'px';
     };
@@ -290,23 +263,48 @@
     const onUp = (e) => {
       if (!dragging) return;
       dragging = false;
-      if (moved) { e.preventDefault(); e.stopPropagation(); }
+
+      // 拖拽：不触发点击/双击
+      if (moved) { e.preventDefault(); e.stopPropagation(); return; }
+
+      // 轻触：手动做单击/双击判定
+      const now = performance.now();
+      if (now - lastTap < TAP_GAP) {
+        // 双击：切换主题
+        if (singleTimer) { clearTimeout(singleTimer); singleTimer = null; }
+        const i = THEMES.indexOf(currentTheme);
+        applyTheme(THEMES[(i+1)%THEMES.length]);
+        lastTap = 0;
+      } else {
+        // 单击：折叠/展开
+        lastTap = now;
+        singleTimer = setTimeout(() => {
+          singleTimer = null;
+          const bar = document.querySelector('.gplus-shbar');
+          if (bar) bar.classList.toggle('gplus-hidden');
+        }, TAP_GAP);
+      }
+      e.preventDefault(); e.stopPropagation();
     };
 
     if ('onpointerdown' in window){
       badge.addEventListener('pointerdown', onDown);
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-      window.addEventListener('pointercancel', onUp);
+      window.addEventListener('pointermove', onMove, { passive:false });
+      window.addEventListener('pointerup', onUp, { passive:false });
+      window.addEventListener('pointercancel', onUp, { passive:false });
     }else{
+      // 兼容旧浏览器
       badge.addEventListener('touchstart', onDown, {passive:false});
       window.addEventListener('touchmove', onMove, {passive:false});
-      window.addEventListener('touchend', onUp);
-      window.addEventListener('touchcancel', onUp);
+      window.addEventListener('touchend', onUp, {passive:false});
+      window.addEventListener('touchcancel', onUp, {passive:false});
       badge.addEventListener('mousedown', onDown);
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', onUp);
     }
+
+    // 阻止系统长按菜单
+    badge.addEventListener('contextmenu', (e)=>e.preventDefault(), {capture:true});
   }
 
   /* ================= 工具条 UI ================= */
@@ -365,14 +363,13 @@
     if (!document.querySelector('.gplus-shbar')) buildBar();
     if (!document.querySelector('.gplus-badge')) ensureBadge();
     attachHubLongPress();
-    attachBadgeDrag();
   }
 
   /* ================= 启动 ================= */
   (function boot(){
     document.body && document.body.classList.add('theme-'+currentTheme);
     buildBar(); ensureBadge();
-    attachHubLongPress(); attachBadgeDrag();
+    attachHubLongPress();
     window.addEventListener('keydown', hotkeys, { passive:true });
     hookHistory(); // GitHub SPA
   })();
