@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      4.1
+// @version      4.2
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -143,52 +143,36 @@
     var raw = getRawUrl();
     if (!raw) return;
 
-    // 三个基址
-    var BASE_VERCEL = 'https://scripthub.vercel.app'; // 稳定：无报错，但不会自动带入（我会顺手复制 RAW）
-    var BASE_ORIGIN = 'https://script.hub';           // 直连：/convert 一次带入，但可能首击 DNS 报错
-    var BASE_LOCAL  = 'http://127.0.0.1:9101';        // 本地：/convert 一次带入
+    // 基址：默认原站；Alt = 本地
+    var base = 'https://script.hub';
+    if (e && e.altKey) base = 'http://127.0.0.1:9101';
 
-    // 点击修饰键：
-    // 默认（无修饰键）→ 稳定模式 vercel 首页
-    // Alt → 直连 convert（origin；Alt+Ctrl → 本地）
-    // Shift → 原站首页（手动粘贴）
-    var useStable = !(e && (e.altKey || e.shiftKey));
-    var base = BASE_VERCEL;
+    // 方案 A：整串编码（原脚本写法）
+    var urlFull = base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
 
-    if (e && e.shiftKey) base = BASE_ORIGIN;  // 原站首页（手动）
-    if (e && e.altKey)   base = BASE_ORIGIN;  // 直连 convert
-    if (!e)              base = BASE_VERCEL;
+    // 方案 B：仅编码路径（有些环境首击更稳）
+    var urlPath = urlFull;
+    try {
+      var u = new URL(raw);
+      var safe = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
+      urlPath = base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
+    } catch (_) { /* 忽略，保留 urlFull */ }
 
-    if (useStable) {
-      // 稳定模式：打开 vercel 首页，并把 RAW 放进剪贴板
-      try { if (navigator.clipboard) navigator.clipboard.writeText(raw); } catch (_) {}
-      var urlHome = BASE_VERCEL + '/';
-      var w0 = window.open(urlHome, '_blank', 'noopener,noreferrer');
-      if (!w0) location.href = urlHome;
-      return;
-    }
-
-    // 直连模式：一次带入（Alt+Ctrl 用本地）
-    if (e && e.altKey && e.ctrlKey) base = BASE_LOCAL;
-
-    var enc = encodeURIComponent(raw);
-    var convert = base + '/convert/_start_/' + enc + '/_end_/plain.txt?type=plain-text&target=plain-text';
-
-    // 先开首页"预热"，避免有环境需要点两次
+    // 先开首页"预热"，再跳 convert（避免首击报错）
     var w = window.open(base + '/', '_blank', 'noopener,noreferrer') || window;
 
+    // 第一次跳 FULL（300ms）
     setTimeout(function () {
-      try {
-        w.location.href = convert;
-      } catch (_) {
-        location.href = convert;
-      }
-    }, 400);
+      try { w.location.href = urlFull; } catch (_) { location.assign(urlFull); }
+    }, 300);
+
+    // 若后端对 FULL 解析不稳，再试 PATH（900ms 再切一次）
+    setTimeout(function () {
+      try { w.location.href = urlPath; } catch (_) { location.assign(urlPath); }
+    }, 900);
+
   } catch (err) {
     console.error('[ScriptHub] open error:', err);
-    // 保底：打开 vercel 首页，至少有页面反馈
-    var fb = 'https://scripthub.vercel.app/';
-    window.open(fb, '_blank', 'noopener,noreferrer') || (location.href = fb);
   }
 }
 
