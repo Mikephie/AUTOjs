@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（Raw 单击复制 / 双击 RawContent / 长按下载 · Edit/Action · 编辑页DL=全选）+ ScriptHub
+// @name         GitHub+ 玻璃工具条（Raw单击复制/双击Raw/长按下载 · Edit/Action · 编辑页All=全选并复制）+ ScriptHub
 // @namespace    https://mikephie.site/
-// @version      3.7.0
-// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击RawContent/长按下载) / DL(编辑页=全选) / Path / Edit / Name / Action / Hub。Pointer 手势判定避免 dblclick 兼容问题；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
+// @version      3.7.1
+// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击RawContent/长按下载) / DL(编辑页=All: 全选并复制) / Path / Edit / Name / Action / Hub。Pointer 手势判定避免 dblclick 兼容问题；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -310,12 +310,117 @@
     badge.addEventListener('contextmenu', (e)=>e.preventDefault(), {capture:true});
   }
 
+  /* ================= 编辑器：全选 & 复制（覆盖 Monaco/CM5/CM6/textarea/viewer） ================= */
+  async function selectAllAndMaybeCopy({copy=true} = {}){
+    // 1) Monaco
+    try{
+      if (window.monaco && window.monaco.editor) {
+        const editors = (window.monaco.editor.getEditors && window.monaco.editor.getEditors()) || [];
+        const ed = editors[0];
+        if (ed) {
+          try{
+            const Range = window.monaco.Range;
+            const model = ed.getModel();
+            const maxLine = model.getLineCount();
+            ed.setSelection(new Range(1,1, maxLine, model.getLineMaxColumn(maxLine)));
+          }catch{}
+          if (copy) {
+            const txt = ed.getValue();
+            await navigator.clipboard.writeText(txt);
+            toast('Copied (Monaco): ' + txt.length + ' chars');
+          } else {
+            toast('Selected all (Monaco)');
+          }
+          return true;
+        }
+      }
+    }catch{}
+
+    // 2) CodeMirror v5
+    try{
+      const cmElt = document.querySelector('.CodeMirror');
+      const cm = cmElt && cmElt.CodeMirror;
+      if (cm && typeof cm.getValue === 'function') {
+        try{ cm.execCommand('selectAll'); }catch{}
+        if (copy) {
+          const txt = cm.getValue();
+          await navigator.clipboard.writeText(txt);
+          toast('Copied (CodeMirror): ' + txt.length + ' chars');
+        } else {
+          toast('Selected all (CodeMirror)');
+        }
+        return true;
+      }
+    }catch{}
+
+    // 3) CodeMirror v6
+    try{
+      const cm6 = document.querySelector('.cm-content');
+      if (cm6) {
+        try{
+          const r = document.createRange();
+          r.selectNodeContents(cm6);
+          const sel = getSelection();
+          sel.removeAllRanges(); sel.addRange(r);
+        }catch{}
+        if (copy) {
+          const txt = cm6.innerText;
+          await navigator.clipboard.writeText(txt);
+          toast('Copied (CM6): ' + txt.length + ' chars');
+        } else {
+          toast('Selected all (CM6)');
+        }
+        return true;
+      }
+    }catch{}
+
+    // 4) 经典 textarea
+    try{
+      const ta = document.querySelector('textarea#code-editor, textarea[name="value"], textarea.js-code-text, textarea');
+      if (ta) {
+        ta.focus(); ta.select();
+        if (copy) {
+          const txt = ta.value;
+          await navigator.clipboard.writeText(txt);
+          toast('Copied (textarea): ' + txt.length + ' chars');
+        } else {
+          toast('Selected all (textarea)');
+        }
+        return true;
+      }
+    }catch{}
+
+    // 5) 退路：viewer DOM
+    try{
+      const viewer = document.querySelector('table.highlight, .blob-wrapper, .markdown-body');
+      if (viewer) {
+        const r = document.createRange();
+        r.selectNodeContents(viewer);
+        const sel = window.getSelection();
+        sel.removeAllRanges(); sel.addRange(r);
+        if (copy) {
+          const txt = viewer.innerText || viewer.textContent || '';
+          await navigator.clipboard.writeText(txt);
+          toast('Copied (viewer): ' + txt.length + ' chars');
+        } else {
+          toast('Selected all (viewer)');
+        }
+        return true;
+      }
+    }catch{}
+
+    toast('Editor not found');
+    return false;
+  }
+  // 兼容旧名
+  function selectAllInEditor(){ return selectAllAndMaybeCopy({copy:false}); }
+
   /* ================= 工具条 UI ================= */
   function buildBar(){
     const bar=document.createElement('div'); bar.className='gplus-shbar';
     bar.innerHTML = `
       <button class="gplus-btn" data-act="raw"  title="Raw (tap=copy / double=open raw / hold=download)">Raw</button>
-      <button class="gplus-btn" data-act="dl"   title="Download raw / Select All in edit">DL</button>
+      <button class="gplus-btn" data-act="dl"   title="Download raw / All in edit">DL</button>
       <button class="gplus-btn" data-act="p"    title="Copy path">Path</button>
       <button class="gplus-btn" data-act="edit" title="Open edit page">Edit</button>
       <button class="gplus-btn" data-act="f"    title="Copy filename">Name</button>
@@ -330,7 +435,8 @@
       if(act==='raw') return; // raw 交给 Pointer 手势
       if(act==='dl'){
         if(isEditPage()){
-          selectAllInEditor();
+          // 编辑页：All = 全选并复制
+          selectAllAndMaybeCopy({copy:true});
         }else{
           downloadRaw();
         }
@@ -366,46 +472,11 @@
     if(!dlBtn) return;
     if(isEditPage()){
       dlBtn.textContent = 'All';
-      dlBtn.title = 'Select All (editor)';
+      dlBtn.title = 'Select All & Copy (editor)';
     }else{
       dlBtn.textContent = 'DL';
       dlBtn.title = 'Download raw';
     }
-  }
-
-  // 选择编辑器中的所有内容（尽量兼容 GitHub 现状）
-  function selectAllInEditor(){
-    // 优先找经典 textarea
-    const ta = document.querySelector('textarea#code-editor, textarea[name="value"], textarea.js-code-text');
-    if (ta) {
-      ta.focus();
-      ta.select();
-      toast('Selected all');
-      return;
-    }
-    // 兼容 contenteditable（如 Monaco/CodeMirror 容器）
-    const editable = document.querySelector('[contenteditable="true"], .cm-content, .monaco-editor, .CodeMirror');
-    if (editable) {
-      // 尝试让其获得焦点后全选
-      editable.focus();
-      try {
-        document.execCommand('selectAll');
-        toast('Selected all');
-        return;
-      } catch {}
-    }
-    // 退路：选中主文本域（view 页面）
-    const blob = document.querySelector('table.highlight, .blob-wrapper, .markdown-body');
-    if (blob) {
-      const range = document.createRange();
-      range.selectNodeContents(blob);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      toast('Selected all (viewer)');
-      return;
-    }
-    toast('Editor not found');
   }
 
   // Raw：Pointer 手势（单击=复制、双击=raw content、长按=下载）
@@ -419,11 +490,8 @@
       const ev=(e.touches&&e.touches[0])||e;
       down=true; moved=false; longPressed=false; sx=ev.clientX; sy=ev.clientY;
       btn.setPointerCapture?.(e.pointerId||1);
-      // 启动长按计时
       longTimer = setTimeout(()=>{
-        longPressed=true;
-        // 长按：真下载
-        downloadRaw();
+        longPressed=true; downloadRaw();
       }, HOLD_MS);
       e.preventDefault(); e.stopPropagation();
     };
@@ -436,27 +504,18 @@
         if(longTimer){ clearTimeout(longTimer); longTimer=null; }
       }
     };
-    const clearTimers=()=>{
-      if(longTimer){ clearTimeout(longTimer); longTimer=null; }
-      if(singleTimer){ /* 单击定时保留由逻辑自行清理 */ }
-    };
     const onUp=(e)=>{
       if(!down) return; down=false;
-      // 任何结束都先清长按
       if(longTimer){ clearTimeout(longTimer); longTimer=null; }
       if(moved){ e.preventDefault(); e.stopPropagation(); return; }
-      if(longPressed){ // 已经触发长按 -> 不再处理单/双击
-        e.preventDefault(); e.stopPropagation(); return;
-      }
+      if(longPressed){ e.preventDefault(); e.stopPropagation(); return; }
       const now=performance.now();
       if(now-lastTap<TAP_GAP){
-        // 双击 -> 打开 raw content
         if(singleTimer){ clearTimeout(singleTimer); singleTimer=null; }
         const r=getRawUrl();
         r? window.open(r,'_blank') : toast('Raw URL not available');
         lastTap=0;
       }else{
-        // 单击 -> 复制 RAW
         lastTap=now;
         singleTimer=setTimeout(()=>{
           singleTimer=null;
@@ -471,12 +530,12 @@
       btn.addEventListener('pointerdown', onDown);
       window.addEventListener('pointermove', onMove, {passive:false});
       window.addEventListener('pointerup', onUp, {passive:false});
-      window.addEventListener('pointercancel', (e)=>{ down=false; clearTimers(); }, {passive:false});
+      window.addEventListener('pointercancel', (e)=>{ down=false; if(longTimer){clearTimeout(longTimer); longTimer=null;} }, {passive:false});
     }else{
       btn.addEventListener('touchstart', onDown, {passive:false});
       window.addEventListener('touchmove', onMove, {passive:false});
       window.addEventListener('touchend', onUp, {passive:false});
-      window.addEventListener('touchcancel', (e)=>{ down=false; clearTimers(); }, {passive:false});
+      window.addEventListener('touchcancel', (e)=>{ down=false; if(longTimer){clearTimeout(longTimer); longTimer=null;} }, {passive:false});
       btn.addEventListener('mousedown', onDown);
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', onUp);
@@ -491,7 +550,7 @@
     if(/(input|textarea|select)/.test(tag)||e.target.isContentEditable) return;
     const k=(e.key||'').toLowerCase();
     if(k==='r'){ const r=getRawUrl(); if(r) copyText(r); }
-    if(k==='d'){ isEditPage()? selectAllInEditor() : downloadRaw(); }
+    if(k==='d'){ isEditPage()? selectAllAndMaybeCopy({copy:true}) : downloadRaw(); }
     if(k==='p'){ const p=getRepoPath(); if(p) copyText(p); }
     if(k==='e'){ const u=getEditUrl(); if(u) window.open(u,'_blank'); }
     if(k==='a'){ const slug=getRepoSlug(); slug && window.open(`https://github.com/${slug}/actions`,'_blank'); }
