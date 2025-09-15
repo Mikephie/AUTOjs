@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ 玻璃风格 + ScriptHub（vercel/?src + 原站/本地 convert 自动分流）
 // @namespace    https://mikephie.site/
-// @version      3.0.0
+// @version      3.0.1
 // @description  固定工具条（桌面顶部 / 移动底部横滑）；Hub 按钮自动根据基址选择 ?src 或 convert 路由；默认 vercel，Shift=script.hub，Alt=127.0.0.1；失败自动回退；暗黑高对比；短标签；快捷键 r/d/p/u/f/s/h；徽标不遮挡。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
@@ -41,21 +41,39 @@
     box-shadow:var(--glass-shadow);
   }
   .gplus-btn{
-    position:relative;flex:0 0 auto;
-    border:1px solid rgba(255,255,255,.28);
-    background:rgba(255,255,255,.08);
-    color:var(--fg);padding:10px 12px;border-radius:12px;
-    font-size:12px;font-weight:700;letter-spacing:.2px;
-    min-height:44px;min-width:82px;text-align:center;
-    cursor:pointer;transition:transform .08s,box-shadow .18s;
-  }
-  .gplus-btn::after{
-    content:"";position:absolute;inset:-3px;border-radius:14px;z-index:-1;
-    background:conic-gradient(from 0deg,var(--accent1),var(--accent2),var(--accent1));
-    filter:blur(10px);opacity:.65;animation:gplusGlow 2.2s linear infinite;
-  }
-  .gplus-btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(0,0,0,.45)}
-  .gplus-btn:active{transform:scale(.98)}
+  position:relative;flex:0 0 auto;
+  border:2px solid transparent;
+  border-radius:12px;
+  background:rgba(255,255,255,.08);
+  color:var(--fg);
+  padding:10px 12px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.2px;
+  min-height:44px;
+  min-width:82px;
+  text-align:center;
+  cursor:pointer;
+  transition:transform .08s,box-shadow .18s,border .18s;
+  /* 外框渐变高亮 */
+  background-clip:padding-box;
+}
+.gplus-btn::before{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:12px;
+  padding:2px; /* 外边框厚度 */
+  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.gplus-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 12px var(--accent1),0 0 20px var(--accent2);
+}
+.gplus-btn:active{transform:scale(.97)}
   @keyframes gplusGlow{to{transform:rotate(360deg)}}
   @media(max-width:768px){
     .gplus-shbar{
