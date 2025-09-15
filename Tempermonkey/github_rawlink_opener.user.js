@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      4.4
+// @version      4.5
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -143,35 +143,35 @@
     var raw = getRawUrl();
     if (!raw) return;
 
-    // 基址：默认原站 https；Alt = 本地
+    // 基址：默认原站 https；按住 Alt 用本地
     var base = 'https://script.hub';
     if (e && e.altKey) base = 'http://127.0.0.1:9101';
 
-    // A) 你原来的整串编码（FULL）
-    var urlFull = base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
-
-    // B) 仅对路径编码（PATH）----保留协议主机，部分环境更稳
-    var urlPath = urlFull;
+    // 构造两种 /convert 链接
+    // ① PATH：只编码 path+search+hash，协议与主机保留（首击更稳）
+    var urlPath, urlFull;
     try {
       var u = new URL(raw);
       var safe = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
       urlPath = base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
-    } catch (_) {}
+    } catch(_) {
+      // 解析失败时，让 PATH 先等于 FULL（下面会赋值）
+    }
+    // ② FULL：整条 raw 一次 encode（兼容你的原始写法）
+    urlFull = base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
+    if (!urlPath) urlPath = urlFull;
 
-    // 先打开 FULL（新标签；若被拦截就用当前页）
-    var win = window.open(urlFull, '_blank', 'noopener,noreferrer') || window;
+    // 关键：先开"首页"，避免直接落在错误页
+    var w = window.open(base + '/', '_blank', 'noopener,noreferrer') || window;
 
-    // 700ms 后自动"再按一次"同一链接（等效你第二次点击）
+    // 先跳 PATH 版本（更稳），再兜底 FULL；时间可以按网络状况微调
     setTimeout(function () {
-      try { win.location.href = urlFull; }
-      catch { location.assign(urlFull); }
-    }, 700);
+      try { w.location.href = urlPath; } catch { location.assign(urlPath); }
+    }, 150);      // 0.15s 后跳 convert（用户基本看不到首页）
 
-    // 1300ms 再切 PATH 版本兜底（多数首击报错到这里就稳定了）
     setTimeout(function () {
-      try { win.location.replace(urlPath); }
-      catch { location.assign(urlPath); }
-    }, 1300);
+      try { w.location.replace(urlFull); } catch { location.assign(urlFull); }
+    }, 900);      // 0.9s 后兜底一次 FULL（如果 PATH 也没解析好）
 
   } catch (err) {
     console.error('[ScriptHub] open error:', err);
