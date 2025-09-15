@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ 玻璃风格 + ScriptHub（vercel/?src + 原站/本地 convert 自动分流）
 // @namespace    https://mikephie.site/
-// @version      3.0.1
+// @version      3.0.2
 // @description  固定工具条（桌面顶部 / 移动底部横滑）；Hub 按钮自动根据基址选择 ?src 或 convert 路由；默认 vercel，Shift=script.hub，Alt=127.0.0.1；失败自动回退；暗黑高对比；短标签；快捷键 r/d/p/u/f/s/h；徽标不遮挡。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
@@ -44,26 +44,23 @@
   position:relative;flex:0 0 auto;
   border:2px solid transparent;
   border-radius:12px;
-  background:rgba(255,255,255,.08);
+  background:rgba(30,30,40,.55); /* 深色玻璃底 */
   color:var(--fg);
-  padding:10px 12px;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.2px;
-  min-height:44px;
-  min-width:82px;
-  text-align:center;
+  padding:10px 14px;
+  font-size:13px;font-weight:700;letter-spacing:.3px;
+  min-height:44px;min-width:88px;text-align:center;
   cursor:pointer;
-  transition:transform .08s,box-shadow .18s,border .18s;
-  /* 外框渐变高亮 */
+  transition:transform .08s,box-shadow .25s,border .25s;
   background-clip:padding-box;
 }
 .gplus-btn::before{
   content:"";
   position:absolute;inset:0;
   border-radius:12px;
-  padding:2px; /* 外边框厚度 */
-  background:linear-gradient(135deg,var(--accent1),var(--accent2));
+  padding:2px;
+  background:linear-gradient(135deg,#00f0ff,#0070ff,#b100ff,#ff2ddf,#00f0ff);
+  background-size:400% 400%;
+  animation:gplusBorderFlow 6s ease infinite;
   -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
@@ -71,10 +68,15 @@
 }
 .gplus-btn:hover{
   transform:translateY(-1px);
-  box-shadow:0 0 12px var(--accent1),0 0 20px var(--accent2);
+  box-shadow:0 0 15px #00e0ff,0 0 25px #b100ff;
 }
 .gplus-btn:active{transform:scale(.97)}
-  @keyframes gplusGlow{to{transform:rotate(360deg)}}
+
+@keyframes gplusBorderFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}gplusGlow{to{transform:rotate(360deg)}}
   @media(max-width:768px){
     .gplus-shbar{
       top:auto;bottom:calc(0px + env(safe-area-inset-bottom,0));
