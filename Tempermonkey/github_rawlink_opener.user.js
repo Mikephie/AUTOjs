@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      3.9
+// @version      4.0
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -142,31 +142,41 @@
   var raw = getRawUrl();
   if (!raw) return;
 
-  var base = 'https://script.hub';           // 默认基址
-  if (e && e.altKey) base = 'http://127.0.0.1:9101';   // Alt = 本地
-  if (e && e.shiftKey) base = 'https://scripthub.vercel.app'; // Shift = vercel（只支持首页，不带入）
+  // ---- 三个基址 ----  
+  var BASE_VERCEL = 'https://scripthub.vercel.app'; // 稳定：无报错，但不会自动带入（复制到剪贴板）
+  var BASE_ORIGIN = 'https://script.hub';           // 直连：convert 一次带入，但可能首击 DNS 报错
+  var BASE_LOCAL  = 'http://127.0.0.1:9101';        // 本地：convert 一次带入
 
-  // vercel 不支持 /convert，直接带去首页
-  if (base.includes('scripthub.vercel.app')) {
-    var home = base + '/';
-    try { navigator.clipboard.writeText(raw); } catch(_) {}
-    window.open(home, '_blank') || location.assign(home);
+  // 点击修饰键：
+  //  默认：稳定模式（vercel 首页 + 复制 raw）
+  //  Alt：直连模式（origin/local convert 自动带入）
+  //  Shift：原站首页
+  var useStable = !(e && (e.altKey || e.shiftKey));
+  var base = BASE_VERCEL;
+
+  if (e && e.shiftKey) base = BASE_ORIGIN;   // 打开原站首页（手动粘贴）
+  if (e && e.altKey)   base = BASE_ORIGIN;   // 直连 convert
+  if (!e)              base = BASE_VERCEL;
+
+  if (useStable) {
+    // ---- 稳定模式：无报错体验 ---- 
+    try { navigator.clipboard && navigator.clipboard.writeText(raw); } catch(_) {}
+    var url = BASE_VERCEL + '/';                      // 进入 vercel 首页
+    window.open(url, '_blank', 'noopener,noreferrer') || (location.href = url);
     return;
   }
 
-  // 生成 convert URL（带 raw）
+  // ---- 直连模式：一次带入 ---- 
+  // 如果按住 Alt 同时再按住 Ctrl，我们用本地（可选）
+  if (e && e.altKey && e.ctrlKey) base = BASE_LOCAL;
+
   var enc = encodeURIComponent(raw);
-  var url = base + '/convert/_start_/' + enc + '/_end_/plain.txt?type=plain-text&target=plain-text';
+  var convert = base + '/convert/_start_/' + enc + '/_end_/plain.txt?type=plain-text&target=plain-text';
 
-  // ⚡ 关键：先开首页"预热"，再跳到 convert，避免首击报错
-  var win = window.open(base + '/', '_blank', 'noopener,noreferrer');
-  if (!win) win = window;
-
+  // 先开首页"预热"，再跳 convert（避免有些环境需要点两次）
+  var w = window.open(base + '/', '_blank', 'noopener,noreferrer') || window;
   setTimeout(function () {
-    try { win.location.href = url; }
-    catch { location.assign(url); }
-  }, 500); // 0.5 秒预热后跳转
-}
+    try { w
 
   // --- 工具 ---
   function onReady(fn) {
