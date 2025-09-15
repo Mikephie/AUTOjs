@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（霓虹/下载修复）+ ScriptHub（复制后跳转）
+// @name         GitHub+ 玻璃工具条（霓虹+真下载）+ ScriptHub（复制后跳转）
 // @namespace    https://mikephie.site/
-// @version      3.2.0
-// @description  顶部/移动端底部玻璃工具条：Raw / DL(真下载) / Path / URL / Name / Repo / Hub(复制RAW后打开首页)。霓虹描边，高对比；iOS/Safari 玻璃模糊生效；快捷键 r/d/p/u/f/s/h。
+// @version      3.2.2
+// @description  顶部/移动端底部玻璃工具条：Raw / DL / Path / URL / Name / Repo / Hub。霓虹描边，高对比；透明模糊透视背景；徽标保留并避免重叠；快捷键 r/d/p/u/f/s/h。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -11,36 +11,22 @@
 (() => {
   'use strict';
 
-  /* ========= 主题：neon | blue | pink | white ========= */
-  const THEME = 'neon';
-
-  /* ============== 样式（玻璃 + 主题描边） ============== */
   const STYLE = `
-  :root{
-    --fg:#EAF2FF; --fg-dim:#B7C2D9;
-  }
+  :root { --fg:#fff; }
   @media(prefers-color-scheme:light){
-    :root{ --fg:#0B1220; --fg-dim:#56617A; }
+    :root { --fg:#000; }
   }
-
   .gplus-hidden{display:none!important}
 
-  /* 顶部工具条容器 -- 用 ::before 做真正的玻璃层（iOS 更稳） */
+  /* ===== 工具条（真实玻璃） ===== */
   .gplus-shbar{
     position:fixed; left:0; right:0; top:0; z-index:2147483000;
     display:flex; align-items:center; gap:10px; padding:10px 12px;
-    background:transparent;   /* 关键：容器不填色，由 ::before 负责模糊层 */
+    background:rgba(40,40,50,0.25); /* 半透明，背后可见 */
+    -webkit-backdrop-filter:blur(18px) saturate(180%);
+    backdrop-filter:blur(18px) saturate(180%);
+    border-bottom:1px solid rgba(255,255,255,0.2);
   }
-  .gplus-shbar::before{
-    content:""; position:absolute; inset:0; z-index:-1;
-    background:linear-gradient(135deg, rgba(18,22,30,.36), rgba(0,0,0,.06));
-    border-top:1px solid rgba(255,255,255,.14);
-    border-bottom:1px solid rgba(255,255,255,.10);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
-    backdrop-filter: blur(18px) saturate(180%);
-    box-shadow: 0 18px 50px rgba(0,0,0,.48);
-  }
-
   /* 移动端：底部横滑 */
   @media(max-width:768px){
     .gplus-shbar{
@@ -56,11 +42,11 @@
   .gplus-btn{
     position:relative; display:inline-block;
     color:var(--fg);
-    background:rgba(255,255,255,.06);
-    -webkit-backdrop-filter:blur(16px) saturate(180%);
-    backdrop-filter:blur(16px) saturate(180%);
+    background:rgba(0,0,0,0.35);
+    -webkit-backdrop-filter:blur(10px) saturate(160%);
+    backdrop-filter:blur(10px) saturate(160%);
     padding:10px 14px; border-radius:14px; min-height:44px; min-width:88px;
-    font-size:13px; font-weight:800; letter-spacing:.3px; text-align:center;
+    font-size:13px; font-weight:700; letter-spacing:.3px; text-align:center;
     border:2px solid transparent; background-clip:padding-box;
     cursor:pointer; user-select:none;
     transition:transform .08s, box-shadow .25s;
@@ -68,55 +54,42 @@
   .gplus-btn:active{ transform:scale(.97); }
   .gplus-btn:hover{ transform:translateY(-1px); }
 
-  @keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-  /* 主题：neon */
-  .theme-neon .gplus-btn::before{
+  /* 霓虹描边 */
+  .gplus-btn::before{
     content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
-    background:linear-gradient(135deg,#00f0ff,#0070ff,#b100ff,#ff2ddf,#00f0ff);
+    background:linear-gradient(135deg,#00f0ff,#b100ff,#ff2ddf,#00f0ff);
     background-size:400% 400%; animation:flow 6s ease infinite;
     -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
     -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
   }
-  .theme-neon .gplus-btn:hover{ box-shadow:0 0 15px #00e0ff,0 0 25px #b100ff; }
+  @keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .gplus-btn:hover{ box-shadow:0 0 15px #00e0ff,0 0 25px #b100ff; }
 
-  /* 主题：blue */
-  .theme-blue .gplus-btn::before{
-    content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
-    background:linear-gradient(135deg,#3b82f6,#06b6d4,#3b82f6);
-    background-size:300% 300%; animation:flow 8s ease infinite;
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-  }
-  .theme-blue .gplus-btn:hover{ box-shadow:0 0 18px #06b6d4; }
-
-  /* 主题：pink */
-  .theme-pink .gplus-btn::before{
-    content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
-    background:linear-gradient(135deg,#ec4899,#a855f7,#ec4899);
-    background-size:300% 300%; animation:flow 7s ease infinite;
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-  }
-  .theme-pink .gplus-btn:hover{ box-shadow:0 0 18px #ec4899; }
-
-  /* 主题：white（极简白边） */
-  .theme-white .gplus-btn::before{
-    content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
-    background:linear-gradient(135deg,#ffffff,#f8fafc);
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-  }
-  .theme-white .gplus-btn:hover{ box-shadow:0 0 14px #fff; }
-
+  /* ===== GitHubPlus 徽标（保留 & 移位防重叠） ===== */
   .gplus-badge{
-    position:fixed; right:14px; bottom:18px; z-index:2147482000;
+    position:fixed; right:12px; z-index:2147483200;
     display:inline-flex; align-items:center; gap:6px;
-    background:linear-gradient(135deg,rgba(0,231,255,.25),rgba(177,0,255,.18));
-    border:1px solid rgba(255,255,255,.14); padding:8px 12px; border-radius:12px;
-    -webkit-backdrop-filter:blur(10px) saturate(150%); backdrop-filter:blur(10px) saturate(150%);
-    color:var(--fg); font-weight:900; font-size:12px; box-shadow: 0 18px 50px rgba(0,0,0,.48); cursor:pointer;
-  }`;
+    padding:8px 12px; border-radius:12px;
+    color:var(--fg); font-weight:900; font-size:12px;
+    background:rgba(40,40,50,.28);
+    -webkit-backdrop-filter:blur(12px) saturate(160%);
+    backdrop-filter:blur(12px) saturate(160%);
+    border:1px solid rgba(255,255,255,.2);
+    box-shadow:0 12px 28px rgba(0,0,0,.45);
+    cursor:pointer; user-select:none;
+  }
+  /* 桌面：右下（不遮内容） */
+  @media(min-width:769px){
+    .gplus-badge{ bottom:24px; }
+  }
+  /* 移动端：放在工具条上方 66px（条高 + 间距），避开 Safari 底部工具栏 */
+  @media(max-width:768px){
+    .gplus-badge{
+      bottom:calc(66px + env(safe-area-inset-bottom,0)); /* 关键：上移防重叠 */
+    }
+  }
+  `;
+
   document.head.appendChild(Object.assign(document.createElement('style'), { textContent: STYLE }));
 
   /* ============== 工具函数 ============== */
@@ -142,7 +115,6 @@
   async function copyText(t){ if(!t) return; try{ await navigator.clipboard.writeText(t); toast('Copied'); } catch{ prompt('Copy manually:',t); } }
 
   /* ============== 真·下载（iOS 兼容） ============== */
-  // fetch -> ArrayBuffer -> Blob('application/octet-stream') -> a[download]
   async function downloadRaw(){
     const url = getRawUrl();
     if (!url) { toast('Not a file view'); return; }
@@ -154,14 +126,13 @@
       const res = await fetch(url, { mode: 'cors', credentials: 'omit', cache: 'no-store' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
 
-      const buf  = await res.arrayBuffer();                       // 避免被当作可预览类型
+      const buf  = await res.arrayBuffer();
       const blob = new Blob([buf], { type: 'application/octet-stream' });
 
       const a = document.createElement('a');
       const obj = URL.createObjectURL(blob);
       a.href = obj;
-      a.download = filename;   // 关键：文件名
-      a.rel = 'noopener';
+      a.download = filename;
       a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
@@ -171,9 +142,8 @@
 
     } catch (err) {
       console.error('[DL] error:', err);
-      // 兜底：打开 Raw（仍可通过系统菜单保存）
       const r = getRawUrl();
-      r ? window.open(r,'_blank') : 0;
+      r && window.open(r,'_blank');
       toast('Fallback: opened Raw');
     }
   }
@@ -181,7 +151,6 @@
   /* ============== Hub：复制 RAW 后打开首页（默认 vercel；Shift=script.hub；Alt=本地） ============== */
   function openScriptHub(e){
     const raw=getRawUrl(); if(!raw){ toast('Not a file view'); return; }
-
     try{ navigator.clipboard && navigator.clipboard.writeText(raw); toast('RAW 已复制'); }
     catch(_){ try{ prompt('Copy manually:',raw); }catch(__){} }
 
@@ -219,11 +188,17 @@
     document.body.appendChild(bar);
   }
 
-  /* ============== 徽标（折叠/展开） ============== */
+  /* ============== 徽标（保留 & 上移） ============== */
   function ensureBadge(){
-    if(document.querySelector('.gplus-badge')) return;
-    const b=document.createElement('div'); b.className='gplus-badge'; b.textContent='GitHubPlus';
-    b.addEventListener('click', ()=>document.querySelector('.gplus-shbar')?.classList.toggle('gplus-hidden'));
+    if (document.querySelector('.gplus-badge')) return;
+    const b=document.createElement('div');
+    b.className='gplus-badge';
+    b.textContent='GitHubPlus';
+    // 点击徽标：折叠/展开工具条
+    b.addEventListener('click', ()=>{
+      const bar=document.querySelector('.gplus-shbar');
+      if (bar) bar.classList.toggle('gplus-hidden');
+    });
     document.body.appendChild(b);
   }
 
@@ -243,8 +218,8 @@
 
   /* ============== 启动 ============== */
   (function boot(){
-    document.body.classList.add('theme-' + THEME);   // 应用主题
-    buildBar(); ensureBadge();
+    buildBar();
+    ensureBadge(); // 保留徽标，并自动上移避免与工具条重叠
     window.addEventListener('keydown', hotkeys, { passive:true });
   })();
 
