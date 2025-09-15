@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ ScriptHub Glass Bar (bottom thin, centered, draggable badge)
+// @name         GitHub+ ScriptHub Glass Bar (thin bottom, centered, draggable badge)
 // @namespace    https://mikephie.site/
-// @version      3.8.2
-// @description  底部超薄玻璃工具条：按钮水平/垂直居中、初始居中吸附；Raw(单击复制/双击Raw/长按下载) · DL(下载) · Path · Edit/Cancel · Name · Action · Hub；徽标可拖拽并默认避让底栏；轻量去抖避免加载抖动；SPA兼容。
+// @version      3.8.3
+// @description  底部超薄玻璃工具条：文件页启用/目录禁用；Raw(单击复制/双击Raw/长按下载) · DL(下载) · Path · Edit/Cancel · Name · Action · Hub；徽标可拖拽&点按显隐；方向修正；去抖；SPA 兼容。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -11,13 +11,13 @@
 (() => {
   'use strict';
 
-  /* ================= CSS（更薄、更透、垂直居中） ================= */
+  /* ================= CSS ================= */
   const STYLE = `
   :root{
     --fg:#fff;
-    --glass-bg:rgba(20,22,30,.07);         /* 更透明 */
+    --glass-bg:rgba(20,22,30,.07);           /* 更透明 */
     --glass-stroke:rgba(255,255,255,.16);
-    --bar-h:56px;                          /* 固定高度，解决"背景条太大" */
+    --bar-h:56px;                            /* 固定高度 */
   }
   @media (prefers-color-scheme:light){
     :root{ --fg:#111; --glass-bg:rgba(255,255,255,.65); --glass-stroke:rgba(0,0,0,.12) }
@@ -28,34 +28,32 @@
     bottom:calc(0px + env(safe-area-inset-bottom,0));
     z-index:2147483600;
 
-    /* 尺寸 & 居中 */
     height:var(--bar-h);
     display:flex; align-items:center; justify-content:center;
     gap:10px; padding:0 12px;
-    overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; scrollbar-width:none;
 
-    /* 玻璃效果 */
     background:var(--glass-bg);
     -webkit-backdrop-filter:blur(20px) saturate(180%);
     backdrop-filter:blur(20px) saturate(180%);
     border-top:1px solid var(--glass-stroke);
     box-shadow:0 -10px 28px rgba(0,0,0,.18);
 
-    /* 细节 */
-    scroll-snap-type:x proximity;
-    will-change:transform;
+    overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    scroll-snap-type:x proximity; will-change:transform;
   }
   .gplus-shbar::-webkit-scrollbar{ display:none }
+  .gplus-hidden{ display:none !important }
 
   .gplus-btn{
     position:relative;
-    display:flex; align-items:center; justify-content:center; /* 垂直 + 水平居中 */
+    display:flex; align-items:center; justify-content:center;
     height:40px; min-width:86px; padding:0 14px;
     color:var(--fg); font:700 13px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
     border-radius:14px; border:2px solid transparent; background-clip:padding-box;
-    background:rgba(0,0,0,.10);             /* 更薄更透 */
+    background:rgba(0,0,0,.10);
     -webkit-backdrop-filter:blur(12px) saturate(170%); backdrop-filter:blur(12px) saturate(170%);
-    cursor:pointer; user-select:none; transition:transform .08s, box-shadow .2s, opacity .2s;
+    cursor:pointer; user-select:none;
+    transition:transform .08s, box-shadow .2s, opacity .2s;
     scroll-snap-align:center;
   }
   .gplus-btn::after{
@@ -70,7 +68,7 @@
   .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25) }
   .gplus-btn[disabled]::after{ opacity:.25 }
 
-  /* 徽标：初始更靠上，避免遮挡底栏；可拖拽 */
+  /* 徽标：默认避开底栏；可拖拽 */
   .gplus-badge{
     position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom,0));
     z-index:2147483700;
@@ -83,10 +81,12 @@
   }`;
   document.head.appendChild(Object.assign(document.createElement('style'), { textContent: STYLE }));
 
-  /* ================= 工具函数 ================= */
+  /* ================= 工具 ================= */
   const $ = (s, r=document) => r.querySelector(s);
   function toast(msg){const d=document.createElement('div');d.textContent=msg;
     Object.assign(d.style,{position:'fixed',left:'50%',top:'18px',transform:'translateX(-50%)',background:'rgba(0,0,0,.65)',color:'#fff',padding:'6px 10px',borderRadius:'8px',zIndex:2147483800,fontSize:'12px'});document.body.appendChild(d);setTimeout(()=>d.remove(),1200);}
+  function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}}
+
   function isFileView(){
     const u = location.href.split('#')[0].split('?')[0];
     return /^https?:\/\/raw\.githubusercontent\.com\//.test(u) ||
@@ -148,53 +148,91 @@
     if(btn.dataset.act==='raw'){ e.preventDefault(); downloadRaw(); }
   }
 
-  /* ================= UI ================= */
+  /* ================= UI：工具条 ================= */
   function buildBar(){
     if($('.gplus-shbar')) return;
     const bar=document.createElement('div'); bar.className='gplus-shbar';
     bar.innerHTML = `
-      <button class="gplus-btn" data-act="raw"   title="Raw: 单击复制 / 双击打开 / 长按下载">Raw</button>
-      <button class="gplus-btn" data-act="dl"    title="下载 Raw">DL</button>
-      <button class="gplus-btn" data-act="path"  title="复制仓库内路径">Path</button>
-      <button class="gplus-btn" data-act="edit"  title="编辑/取消编辑">Edit</button>
-      <button class="gplus-btn" data-act="name"  title="复制文件名">Name</button>
+      <button class="gplus-btn" data-act="raw"    title="Raw: 单击复制 / 双击打开 / 长按下载">Raw</button>
+      <button class="gplus-btn" data-act="dl"     title="下载 Raw">DL</button>
+      <button class="gplus-btn" data-act="path"   title="复制仓库内路径">Path</button>
+      <button class="gplus-btn" data-act="edit"   title="编辑/取消编辑">Edit</button>
+      <button class="gplus-btn" data-act="name"   title="复制文件名">Name</button>
       <button class="gplus-btn" data-act="action" title="GitHub Actions">Action</button>
-      <button class="gplus-btn" data-act="hub"   title="ScriptHub">Hub</button>
+      <button class="gplus-btn" data-act="hub"    title="ScriptHub">Hub</button>
     `;
     bar.addEventListener('click', handleClick);
     bar.addEventListener('dblclick', handleDblClick);
     bar.addEventListener('contextmenu', handleContext);
     document.body.appendChild(bar);
 
-    // 初次让内容居中到可视中点
+    // 初次居中
     requestAnimationFrame(()=>{
       const delta=(bar.scrollWidth - bar.clientWidth)/2;
       if(delta>0) bar.scrollLeft = delta;
     });
   }
 
+  /* ================= UI：徽标（拖拽+点按显隐，方向修正） ================= */
   function ensureBadge(){
-    if($('.gplus-badge')) return;
-    const b=document.createElement('div'); b.className='gplus-badge'; b.textContent='GitHubPlus';
-    document.body.appendChild(b);
-    // 单击：显隐工具条
-    b.addEventListener('click',()=>$('.gplus-shbar')?.classList.toggle('gplus-hidden'));
+    if ($('.gplus-badge')) return;
 
-    // 拖拽（避免遮挡）
-    let dragging=false,moved=false,sx=0,sy=0,startR=0,startB=0;
-    const down=(ev)=>{const e=(ev.touches&&ev.touches[0])||ev; dragging=true;moved=false;sx=e.clientX;sy=e.clientY;
-      const rect=b.getBoundingClientRect(); startR=window.innerWidth-rect.right; startB=window.innerHeight-rect.bottom;
-      ev.preventDefault();};
-    const move=(ev)=>{ if(!dragging) return; const e=(ev.touches&&ev.touches[0])||ev;
-      const dx=e.clientX-sx, dy=e.clientY-sy; if(Math.abs(dx)+Math.abs(dy)>4) moved=true;
-      b.style.right=Math.max(6,startR-dx)+'px'; b.style.bottom=Math.max(6,startB+dy)+'px'; };
-    const up=()=>{ dragging=false; };
-    b.addEventListener('pointerdown',down); window.addEventListener('pointermove',move,{passive:false});
-    window.addEventListener('pointerup',up,{passive:false});
-    b.addEventListener('touchstart',down,{passive:false}); window.addEventListener('touchmove',move,{passive:false});
-    window.addEventListener('touchend',up,{passive:false});
+    const badge=document.createElement('div');
+    badge.className='gplus-badge';
+    badge.textContent='GitHubPlus';
+    document.body.appendChild(badge);
+
+    const getBar = () => $('.gplus-shbar');
+
+    let dragging=false, moved=false;
+    let sx=0, sy=0, startRight=0, startBottom=0, downAt=0;
+    const TAP_MS = 250, MOVE_PX = 6;
+
+    function onDown(ev){
+      const e=(ev.touches&&ev.touches[0])||ev;
+      dragging=true; moved=false; downAt=performance.now();
+      sx=e.clientX; sy=e.clientY;
+
+      const rect=badge.getBoundingClientRect();
+      startRight = window.innerWidth  - rect.right;
+      startBottom= window.innerHeight - rect.bottom;
+
+      if (badge.setPointerCapture && ev.pointerId!=null) badge.setPointerCapture(ev.pointerId);
+      ev.preventDefault(); // 我们自己处理"点按"
+    }
+    function onMove(ev){
+      if(!dragging) return;
+      const e=(ev.touches&&ev.touches[0])||ev;
+      const dx=e.clientX-sx, dy=e.clientY-sy;
+      if(Math.abs(dx)+Math.abs(dy)>MOVE_PX) moved=true;
+
+      // 方向自然：上拖↑ => bottom 增大；下拖↓ => bottom 减小
+      badge.style.right  = Math.max(6, startRight - dx) + 'px';
+      badge.style.bottom = Math.max(6, startBottom - dy) + 'px';
+    }
+    function onUp(){
+      if(!dragging) return; dragging=false;
+      const isTap = !moved && (performance.now() - downAt < TAP_MS);
+      if(isTap){ const bar=getBar(); if(bar) bar.classList.toggle('gplus-hidden'); }
+    }
+
+    if('onpointerdown' in window){
+      badge.addEventListener('pointerdown', onDown, {passive:false});
+      window.addEventListener('pointermove', onMove, {passive:false});
+      window.addEventListener('pointerup', onUp, {passive:false});
+      window.addEventListener('pointercancel', onUp, {passive:false});
+    }else{
+      badge.addEventListener('touchstart', onDown, {passive:false});
+      window.addEventListener('touchmove', onMove, {passive:false});
+      window.addEventListener('touchend', onUp, {passive:false});
+      badge.addEventListener('mousedown', onDown);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
+    }
+    badge.addEventListener('contextmenu', e=>e.preventDefault(), {capture:true});
   }
 
+  /* ================= 启用/禁用（文件/目录） ================= */
   function refreshAvailability(){
     const fileMode = isFileView();
     const editMode = isEditView();
@@ -207,8 +245,7 @@
     if (q('edit')) q('edit').textContent = editMode ? 'Cancel' : 'Edit';
   }
 
-  /* ================= SPA & 去抖 ================= */
-  function debounce(fn,ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; }
+  /* ================= SPA & 观察去抖 ================= */
   function hookHistory(){
     const _ps=history.pushState,_rs=history.replaceState;
     const fire=debounce(()=>{ refreshAvailability(); },120);
@@ -221,7 +258,7 @@
   function boot(){
     buildBar(); ensureBadge(); refreshAvailability();
     hookHistory();
-    const mo = new MutationObserver(debounce(()=>refreshAvailability(),120));
+    const mo=new MutationObserver(debounce(()=>refreshAvailability(),120));
     mo.observe(document.body,{childList:true,subtree:true});
   }
   boot();
