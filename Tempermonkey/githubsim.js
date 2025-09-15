@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（Raw单击复制/双击View + Edit + Action + 双击徽标切主题）+ ScriptHub
+// @name         GitHub+ 玻璃工具条（Raw单击复制/双击View·Pointer手势修复 + Edit + Action + 双击徽标切主题）+ ScriptHub
 // @namespace    https://mikephie.site/
-// @version      3.6.1
-// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击View) / DL / Path / Edit / Name / Action / Hub。双击"GitHubPlus"徽标切主题；Hub 点击跳 ScriptHub、长按 Hub 亦可切主题；更通透玻璃；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
+// @version      3.6.2
+// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击View) / DL / Path / Edit / Name / Action / Hub。Raw与徽标都用Pointer手势自行判定单击/双击，避免浏览器dblclick兼容问题；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -158,7 +158,7 @@
     if(m){
       return `https://github.com/${m[1]}/${m[2]}/blob/${m[3]}/${m[4]}`;
     }
-    return url; // 已经在 github.com 视图就返回当前
+    return url;
   }
   function getRepoPath(){const p=location.pathname.split('/').filter(Boolean);return p.length>=5?p.slice(4).join('/'):"";}
   function getFileName(){const p=getRepoPath();return p?p.split('/').pop():"";}
@@ -180,8 +180,7 @@
 
   /* ================= 真下载 ================= */
   async function downloadRaw(){
-    const url = getRawUrl();
-    if (!url) { toast('Not a file view'); return; }
+    const url = getRawUrl(); if (!url) { toast('Not a file view'); return; }
     let filename = getFileName() || url.split('/').pop() || 'download.txt';
     toast('Downloading…');
     try {
@@ -317,11 +316,11 @@
     badge.addEventListener('contextmenu', (e)=>e.preventDefault(), {capture:true});
   }
 
-  /* ================= 工具条 UI（按钮功能重映射） ================= */
+  /* ================= 工具条 UI（按钮功能 + Raw 手势版） ================= */
   function buildBar(){
     const bar=document.createElement('div'); bar.className='gplus-shbar';
     bar.innerHTML = `
-      <button class="gplus-btn" data-act="raw"  title="Raw (click copy / dblclick view)">Raw</button>
+      <button class="gplus-btn" data-act="raw"  title="Raw (tap=copy / double=View)">Raw</button>
       <button class="gplus-btn" data-act="dl"   title="Download raw">DL</button>
       <button class="gplus-btn" data-act="p"    title="Copy path">Path</button>
       <button class="gplus-btn" data-act="edit" title="Open edit page">Edit</button>
@@ -330,23 +329,11 @@
       <button class="gplus-btn" data-act="hub"  title="ScriptHub (click) / Theme (hold)">Hub</button>
     `;
 
-    // Raw：单击=复制，双击=View
-    let rawClickTimer=null;
-    const RAW_GAP=250;
-
+    // ---- 其余按钮仍用 click ---- //
     bar.addEventListener('click', (e)=>{
       const btn=e.target.closest('.gplus-btn'); if(!btn) return;
       const act=btn.dataset.act;
-
-      if(act==='raw'){
-        if(rawClickTimer) return;
-        rawClickTimer=setTimeout(()=>{
-          rawClickTimer=null;
-          const r=getRawUrl(); if(r) copyText(r); else toast('Not a file view');
-        }, RAW_GAP);
-        return;
-      }
-
+      if(act==='raw') return; // 原生 click 不处理 raw，交给 Pointer 手势
       if(act==='dl'){ downloadRaw(); return; }
       if(act==='p'){ const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view'); return; }
       if(act==='edit'){
@@ -365,17 +352,71 @@
       if(act==='hub'){ openScriptHub(e); return; }
     });
 
-    // Raw 双击 → 打开 GitHub 文件视图（/blob/...），而非 raw
-    bar.addEventListener('dblclick', (e)=>{
-      const btn=e.target.closest('.gplus-btn'); if(!btn) return;
-      if(btn.dataset.act==='raw'){
-        if(rawClickTimer){ clearTimeout(rawClickTimer); rawClickTimer=null; }
-        const v=getViewUrl();
-        if(v) window.open(v,'_blank'); else toast('View URL not available');
-      }
-    });
-
     document.body.appendChild(bar);
+
+    // ---- Raw 按钮：Pointer 手势单击/双击判定 ---- //
+    const rawBtn = document.querySelector('.gplus-btn[data-act="raw"]');
+    attachRawGestures(rawBtn);
+  }
+
+  // 用 Pointer 统一实现 Raw 的单击=复制、双击=View（避免 dblclick 误触）
+  function attachRawGestures(btn){
+    if(!btn) return;
+    let down=false, moved=false, sx=0, sy=0;
+    let lastTap=0, singleTimer=null;
+    const TAP_GAP=260, MOVE_THRESH=6;
+
+    const onDown=(e)=>{
+      const ev=(e.touches&&e.touches[0])||e;
+      down=true; moved=false; sx=ev.clientX; sy=ev.clientY;
+      btn.setPointerCapture?.(e.pointerId||1);
+      e.preventDefault(); e.stopPropagation();
+    };
+    const onMove=(e)=>{
+      if(!down) return;
+      const ev=(e.touches&&e.touches[0])||e;
+      const dx=Math.abs(ev.clientX-sx), dy=Math.abs(ev.clientY-sy);
+      if(dx+dy>MOVE_THRESH) moved=true;
+    };
+    const onUp=(e)=>{
+      if(!down) return; down=false;
+      if(moved){ e.preventDefault(); e.stopPropagation(); return; }
+      const now=performance.now();
+      if(now-lastTap<TAP_GAP){
+        // 双击 -> View
+        if(singleTimer){ clearTimeout(singleTimer); singleTimer=null; }
+        const v=getViewUrl();
+        v? window.open(v,'_blank') : toast('View URL not available');
+        lastTap=0;
+      }else{
+        // 单击 -> 复制 RAW
+        lastTap=now;
+        singleTimer=setTimeout(()=>{
+          singleTimer=null;
+          const r=getRawUrl();
+          r? copyText(r) : toast('Not a file view');
+        }, TAP_GAP);
+      }
+      e.preventDefault(); e.stopPropagation();
+    };
+
+    if('onpointerdown' in window){
+      btn.addEventListener('pointerdown', onDown);
+      window.addEventListener('pointermove', onMove, {passive:false});
+      window.addEventListener('pointerup', onUp, {passive:false});
+      window.addEventListener('pointercancel', onUp, {passive:false});
+    }else{
+      btn.addEventListener('touchstart', onDown, {passive:false});
+      window.addEventListener('touchmove', onMove, {passive:false});
+      window.addEventListener('touchend', onUp, {passive:false});
+      window.addEventListener('touchcancel', onUp, {passive:false});
+      btn.addEventListener('mousedown', onDown);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
+    }
+
+    // 阻止系统长按菜单
+    btn.addEventListener('contextmenu', (e)=>e.preventDefault(), {capture:true});
   }
 
   /* ================= 快捷键（r/d/p/e/a/h） ================= */
