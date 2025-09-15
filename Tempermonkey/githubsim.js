@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（主题可切换）+ ScriptHub（复制后跳转）
+// @name         GitHub+ 玻璃工具条（霓虹高亮｜可靠下载）+ ScriptHub（复制后跳转）
 // @namespace    https://mikephie.site/
-// @version      3.1.0
-// @description  顶部/底部玻璃工具条：Raw/下载/复制Path/URL/Name/Repo/ScriptHub。霓虹描边、主题可切换、移动端底部横滑、可靠下载、Hub先复制RAW再跳首页（Shift=script.hub，Alt=本地）。
+// @version      3.1.1
+// @description  顶部/移动端底部"透明模糊玻璃"工具条：Raw、下载、复制 Path/URL/Name/Repo、ScriptHub。霓虹描边；DL 真下载（Blob）；Hub 先复制 RAW 再跳首页（Shift=script.hub，Alt=本地）；横向滑动；快捷键 r/d/p/u/f/s/h。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -11,120 +11,89 @@
 (() => {
   'use strict';
 
-  /* ========= 主题：neon | blue | pink | white ========= */
-  const THEME = 'neon';
-
-  /* ============== 样式（玻璃 + 边框主题） ============== */
+  /* ============== 样式：玻璃背景用 ::before（iOS 更稳） ============== */
   const STYLE = `
   :root{
     --fg:#EAF2FF; --fg-dim:#B7C2D9;
-    --glass-bg:rgba(12,14,20,.42);
-    --glass-stroke:rgba(255,255,255,.14);
-    --shadow:0 18px 50px rgba(0,0,0,.48);
   }
-  @media(prefers-color-scheme:light){
-    :root{
-      --fg:#0B1220; --fg-dim:#56617A;
-      --glass-bg:rgba(255,255,255,.55);
-      --glass-stroke:rgba(0,0,0,.1);
-      --shadow:0 12px 35px rgba(0,0,0,.18);
-    }
+  @media (prefers-color-scheme:light){
+    :root{ --fg:#0B1220; --fg-dim:#56617A; }
   }
 
   .gplus-hidden{display:none!important}
 
+  /* 工具条容器本体透明，背景由 ::before 承担 */
   .gplus-shbar{
     position:fixed; left:0; right:0; top:0; z-index:2147483000;
     display:flex; align-items:center; gap:10px; padding:10px 12px;
-    background:linear-gradient(135deg,var(--glass-bg),rgba(0,0,0,.08));
-    border:1px solid var(--glass-stroke);
-    -webkit-backdrop-filter:blur(16px) saturate(160%);
-    backdrop-filter:blur(16px) saturate(160%);
-    box-shadow:var(--shadow);
+    background:transparent;
   }
-  @media(max-width:768px){
+  .gplus-shbar::before{
+    content:""; position:absolute; inset:0; z-index:-1;
+    background:linear-gradient(135deg, rgba(18,22,30,.36), rgba(0,0,0,.06));
+    border-top:1px solid rgba(255,255,255,.14);
+    border-bottom:1px solid rgba(255,255,255,.10);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    backdrop-filter: blur(18px) saturate(180%);
+    box-shadow: 0 18px 50px rgba(0,0,0,.48);
+  }
+
+  /* 移动端：底部横滑 */
+  @media (max-width:768px){
     .gplus-shbar{
       top:auto; bottom:calc(0px + env(safe-area-inset-bottom,0));
       display:block; white-space:nowrap; overflow-x:auto;
       -webkit-overflow-scrolling:touch; touch-action:pan-x;
       padding:10px 12px calc(10px + env(safe-area-inset-bottom,0));
-      scrollbar-width:none;
     }
     .gplus-shbar::-webkit-scrollbar{display:none}
   }
 
+  /* 玻璃按钮 + 霓虹描边 */
   .gplus-btn{
     position:relative; display:inline-block;
     color:var(--fg); background:rgba(255,255,255,.06);
     -webkit-backdrop-filter:blur(16px) saturate(180%);
     backdrop-filter:blur(16px) saturate(180%);
-    padding:10px 14px; border-radius:14px; min-height:44px; min-width:88px;
+    padding:10px 14px; border-radius:14px;
+    min-height:44px; min-width:88px;
     font-size:13px; font-weight:800; letter-spacing:.3px; text-align:center;
     border:2px solid transparent; background-clip:padding-box;
     cursor:pointer; user-select:none;
     transition:transform .08s, box-shadow .25s;
   }
+  .gplus-btn::before{
+    content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
+    background:linear-gradient(135deg,#ff2ddf,#b100ff,#0070ff,#00f0ff,#ff2ddf);
+    background-size:400% 400%; animation:gplusFlow 6s ease infinite;
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+  }
+  .gplus-btn:hover{ transform:translateY(-1px); box-shadow:0 0 14px rgba(255,45,223,.65),0 0 22px rgba(0,240,255,.45); }
   .gplus-btn:active{ transform:scale(.97); }
-  .gplus-btn:hover{ transform:translateY(-1px); }
+  @keyframes gplusFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-  /* 霓虹边框动画（共用） */
-  @keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-  /* 主题：neon */
-  .theme-neon .gplus-btn::before{
-    content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
-    background:linear-gradient(135deg,#00f0ff,#0070ff,#b100ff,#ff2ddf,#00f0ff);
-    background-size:400% 400%; animation:flow 6s ease infinite;
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-  }
-  .theme-neon .gplus-btn:hover{ box-shadow:0 0 15px #00e0ff,0 0 25px #b100ff; }
-
-  /* 主题：blue */
-  .theme-blue .gplus-btn::before{
-    content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
-    background:linear-gradient(135deg,#3b82f6,#06b6d4,#3b82f6);
-    background-size:300% 300%; animation:flow 8s ease infinite;
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-  }
-  .theme-blue .gplus-btn:hover{ box-shadow:0 0 18px #06b6d4; }
-
-  /* 主题：pink */
-  .theme-pink .gplus-btn::before{
-    content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
-    background:linear-gradient(135deg,#ec4899,#a855f7,#ec4899);
-    background-size:300% 300%; animation:flow 7s ease infinite;
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-  }
-  .theme-pink .gplus-btn:hover{ box-shadow:0 0 18px #ec4899; }
-
-  /* 主题：white（极简白边） */
-  .theme-white .gplus-btn::before{
-    content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
-    background:linear-gradient(135deg,#ffffff,#f8fafc);
-    -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-  }
-  .theme-white .gplus-btn:hover{ box-shadow:0 0 14px #fff; }
-
+  /* 右下角徽标（折叠/展开） */
   .gplus-badge{
     position:fixed; right:14px; bottom:18px; z-index:2147482000;
     display:inline-flex; align-items:center; gap:6px;
     background:linear-gradient(135deg,rgba(0,231,255,.25),rgba(177,0,255,.18));
-    border:1px solid var(--glass-stroke); padding:8px 12px; border-radius:12px;
+    border:1px solid rgba(255,255,255,.14); padding:8px 12px; border-radius:12px;
     -webkit-backdrop-filter:blur(10px) saturate(150%); backdrop-filter:blur(10px) saturate(150%);
-    color:var(--fg); font-weight:900; font-size:12px; box-shadow:var(--shadow); cursor:pointer;
+    color:var(--fg); font-weight:900; font-size:12px; box-shadow:0 12px 28px rgba(0,0,0,.45);
+    cursor:pointer;
   }`;
   document.head.appendChild(Object.assign(document.createElement('style'), { textContent: STYLE }));
 
-  /* ============== 工具函数 ============== */
+  /* ============== 基础工具 ============== */
   const $ = (s, r=document) => r.querySelector(s);
-  function toast(msg){ const d=document.createElement('div'); d.textContent=msg;
+  function toast(msg){
+    const d=document.createElement('div'); d.textContent=msg;
     Object.assign(d.style,{position:'fixed',left:'50%',top:'18px',transform:'translateX(-50%)',
       background:'rgba(0,0,0,.65)',color:'#fff',padding:'6px 10px',borderRadius:'8px',
-      zIndex:2147483647,fontSize:'12px'}); document.body.appendChild(d); setTimeout(()=>d.remove(),1200); }
+      zIndex:2147483647,fontSize:'12px'}); document.body.appendChild(d);
+    setTimeout(()=>d.remove(),1200);
+  }
 
   function getRawUrl(){
     const href=location.href.split('#')[0].split('?')[0];
@@ -141,28 +110,33 @@
   function getRepoSlug(){const p=location.pathname.split('/').filter(Boolean);return p.length>=2?`${p[0]}/${p[1]}`:"";}
   async function copyText(t){ if(!t) return; try{ await navigator.clipboard.writeText(t); toast('Copied'); } catch{ prompt('Copy manually:',t); } }
 
-  /* 可靠下载：fetch -> Blob -> a[download] */
+  /* ============== 可靠下载：ArrayBuffer → Blob(octet-stream) → a[download] ============== */
   async function downloadRaw(){
     const url=getRawUrl(); if(!url){ toast('Not a file view'); return; }
-    let filename=getFileName() || url.split('/').pop() || 'download.txt';
+    let filename=getFileName() || (url.split('/').pop()||'download.txt');
     toast('Downloading…');
     try{
-      const res=await fetch(url,{mode:'cors',credentials:'omit'}); if(!res.ok) throw new Error('HTTP '+res.status);
-      const blob=await res.blob();
+      const res=await fetch(url,{mode:'cors',credentials:'omit',cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const buf=await res.arrayBuffer();
+      const blob=new Blob([buf],{type:'application/octet-stream'}); // 强制下载语义
       const a=document.createElement('a'); const obj=URL.createObjectURL(blob);
-      a.href=obj; a.download=filename; a.rel='noopener'; a.style.display='none'; document.body.appendChild(a); a.click();
-      setTimeout(()=>{ URL.revokeObjectURL(obj); a.remove(); }, 1000);
+      a.href=obj; a.download=filename; a.rel='noopener'; a.style.display='none';
+      document.body.appendChild(a); a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(obj); a.remove(); },1200);
       toast('Saved: '+filename);
     }catch(err){
       console.error('[DL] error:',err);
+      // 兜底：打开 Raw，让系统菜单保存
       window.open(url,'_blank'); toast('Fallback: opened Raw');
     }
   }
 
-  /* Hub：先复制 RAW，再打开首页（默认 vercel；Shift=script.hub；Alt=本地） */
+  /* ============== Hub：先复制 RAW，再打开首页（默认 vercel；Shift=script.hub；Alt=本地） ============== */
   function openScriptHub(e){
     const raw=getRawUrl(); if(!raw){ toast('Not a file view'); return; }
-    try{ navigator.clipboard && navigator.clipboard.writeText(raw); toast('RAW 已复制'); }catch(_){ try{ prompt('Copy manually:',raw); }catch(__){} }
+    try{ navigator.clipboard && navigator.clipboard.writeText(raw); toast('RAW 已复制'); }
+    catch(_){ try{ prompt('Copy manually:',raw); }catch(__){} }
     let base='https://scripthub.vercel.app';
     if (e && e.shiftKey) base='https://script.hub';
     if (e && e.altKey)   base='http://127.0.0.1:9101';
@@ -182,7 +156,7 @@
       <button class="gplus-btn" data-act="s"    title="s">Repo</button>
       <button class="gplus-btn" data-act="hub"  title="h">Hub</button>
     `;
-    bar.addEventListener('click', (e)=>{
+    bar.addEventListener('click',(e)=>{
       const btn=e.target.closest('.gplus-btn'); if(!btn) return;
       const act=btn.dataset.act;
       if(act==='raw'){ const r=getRawUrl(); if(r) window.open(r,'_blank'); else toast('Not a file view'); }
@@ -200,7 +174,7 @@
   function ensureBadge(){
     if(document.querySelector('.gplus-badge')) return;
     const b=document.createElement('div'); b.className='gplus-badge'; b.textContent='GitHubPlus';
-    b.addEventListener('click', ()=>document.querySelector('.gplus-shbar')?.classList.toggle('gplus-hidden'));
+    b.addEventListener('click',()=>document.querySelector('.gplus-shbar')?.classList.toggle('gplus-hidden'));
     document.body.appendChild(b);
   }
 
@@ -220,9 +194,7 @@
 
   /* ============== 启动 ============== */
   (function boot(){
-    document.body.classList.add('theme-' + THEME);   // 应用主题
     buildBar(); ensureBadge();
     window.addEventListener('keydown', hotkeys, { passive:true });
   })();
-
 })();
