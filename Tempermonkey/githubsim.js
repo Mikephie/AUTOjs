@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ 玻璃风格 + ScriptHub（vercel/?src + 原站/本地 convert 自动分流）
 // @namespace    https://mikephie.site/
-// @version      2.9.1
+// @version      3.0.0
 // @description  固定工具条（桌面顶部 / 移动底部横滑）；Hub 按钮自动根据基址选择 ?src 或 convert 路由；默认 vercel，Shift=script.hub，Alt=127.0.0.1；失败自动回退；暗黑高对比；短标签；快捷键 r/d/p/u/f/s/h；徽标不遮挡。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
@@ -116,18 +116,33 @@
     return `${base}/convert/_start_/${encodeURIComponent(raw)}/_end_/plain.txt?type=plain-text&target=plain-text`;
   }
 
-  function openScriptHub(e){
-    const raw=getRawUrl(); if(!raw){toast("Not a file view");return;}
-    const bases=pickBases(e);
-    (function tryOpen(i){
-      if(i>=bases.length){copyText(raw);toast("已复制 Raw，手动粘贴到 ScriptHub");return;}
-      const url=buildHubUrl(bases[i], raw);
-      try{
-        const w=window.open(url,'_blank','noopener');
-        if(!w) location.assign(url);
-      }catch{ tryOpen(i+1); }
-    })(0);
+// 点击 Hub：先复制 RAW，再打开目标首页（默认 vercel；Shift=script.hub；Alt=本地）
+function openScriptHub(e){
+  const raw = getRawUrl();
+  if (!raw) { toast("Not a file view"); return; }
+
+  // 复制 RAW（失败就弹出可手动复制）
+  try {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(raw);
+      toast("RAW 已复制");
+    } else {
+      throw new Error("no clipboard");
+    }
+  } catch (_) {
+    try { prompt("Copy manually:", raw); } catch(_) {}
   }
+
+  // 基址优先：默认 vercel；Shift=script.hub；Alt=本地
+  let base = 'https://scripthub.vercel.app';
+  if (e && e.shiftKey) base = 'https://script.hub';
+  if (e && e.altKey)   base = 'http://127.0.0.1:9101';
+
+  // 只打开首页，不再拼 /convert ---- 你手动粘贴即可
+  const url = base.replace(/\/+$/,'') + '/';
+  const w = window.open(url, '_blank', 'noopener');
+  if (!w) location.assign(url);
+}
 
   /* ==================== 工具条 UI ==================== */
   function buildBar(){
