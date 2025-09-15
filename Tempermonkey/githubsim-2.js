@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（Raw单击复制/双击查看 + Edit + Action + 双击徽标切主题）+ ScriptHub
+// @name         GitHub+ 玻璃工具条（单击徽标开关+双击换主题+真下载+拖拽徽标）+ ScriptHub
 // @namespace    https://mikephie.site/
-// @version      3.6.0
-// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击打开) / DL / Path / Edit / Name / Action / Hub。双击"GitHubPlus"徽标切主题；Hub 点击跳 ScriptHub、长按 Hub 亦可切主题；更通透玻璃；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
+// @version      3.5.1
+// @description  顶部/移动端底部玻璃工具条：Raw / DL / Path / URL / Name / Repo / Hub。单击"GitHubPlus"徽标折叠/展开；双击徽标切主题（霓虹/蓝/粉/白，记忆）；Hub 点击跳 ScriptHub、长按 Hub 亦可切主题；更通透玻璃；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/u/f/s/h；GitHub SPA 兼容。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -140,7 +140,6 @@
       background:'rgba(0,0,0,.65)',color:'#fff',padding:'6px 10px',borderRadius:'8px',
       zIndex:2147483800,fontSize:'12px'}); document.body.appendChild(d); setTimeout(()=>d.remove(),1200); }
 
-  // 解析 RAW URL
   function getRawUrl(){
     const href=location.href.split('#')[0].split('?')[0];
     const clean=location.origin+location.pathname;
@@ -154,28 +153,6 @@
   function getRepoPath(){const p=location.pathname.split('/').filter(Boolean);return p.length>=5?p.slice(4).join('/'):"";}
   function getFileName(){const p=getRepoPath();return p?p.split('/').pop():"";}
   function getRepoSlug(){const p=location.pathname.split('/').filter(Boolean);return p.length>=2?`${p[0]}/${p[1]}`:"";}
-
-  // 构造编辑页 URL（在 raw.githubusercontent.com 也能反推）
-  function getEditUrl(){
-    const url=location.href.split('#')[0].split('?')[0];
-    // raw.githubusercontent.com/owner/repo/branch/path...
-    const mRaw=url.match(/^https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/);
-    if(mRaw){
-      return `https://github.com/${mRaw[1]}/${mRaw[2]}/edit/${mRaw[3]}/${mRaw[4]}`;
-    }
-    // github.com/owner/repo/blob/branch/path...
-    const mBlob=url.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)$/);
-    if(mBlob){
-      return `https://github.com/${mBlob[1]}/${mBlob[2]}/edit/${mBlob[3]}/${mBlob[4]}`;
-    }
-    // github.com/owner/repo/raw/branch/path...
-    const mRaw2=url.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/raw\/([^\/]+)\/(.+)$/);
-    if(mRaw2){
-      return `https://github.com/${mRaw2[1]}/${mRaw2[2]}/edit/${mRaw2[3]}/${mRaw2[4]}`;
-    }
-    return '';
-  }
-
   async function copyText(t){ if(!t) return; try{ await navigator.clipboard.writeText(t); toast('Copied'); } catch{ prompt('Copy manually:',t); } }
 
   /* ================= 真下载 ================= */
@@ -253,6 +230,8 @@
     document.body.appendChild(b);
     attachBadgeGestures(b);
   }
+
+  // 统一用 Pointer 实现：拖拽 / 单击 / 双击（避免移动端 click/dblclick 兼容问题）
   function attachBadgeGestures(badge){
     let dragging=false, moved=false;
     let sx=0, sy=0, startRight=0, startBottom=0;
@@ -270,6 +249,7 @@
       badge.setPointerCapture?.(e.pointerId || 1);
       e.preventDefault(); e.stopPropagation();
     };
+
     const onMove = (e) => {
       if (!dragging) return;
       const ev = (e.touches && e.touches[0]) || e;
@@ -279,17 +259,24 @@
       badge.style.right = Math.max(6, startRight - dx) + 'px';
       badge.style.bottom = Math.max(6, startBottom + dy) + 'px';
     };
+
     const onUp = (e) => {
       if (!dragging) return;
       dragging = false;
+
+      // 拖拽：不触发点击/双击
       if (moved) { e.preventDefault(); e.stopPropagation(); return; }
+
+      // 轻触：手动做单击/双击判定
       const now = performance.now();
       if (now - lastTap < TAP_GAP) {
+        // 双击：切换主题
         if (singleTimer) { clearTimeout(singleTimer); singleTimer = null; }
         const i = THEMES.indexOf(currentTheme);
         applyTheme(THEMES[(i+1)%THEMES.length]);
         lastTap = 0;
       } else {
+        // 单击：折叠/展开
         lastTap = now;
         singleTimer = setTimeout(() => {
           singleTimer = null;
@@ -306,6 +293,7 @@
       window.addEventListener('pointerup', onUp, { passive:false });
       window.addEventListener('pointercancel', onUp, { passive:false });
     }else{
+      // 兼容旧浏览器
       badge.addEventListener('touchstart', onDown, {passive:false});
       window.addEventListener('touchmove', onMove, {passive:false});
       window.addEventListener('touchend', onUp, {passive:false});
@@ -314,78 +302,48 @@
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', onUp);
     }
+
+    // 阻止系统长按菜单
     badge.addEventListener('contextmenu', (e)=>e.preventDefault(), {capture:true});
   }
 
-  /* ================= 工具条 UI（按钮功能重映射） ================= */
+  /* ================= 工具条 UI ================= */
   function buildBar(){
     const bar=document.createElement('div'); bar.className='gplus-shbar';
     bar.innerHTML = `
-      <button class="gplus-btn" data-act="raw"  title="Raw (click copy / dblclick open)">Raw</button>
-      <button class="gplus-btn" data-act="dl"   title="Download raw">DL</button>
-      <button class="gplus-btn" data-act="p"    title="Copy path">Path</button>
-      <button class="gplus-btn" data-act="edit" title="Open edit page">Edit</button>
-      <button class="gplus-btn" data-act="f"    title="Copy filename">Name</button>
-      <button class="gplus-btn" data-act="act"  title="Open Actions">Action</button>
-      <button class="gplus-btn" data-act="hub"  title="ScriptHub (click) / Theme (hold)">Hub</button>
+      <button class="gplus-btn" data-act="raw"  title="r">Raw</button>
+      <button class="gplus-btn" data-act="dl"   title="d">DL</button>
+      <button class="gplus-btn" data-act="p"    title="p">Path</button>
+      <button class="gplus-btn" data-act="u"    title="u">URL</button>
+      <button class="gplus-btn" data-act="f"    title="f">Name</button>
+      <button class="gplus-btn" data-act="s"    title="s">Repo</button>
+      <button class="gplus-btn" data-act="hub"  title="h">Hub</button>
     `;
-
-    // Raw：单击=复制，双击=打开
-    let rawClickTimer=null;
-    const RAW_GAP=250;
-
     bar.addEventListener('click', (e)=>{
       const btn=e.target.closest('.gplus-btn'); if(!btn) return;
       const act=btn.dataset.act;
-
-      if(act==='raw'){
-        if(rawClickTimer) return;
-        rawClickTimer=setTimeout(()=>{
-          rawClickTimer=null;
-          const r=getRawUrl(); if(r) copyText(r); else toast('Not a file view');
-        }, RAW_GAP);
-        return;
-      }
-
-      if(act==='dl'){ downloadRaw(); return; }
-      if(act==='p'){ const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view'); return; }
-      if(act==='edit'){
-        const editUrl = getEditUrl();
-        if(editUrl) window.open(editUrl,'_blank');
-        else toast('Edit URL not available');
-        return;
-      }
-      if(act==='f'){ const fn=getFileName(); if(fn) copyText(fn); else toast('Not a file view'); return; }
-      if(act==='act'){
-        const slug=getRepoSlug();
-        if(slug) window.open(`https://github.com/${slug}/actions`,'_blank');
-        else toast('Not in repo');
-        return;
-      }
-      if(act==='hub'){ openScriptHub(e); return; }
+      if(act==='raw'){ const r=getRawUrl(); if(r) window.open(r,'_blank'); else toast('Not a file view'); }
+      if(act==='dl'){ downloadRaw(); }
+      if(act==='p'){ const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view'); }
+      if(act==='u'){ const r=getRawUrl(); if(r) copyText(r); else toast('Not a file view'); }
+      if(act==='f'){ const fn=getFileName(); if(fn) copyText(fn); else toast('Not a file view'); }
+      if(act==='s'){ const rp=getRepoSlug(); if(rp) copyText(rp); else toast('Not in repo'); }
+      if(act==='hub'){ openScriptHub(e); }
     });
-
-    bar.addEventListener('dblclick', (e)=>{
-      const btn=e.target.closest('.gplus-btn'); if(!btn) return;
-      if(btn.dataset.act==='raw'){
-        if(rawClickTimer){ clearTimeout(rawClickTimer); rawClickTimer=null; }
-        const r=getRawUrl(); if(r) window.open(r,'_blank'); else toast('Not a file view');
-      }
-    });
-
     document.body.appendChild(bar);
   }
 
-  /* ================= 快捷键（更新为 r/d/p/e/a/h） ================= */
+  /* ================= 快捷键 ================= */
   function hotkeys(e){
     const tag=(e.target.tagName||'').toLowerCase();
     if(/(input|textarea|select)/.test(tag)||e.target.isContentEditable) return;
     const k=(e.key||'').toLowerCase();
-    if(k==='r'){ const r=getRawUrl(); if(r) copyText(r); }      // raw: 快速复制（与按钮单击一致）
+    if(k==='r'){ const r=getRawUrl(); if(r) window.open(r,'_blank'); }
     if(k==='d'){ downloadRaw(); }
     if(k==='p'){ const p=getRepoPath(); if(p) copyText(p); }
-    if(k==='e'){ const u=getEditUrl(); if(u) window.open(u,'_blank'); }
-    if(k==='a'){ const slug=getRepoSlug(); slug && window.open(`https://github.com/${slug}/actions`,'_blank'); }
+    if(k==='u'){ const r=getRawUrl(); if(r) copyText(r); }
+    if(k==='f'){ const fn=getFileName(); if(fn) copyText(fn); }
+    if(k==='s'){ const rp=getRepoSlug(); if(rp) copyText(rp); }
     if(k==='h'){ openScriptHub(e); }
   }
 
