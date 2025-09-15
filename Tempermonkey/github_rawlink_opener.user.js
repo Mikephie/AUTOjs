@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub Raw Link Opener / Script-Hub edit (No CodeHub)
 // @namespace    GitHub / Script-Hub
-// @version      3.6
+// @version      3.7
 // @description  始终渲染按钮；兼容 GitHub SPA；右下角栈叠；按钮底色 20% 透明；移除 Code Hub 按钮；修复转换/编码问题；兼容 /raw/ 视图
 // @match        https://github.com/*
 // @match        https://script.hub/*
@@ -142,52 +142,35 @@
   var raw = getRawUrl();
   if (!raw) return;
 
-  // 默认：原站 https；按住 Alt 用本地；按住 Shift 用 vercel
-  var base = 'https://script.hub';
-  if (e && e.altKey)   base = 'http://127.0.0.1:9101';
-  if (e && e.shiftKey) base = 'https://scripthub.vercel.app';
+  // 解析 Raw，保留协议和主机，仅编码路径+查询+hash，避免部分后端首次解析失败
+  var url;
+  try {
+    var u = new URL(raw);
+    var safe = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
 
-  // vercel 站不支持 /convert 路由，只能去首页；顺便把 Raw 复制到剪贴板
-  if (base.indexOf('scripthub.vercel.app') !== -1) {
-    var home = base + '/';
-    try { navigator.clipboard && navigator.clipboard.writeText(raw); } catch (_) {}
-    var wv = window.open(home, '_blank', 'noopener,noreferrer');
-    if (!wv) location.assign(home);
-    return;
+    // 选择基址：默认 https 原站；按住 Shift 用 vercel（仅首页），按住 Alt 用本地
+    var base = 'https://script.hub';
+    if (e && e.shiftKey) base = 'https://scripthub.vercel.app';
+    if (e && e.altKey)   base = 'http://127.0.0.1:9101';
+
+    if (base.indexOf('scripthub.vercel.app') !== -1) {
+      // vercel 部署不支持 /convert 路由，只能进首页；它不会自动带入，只能粘贴
+      // 如果你之后要自动填充，只能让 vercel 实现 ?src= 识别
+      url = base + '/';
+      // 贴心：顺手把 raw 复制到剪贴板，进去即可粘贴
+      try { navigator.clipboard && navigator.clipboard.writeText(raw); } catch(_) {}
+    } else {
+      // 原站 / 本地：支持 convert 路由（一次带入）
+      url = base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
+    }
+  } catch (err) {
+    // 如果 URL 解析失败，退回最原始（整串编码）方案
+    var enc = encodeURIComponent(raw);
+    url = 'https://script.hub/convert/_start_/' + enc + '/_end_/plain.txt?type=plain-text&target=plain-text';
   }
 
-  // 原站/本地：使用 convert 路由（自动带入 Raw）
-  var convert = base + '/convert/_start_/' + encodeURIComponent(raw) + '/_end_/plain.txt?type=plain-text&target=plain-text';
-
-  // 关键技巧：先打开首页"预热"，再跳到 convert（规避首击 Invalid URL）
-  var w = window.open(base + '/', '_blank', 'noopener,noreferrer');
-  var jump = function(url) {
-    try {
-      if (w && !w.closed) w.location.href = url;
-      else location.assign(url);
-    } catch (_) {
-      location.assign(url);
-    }
-  };
-
-  // 预热 300ms 后跳到 convert；若还不行，再尝试"仅路径编码"版本
-  setTimeout(function () {
-    var url1 = convert;
-
-    var url2;
-    try {
-      var u = new URL(raw);
-      var safe = u.protocol + '//' + u.host + encodeURIComponent(u.pathname + u.search + u.hash);
-      url2 = base + '/convert/_start_/' + safe + '/_end_/plain.txt?type=plain-text&target=plain-text';
-    } catch (_) {
-      url2 = url1; // 解析失败就用原方案
-    }
-
-    jump(url1);
-
-    // 再给一次兜底（500ms 后）----等效"你手动点第二次"
-    setTimeout(function(){ jump(url2); }, 500);
-  }, 300);
+  var w = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!w) location.assign(url);
 }
 
   // --- 工具 ---
