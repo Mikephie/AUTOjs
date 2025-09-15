@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（Raw单击复制/双击Raw/长按下载 · Edit/Action · 编辑页All=全选并复制）+ ScriptHub
+// @name         GitHub+ 玻璃工具条（Raw单击复制/双击Raw/长按下载 · Edit/Action · 编辑页All=全选并复制 · Edit页Path=Cancel）+ ScriptHub
 // @namespace    https://mikephie.site/
-// @version      3.7.1
-// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击RawContent/长按下载) / DL(编辑页=All: 全选并复制) / Path / Edit / Name / Action / Hub。Pointer 手势判定避免 dblclick 兼容问题；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
+// @version      3.7.2
+// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击RawContent/长按下载) / DL(编辑页=All: 全选并复制) / Path(编辑页=Cancel) / Edit / Name / Action / Hub。Pointer 手势判定；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -16,13 +16,11 @@
   const THEME_KEY = '__gplus_theme__';
   let currentTheme = localStorage.getItem(THEME_KEY) || 'neon';
 
-  /* ================= 样式 ================= */
+  /* ================= 样式（省略说明，沿用上一版） ================= */
   const STYLE = `
   :root{ --fg:#fff; }
   @media(prefers-color-scheme:light){ :root{ --fg:#000; } }
   .gplus-hidden{display:none!important}
-
-  /* 工具条：更通透玻璃 */
   .gplus-shbar{
     position:fixed; left:0; right:0; top:0; z-index:2147483600;
     display:flex; align-items:center; gap:10px; padding:10px 12px;
@@ -42,7 +40,6 @@
     }
     .gplus-shbar::-webkit-scrollbar{display:none}
   }
-
   .gplus-btn{
     position:relative; display:inline-block; color:var(--fg);
     background:rgba(0,0,0,0.20);
@@ -56,10 +53,7 @@
   }
   .gplus-btn:active{ transform:scale(.97); }
   .gplus-btn:hover{ transform:translateY(-1px); }
-
   @keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-  /* 主题：霓虹/蓝/粉/白边 */
   .theme-neon .gplus-btn::before{
     content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
     background:linear-gradient(135deg,#00f0ff,#0070ff,#b100ff,#ff2ddf,#00f0ff);
@@ -68,7 +62,6 @@
     -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
   }
   .theme-neon .gplus-btn:hover{ box-shadow:0 0 15px #00e0ff,0 0 25px #b100ff; }
-
   .theme-blue .gplus-btn::before{
     content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
     background:linear-gradient(135deg,#3b82f6,#06b6d4,#3b82f6);
@@ -77,7 +70,6 @@
     -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
   }
   .theme-blue .gplus-btn:hover{ box-shadow:0 0 18px #06b6d4; }
-
   .theme-pink .gplus-btn::before{
     content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
     background:linear-gradient(135deg,#ec4899,#a855f7,#ec4899);
@@ -86,7 +78,6 @@
     -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
   }
   .theme-pink .gplus-btn:hover{ box-shadow:0 0 18px #ec4899; }
-
   .theme-white .gplus-btn::before{
     content:""; position:absolute; inset:0; border-radius:14px; padding:2px;
     background:linear-gradient(135deg,#ffffff,#f8fafc);
@@ -94,13 +85,10 @@
     -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
   }
   .theme-white .gplus-btn:hover{ box-shadow:0 0 14px #fff; }
-
-  /* ── GitHubPlus 徽标：霓虹玻璃胶囊 + 可拖拽 ── */
   .gplus-badge{
     position:fixed; right:12px; z-index:2147483700;
     display:inline-flex; align-items:center; gap:8px;
-    padding:9px 14px 9px 26px;
-    border-radius:16px;
+    padding:9px 14px 9px 26px; border-radius:16px;
     color:var(--fg); font-weight:900; font-size:12px; letter-spacing:.2px;
     background:rgba(20,22,30,.22);
     -webkit-backdrop-filter:blur(12px) saturate(160%);
@@ -145,7 +133,7 @@
     return /^https?:\/\/github\.com\/[^\/]+\/[^\/]+\/edit\//.test(u);
   }
 
-  // RAW URL
+  // ---- URL 构造 ---- //
   function getRawUrl(){
     const href=location.href.split('#')[0].split('?')[0];
     const clean=location.origin+location.pathname;
@@ -159,6 +147,27 @@
   function getRepoPath(){const p=location.pathname.split('/').filter(Boolean);return p.length>=5?p.slice(4).join('/'):"";}
   function getFileName(){const p=getRepoPath();return p?p.split('/').pop():"";}
   function getRepoSlug(){const p=location.pathname.split('/').filter(Boolean);return p.length>=2?`${p[0]}/${p[1]}`:"";}
+
+  // /edit/ 或 /raw/ 或 raw.githubusercontent → 还原到 /blob/
+  function getBlobViewUrl(){
+    const url=location.href.split('#')[0].split('?')[0];
+
+    // raw.githubusercontent.com/owner/repo/branch/path → github.com/owner/repo/blob/branch/path
+    let m=url.match(/^https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/);
+    if(m) return `https://github.com/${m[1]}/${m[2]}/blob/${m[3]}/${m[4]}`;
+
+    // github.com/owner/repo/raw/branch/path → /blob/
+    m=url.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/raw\/([^\/]+)\/(.+)$/);
+    if(m) return `https://github.com/${m[1]}/${m[2]}/blob/${m[3]}/${m[4]}`;
+
+    // github.com/owner/repo/edit/branch/path → /blob/
+    m=url.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/edit\/([^\/]+)\/(.+)$/);
+    if(m) return `https://github.com/${m[1]}/${m[2]}/blob/${m[3]}/${m[4]}`;
+
+    // 否则保留当前
+    return url;
+  }
+  function cancelEdit(){ const u=getBlobViewUrl(); if(u) location.href=u; else history.back(); }
 
   // Edit URL（从 raw 或 blob 反推 /edit/...）
   function getEditUrl(){
@@ -412,7 +421,6 @@
     toast('Editor not found');
     return false;
   }
-  // 兼容旧名
   function selectAllInEditor(){ return selectAllAndMaybeCopy({copy:false}); }
 
   /* ================= 工具条 UI ================= */
@@ -421,28 +429,33 @@
     bar.innerHTML = `
       <button class="gplus-btn" data-act="raw"  title="Raw (tap=copy / double=open raw / hold=download)">Raw</button>
       <button class="gplus-btn" data-act="dl"   title="Download raw / All in edit">DL</button>
-      <button class="gplus-btn" data-act="p"    title="Copy path">Path</button>
+      <button class="gplus-btn" data-act="p"    title="Copy path / Cancel in edit">Path</button>
       <button class="gplus-btn" data-act="edit" title="Open edit page">Edit</button>
       <button class="gplus-btn" data-act="f"    title="Copy filename">Name</button>
       <button class="gplus-btn" data-act="act"  title="Open Actions">Action</button>
       <button class="gplus-btn" data-act="hub"  title="ScriptHub (click) / Theme (hold)">Hub</button>
     `;
 
-    // 其他按钮 click
     bar.addEventListener('click', (e)=>{
       const btn=e.target.closest('.gplus-btn'); if(!btn) return;
       const act=btn.dataset.act;
       if(act==='raw') return; // raw 交给 Pointer 手势
       if(act==='dl'){
         if(isEditPage()){
-          // 编辑页：All = 全选并复制
           selectAllAndMaybeCopy({copy:true});
         }else{
           downloadRaw();
         }
         return;
       }
-      if(act==='p'){ const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view'); return; }
+      if(act==='p'){
+        if(isEditPage()){
+          cancelEdit();
+        }else{
+          const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view');
+        }
+        return;
+      }
       if(act==='edit'){
         const editUrl = getEditUrl();
         if(editUrl) window.open(editUrl,'_blank'); else toast('Edit URL not available');
@@ -459,27 +472,37 @@
 
     document.body.appendChild(bar);
 
-    // Raw 按钮：Pointer 手势（单击=复制、双击=打开 raw、长按=下载）
+    // Raw：Pointer 手势（单击=复制、双击=raw、长按=下载）
     const rawBtn = document.querySelector('.gplus-btn[data-act="raw"]');
     attachRawGestures(rawBtn);
 
-    // 根据是否在编辑页，更新 DL 按钮文案
     updateModeButtons();
   }
 
   function updateModeButtons(){
     const dlBtn = document.querySelector('.gplus-btn[data-act="dl"]');
-    if(!dlBtn) return;
-    if(isEditPage()){
-      dlBtn.textContent = 'All';
-      dlBtn.title = 'Select All & Copy (editor)';
-    }else{
-      dlBtn.textContent = 'DL';
-      dlBtn.title = 'Download raw';
+    const pathBtn = document.querySelector('.gplus-btn[data-act="p"]');
+    if(dlBtn){
+      if(isEditPage()){
+        dlBtn.textContent = 'All';
+        dlBtn.title = 'Select All & Copy (editor)';
+      }else{
+        dlBtn.textContent = 'DL';
+        dlBtn.title = 'Download raw';
+      }
+    }
+    if(pathBtn){
+      if(isEditPage()){
+        pathBtn.textContent = 'Cancel';
+        pathBtn.title = 'Cancel edit (back to blob view)';
+      }else{
+        pathBtn.textContent = 'Path';
+        pathBtn.title = 'Copy path';
+      }
     }
   }
 
-  // Raw：Pointer 手势（单击=复制、双击=raw content、长按=下载）
+  // Raw：Pointer（单击=复制、双击=raw content、长按=下载）
   function attachRawGestures(btn){
     if(!btn) return;
     let down=false, moved=false, sx=0, sy=0;
@@ -490,9 +513,7 @@
       const ev=(e.touches&&e.touches[0])||e;
       down=true; moved=false; longPressed=false; sx=ev.clientX; sy=ev.clientY;
       btn.setPointerCapture?.(e.pointerId||1);
-      longTimer = setTimeout(()=>{
-        longPressed=true; downloadRaw();
-      }, HOLD_MS);
+      longTimer = setTimeout(()=>{ longPressed=true; downloadRaw(); }, HOLD_MS);
       e.preventDefault(); e.stopPropagation();
     };
     const onMove=(e)=>{
@@ -530,12 +551,12 @@
       btn.addEventListener('pointerdown', onDown);
       window.addEventListener('pointermove', onMove, {passive:false});
       window.addEventListener('pointerup', onUp, {passive:false});
-      window.addEventListener('pointercancel', (e)=>{ down=false; if(longTimer){clearTimeout(longTimer); longTimer=null;} }, {passive:false});
+      window.addEventListener('pointercancel', (e)=>{ /* noop */ }, {passive:false});
     }else{
       btn.addEventListener('touchstart', onDown, {passive:false});
       window.addEventListener('touchmove', onMove, {passive:false});
       window.addEventListener('touchend', onUp, {passive:false});
-      window.addEventListener('touchcancel', (e)=>{ down=false; if(longTimer){clearTimeout(longTimer); longTimer=null;} }, {passive:false});
+      window.addEventListener('touchcancel', (e)=>{ /* noop */ }, {passive:false});
       btn.addEventListener('mousedown', onDown);
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', onUp);
@@ -551,7 +572,10 @@
     const k=(e.key||'').toLowerCase();
     if(k==='r'){ const r=getRawUrl(); if(r) copyText(r); }
     if(k==='d'){ isEditPage()? selectAllAndMaybeCopy({copy:true}) : downloadRaw(); }
-    if(k==='p'){ const p=getRepoPath(); if(p) copyText(p); }
+    if(k==='p'){
+      if(isEditPage()) cancelEdit();
+      else { const p=getRepoPath(); if(p) copyText(p); }
+    }
     if(k==='e'){ const u=getEditUrl(); if(u) window.open(u,'_blank'); }
     if(k==='a'){ const slug=getRepoSlug(); slug && window.open(`https://github.com/${slug}/actions`,'_blank'); }
     if(k==='h'){ openScriptHub(e); }
