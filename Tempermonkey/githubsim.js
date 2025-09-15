@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（Raw单击复制/双击RawContent·Pointer手势 + Edit + Action + 双击徽标切主题）+ ScriptHub
+// @name         GitHub+ 玻璃工具条（Raw 单击复制 / 双击 RawContent / 长按下载 · Edit/Action · 编辑页DL=全选）+ ScriptHub
 // @namespace    https://mikephie.site/
-// @version      3.6.3
-// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击RawContent) / DL / Path / Edit / Name / Action / Hub。Raw与徽标用Pointer手势判定单击/双击；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
+// @version      3.7.0
+// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击RawContent/长按下载) / DL(编辑页=全选) / Path / Edit / Name / Action / Hub。Pointer 手势判定避免 dblclick 兼容问题；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -140,6 +140,11 @@
       background:'rgba(0,0,0,.65)',color:'#fff',padding:'6px 10px',borderRadius:'8px',
       zIndex:2147483800,fontSize:'12px'}); document.body.appendChild(d); setTimeout(()=>d.remove(),1200); }
 
+  function isEditPage(){
+    const u = location.href.split('#')[0].split('?')[0];
+    return /^https?:\/\/github\.com\/[^\/]+\/[^\/]+\/edit\//.test(u);
+  }
+
   // RAW URL
   function getRawUrl(){
     const href=location.href.split('#')[0].split('?')[0];
@@ -192,7 +197,7 @@
     }
   }
 
-  /* ================= Hub 打开（点击） ================= */
+  /* ================= ScriptHub ================= */
   function openScriptHub(e){
     const raw=getRawUrl(); if(!raw){ toast('Not a file view'); return; }
     try{ navigator.clipboard && navigator.clipboard.writeText(raw); toast('RAW 已复制'); }
@@ -204,7 +209,7 @@
     const w=window.open(url,'_blank','noopener'); if(!w) location.assign(url);
   }
 
-  /* ================= 主题应用/切换 ================= */
+  /* ================= 主题 ================= */
   function applyTheme(theme){
     THEMES.forEach(t => document.body.classList.remove('theme-'+t));
     document.body.classList.add('theme-'+theme);
@@ -213,7 +218,6 @@
     toast('Theme: ' + theme);
   }
 
-  // Hub 长按也可切主题（保留）
   function attachHubLongPress(){
     const hubBtn = document.querySelector('.gplus-btn[data-act="hub"]');
     if (!hubBtn) return;
@@ -234,7 +238,7 @@
     hubBtn.addEventListener('contextmenu', (e)=>{ e.preventDefault(); }, {capture:true});
   }
 
-  /* ================= 徽标：创建 + 手势（单击/双击/拖拽） ================= */
+  /* ================= 徽标（单击折叠 / 双击切主题 / 可拖拽） ================= */
   function ensureBadge(){
     if (document.querySelector('.gplus-badge')) return;
     const b=document.createElement('div');
@@ -247,8 +251,7 @@
     let dragging=false, moved=false;
     let sx=0, sy=0, startRight=0, startBottom=0;
     let lastTap=0, singleTimer=null;
-    const TAP_GAP = 280;
-    const MOVE_THRESH = 6;
+    const TAP_GAP = 280, MOVE_THRESH = 6;
 
     const onDown = (e) => {
       const ev = (e.touches && e.touches[0]) || e;
@@ -307,12 +310,12 @@
     badge.addEventListener('contextmenu', (e)=>e.preventDefault(), {capture:true});
   }
 
-  /* ================= 工具条 UI（按钮+Raw手势版） ================= */
+  /* ================= 工具条 UI ================= */
   function buildBar(){
     const bar=document.createElement('div'); bar.className='gplus-shbar';
     bar.innerHTML = `
-      <button class="gplus-btn" data-act="raw"  title="Raw (tap=copy / double=open raw content)">Raw</button>
-      <button class="gplus-btn" data-act="dl"   title="Download raw">DL</button>
+      <button class="gplus-btn" data-act="raw"  title="Raw (tap=copy / double=open raw / hold=download)">Raw</button>
+      <button class="gplus-btn" data-act="dl"   title="Download raw / Select All in edit">DL</button>
       <button class="gplus-btn" data-act="p"    title="Copy path">Path</button>
       <button class="gplus-btn" data-act="edit" title="Open edit page">Edit</button>
       <button class="gplus-btn" data-act="f"    title="Copy filename">Name</button>
@@ -325,7 +328,14 @@
       const btn=e.target.closest('.gplus-btn'); if(!btn) return;
       const act=btn.dataset.act;
       if(act==='raw') return; // raw 交给 Pointer 手势
-      if(act==='dl'){ downloadRaw(); return; }
+      if(act==='dl'){
+        if(isEditPage()){
+          selectAllInEditor();
+        }else{
+          downloadRaw();
+        }
+        return;
+      }
       if(act==='p'){ const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view'); return; }
       if(act==='edit'){
         const editUrl = getEditUrl();
@@ -343,32 +353,101 @@
 
     document.body.appendChild(bar);
 
-    // Raw 按钮：Pointer 手势（单击=复制、双击=打开 raw 内容）
+    // Raw 按钮：Pointer 手势（单击=复制、双击=打开 raw、长按=下载）
     const rawBtn = document.querySelector('.gplus-btn[data-act="raw"]');
     attachRawGestures(rawBtn);
+
+    // 根据是否在编辑页，更新 DL 按钮文案
+    updateModeButtons();
   }
 
+  function updateModeButtons(){
+    const dlBtn = document.querySelector('.gplus-btn[data-act="dl"]');
+    if(!dlBtn) return;
+    if(isEditPage()){
+      dlBtn.textContent = 'All';
+      dlBtn.title = 'Select All (editor)';
+    }else{
+      dlBtn.textContent = 'DL';
+      dlBtn.title = 'Download raw';
+    }
+  }
+
+  // 选择编辑器中的所有内容（尽量兼容 GitHub 现状）
+  function selectAllInEditor(){
+    // 优先找经典 textarea
+    const ta = document.querySelector('textarea#code-editor, textarea[name="value"], textarea.js-code-text');
+    if (ta) {
+      ta.focus();
+      ta.select();
+      toast('Selected all');
+      return;
+    }
+    // 兼容 contenteditable（如 Monaco/CodeMirror 容器）
+    const editable = document.querySelector('[contenteditable="true"], .cm-content, .monaco-editor, .CodeMirror');
+    if (editable) {
+      // 尝试让其获得焦点后全选
+      editable.focus();
+      try {
+        document.execCommand('selectAll');
+        toast('Selected all');
+        return;
+      } catch {}
+    }
+    // 退路：选中主文本域（view 页面）
+    const blob = document.querySelector('table.highlight, .blob-wrapper, .markdown-body');
+    if (blob) {
+      const range = document.createRange();
+      range.selectNodeContents(blob);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      toast('Selected all (viewer)');
+      return;
+    }
+    toast('Editor not found');
+  }
+
+  // Raw：Pointer 手势（单击=复制、双击=raw content、长按=下载）
   function attachRawGestures(btn){
     if(!btn) return;
     let down=false, moved=false, sx=0, sy=0;
-    let lastTap=0, singleTimer=null;
-    const TAP_GAP=260, MOVE_THRESH=6;
+    let lastTap=0, singleTimer=null, longTimer=null, longPressed=false;
+    const TAP_GAP=260, MOVE_THRESH=6, HOLD_MS=520;
 
     const onDown=(e)=>{
       const ev=(e.touches&&e.touches[0])||e;
-      down=true; moved=false; sx=ev.clientX; sy=ev.clientY;
+      down=true; moved=false; longPressed=false; sx=ev.clientX; sy=ev.clientY;
       btn.setPointerCapture?.(e.pointerId||1);
+      // 启动长按计时
+      longTimer = setTimeout(()=>{
+        longPressed=true;
+        // 长按：真下载
+        downloadRaw();
+      }, HOLD_MS);
       e.preventDefault(); e.stopPropagation();
     };
     const onMove=(e)=>{
       if(!down) return;
       const ev=(e.touches&&e.touches[0])||e;
       const dx=Math.abs(ev.clientX-sx), dy=Math.abs(ev.clientY-sy);
-      if(dx+dy>MOVE_THRESH) moved=true;
+      if(dx+dy>MOVE_THRESH){
+        moved=true;
+        if(longTimer){ clearTimeout(longTimer); longTimer=null; }
+      }
+    };
+    const clearTimers=()=>{
+      if(longTimer){ clearTimeout(longTimer); longTimer=null; }
+      if(singleTimer){ /* 单击定时保留由逻辑自行清理 */ }
     };
     const onUp=(e)=>{
       if(!down) return; down=false;
+      // 任何结束都先清长按
+      if(longTimer){ clearTimeout(longTimer); longTimer=null; }
       if(moved){ e.preventDefault(); e.stopPropagation(); return; }
+      if(longPressed){ // 已经触发长按 -> 不再处理单/双击
+        e.preventDefault(); e.stopPropagation(); return;
+      }
       const now=performance.now();
       if(now-lastTap<TAP_GAP){
         // 双击 -> 打开 raw content
@@ -392,12 +471,12 @@
       btn.addEventListener('pointerdown', onDown);
       window.addEventListener('pointermove', onMove, {passive:false});
       window.addEventListener('pointerup', onUp, {passive:false});
-      window.addEventListener('pointercancel', onUp, {passive:false});
+      window.addEventListener('pointercancel', (e)=>{ down=false; clearTimers(); }, {passive:false});
     }else{
       btn.addEventListener('touchstart', onDown, {passive:false});
       window.addEventListener('touchmove', onMove, {passive:false});
       window.addEventListener('touchend', onUp, {passive:false});
-      window.addEventListener('touchcancel', onUp, {passive:false});
+      window.addEventListener('touchcancel', (e)=>{ down=false; clearTimers(); }, {passive:false});
       btn.addEventListener('mousedown', onDown);
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', onUp);
@@ -412,7 +491,7 @@
     if(/(input|textarea|select)/.test(tag)||e.target.isContentEditable) return;
     const k=(e.key||'').toLowerCase();
     if(k==='r'){ const r=getRawUrl(); if(r) copyText(r); }
-    if(k==='d'){ downloadRaw(); }
+    if(k==='d'){ isEditPage()? selectAllInEditor() : downloadRaw(); }
     if(k==='p'){ const p=getRepoPath(); if(p) copyText(p); }
     if(k==='e'){ const u=getEditUrl(); if(u) window.open(u,'_blank'); }
     if(k==='a'){ const slug=getRepoSlug(); slug && window.open(`https://github.com/${slug}/actions`,'_blank'); }
@@ -422,7 +501,7 @@
   /* ================= SPA 兼容 ================= */
   function hookHistory(){
     const _ps=history.pushState, _rs=history.replaceState;
-    const fire=()=>setTimeout(mount,0);
+    const fire=()=>setTimeout(()=>{ mount(); updateModeButtons(); },0);
     history.pushState=function(){ const r=_ps.apply(this,arguments); fire(); return r; };
     history.replaceState=function(){ const r=_rs.apply(this,arguments); fire(); return r; };
     window.addEventListener('popstate', fire, false);
@@ -435,6 +514,7 @@
     if (!document.querySelector('.gplus-shbar')) buildBar();
     if (!document.querySelector('.gplus-badge')) ensureBadge();
     attachHubLongPress();
+    updateModeButtons();
   }
 
   /* ================= 启动 ================= */
