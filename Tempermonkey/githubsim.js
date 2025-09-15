@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ 玻璃工具条（Raw单击复制/双击View·Pointer手势修复 + Edit + Action + 双击徽标切主题）+ ScriptHub
+// @name         GitHub+ 玻璃工具条（Raw单击复制/双击RawContent·Pointer手势 + Edit + Action + 双击徽标切主题）+ ScriptHub
 // @namespace    https://mikephie.site/
-// @version      3.6.2
-// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击View) / DL / Path / Edit / Name / Action / Hub。Raw与徽标都用Pointer手势自行判定单击/双击，避免浏览器dblclick兼容问题；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
+// @version      3.6.3
+// @description  顶部/移动端底部玻璃工具条：Raw(单击复制/双击RawContent) / DL / Path / Edit / Name / Action / Hub。Raw与徽标用Pointer手势判定单击/双击；Hub 点击跳 ScriptHub、长按 Hub 切主题；玻璃模糊+霓虹描边；真下载；徽标霓虹胶囊&可拖拽；快捷键 r/d/p/e/a/h；GitHub SPA 兼容。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -150,15 +150,6 @@
     const m2=clean.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/raw\/([^\/]+)\/(.+)$/);
     if(m2) return `https://raw.githubusercontent.com/${m2[1]}/${m2[2]}/${m2[3]}/${m2[4]}`;
     return '';
-  }
-  // GitHub 文件视图 URL（从 raw 反推回 /blob/...）
-  function getViewUrl(){
-    const url=location.href.split('#')[0].split('?')[0];
-    const m=url.match(/^https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)$/);
-    if(m){
-      return `https://github.com/${m[1]}/${m[2]}/blob/${m[3]}/${m[4]}`;
-    }
-    return url;
   }
   function getRepoPath(){const p=location.pathname.split('/').filter(Boolean);return p.length>=5?p.slice(4).join('/'):"";}
   function getFileName(){const p=getRepoPath();return p?p.split('/').pop():"";}
@@ -316,11 +307,11 @@
     badge.addEventListener('contextmenu', (e)=>e.preventDefault(), {capture:true});
   }
 
-  /* ================= 工具条 UI（按钮功能 + Raw 手势版） ================= */
+  /* ================= 工具条 UI（按钮+Raw手势版） ================= */
   function buildBar(){
     const bar=document.createElement('div'); bar.className='gplus-shbar';
     bar.innerHTML = `
-      <button class="gplus-btn" data-act="raw"  title="Raw (tap=copy / double=View)">Raw</button>
+      <button class="gplus-btn" data-act="raw"  title="Raw (tap=copy / double=open raw content)">Raw</button>
       <button class="gplus-btn" data-act="dl"   title="Download raw">DL</button>
       <button class="gplus-btn" data-act="p"    title="Copy path">Path</button>
       <button class="gplus-btn" data-act="edit" title="Open edit page">Edit</button>
@@ -329,24 +320,22 @@
       <button class="gplus-btn" data-act="hub"  title="ScriptHub (click) / Theme (hold)">Hub</button>
     `;
 
-    // ---- 其余按钮仍用 click ---- //
+    // 其他按钮 click
     bar.addEventListener('click', (e)=>{
       const btn=e.target.closest('.gplus-btn'); if(!btn) return;
       const act=btn.dataset.act;
-      if(act==='raw') return; // 原生 click 不处理 raw，交给 Pointer 手势
+      if(act==='raw') return; // raw 交给 Pointer 手势
       if(act==='dl'){ downloadRaw(); return; }
       if(act==='p'){ const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view'); return; }
       if(act==='edit'){
         const editUrl = getEditUrl();
-        if(editUrl) window.open(editUrl,'_blank');
-        else toast('Edit URL not available');
+        if(editUrl) window.open(editUrl,'_blank'); else toast('Edit URL not available');
         return;
       }
       if(act==='f'){ const fn=getFileName(); if(fn) copyText(fn); else toast('Not a file view'); return; }
       if(act==='act'){
         const slug=getRepoSlug();
-        if(slug) window.open(`https://github.com/${slug}/actions`,'_blank');
-        else toast('Not in repo');
+        if(slug) window.open(`https://github.com/${slug}/actions`,'_blank'); else toast('Not in repo');
         return;
       }
       if(act==='hub'){ openScriptHub(e); return; }
@@ -354,12 +343,11 @@
 
     document.body.appendChild(bar);
 
-    // ---- Raw 按钮：Pointer 手势单击/双击判定 ---- //
+    // Raw 按钮：Pointer 手势（单击=复制、双击=打开 raw 内容）
     const rawBtn = document.querySelector('.gplus-btn[data-act="raw"]');
     attachRawGestures(rawBtn);
   }
 
-  // 用 Pointer 统一实现 Raw 的单击=复制、双击=View（避免 dblclick 误触）
   function attachRawGestures(btn){
     if(!btn) return;
     let down=false, moved=false, sx=0, sy=0;
@@ -383,10 +371,10 @@
       if(moved){ e.preventDefault(); e.stopPropagation(); return; }
       const now=performance.now();
       if(now-lastTap<TAP_GAP){
-        // 双击 -> View
+        // 双击 -> 打开 raw content
         if(singleTimer){ clearTimeout(singleTimer); singleTimer=null; }
-        const v=getViewUrl();
-        v? window.open(v,'_blank') : toast('View URL not available');
+        const r=getRawUrl();
+        r? window.open(r,'_blank') : toast('Raw URL not available');
         lastTap=0;
       }else{
         // 单击 -> 复制 RAW
@@ -415,7 +403,6 @@
       window.addEventListener('mouseup', onUp);
     }
 
-    // 阻止系统长按菜单
     btn.addEventListener('contextmenu', (e)=>e.preventDefault(), {capture:true});
   }
 
