@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ Glass Toolbar · Safe WebKit Build (ultra transparent + fixed badge dblclick)
+// @name         GitHub+ Glass Toolbar · DL click=download / dblclick=copy raw content
 // @namespace    https://mikephie.site/
-// @version      3.9.11-safe
-// @description  Bottom glass toolbar (pure-border, ultra-transparent). Dbl-click badge = switch theme; single-click = show/hide; no cross-trigger. WebKit-friendly.
+// @version      3.9.12
+// @description  Bottom glass toolbar (ultra transparent). DL: click=download, dblclick=copy raw content. Badge: click toggle, dblclick switch theme.
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -26,16 +26,16 @@ html.gp-white  { --edge1:#ffffff; --edge2:#ffffff; }
 html.gp-green  { --edge1:#10b981; --edge2:#06b6d4; }
 html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 
-/* 外壳：完全透明，只做模糊（≈>90% 透明效果） */
+/* 外壳：完全透明 + 强模糊（更像 iOS 玻璃，能看见背后文字） */
 .gp-shell{
   position:fixed; left:0; right:0;
   bottom:calc(env(safe-area-inset-bottom,0px));
   z-index:2147483600; height:var(--bar-h);
   pointer-events:none;
-  background:transparent; /* ultra transparent */
-  -webkit-backdrop-filter:blur(12px) saturate(160%);
-  backdrop-filter:blur(12px) saturate(160%);
-  border-top:1px solid rgba(255,255,255,0.08);
+  background:transparent;           /* 无底色 */
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
+  backdrop-filter:blur(24px) saturate(160%);
+  border-top:1px solid rgba(255,255,255,0.06);  /* 很轻的描边防止"漂浮感" */
 }
 
 /* bar：滚动容器 */
@@ -47,15 +47,16 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 }
 .gp-bar::-webkit-scrollbar{ display:none }
 
-/* 纯边框按钮 + 微光 */
+/* 纯边框按钮 + 霓虹光（去掉任何可能像底色的阴影填充） */
 .gp-btn{
   position:relative; display:inline-flex; align-items:center; justify-content:center;
   height:40px; min-width:92px; padding:0 14px; border-radius:16px;
   color:var(--fg); font:700 14px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
-  background:transparent; border:2px solid rgba(255,255,255,0.82);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.18),
-              0 0 10px var(--edge1),
-              0 0 14px var(--edge2);
+  background:transparent; border:2px solid rgba(255,255,255,0.85);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.16),
+    0 0 10px var(--edge1),
+    0 0 16px var(--edge2);
   transition:transform .08s;
   cursor:pointer; user-select:none;
 }
@@ -69,12 +70,13 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   width:60px; height:60px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
   background:transparent;
-  -webkit-backdrop-filter:blur(12px) saturate(160%);
-  backdrop-filter:blur(12px) saturate(160%);
-  border:2px solid rgba(255,255,255,0.82);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.18),
-              0 0 12px var(--edge1),
-              0 0 16px var(--edge2);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
+  backdrop-filter:blur(24px) saturate(160%);
+  border:2px solid rgba(255,255,255,0.85);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.16),
+    0 0 12px var(--edge1),
+    0 0 18px var(--edge2);
   z-index:2147483650; cursor:pointer; user-select:none;
 }
 .gp-badge svg{ width:30px; height:30px; fill:var(--fg); }
@@ -153,6 +155,13 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
       a.click(); a.remove(); URL.revokeObjectURL(url);
     }catch{ toast('Download failed'); }
   }
+  async function copyRawContent(){
+    const raw=getRawUrl(); if(!raw){ toast('Not a file'); return; }
+    try{
+      const txt=await (await fetch(raw,{credentials:'omit',cache:'no-store'})).text();
+      await copyText(txt);
+    }catch{ toast('Copy failed'); }
+  }
   async function copyAll(){
     const sels=[
       '.highlight .blob-code-inner','.blob-code',
@@ -172,7 +181,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   }
   function openHub(){
     const raw=getRawUrl(); if(!raw){ toast('Not a file'); return; }
-    copyText(raw); // 稳定模式：复制后打开 vercel
+    copyText(raw); // 稳定：复制后打开 vercel
     const url=`https://scripthub.vercel.app/?src=${encodeURIComponent(raw)}`;
     try{ window.open(url,'_blank','noopener') || (location.href=url); }catch{ location.href=url; }
   }
@@ -196,10 +205,15 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
       return b;
     };
 
+    // Raw：单击复制 Raw 链接；双击打开 Raw；长按真下载
     const actRawClick = ()=>{ const r=getRawUrl(); if(r) copyText(r); else toast('Not a file view'); };
     const actRawDbl   = ()=>{ const r=getRawUrl(); if(r) window.open(r,'_blank'); else toast('Not a file view'); };
     const actRawLong  = ()=>downloadRaw();
-    const actAll      = ()=>copyAll();
+
+    // DL：单击真下载；双击复制 **Raw 内容文本**
+    const actDlClick  = ()=>downloadRaw();
+    const actDlDbl    = ()=>copyRawContent();
+
     const actPathOrCancel = ()=>{
       if(inEdit()) location.href = location.href.replace('/edit/','/blob/');
       else { const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view'); }
@@ -218,7 +232,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 
     bar.append(
       btn('raw','Raw', actRawClick, actRawDbl, actRawLong),
-      btn('all','DL',  actAll),
+      btn('dl','DL',   actDlClick,  actDlDbl),
       btn('path', inEdit() ? 'Cancel' : 'Path', actPathOrCancel),
       btn('edit','Edit', actEdit),
       btn('name','Name', actName),
@@ -228,7 +242,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 
     document.body.appendChild(shell);
 
-    // 轻量刷新：路由变化时同步 Path/Cancel
+    // 路由变化时同步 Path/Cancel
     const syncLabel = ()=>{
       const b=document.querySelector('.gp-btn[data-key="path"]');
       if(b) b.textContent = inEdit() ? 'Cancel' : 'Path';
@@ -254,11 +268,11 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
         const shell=document.querySelector('.gp-shell');
         if(shell) shell.classList.toggle('gp-hidden');
         clickTimer = null;
-      }, 260); // 单击延迟
+      }, 260);
     });
     div.addEventListener('dblclick', ()=>{
       if(clickTimer){ clearTimeout(clickTimer); clickTimer=null; }
-      cycleTheme(); // 只切换主题，不再触发隐藏/显示
+      cycleTheme();
     });
 
     document.body.appendChild(div);
