@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ Glass Toolbar · DL click=download / dblclick=copy raw content
+// @name         GitHub+ Glass Toolbar · Gesture-Safe Copy (prefetch raw)
 // @namespace    https://mikephie.site/
-// @version      3.9.13
-// @description  Bottom glass toolbar (ultra transparent, iOS-style). DL: click=download, dblclick=copy raw text. Raw: click=copy URL, dblclick=open, longpress=download. Badge: click toggle, dblclick switch theme.
+// @version      3.9.14
+// @description  Bottom glass toolbar (ultra transparent). DL: click=download, dblclick=copy raw text (prefetch to keep user-gesture). Raw: click=copy URL, dblclick=open, longpress=download. Badge: click toggle, dblclick switch theme.
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -35,8 +35,8 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   pointer-events:none;
   background:transparent;
   -webkit-backdrop-filter:blur(24px) saturate(160%);
-  backdrop-filter:blur(20px) saturate(160%);
-  border-top:1px solid rgba(255,255,255,0.05);
+  backdrop-filter:blur(24px) saturate(160%);
+  border-top:1px solid rgba(255,255,255,0.06);
 }
 
 /* bar：滚动容器 */
@@ -117,7 +117,6 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   }
 
   /* ================= 单击/双击/长按 分流 ================= */
-  // 用法：bindClickModes(el, { single(){}, double(){}, long(){} })
   function bindClickModes(el, handlers, {singleDelay=260, longDelay=600} = {}) {
     let singleTimer = null;
     let longTimer = null;
@@ -127,13 +126,13 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 
     const onDown = () => {
       longFired = false;
-      if (handlers.long) {
-        longTimer = setTimeout(() => { longFired = true; handlers.long(); }, longDelay);
-      }
+      if (handlers.long) longTimer = setTimeout(() => { longFired = true; handlers.long(); }, longDelay);
+      // 手势开始时，尽可能预热 Raw 内容（为双击复制做准备）
+      warmRawCache();
     };
     const onUp = () => clearLong();
     const onClick = (e) => {
-      if (longFired) return;               // 长按已触发，忽略单击
+      if (longFired) return;
       if (singleTimer) clearTimeout(singleTimer);
       singleTimer = setTimeout(() => { handlers.single && handlers.single(e); }, singleDelay);
     };
@@ -177,11 +176,83 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   };
   const inEdit = () => /\/edit\//.test(location.pathname);
 
-  /* ================= Actions ================= */
-  async function copyText(t){
-    if(!t) return;
-    try{ await navigator.clipboard.writeText(t); toast('Copied'); }
-    catch{ window.prompt('Copy manually:', t); }
+  /* ================= Raw 文本缓存（为双击复制服务） ================= */
+  let RAW_CACHE = { url:'', text:'', ts:0 };
+  const CACHE_TTL = 30 * 1000; // 30s 内视为新鲜
+
+  async function warmRawCache(){
+    const raw = getRawUrl();
+    if(!raw) return;
+    const now = Date.now();
+    if (RAW_CACHE.url === raw && (now - RAW_CACHE.ts) < CACHE_TTL && RAW_CACHE.text) return; // 已新鲜
+    try{
+      const res = await fetch(raw, { credentials:'omit', cache:'no-store' });
+      const txt = await res.text();
+      RAW_CACHE = { url: raw, text: txt, ts: now };
+    }catch{ /* 忽略，稍后还有备用路径 */ }
+  }
+
+  function getVisibleCodeText(){
+    const sels=[
+      '.highlight .blob-code-inner','.blob-code',
+      'table.js-file-line-container td.blob-code',
+      '.react-blob-print-hide .blob-code-inner'
+    ];
+    for(const sel of sels){
+      const nodes=[...document.querySelectorAll(sel)];
+      if(nodes.length>5) return nodes.map(n=>n.innerText||n.textContent||'').join('\n');
+    }
+    return '';
+  }
+
+  /* ================= Copy helpers（手势安全） ================= */
+  async function copyText(text) {
+    if (!text) return;
+    // 1) 现代 API
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        toast('Copied'); return;
+      }
+    } catch(_) {}
+    // 2) execCommand 兜底
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly','');
+      Object.assign(ta.style,{position:'fixed',left:'-9999px',top:'0',opacity:'0',pointerEvents:'none',zIndex:'-1'});
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, ta.value.length);
+      const ok = document.execCommand('copy');
+      ta.remove();
+      if (ok) { toast('Copied'); return; }
+    } catch(_) {}
+    // 3) 最后提示
+    try{ window.prompt('Copy manually:', text); }catch{}
+  }
+
+  async function copyRawContentGestureSafe(){
+    const raw = getRawUrl();
+    if (!raw) { toast('Not a file'); return; }
+
+    // A. 优先用缓存（已在手势开始时预热）
+    if (RAW_CACHE.url === raw && RAW_CACHE.text) {
+      await copyText(RAW_CACHE.text);
+      return;
+    }
+
+    // B. 退而求其次：用页面可见代码（同步，仍属于手势）
+    const vis = getVisibleCodeText();
+    if (vis) { await copyText(vis); return; }
+
+    // C. 最后兜底：去抓取（已脱离手势，可能被 Safari 拒绝）→ 抱歉提示
+    try {
+      const res = await fetch(raw, { credentials:'omit', cache:'no-store' });
+      const txt = await res.text();
+      await copyText(txt); // 有些环境仍然允许
+    } catch {
+      toast('Copy failed');
+    }
   }
 
   async function downloadRaw(){
@@ -193,33 +264,6 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
       const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a);
       a.click(); a.remove(); URL.revokeObjectURL(url);
     }catch{ toast('Download failed'); }
-  }
-
-  async function copyRawContent(){
-    const raw=getRawUrl(); if(!raw){ toast('Not a file'); return; }
-    try{
-      const txt=await (await fetch(raw,{credentials:'omit',cache:'no-store'})).text();
-      await copyText(txt);
-    }catch{ toast('Copy failed'); }
-  }
-
-  async function copyAll(){
-    const sels=[
-      '.highlight .blob-code-inner','.blob-code',
-      'table.js-file-line-container td.blob-code',
-      '.react-blob-print-hide .blob-code-inner'
-    ];
-    let text='';
-    for(const sel of sels){
-      const nodes=[...document.querySelectorAll(sel)];
-      if(nodes.length>5){ text=nodes.map(n=>n.innerText||n.textContent||'').join('\n'); break; }
-    }
-    if(!text){
-      const raw=getRawUrl(); if(raw){
-        try{ text=await (await fetch(raw,{credentials:'omit',cache:'no-store'})).text(); }catch{}
-      }
-    }
-    if(text) copyText(text); else toast('Copy failed');
   }
 
   function openHub(){
@@ -238,26 +282,24 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 
     const btn = (key, label) => {
       const b=document.createElement('button'); b.className='gp-btn'; b.dataset.key=key; b.textContent=label;
+      // 鼠标经过/触摸进入时也预热一次
+      b.addEventListener('mouseenter', warmRawCache, {passive:true});
+      b.addEventListener('touchstart', warmRawCache, {passive:true});
       return b;
     };
 
     // ---- Buttons ---- //
     const rawBtn = btn('raw','Raw');
     bindClickModes(rawBtn, {
-      // 单击：复制 Raw 链接
       single(){ const r=getRawUrl(); r ? copyText(r) : toast('Not a file view'); },
-      // 双击：打开 Raw
       double(){ const r=getRawUrl(); r ? window.open(r,'_blank') : toast('Not a file view'); },
-      // 长按：真下载
       long(){ downloadRaw(); }
     });
 
     const dlBtn = btn('dl','DL');
     bindClickModes(dlBtn, {
-      // 单击：真下载
-      single(){ downloadRaw(); },
-      // 双击：复制 Raw 内容文本
-      double(){ copyRawContent(); }
+      single(){ downloadRaw(); },                 // 单击 = 真下载
+      double(){ copyRawContentGestureSafe(); }    // 双击 = 复制 Raw 文本（手势安全）
     });
 
     const pathBtn = btn('path', inEdit() ? 'Cancel' : 'Path');
@@ -334,6 +376,9 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
     }catch{}
     buildBar();
     buildBadge();
+
+    // 页面加载后也主动预热一次
+    warmRawCache();
   }
 
   const tryBoot = ()=> (document.body ? boot() : requestAnimationFrame(tryBoot));
