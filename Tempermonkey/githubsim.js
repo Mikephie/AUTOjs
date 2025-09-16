@@ -24,128 +24,138 @@
 
   /* ============ 样式（按钮描边改遮罩环 + 发光更亮） ============ */
   const STYLE = `
+:root{
+  --fg:#fff; --bar-h:56px;
+
+  /* 主题色（与徽标、描边、光晕共用） */
+  --edge1:#ff00ff; --edge2:#00ffff;
+
+  /* 玻璃底色（更通透） */
+  --glass-tint: 222 18% 10%;
+  --glass-alpha:.05;            /* ↓ 更轻薄的全局蒙层 */
+  --glass-stroke:0 0% 100% / .10;
+
+  /* 卡片内层（按钮填充）更淡，凸显边框与背景 */
+  --card-alpha:.045;
+
+  --badge-cat:#0b0f17;
+}
+@media (prefers-color-scheme:light){
   :root{
-    --fg:#fff; --bar-h:56px;
+    --fg:#171717;
+    --glass-tint:0 0% 100%;
+    --glass-alpha:.58;
+    --glass-stroke:0 0% 0% / .10;
+    --card-alpha:.12;
+    --badge-cat:#eef2ff;
 
-    /* 默认主题：Neon */
-    --edge1:#ff00ff; --edge2:#00ffff;
-
-    /* 玻璃基底（更通透） */
-    --glass-tint: 222 18% 10%;
-    --glass-alpha:.06;            /* ↓ 再降低一点透明蒙层，边框更显眼 */
-    --glass-stroke:0 0% 100% / .10;
-
-    /* 卡片内层透明度（更淡一点） */
-    --card-alpha:.06;
-
-    --badge-cat:#0b0f17;
+    /* 浅色下边框要更清楚一点 */
   }
-  @media (prefers-color-scheme:light){
-    :root{
-      --fg:#171717;
-      --glass-tint:0 0% 100%;
-      --glass-alpha:.60;
-      --glass-stroke:0 0% 0% / .10;
-      --card-alpha:.14;
-      --badge-cat:#eef2ff;
-    }
-  }
+}
 
-  /* 主题色（与徽标/按钮共享 edge1/edge2） */
-  .gplus-theme-neon  { --edge1:#ff00ff; --edge2:#00ffff; }
-  .gplus-theme-blue  { --edge1:#60a5fa; --edge2:#22d3ee; }
-  .gplus-theme-pink  { --edge1:#f472b6; --edge2:#c084fc; }
-  .gplus-theme-white { --edge1:#ffffff; --edge2:#ffffff; }
-  .gplus-theme-green { --edge1:#10b981; --edge2:#06b6d4; }
-  .gplus-theme-orange{ --edge1:#f97316; --edge2:#facc15; }
+/* 主题类（和你现有一致） */
+.gplus-theme-neon  { --edge1:#ff00ff; --edge2:#00ffff; }
+.gplus-theme-blue  { --edge1:#60a5fa; --edge2:#22d3ee; }
+.gplus-theme-pink  { --edge1:#f472b6; --edge2:#c084fc; }
+.gplus-theme-white { --edge1:#ffffff; --edge2:#ffffff; }
+.gplus-theme-green { --edge1:#10b981; --edge2:#06b6d4; }
+.gplus-theme-orange{ --edge1:#f97316; --edge2:#facc15; }
 
-  /* 底部玻璃条 */
-  .gplus-shbar{
-    position:fixed; left:0; right:0;
-    bottom:calc(0px + env(safe-area-inset-bottom,0));
-    z-index:2147483600;
-    height:var(--bar-h);
-    display:flex; align-items:center; justify-content:center;
-    gap:10px; padding:0 12px;
+/* 底部玻璃条（保持不变，仅轻调透明度） */
+.gplus-shbar{
+  position:fixed; left:0; right:0;
+  bottom:calc(0px + env(safe-area-inset-bottom,0));
+  z-index:2147483600; height:var(--bar-h);
+  display:flex; align-items:center; justify-content:center;
+  gap:10px; padding:0 12px;
 
-    background:linear-gradient(180deg,
-      hsl(var(--glass-tint)/calc(var(--glass-alpha)+.04)) 0%,
-      hsl(var(--glass-tint)/var(--glass-alpha)) 100%);
-    -webkit-backdrop-filter:blur(24px) saturate(185%) contrast(1.06);
-    backdrop-filter:blur(24px) saturate(185%) contrast(1.06);
+  background:linear-gradient(180deg,
+    hsl(var(--glass-tint)/calc(var(--glass-alpha)+.035)) 0%,
+    hsl(var(--glass-tint)/var(--glass-alpha)) 100%);
+  -webkit-backdrop-filter:blur(24px) saturate(185%) contrast(1.06);
+  backdrop-filter:blur(24px) saturate(185%) contrast(1.06);
 
-    border-top:1px solid hsl(var(--glass-stroke));
-    box-shadow:
-      inset 0 1px 0 hsl(0 0% 100%/.16),
-      inset 0 -1px 0 hsl(0 0% 0%/.10),
-      0 -12px 28px rgba(0,0,0,.16);
+  border-top:1px solid hsl(var(--glass-stroke));
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100%/.14),
+    inset 0 -1px 0 hsl(0 0% 0%/.10),
+    0 -12px 28px rgba(0,0,0,.14);
 
-    overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch;
-    scrollbar-width:none; scroll-snap-type:x proximity;
-  }
-  .gplus-shbar::-webkit-scrollbar{display:none}
-  .gplus-hidden{display:none!important}
+  overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none; scroll-snap-type:x proximity;
+}
+.gplus-shbar::-webkit-scrollbar{display:none}
+.gplus-hidden{display:none!important}
 
-  /* 按钮：遮罩环描边（超清晰）+ 半透明内层 + 强外发光 */
-  .gplus-btn{
-    position:relative; display:inline-flex; align-items:center; justify-content:center;
-    height:40px; min-width:86px; padding:0 14px;
-    color:var(--fg);
-    font:700 13px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
-    border-radius:14px;
-    border:0;                                        /* 交给遮罩环来画描边 */
-    background: hsl(var(--glass-tint)/var(--card-alpha));
-    -webkit-backdrop-filter:blur(16px) saturate(180%);
-    backdrop-filter:blur(16px) saturate(180%);
-    box-shadow:
-      inset 0 1px 0 hsl(0 0% 100%/.18),
-      0 8px 20px rgba(0,0,0,.18);
-    cursor:pointer; user-select:none;
-    transition:transform .08s, box-shadow .2s, opacity .2s, background .2s, filter .2s;
-    scroll-snap-align:center;
-  }
-  /* ::before 做"渐变描边环"（遮罩 XOR 技术，不会被背景吃色） */
-  .gplus-btn::before{
-    content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
-    background:linear-gradient(135deg,var(--edge1),var(--edge2));
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;          /* 让中间镂空，保留一圈渐变边 */
-    pointer-events:none;
-  }
-  /* ::after 做统一 Glow（与徽标一致），更亮更粗 */
-  .gplus-btn::after{
-    content:""; position:absolute; inset:-6px; border-radius:inherit;
-    background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
-    filter:blur(18px); opacity:.78;                /* ↑ 提升亮度和范围 */
-    z-index:-1; pointer-events:none;
-  }
-  .gplus-btn:hover{ transform:translateY(-1px) }
-  .gplus-btn:active{ transform:scale(.962) }
-  .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25); }
+/* ============ 按钮：玻璃边（半透明白）+ 渐变细描边 + 霓虹光晕 ============ */
+.gplus-btn{
+  position:relative; display:inline-flex; align-items:center; justify-content:center;
+  height:40px; min-width:86px; padding:0 14px;
+  color:var(--fg);
+  font:700 13px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
+  border-radius:14px; border:0;
+  /* 半透明的填充，便于透出底部页面内容 */
+  background:hsl(var(--glass-tint)/var(--card-alpha));
+  -webkit-backdrop-filter:blur(16px) saturate(180%);
+  backdrop-filter:blur(16px) saturate(180%);
+  /* 内层高光/暗沿，模拟 iOS 玻璃厚度 */
+  box-shadow:
+    inset 0 0 0 1px hsl(0 0% 100%/.18),   /* 玻璃边----半透明白（真正的 rim） */
+    inset 0 1px 0 hsl(0 0% 100%/.22),
+    inset 0 -1px 0 hsl(0 0% 0%/.20),
+    0 8px 20px rgba(0,0,0,.16);
+  cursor:pointer; user-select:none;
+  transition:transform .08s, box-shadow .2s, opacity .2s, background .2s, filter .2s;
+  scroll-snap-align:center;
+}
+/* 细渐变描边：很薄、半透明，只做彩色折射的感觉（不抢主体） */
+.gplus-btn::before{
+  content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
+  background:linear-gradient(135deg,var(--edge1),var(--edge2));
+  opacity:.45;                               /* ↓ 比之前更淡，保留玻璃感 */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+/* 霓虹外发光（与徽标完全同步）----更强烈、范围更大 */
+.gplus-btn::after{
+  content:""; position:absolute; inset:-7px; border-radius:inherit;
+  background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
+  filter:blur(22px); opacity:.92; z-index:-1; pointer-events:none;
+}
+.gplus-btn:hover{ transform:translateY(-1px) }
+.gplus-btn:active{ transform:scale(.962) }
+.gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25); }
 
-  /* 徽标：与按钮同色，Glow 更强一档 */
-  .gplus-badge{
-    position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom,0));
-    z-index:2147483700;
-    border-radius:50%; display:flex; align-items:center; justify-content:center;
-    background:hsl(var(--glass-tint)/calc(var(--glass-alpha)+.05));
-    -webkit-backdrop-filter:blur(18px) saturate(185%) contrast(1.06);
-    backdrop-filter:blur(18px) saturate(185%) contrast(1.06);
-    border:1px solid hsl(var(--glass-stroke));
-    box-shadow:inset 0 1px 0 hsl(0 0% 100%/.20), 0 14px 32px rgba(0,0,0,.30);
-    color:var(--edge1); cursor:pointer; user-select:none; transition:transform .15s;
-  }
-  .gplus-badge:hover{ transform:scale(1.05); }
-  .gplus-badge svg{ display:block; }
-  .gplus-badge::after{
-    content:""; position:absolute; inset:-4px; border-radius:50%;
-    background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
-    filter:blur(16px); opacity:.95; z-index:-1; pointer-events:none;
-  }
-  `;
+/* ============ 徽标（与按钮配色/光晕统一） ============ */
+.gplus-badge{
+  position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom,0));
+  z-index:2147483700; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:hsl(var(--glass-tint)/calc(var(--glass-alpha)+.05));
+  -webkit-backdrop-filter:blur(18px) saturate(185%) contrast(1.06);
+  backdrop-filter:blur(18px) saturate(185%) contrast(1.06);
+  border:1px solid hsl(var(--glass-stroke));
+  /* 让徽标本体边缘也像 iOS 图标那样有玻璃感 */
+  box-shadow:
+    inset 0 0 0 1px hsl(0 0% 100%/.18),
+    inset 0 1px 0 hsl(0 0% 100%/.22),
+    inset 0 -1px 0 hsl(0 0% 0%/.18),
+    0 14px 32px rgba(0,0,0,.28);
+  color:var(--edge1);
+  cursor:pointer; user-select:none; transition:transform .15s;
+}
+.gplus-badge:hover{ transform:scale(1.05); }
+.gplus-badge svg{ display:block; }
+/* 徽标霓虹光晕 */
+.gplus-badge::after{
+  content:""; position:absolute; inset:-6px; border-radius:50%;
+  background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
+  filter:blur(20px); opacity:.96; z-index:-1; pointer-events:none;
+}
+`;
   document.head.appendChild(Object.assign(document.createElement('style'),{textContent:STYLE}));
 
   /* ============ 小工具 ============ */
