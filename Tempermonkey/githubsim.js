@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ Glass iOS26 + ScriptHub (Full, vivid border)
+// @name         GitHub+ Glass iOS26 + ScriptHub (Full, bold border)
 // @namespace    https://mikephie.site/
-// @version      4.0.2
-// @description  iOS26 玻璃条 + 鲜明渐变描边；徽标(单击显隐/双击换主题/长按切尺寸/可拖拽/持久化)；Raw(单击复制/双击打开/长按下载)；DL 真下载；Path|Edit/Cancel 自动切换；Name|Action|Hub 分流；SPA 兼容；移动横滑；初次居中。
+// @version      4.0.5
+// @description  iOS26 玻璃条 + 3px 鲜明渐变描边；徽标(单击显隐/双击换主题/长按切尺寸/可拖拽/持久化)；Raw(单击复制/双击打开/长按下载)；DL 真下载；Path|Edit/Cancel 自动切换；Name|Action|Hub 分流；SPA 兼容；移动横滑；初次居中。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -22,7 +22,7 @@
     localStorage.setItem(THEME_KEY,name);
   }
 
-  /* ============ 样式：iOS26 玻璃 + 粗描边按钮 ============ */
+  /* ============ 样式（加粗描边 + 更通透玻璃） ============ */
   const STYLE = `
   :root{
     --fg:#fff; --bar-h:56px;
@@ -30,11 +30,13 @@
     /* 默认主题：Neon 渐变描边 */
     --edge1:#ff00ff; --edge2:#00ffff;
 
-    /* 暗色玻璃基底 */
+    /* 暗色玻璃基底（更通透：降低 alpha） */
     --glass-tint: 222 18% 10%;
-    --glass-alpha:.10;
+    --glass-alpha:.08;               /* ↓ 从 .10 降到 .08 更透 */
     --glass-stroke:0 0% 100% / .12;
-    --card-alpha:.12;
+
+    /* 按钮内层卡片透明度（更通透） */
+    --card-alpha:.08;                /* ↓ 从 .12 降到 .08 */
 
     --badge-cat:#0b0f17;
   }
@@ -42,9 +44,9 @@
     :root{
       --fg:#171717;
       --glass-tint:0 0% 100%;
-      --glass-alpha:.66;
+      --glass-alpha:.62;             /* 也略降一点 */
       --glass-stroke:0 0% 0% / .12;
-      --card-alpha:.18;
+      --card-alpha:.16;
       --badge-cat:#eef2ff;
     }
   }
@@ -69,14 +71,14 @@
     background:linear-gradient(180deg,
       hsl(var(--glass-tint)/calc(var(--glass-alpha)+.04)) 0%,
       hsl(var(--glass-tint)/var(--glass-alpha)) 100%);
-    -webkit-backdrop-filter:blur(24px) saturate(180%) contrast(1.05);
-    backdrop-filter:blur(24px) saturate(180%) contrast(1.05);
+    -webkit-backdrop-filter:blur(24px) saturate(185%) contrast(1.06);
+    backdrop-filter:blur(24px) saturate(185%) contrast(1.06);
 
     border-top:1px solid hsl(var(--glass-stroke));
     box-shadow:
       inset 0 1px 0 hsl(0 0% 100%/.18),
-      inset 0 -1px 0 hsl(0 0% 0%/.12),
-      0 -12px 28px rgba(0,0,0,.20);
+      inset 0 -1px 0 hsl(0 0% 0%/.10),
+      0 -12px 28px rgba(0,0,0,.18);
 
     overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch;
     scrollbar-width:none; scroll-snap-type:x proximity;
@@ -84,7 +86,7 @@
   .gplus-shbar::-webkit-scrollbar{display:none}
   .gplus-hidden{display:none!important}
 
-  /* 按钮：粗 2px 渐变描边 + 内层半透明渐变 */
+  /* 按钮：3px 渐变描边 + 半透明内层渐变（更显色） */
   .gplus-btn{
     position:relative; display:flex; align-items:center; justify-content:center;
     height:40px; min-width:86px; padding:0 14px;
@@ -92,45 +94,46 @@
     font:700 13px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
     border-radius:14px;
 
-    /* 关键：粗边框 + 双背景 (padding-box 填充 + border-box 渐变边) */
-    border:2px solid transparent;
+    /* 关键：粗边框 + 双背景 */
+    border:3px solid transparent; /* ← 比 v3.9.3 更粗 */
     background:
       linear-gradient(180deg,
-        hsl(var(--glass-tint)/calc(var(--card-alpha)+.04)) 0%,
+        hsl(var(--glass-tint)/calc(var(--card-alpha)+.05)) 0%,
         hsl(var(--glass-tint)/var(--card-alpha)) 100%) padding-box,
       linear-gradient(135deg,var(--edge1),var(--edge2)) border-box;
 
-    -webkit-backdrop-filter:blur(16px) saturate(170%);
-    backdrop-filter:blur(16px) saturate(170%);
-    box-shadow:inset 0 1px 0 hsl(0 0% 100%/.20), 0 6px 18px rgba(0,0,0,.22);
+    -webkit-backdrop-filter:blur(16px) saturate(180%);
+    backdrop-filter:blur(16px) saturate(180%);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100%/.22),
+      0 8px 20px rgba(0,0,0,.22);
     cursor:pointer; user-select:none;
     transition:transform .08s, box-shadow .2s, opacity .2s, background .2s, filter .2s;
     scroll-snap-align:center;
   }
-  /* 去掉旧的外发光细边 */
   .gplus-btn::after{ display:none }
-  .gplus-btn:hover{ transform:translateY(-1px); filter:saturate(1.05) }
-  .gplus-btn:active{ transform:scale(.965) }
+  .gplus-btn:hover{ transform:translateY(-1px); filter:saturate(1.06) }
+  .gplus-btn:active{ transform:scale(.962) }
   .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25) }
 
-  /* 徽标：圆形玻璃 + 渐变光环（与按钮主题一致） */
+  /* 徽标：更亮的光晕，和主题一致 */
   .gplus-badge{
     position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom,0));
     z-index:2147483700;
     border-radius:50%; display:flex; align-items:center; justify-content:center;
     background:hsl(var(--glass-tint)/calc(var(--glass-alpha)+.05));
-    -webkit-backdrop-filter:blur(18px) saturate(180%) contrast(1.05);
-    backdrop-filter:blur(18px) saturate(180%) contrast(1.05);
+    -webkit-backdrop-filter:blur(18px) saturate(185%) contrast(1.06);
+    backdrop-filter:blur(18px) saturate(185%) contrast(1.06);
     border:1px solid hsl(var(--glass-stroke));
-    box-shadow:inset 0 1px 0 hsl(0 0% 100%/.20), 0 14px 32px rgba(0,0,0,.35);
+    box-shadow:inset 0 1px 0 hsl(0 0% 100%/.22), 0 14px 32px rgba(0,0,0,.32);
     color:var(--edge1); cursor:pointer; user-select:none; transition:transform .15s;
   }
   .gplus-badge:hover{ transform:scale(1.05); }
   .gplus-badge svg{ display:block; }
   .gplus-badge::after{
-    content:""; position:absolute; inset:-3px; border-radius:50%;
+    content:""; position:absolute; inset:-4px; border-radius:50%;
     background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
-    filter:blur(10px); opacity:.9; z-index:-1; pointer-events:none;
+    filter:blur(14px); opacity:1; z-index:-1; pointer-events:none; /* 更亮更厚实 */
   }
   `;
   document.head.appendChild(Object.assign(document.createElement('style'),{textContent:STYLE}));
@@ -254,7 +257,6 @@
       </svg>`;
     document.body.appendChild(badge);
 
-    // 尺寸持久化
     const SIZE_KEY='gplus_badge_size'; const SIZES=[56,76,90];
     let size=parseInt(localStorage.getItem(SIZE_KEY)||SIZES[1],10); if(!SIZES.includes(size)) size=SIZES[1];
     function applyBadgeSize(px){
@@ -264,7 +266,6 @@
     }
     applyBadgeSize(size);
 
-    // 手势
     const barEl = ()=>$('.gplus-shbar');
     let dragging=false,moved=false,sx=0,sy=0,startR=0,startB=0,downAt=0,lastTap=0;
     let longTimer=null,longTriggered=false,singleTimer=null;
@@ -324,7 +325,7 @@
     on(badge,'contextmenu',e=>e.preventDefault(),{capture:true});
   }
 
-  /* ============ 状态刷新（按钮禁用/文案） ============ */
+  /* ============ 状态刷新 ============ */
   function refreshAvailability(){
     const fileMode=isFileView();
     const editMode=isEditView();
