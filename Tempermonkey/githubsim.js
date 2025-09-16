@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         GitHub+ Glass Toolbar · DL click=download / dblclick=copy raw content
 // @namespace    https://mikephie.site/
-// @version      3.9.12
-// @description  Bottom glass toolbar (ultra transparent). DL: click=download, dblclick=copy raw content. Badge: click toggle, dblclick switch theme.
+// @version      3.9.13
+// @description  Bottom glass toolbar (ultra transparent, iOS-style). DL: click=download, dblclick=copy raw text. Raw: click=copy URL, dblclick=open, longpress=download. Badge: click toggle, dblclick switch theme.
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -19,6 +19,7 @@
   const CSS = `
 :root{ --fg:#eaf2ff; --fg-dim:#b7c2d9; --bar-h:62px; --edge1:#ff00ff; --edge2:#00ffff; }
 @media(prefers-color-scheme:light){ :root{ --fg:#0b1220; --fg-dim:#475369; } }
+
 html.gp-neon   { --edge1:#ff00ff; --edge2:#00ffff; }
 html.gp-blue   { --edge1:#60a5fa; --edge2:#22d3ee; }
 html.gp-pink   { --edge1:#f472b6; --edge2:#c084fc; }
@@ -26,16 +27,16 @@ html.gp-white  { --edge1:#ffffff; --edge2:#ffffff; }
 html.gp-green  { --edge1:#10b981; --edge2:#06b6d4; }
 html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 
-/* 外壳：完全透明 + 强模糊（更像 iOS 玻璃，能看见背后文字） */
+/* 外壳：完全无底色 + 强模糊（能看见背后文字） */
 .gp-shell{
   position:fixed; left:0; right:0;
   bottom:calc(env(safe-area-inset-bottom,0px));
   z-index:2147483600; height:var(--bar-h);
   pointer-events:none;
-  background:transparent;           /* 无底色 */
+  background:transparent;
   -webkit-backdrop-filter:blur(24px) saturate(160%);
-  backdrop-filter:blur(24px) saturate(160%);
-  border-top:1px solid rgba(255,255,255,0.06);  /* 很轻的描边防止"漂浮感" */
+  backdrop-filter:blur(20px) saturate(160%);
+  border-top:1px solid rgba(255,255,255,0.05);
 }
 
 /* bar：滚动容器 */
@@ -47,16 +48,16 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 }
 .gp-bar::-webkit-scrollbar{ display:none }
 
-/* 纯边框按钮 + 霓虹光（去掉任何可能像底色的阴影填充） */
+/* 纯边框按钮 + 霓虹边缘光；无填充 */
 .gp-btn{
   position:relative; display:inline-flex; align-items:center; justify-content:center;
   height:40px; min-width:92px; padding:0 14px; border-radius:16px;
   color:var(--fg); font:700 14px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
-  background:transparent; border:2px solid rgba(255,255,255,0.85);
+  background:transparent; border:2px solid rgba(255,255,255,0.9);
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.16),
     0 0 10px var(--edge1),
-    0 0 16px var(--edge2);
+    0 0 18px var(--edge2);
   transition:transform .08s;
   cursor:pointer; user-select:none;
 }
@@ -72,16 +73,16 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   background:transparent;
   -webkit-backdrop-filter:blur(24px) saturate(160%);
   backdrop-filter:blur(24px) saturate(160%);
-  border:2px solid rgba(255,255,255,0.85);
+  border:2px solid rgba(255,255,255,0.9);
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.16),
     0 0 12px var(--edge1),
-    0 0 18px var(--edge2);
+    0 0 20px var(--edge2);
   z-index:2147483650; cursor:pointer; user-select:none;
 }
 .gp-badge svg{ width:30px; height:30px; fill:var(--fg); }
-.gp-hidden{ display:none !important }
 
+.gp-hidden{ display:none !important }
 @media (max-width:380px){ .gp-btn{ min-width:84px; font-size:13px; height:38px } }
   `;
 
@@ -115,7 +116,44 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
     document.body.appendChild(d); setTimeout(()=>d.remove(),ms);
   }
 
-  /* ============== URL helpers ============== */
+  /* ================= 单击/双击/长按 分流 ================= */
+  // 用法：bindClickModes(el, { single(){}, double(){}, long(){} })
+  function bindClickModes(el, handlers, {singleDelay=260, longDelay=600} = {}) {
+    let singleTimer = null;
+    let longTimer = null;
+    let longFired = false;
+
+    const clearLong = () => { if (longTimer) { clearTimeout(longTimer); longTimer = null; } };
+
+    const onDown = () => {
+      longFired = false;
+      if (handlers.long) {
+        longTimer = setTimeout(() => { longFired = true; handlers.long(); }, longDelay);
+      }
+    };
+    const onUp = () => clearLong();
+    const onClick = (e) => {
+      if (longFired) return;               // 长按已触发，忽略单击
+      if (singleTimer) clearTimeout(singleTimer);
+      singleTimer = setTimeout(() => { handlers.single && handlers.single(e); }, singleDelay);
+    };
+    const onDbl = (e) => {
+      if (singleTimer) { clearTimeout(singleTimer); singleTimer = null; }
+      clearLong();
+      e.preventDefault();
+      handlers.double && handlers.double(e);
+    };
+
+    el.addEventListener('mousedown', onDown);
+    el.addEventListener('touchstart', onDown, {passive:true});
+    el.addEventListener('mouseup', onUp);
+    el.addEventListener('mouseleave', onUp);
+    el.addEventListener('touchend', onUp, {passive:true});
+    el.addEventListener('click', onClick);
+    el.addEventListener('dblclick', onDbl);
+  }
+
+  /* ================= URL helpers ================= */
   function getRawUrl(){
     const href=location.href.split('#')[0].split('?')[0];
     const clean=location.origin+location.pathname;
@@ -139,12 +177,13 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   };
   const inEdit = () => /\/edit\//.test(location.pathname);
 
-  /* ============== Actions ============== */
+  /* ================= Actions ================= */
   async function copyText(t){
     if(!t) return;
     try{ await navigator.clipboard.writeText(t); toast('Copied'); }
     catch{ window.prompt('Copy manually:', t); }
   }
+
   async function downloadRaw(){
     try{
       const raw=getRawUrl(); if(!raw){ toast('Not a file'); return; }
@@ -155,6 +194,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
       a.click(); a.remove(); URL.revokeObjectURL(url);
     }catch{ toast('Download failed'); }
   }
+
   async function copyRawContent(){
     const raw=getRawUrl(); if(!raw){ toast('Not a file'); return; }
     try{
@@ -162,6 +202,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
       await copyText(txt);
     }catch{ toast('Copy failed'); }
   }
+
   async function copyAll(){
     const sels=[
       '.highlight .blob-code-inner','.blob-code',
@@ -174,11 +215,13 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
       if(nodes.length>5){ text=nodes.map(n=>n.innerText||n.textContent||'').join('\n'); break; }
     }
     if(!text){
-      const raw=getRawUrl(); if(!raw){ toast('Not a file'); return; }
-      try{ text=await (await fetch(raw,{credentials:'omit',cache:'no-store'})).text(); }catch{}
+      const raw=getRawUrl(); if(raw){
+        try{ text=await (await fetch(raw,{credentials:'omit',cache:'no-store'})).text(); }catch{}
+      }
     }
     if(text) copyText(text); else toast('Copy failed');
   }
+
   function openHub(){
     const raw=getRawUrl(); if(!raw){ toast('Not a file'); return; }
     copyText(raw); // 稳定：复制后打开 vercel
@@ -186,39 +229,45 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
     try{ window.open(url,'_blank','noopener') || (location.href=url); }catch{ location.href=url; }
   }
 
-  /* ============== UI ============== */
+  /* ================= UI ================= */
   function buildBar(){
     if(document.querySelector('.gp-shell')) return;
 
     const shell=document.createElement('div'); shell.className='gp-shell';
     const bar=document.createElement('div'); bar.className='gp-bar'; shell.appendChild(bar);
 
-    const btn = (key, label, onClick, onDbl, onLong) => {
+    const btn = (key, label) => {
       const b=document.createElement('button'); b.className='gp-btn'; b.dataset.key=key; b.textContent=label;
-      let t=null, done=false;
-      const start=()=>{ done=false; if(onLong) t=setTimeout(()=>{ done=true; onLong(); },600); };
-      const clear=()=>{ if(t){clearTimeout(t); t=null;} };
-      b.addEventListener('mousedown',start); b.addEventListener('touchstart',start,{passive:true});
-      b.addEventListener('mouseup',clear); b.addEventListener('mouseleave',clear); b.addEventListener('touchend',clear,{passive:true});
-      b.addEventListener('click',e=>{ if(!done) onClick && onClick(e); });
-      if(onDbl) b.addEventListener('dblclick',onDbl);
       return b;
     };
 
-    // Raw：单击复制 Raw 链接；双击打开 Raw；长按真下载
-    const actRawClick = ()=>{ const r=getRawUrl(); if(r) copyText(r); else toast('Not a file view'); };
-    const actRawDbl   = ()=>{ const r=getRawUrl(); if(r) window.open(r,'_blank'); else toast('Not a file view'); };
-    const actRawLong  = ()=>downloadRaw();
+    // ---- Buttons ---- //
+    const rawBtn = btn('raw','Raw');
+    bindClickModes(rawBtn, {
+      // 单击：复制 Raw 链接
+      single(){ const r=getRawUrl(); r ? copyText(r) : toast('Not a file view'); },
+      // 双击：打开 Raw
+      double(){ const r=getRawUrl(); r ? window.open(r,'_blank') : toast('Not a file view'); },
+      // 长按：真下载
+      long(){ downloadRaw(); }
+    });
 
-    // DL：单击真下载；双击复制 **Raw 内容文本**
-    const actDlClick  = ()=>downloadRaw();
-    const actDlDbl    = ()=>copyRawContent();
+    const dlBtn = btn('dl','DL');
+    bindClickModes(dlBtn, {
+      // 单击：真下载
+      single(){ downloadRaw(); },
+      // 双击：复制 Raw 内容文本
+      double(){ copyRawContent(); }
+    });
 
-    const actPathOrCancel = ()=>{
+    const pathBtn = btn('path', inEdit() ? 'Cancel' : 'Path');
+    pathBtn.addEventListener('click', ()=>{
       if(inEdit()) location.href = location.href.replace('/edit/','/blob/');
-      else { const p=getRepoPath(); if(p) copyText(p); else toast('Not a file view'); }
-    };
-    const actEdit = ()=>{
+      else { const p=getRepoPath(); p ? copyText(p) : toast('Not a file view'); }
+    });
+
+    const editBtn = btn('edit','Edit');
+    editBtn.addEventListener('click', ()=>{
       let url=location.href.replace('/blob/','/edit/').replace('/raw/','/edit/');
       if(!/\/edit\//.test(url) && getRawUrl()){
         const slug=getRepoSlug(), path=getRepoPath();
@@ -226,20 +275,18 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
         if(slug && path) url=`https://github.com/${slug}/edit/${branch}/${path}`;
       }
       location.href=url;
-    };
-    const actName = ()=>{ const n=getFileName(); if(n) copyText(n); else toast('Not a file view'); };
-    const actAction = ()=>{ const slug=getRepoSlug(); if(!slug){ toast('Not in repo'); return; } window.open(`https://github.com/${slug}/actions`,'_blank'); };
+    });
 
-    bar.append(
-      btn('raw','Raw', actRawClick, actRawDbl, actRawLong),
-      btn('dl','DL',   actDlClick,  actDlDbl),
-      btn('path', inEdit() ? 'Cancel' : 'Path', actPathOrCancel),
-      btn('edit','Edit', actEdit),
-      btn('name','Name', actName),
-      btn('act','Action', actAction),
-      btn('hub','Hub', openHub)
-    );
+    const nameBtn = btn('name','Name');
+    nameBtn.addEventListener('click', ()=>{ const n=getFileName(); n ? copyText(n) : toast('Not a file view'); });
 
+    const actBtn = btn('act','Action');
+    actBtn.addEventListener('click', ()=>{ const slug=getRepoSlug(); slug ? window.open(`https://github.com/${slug}/actions`,'_blank') : toast('Not in repo'); });
+
+    const hubBtn = btn('hub','Hub');
+    hubBtn.addEventListener('click', openHub);
+
+    bar.append(rawBtn, dlBtn, pathBtn, editBtn, nameBtn, actBtn, hubBtn);
     document.body.appendChild(shell);
 
     // 路由变化时同步 Path/Cancel
@@ -260,7 +307,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
     const div=document.createElement('div'); div.className='gp-badge';
     div.innerHTML=`<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.11 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.91.08 2.11.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>`;
 
-    // 单击/双击分流：双击优先，取消单击的toggle
+    // 单击切显隐；双击切主题（双击优先，取消单击）
     let clickTimer = null;
     div.addEventListener('click', ()=>{
       if(clickTimer) clearTimeout(clickTimer);
@@ -278,7 +325,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
     document.body.appendChild(div);
   }
 
-  /* ============== Boot ============== */
+  /* ================= Boot ================= */
   function boot(){
     addStyle();
     try{
