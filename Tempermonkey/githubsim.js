@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ Glass iOS26 + ScriptHub (Full, bold border)
+// @name         GitHub+ Glass iOS26 + ScriptHub (Full, unified glow & border)
 // @namespace    https://mikephie.site/
-// @version      4.0.6
-// @description  iOS26 玻璃条 + 3px 鲜明渐变描边；徽标(单击显隐/双击换主题/长按切尺寸/可拖拽/持久化)；Raw(单击复制/双击打开/长按下载)；DL 真下载；Path|Edit/Cancel 自动切换；Name|Action|Hub 分流；SPA 兼容；移动横滑；初次居中。
+// @version      4.0.8
+// @description  iOS26 玻璃条 + 3px 渐变描边；按钮开启与徽标"同款发光"（conic-gradient + blur）+ 色彩增强；徽标(单击显隐/双击换主题/长按切尺寸/可拖拽/持久化)；Raw(单击复制/双击打开/长按下载)；DL 真下载；Path|Edit/Cancel 自动切换；Name|Action|Hub 分流；SPA 兼容；移动横滑；初次居中。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -22,7 +22,7 @@
     localStorage.setItem(THEME_KEY,name);
   }
 
-  /* ============ 样式（加粗描边 + 更通透玻璃） ============ */
+  /* ============ 样式（统一按钮与徽标的色感与光晕） ============ */
   const STYLE = `
   :root{
     --fg:#fff; --bar-h:56px;
@@ -30,13 +30,13 @@
     /* 默认主题：Neon 渐变描边 */
     --edge1:#ff00ff; --edge2:#00ffff;
 
-    /* 暗色玻璃基底（更通透：降低 alpha） */
+    /* 暗色玻璃基底（通透） */
     --glass-tint: 222 18% 10%;
-    --glass-alpha:.08;               /* ↓ 从 .10 降到 .08 更透 */
+    --glass-alpha:.08;
     --glass-stroke:0 0% 100% / .12;
 
-    /* 按钮内层卡片透明度（更通透） */
-    --card-alpha:.08;                /* ↓ 从 .12 降到 .08 */
+    /* 按钮内层卡片的透明度（通透） */
+    --card-alpha:.08;
 
     --badge-cat:#0b0f17;
   }
@@ -44,14 +44,14 @@
     :root{
       --fg:#171717;
       --glass-tint:0 0% 100%;
-      --glass-alpha:.62;             /* 也略降一点 */
+      --glass-alpha:.62;
       --glass-stroke:0 0% 0% / .12;
       --card-alpha:.16;
       --badge-cat:#eef2ff;
     }
   }
 
-  /* 主题色（6 套） */
+  /* 主题色（与徽标/按钮共享 edge1/edge2） */
   .gplus-theme-neon  { --edge1:#ff00ff; --edge2:#00ffff; }
   .gplus-theme-blue  { --edge1:#60a5fa; --edge2:#22d3ee; }
   .gplus-theme-pink  { --edge1:#f472b6; --edge2:#c084fc; }
@@ -86,7 +86,7 @@
   .gplus-shbar::-webkit-scrollbar{display:none}
   .gplus-hidden{display:none!important}
 
-  /* 按钮：3px 渐变描边 + 半透明内层渐变（更显色） */
+  /* 按钮：3px 渐变描边 + 半透明内层 + 与徽标一致的光晕 */
   .gplus-btn{
     position:relative; display:flex; align-items:center; justify-content:center;
     height:40px; min-width:86px; padding:0 14px;
@@ -94,13 +94,16 @@
     font:700 13px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
     border-radius:14px;
 
-    /* 关键：粗边框 + 双背景 */
-    border:5px solid transparent; /* ← 比 v3.9.3 更粗 */
+    /* 3px 粗边 + 双背景渐变 */
+    border:3px solid transparent;
     background:
       linear-gradient(180deg,
         hsl(var(--glass-tint)/calc(var(--card-alpha)+.05)) 0%,
         hsl(var(--glass-tint)/var(--card-alpha)) 100%) padding-box,
       linear-gradient(135deg,var(--edge1),var(--edge2)) border-box;
+
+    /* 让边框/颜色更鲜艳，和徽标匹配 */
+    filter:saturate(1.4) brightness(1.2);
 
     -webkit-backdrop-filter:blur(16px) saturate(180%);
     backdrop-filter:blur(16px) saturate(180%);
@@ -111,12 +114,18 @@
     transition:transform .08s, box-shadow .2s, opacity .2s, background .2s, filter .2s;
     scroll-snap-align:center;
   }
-  .gplus-btn::after{ display:none }
-  .gplus-btn:hover{ transform:translateY(-1px); filter:saturate(1.06) }
+  /* 统一 Glow：按钮也加同款环形发光（与徽标一致） */
+  .gplus-btn::after{
+    content:""; position:absolute; inset:-4px; border-radius:inherit;
+    background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
+    filter:blur(14px); opacity:.58;  /* 强度可按需调：.45~.75 */
+    z-index:-1; pointer-events:none;
+  }
+  .gplus-btn:hover{ transform:translateY(-1px); filter:saturate(1.5) brightness(1.22) }
   .gplus-btn:active{ transform:scale(.962) }
-  .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25) }
+  .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25) saturate(1) brightness(1); }
 
-  /* 徽标：更亮的光晕，和主题一致 */
+  /* 徽标：与按钮共享 edge1/edge2，Glow 更亮一点 */
   .gplus-badge{
     position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom,0));
     z-index:2147483700;
@@ -133,7 +142,7 @@
   .gplus-badge::after{
     content:""; position:absolute; inset:-4px; border-radius:50%;
     background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
-    filter:blur(14px); opacity:1; z-index:-1; pointer-events:none; /* 更亮更厚实 */
+    filter:blur(14px); opacity:1; z-index:-1; pointer-events:none;
   }
   `;
   document.head.appendChild(Object.assign(document.createElement('style'),{textContent:STYLE}));
