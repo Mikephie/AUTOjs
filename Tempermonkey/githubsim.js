@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ Glass Toolbar · Safe WebKit Build
+// @name         GitHub+ Glass Toolbar · Safe WebKit Build (ultra transparent + fixed badge dblclick)
 // @namespace    https://mikephie.site/
-// @version      3.9.10-safe
-// @description  Bottom glass toolbar (pure-border style, light blur). Fixes WebKit blank-screen by reducing backdrop area & shadows and removing heavy observers.
+// @version      3.9.11-safe
+// @description  Bottom glass toolbar (pure-border, ultra-transparent). Dbl-click badge = switch theme; single-click = show/hide; no cross-trigger. WebKit-friendly.
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -11,9 +11,11 @@
 (() => {
   'use strict';
 
+  /* ================= Theme ================= */
   const THEMES = ['neon','blue','pink','white','green','orange'];
   const LS_THEME = '__gplus_theme__';
 
+  /* ================= CSS ================= */
   const CSS = `
 :root{ --fg:#eaf2ff; --fg-dim:#b7c2d9; --bar-h:62px; --edge1:#ff00ff; --edge2:#00ffff; }
 @media(prefers-color-scheme:light){ :root{ --fg:#0b1220; --fg-dim:#475369; } }
@@ -24,36 +26,36 @@ html.gp-white  { --edge1:#ffffff; --edge2:#ffffff; }
 html.gp-green  { --edge1:#10b981; --edge2:#06b6d4; }
 html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 
-/* shell: 不拦截事件，减少合成层面积 */
+/* 外壳：完全透明，只做模糊（≈>90% 透明效果） */
 .gp-shell{
   position:fixed; left:0; right:0;
   bottom:calc(env(safe-area-inset-bottom,0px));
   z-index:2147483600; height:var(--bar-h);
   pointer-events:none;
-  background:rgba(255,255,255,0.02);
+  background:transparent; /* ultra transparent */
   -webkit-backdrop-filter:blur(12px) saturate(160%);
   backdrop-filter:blur(12px) saturate(160%);
-  border-top:1px solid rgba(255,255,255,0.12);
+  border-top:1px solid rgba(255,255,255,0.08);
 }
 
-/* bar: 真正滚动的容器 */
+/* bar：滚动容器 */
 .gp-bar{
   height:100%; display:flex; align-items:center; justify-content:center;
   gap:10px; padding:0 12px; overflow-x:auto; white-space:nowrap;
   -webkit-overflow-scrolling:touch; scrollbar-width:none;
-  pointer-events:auto; /* 仅按钮可点 */
+  pointer-events:auto;
 }
 .gp-bar::-webkit-scrollbar{ display:none }
 
-/* button: 纯边框 + 微光，避免大面积阴影 */
+/* 纯边框按钮 + 微光 */
 .gp-btn{
   position:relative; display:inline-flex; align-items:center; justify-content:center;
   height:40px; min-width:92px; padding:0 14px; border-radius:16px;
   color:var(--fg); font:700 14px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
-  background:transparent; border:2px solid rgba(255,255,255,0.72);
+  background:transparent; border:2px solid rgba(255,255,255,0.82);
   box-shadow: 0 0 0 1px rgba(255,255,255,0.18),
               0 0 10px var(--edge1),
-              0 0 12px var(--edge2);
+              0 0 14px var(--edge2);
   transition:transform .08s;
   cursor:pointer; user-select:none;
 }
@@ -61,7 +63,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 .gp-btn:active{ transform:scale(.965) }
 .gp-btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
-/* badge */
+/* 徽标（GitHub 猫） */
 .gp-badge{
   position:fixed; right:16px; bottom:calc(var(--bar-h) + 20px + env(safe-area-inset-bottom,0px));
   width:60px; height:60px; border-radius:50%;
@@ -69,7 +71,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   background:transparent;
   -webkit-backdrop-filter:blur(12px) saturate(160%);
   backdrop-filter:blur(12px) saturate(160%);
-  border:2px solid rgba(255,255,255,0.72);
+  border:2px solid rgba(255,255,255,0.82);
   box-shadow: 0 0 0 1px rgba(255,255,255,0.18),
               0 0 12px var(--edge1),
               0 0 16px var(--edge2);
@@ -81,17 +83,17 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 @media (max-width:380px){ .gp-btn{ min-width:84px; font-size:13px; height:38px } }
   `;
 
-  function addStyle() {
-    const s = document.createElement('style');
-    s.textContent = CSS;
-    (document.head || document.documentElement).appendChild(s);
+  function addStyle(){
+    const s=document.createElement('style');
+    s.textContent=CSS;
+    (document.head||document.documentElement).appendChild(s);
   }
 
   function applyTheme(name){
     const html=document.documentElement;
     THEMES.forEach(t=>html.classList.remove('gp-'+t));
     html.classList.add('gp-'+name);
-    try{ localStorage.setItem(LS_THEME, name); }catch{}
+    try{ localStorage.setItem(LS_THEME,name); }catch{}
   }
   function cycleTheme(){
     const curr = localStorage.getItem(LS_THEME) || THEMES[0];
@@ -103,12 +105,15 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   function toast(msg,ms=1200){
     const d=document.createElement('div');
     d.textContent=msg;
-    Object.assign(d.style,{position:'fixed',left:'50%',top:'18px',transform:'translateX(-50%)',
+    Object.assign(d.style,{
+      position:'fixed',left:'50%',top:'18px',transform:'translateX(-50%)',
       background:'rgba(0,0,0,.65)',color:'#fff',padding:'8px 12px',borderRadius:'10px',
-      zIndex:2147483999,font:'12px -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial'});
+      zIndex:2147483999,font:'12px -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial'
+    });
     document.body.appendChild(d); setTimeout(()=>d.remove(),ms);
   }
 
+  /* ============== URL helpers ============== */
   function getRawUrl(){
     const href=location.href.split('#')[0].split('?')[0];
     const clean=location.origin+location.pathname;
@@ -132,6 +137,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
   };
   const inEdit = () => /\/edit\//.test(location.pathname);
 
+  /* ============== Actions ============== */
   async function copyText(t){
     if(!t) return;
     try{ await navigator.clipboard.writeText(t); toast('Copied'); }
@@ -164,14 +170,14 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
     }
     if(text) copyText(text); else toast('Copy failed');
   }
-
   function openHub(){
     const raw=getRawUrl(); if(!raw){ toast('Not a file'); return; }
-    copyText(raw);
+    copyText(raw); // 稳定模式：复制后打开 vercel
     const url=`https://scripthub.vercel.app/?src=${encodeURIComponent(raw)}`;
     try{ window.open(url,'_blank','noopener') || (location.href=url); }catch{ location.href=url; }
   }
 
+  /* ============== UI ============== */
   function buildBar(){
     if(document.querySelector('.gp-shell')) return;
 
@@ -222,7 +228,7 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
 
     document.body.appendChild(shell);
 
-    // 轻量刷新：只在路由变化时同步 Path/Cancel 文案
+    // 轻量刷新：路由变化时同步 Path/Cancel
     const syncLabel = ()=>{
       const b=document.querySelector('.gp-btn[data-key="path"]');
       if(b) b.textContent = inEdit() ? 'Cancel' : 'Path';
@@ -239,21 +245,28 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
     if(document.querySelector('.gp-badge')) return;
     const div=document.createElement('div'); div.className='gp-badge';
     div.innerHTML=`<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.11 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.91.08 2.11.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>`;
-    let last=0;
+
+    // 单击/双击分流：双击优先，取消单击的toggle
+    let clickTimer = null;
     div.addEventListener('click', ()=>{
-      const now=Date.now();
-      if(now-last<300){ cycleTheme(); }
-      else{
+      if(clickTimer) clearTimeout(clickTimer);
+      clickTimer = setTimeout(()=>{
         const shell=document.querySelector('.gp-shell');
         if(shell) shell.classList.toggle('gp-hidden');
-      }
-      last=now;
+        clickTimer = null;
+      }, 260); // 单击延迟
     });
+    div.addEventListener('dblclick', ()=>{
+      if(clickTimer){ clearTimeout(clickTimer); clickTimer=null; }
+      cycleTheme(); // 只切换主题，不再触发隐藏/显示
+    });
+
     document.body.appendChild(div);
   }
 
+  /* ============== Boot ============== */
   function boot(){
-    try{ addStyle(); }catch{}
+    addStyle();
     try{
       const saved = localStorage.getItem(LS_THEME);
       applyTheme(saved && THEMES.includes(saved) ? saved : THEMES[0]);
@@ -262,7 +275,6 @@ html.gp-orange { --edge1:#f97316; --edge2:#facc15; }
     buildBadge();
   }
 
-  // 等待 body（避免"空白页"）
   const tryBoot = ()=> (document.body ? boot() : requestAnimationFrame(tryBoot));
   tryBoot();
 })();
