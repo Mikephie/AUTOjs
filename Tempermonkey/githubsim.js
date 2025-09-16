@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ Glass iOS26 + ScriptHub (Full, unified glow & border)
+// @name         GitHub+ Glass iOS26 + ScriptHub (Full, crisp ring & unified glow)
 // @namespace    https://mikephie.site/
-// @version      4.0.8
-// @description  iOS26 玻璃条 + 3px 渐变描边；按钮开启与徽标"同款发光"（conic-gradient + blur）+ 色彩增强；徽标(单击显隐/双击换主题/长按切尺寸/可拖拽/持久化)；Raw(单击复制/双击打开/长按下载)；DL 真下载；Path|Edit/Cancel 自动切换；Name|Action|Hub 分流；SPA 兼容；移动横滑；初次居中。
+// @version      4.1.0
+// @description  iOS26 玻璃条；按钮改"遮罩环描边"+ 强外发光（与徽标同色）；徽标(单击显隐/双击换主题/长按改尺寸/可拖拽/持久化)；Raw(单击复制/双击打开/长按下载)；DL 真下载；Path|Edit/Cancel 自动切换；Name/Action/Hub 分流；SPA 兼容；移动横滑；初次居中。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -22,21 +22,21 @@
     localStorage.setItem(THEME_KEY,name);
   }
 
-  /* ============ 样式（统一按钮与徽标的色感与光晕） ============ */
+  /* ============ 样式（按钮描边改遮罩环 + 发光更亮） ============ */
   const STYLE = `
   :root{
     --fg:#fff; --bar-h:56px;
 
-    /* 默认主题：Neon 渐变描边 */
+    /* 默认主题：Neon */
     --edge1:#ff00ff; --edge2:#00ffff;
 
-    /* 暗色玻璃基底（通透） */
+    /* 玻璃基底（更通透） */
     --glass-tint: 222 18% 10%;
-    --glass-alpha:.08;
-    --glass-stroke:0 0% 100% / .12;
+    --glass-alpha:.06;            /* ↓ 再降低一点透明蒙层，边框更显眼 */
+    --glass-stroke:0 0% 100% / .10;
 
-    /* 按钮内层卡片的透明度（通透） */
-    --card-alpha:.08;
+    /* 卡片内层透明度（更淡一点） */
+    --card-alpha:.06;
 
     --badge-cat:#0b0f17;
   }
@@ -44,9 +44,9 @@
     :root{
       --fg:#171717;
       --glass-tint:0 0% 100%;
-      --glass-alpha:.62;
-      --glass-stroke:0 0% 0% / .12;
-      --card-alpha:.16;
+      --glass-alpha:.60;
+      --glass-stroke:0 0% 0% / .10;
+      --card-alpha:.14;
       --badge-cat:#eef2ff;
     }
   }
@@ -76,9 +76,9 @@
 
     border-top:1px solid hsl(var(--glass-stroke));
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100%/.18),
+      inset 0 1px 0 hsl(0 0% 100%/.16),
       inset 0 -1px 0 hsl(0 0% 0%/.10),
-      0 -12px 28px rgba(0,0,0,.18);
+      0 -12px 28px rgba(0,0,0,.16);
 
     overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch;
     scrollbar-width:none; scroll-snap-type:x proximity;
@@ -86,46 +86,47 @@
   .gplus-shbar::-webkit-scrollbar{display:none}
   .gplus-hidden{display:none!important}
 
-  /* 按钮：3px 渐变描边 + 半透明内层 + 与徽标一致的光晕 */
+  /* 按钮：遮罩环描边（超清晰）+ 半透明内层 + 强外发光 */
   .gplus-btn{
-    position:relative; display:flex; align-items:center; justify-content:center;
+    position:relative; display:inline-flex; align-items:center; justify-content:center;
     height:40px; min-width:86px; padding:0 14px;
     color:var(--fg);
     font:700 13px/1 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;
     border-radius:14px;
-
-    /* 3px 粗边 + 双背景渐变 */
-    border:3px solid transparent;
-    background:
-      linear-gradient(180deg,
-        hsl(var(--glass-tint)/calc(var(--card-alpha)+.05)) 0%,
-        hsl(var(--glass-tint)/var(--card-alpha)) 100%) padding-box,
-      linear-gradient(135deg,var(--edge1),var(--edge2)) border-box;
-
-    /* 让边框/颜色更鲜艳，和徽标匹配 */
-    filter:saturate(1.4) brightness(1.2);
-
+    border:0;                                        /* 交给遮罩环来画描边 */
+    background: hsl(var(--glass-tint)/var(--card-alpha));
     -webkit-backdrop-filter:blur(16px) saturate(180%);
     backdrop-filter:blur(16px) saturate(180%);
     box-shadow:
-      inset 0 1px 0 hsl(0 0% 100%/.22),
-      0 8px 20px rgba(0,0,0,.22);
+      inset 0 1px 0 hsl(0 0% 100%/.18),
+      0 8px 20px rgba(0,0,0,.18);
     cursor:pointer; user-select:none;
     transition:transform .08s, box-shadow .2s, opacity .2s, background .2s, filter .2s;
     scroll-snap-align:center;
   }
-  /* 统一 Glow：按钮也加同款环形发光（与徽标一致） */
+  /* ::before 做"渐变描边环"（遮罩 XOR 技术，不会被背景吃色） */
+  .gplus-btn::before{
+    content:""; position:absolute; inset:-2px; border-radius:inherit; padding:2px;
+    background:linear-gradient(135deg,var(--edge1),var(--edge2));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;          /* 让中间镂空，保留一圈渐变边 */
+    pointer-events:none;
+  }
+  /* ::after 做统一 Glow（与徽标一致），更亮更粗 */
   .gplus-btn::after{
-    content:""; position:absolute; inset:-4px; border-radius:inherit;
+    content:""; position:absolute; inset:-6px; border-radius:inherit;
     background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
-    filter:blur(14px); opacity:.58;  /* 强度可按需调：.45~.75 */
+    filter:blur(18px); opacity:.78;                /* ↑ 提升亮度和范围 */
     z-index:-1; pointer-events:none;
   }
-  .gplus-btn:hover{ transform:translateY(-1px); filter:saturate(1.5) brightness(1.22) }
+  .gplus-btn:hover{ transform:translateY(-1px) }
   .gplus-btn:active{ transform:scale(.962) }
-  .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25) saturate(1) brightness(1); }
+  .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25); }
 
-  /* 徽标：与按钮共享 edge1/edge2，Glow 更亮一点 */
+  /* 徽标：与按钮同色，Glow 更强一档 */
   .gplus-badge{
     position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom,0));
     z-index:2147483700;
@@ -134,7 +135,7 @@
     -webkit-backdrop-filter:blur(18px) saturate(185%) contrast(1.06);
     backdrop-filter:blur(18px) saturate(185%) contrast(1.06);
     border:1px solid hsl(var(--glass-stroke));
-    box-shadow:inset 0 1px 0 hsl(0 0% 100%/.22), 0 14px 32px rgba(0,0,0,.32);
+    box-shadow:inset 0 1px 0 hsl(0 0% 100%/.20), 0 14px 32px rgba(0,0,0,.30);
     color:var(--edge1); cursor:pointer; user-select:none; transition:transform .15s;
   }
   .gplus-badge:hover{ transform:scale(1.05); }
@@ -142,7 +143,7 @@
   .gplus-badge::after{
     content:""; position:absolute; inset:-4px; border-radius:50%;
     background:conic-gradient(from 0deg,var(--edge1),var(--edge2),var(--edge1));
-    filter:blur(14px); opacity:1; z-index:-1; pointer-events:none;
+    filter:blur(16px); opacity:.95; z-index:-1; pointer-events:none;
   }
   `;
   document.head.appendChild(Object.assign(document.createElement('style'),{textContent:STYLE}));
@@ -245,7 +246,7 @@
     on(bar.querySelector('[data-act="raw"]'),'dblclick',openRaw);
     on(bar.querySelector('[data-act="raw"]'),'contextmenu',e=>{e.preventDefault();downloadRaw();});
     document.body.appendChild(bar);
-    requestAnimationFrame(()=>{ const delta=(bar.scrollWidth-bar.clientWidth)/2; if(delta>0) bar.scrollLeft=delta; });
+    requestAnimationFrame(()=>{ const d=(bar.scrollWidth-bar.clientWidth)/2; if(d>0) bar.scrollLeft=d; });
   }
 
   /* ============ 徽标（拖拽/单击显隐/双击换主题/长按尺寸） ============ */
@@ -275,7 +276,6 @@
     }
     applyBadgeSize(size);
 
-    const barEl = ()=>$('.gplus-shbar');
     let dragging=false,moved=false,sx=0,sy=0,startR=0,startB=0,downAt=0,lastTap=0;
     let longTimer=null,longTriggered=false,singleTimer=null;
     const TAP_MS=250, DBL_MS=300, MOVE_PX=6, LONG_MS=600;
@@ -289,9 +289,9 @@
       sx=e.clientX; sy=e.clientY;
       const rect=badge.getBoundingClientRect();
       startR=window.innerWidth-rect.right; startB=window.innerHeight-rect.bottom;
-      clearLong(); clearSingle(); longTimer=setTimeout(longFire,LONG_MS);
       if(badge.setPointerCapture && ev.pointerId!=null) badge.setPointerCapture(ev.pointerId);
       ev.preventDefault();
+      clearLong(); clearSingle(); longTimer=setTimeout(longFire,LONG_MS);
     }
     function onMove(ev){
       if(!dragging) return;
@@ -314,7 +314,7 @@
         applyTheme(next); toast('Theme: '+next); lastTap=0;
       }else{
         clearSingle();
-        singleTimer=setTimeout(()=>{ const el=barEl(); if(el) el.classList.toggle('gplus-hidden'); }, DBL_MS+10);
+        singleTimer=setTimeout(()=>{ const el=$('.gplus-shbar'); if(el) el.classList.toggle('gplus-hidden'); }, DBL_MS+10);
         lastTap=now;
       }
     }
