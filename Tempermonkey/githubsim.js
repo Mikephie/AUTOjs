@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         GitHub+ ScriptHub Glass Bar (3.8.9 badge long-press size, six themes + Octocat badge, full)
+// @name         GitHub+ ScriptHub Glass Bar (v3.9.0)
 // @namespace    https://mikephie.site/
-// @version      3.9.2
-// @description  底部超薄玻璃条（文件页启用/目录禁用）；Raw(单击复制/双击Raw/长按下载) · DL · Path · Edit/Cancel · Name · Action · Hub 分流；Octocat 圆形徽标：可拖拽、单击显隐、双击切主题、长按切换大小(56/76/90，持久化)；六种主题；SPA 兼容、去抖、初次居中。
+// @version      4.0.0
+// @description  底部超薄玻璃条（文件页启用/目录禁用）；Raw(单击复制/双击Raw/长按下载) · DL · Path · Edit/Cancel · Name · Action · Hub 分流；Octocat 圆形徽标：渐变光环、可拖拽、单击显隐、双击换主题、长按切换大小(56/76/90，持久化)；六种主题；SPA 兼容、去抖、初次居中。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
 // @run-at       document-end
@@ -86,7 +86,7 @@
   .gplus-btn[disabled]{ opacity:.45; cursor:not-allowed; filter:grayscale(.25) }
   .gplus-btn[disabled]::after{ opacity:.25 }
 
-  /* Octocat 圆形徽标（尺寸由 JS 动态设置，初始使用持久化值） */
+  /* Octocat 圆形徽标（渐变光环；尺寸由 JS 动态设置，初始用持久化值） */
   .gplus-badge{
     position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom,0));
     z-index:2147483700;
@@ -102,6 +102,12 @@
   }
   .gplus-badge:hover{ transform:scale(1.05); }
   .gplus-badge svg{ display:block; }
+  /* 渐变光环（与按钮一致） */
+  .gplus-badge::after{
+    content:""; position:absolute; inset:-3px; border-radius:50%;
+    background:conic-gradient(from 0deg, var(--edge1), var(--edge2), var(--edge1));
+    filter:blur(10px); opacity:.9; z-index:-1; pointer-events:none;
+  }
   `;
   document.head.appendChild(Object.assign(document.createElement('style'), { textContent: STYLE }));
 
@@ -224,7 +230,7 @@
     });
   }
 
-  /* ================== 徽标（Octocat 圆标：拖拽 / 单击显隐 / 双击切主题 / 长按切换尺寸） ================== */
+  /* ================== 徽标（拖拽 / 单击显隐 / 双击切主题 / 长按切换尺寸） ================== */
   function ensureBadge(){
     if(document.querySelector('.gplus-badge')) return;
 
@@ -247,7 +253,7 @@
 
     // ---- 尺寸持久化 & 应用 ---- //
     const SIZE_KEY = 'gplus_badge_size';
-    const SIZES = [56, 76, 90]; // px（外层宽高）
+    const SIZES = [56, 76, 90]; // px
     let size = parseInt(localStorage.getItem(SIZE_KEY) || SIZES[1], 10);
     if(!SIZES.includes(size)) size = SIZES[1];
     function applyBadgeSize(px){
@@ -263,23 +269,22 @@
 
     const bar = () => document.querySelector('.gplus-shbar');
 
-    // ---- 手势：拖拽 + 单击显隐 + 双击切主题 + 长按切换尺寸（600ms，与 Raw 长按一致）----
+    // ---- 手势：拖拽 + 单击显隐(延时) + 双击切主题 + 长按切换尺寸（600ms）----
     let dragging=false, moved=false;
     let sx=0, sy=0, startRight=0, startBottom=0, downAt=0, lastTap=0;
-    let longTimer=null, longTriggered=false;
+    let longTimer=null, longTriggered=false, singleTimer=null;
     const TAP_MS=250, DBL_MS=300, MOVE_PX=6, LONG_MS=600;
 
     function longPressFire(){
       longTriggered = true;
-      // 切换尺寸：56 -> 76 -> 90 -> …
       const idx = SIZES.indexOf(size);
       size = SIZES[(idx + 1) % SIZES.length];
       localStorage.setItem(SIZE_KEY, String(size));
       applyBadgeSize(size);
       toast('Badge size: ' + size + 'px');
     }
-
-    function clearLongTimer(){ if(longTimer){ clearTimeout(longTimer); longTimer=null; } }
+    function clearLong(){ if(longTimer){ clearTimeout(longTimer); longTimer=null; } }
+    function clearSingle(){ if(singleTimer){ clearTimeout(singleTimer); singleTimer=null; } }
 
     function onDown(ev){
       const e=(ev.touches&&ev.touches[0])||ev;
@@ -288,7 +293,8 @@
       const rect=badge.getBoundingClientRect();
       startRight = window.innerWidth  - rect.right;
       startBottom= window.innerHeight - rect.bottom;
-      clearLongTimer(); longTimer = setTimeout(longPressFire, LONG_MS);
+      clearLong(); clearSingle();
+      longTimer = setTimeout(longPressFire, LONG_MS);
       if(badge.setPointerCapture && ev.pointerId!=null) badge.setPointerCapture(ev.pointerId);
       ev.preventDefault();
     }
@@ -297,30 +303,36 @@
       const e=(ev.touches&&ev.touches[0])||ev;
       const dx=e.clientX-sx, dy=e.clientY-sy;
       if(Math.abs(dx)+Math.abs(dy)>MOVE_PX) moved=true;
-      // 一旦移动明显，取消长按定时
-      if(moved) clearLongTimer();
+      if(moved) clearLong(); // 移动后不触发长按
       badge.style.right  = Math.max(6, startRight - dx) + 'px';
       badge.style.bottom = Math.max(6, startBottom - dy) + 'px';
     }
     function onUp(){
       if(!dragging) return; dragging=false;
-      clearLongTimer();
-      if(longTriggered){ // 已经长按触发：吞掉点击/双击
-        return;
-      }
+      clearLong();
+
+      // 长按已触发：吞掉单/双击
+      if(longTriggered){ clearSingle(); return; }
+
       const isTap = !moved && (performance.now() - downAt < TAP_MS);
-      if(isTap){
-        const now = performance.now();
-        if(now - lastTap < DBL_MS){
-          const cur = getTheme();
-          const next = THEMES[(THEMES.indexOf(cur)+1)%THEMES.length];
-          applyTheme(next);
-          toast('Theme: '+next);
-          lastTap = 0;
-        }else{
+      if(!isTap){ clearSingle(); return; }
+
+      const now = performance.now();
+      // 双击：取消单击定时，直接换主题
+      if(now - lastTap < DBL_MS){
+        clearSingle();
+        const cur = getTheme();
+        const next = THEMES[(THEMES.indexOf(cur)+1)%THEMES.length];
+        applyTheme(next);
+        toast('Theme: ' + next);
+        lastTap = 0;
+      }else{
+        // 单击：延迟到 DBL_MS 后执行（如果期间再点一次会被取消）
+        clearSingle();
+        singleTimer = setTimeout(()=>{
           const el = bar(); if(el) el.classList.toggle('gplus-hidden');
-          lastTap = now;
-        }
+        }, DBL_MS + 10);
+        lastTap = now;
       }
     }
 
