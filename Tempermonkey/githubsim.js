@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub+ Glass iOS26 + ScriptHub (Full, bold border)
 // @namespace    https://mikephie.site/
-// @version      4.0.5
+// @version      4.0.6
 // @description  iOS26 玻璃条 + 3px 鲜明渐变描边；徽标(单击显隐/双击换主题/长按切尺寸/可拖拽/持久化)；Raw(单击复制/双击打开/长按下载)；DL 真下载；Path|Edit/Cancel 自动切换；Name|Action|Hub 分流；SPA 兼容；移动横滑；初次居中。
 // @match        https://github.com/*
 // @match        https://raw.githubusercontent.com/*
@@ -95,7 +95,7 @@
     border-radius:14px;
 
     /* 关键：粗边框 + 双背景 */
-    border:3px solid transparent; /* ← 比 v3.9.3 更粗 */
+    border:5px solid transparent; /* ← 比 v3.9.3 更粗 */
     background:
       linear-gradient(180deg,
         hsl(var(--glass-tint)/calc(var(--card-alpha)+.05)) 0%,
