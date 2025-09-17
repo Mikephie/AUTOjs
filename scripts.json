@@ -1,10 +1,10 @@
 {
-  "generatedTime": "2025-09-16T03:28:58.068Z",
+  "generatedTime": "2025-09-17T03:27:16.126Z",
   "scripts": [
     {
       "name": "RevenueCatNew",
       "filename": "RevenueCatNew.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/RevenueCatNew.js",
         "quantumultx": "quantumultx/RevenueCatNew.js",
@@ -15,7 +15,7 @@
     {
       "name": "adblockpro",
       "filename": "adblockpro.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/adblockpro.js",
         "quantumultx": "quantumultx/adblockpro.js",
@@ -26,7 +26,7 @@
     {
       "name": "aimirror",
       "filename": "aimirror.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/aimirror.js",
         "quantumultx": "quantumultx/aimirror.js",
@@ -37,7 +37,7 @@
     {
       "name": "aloha",
       "filename": "aloha.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/aloha.js",
         "quantumultx": "quantumultx/aloha.js",
@@ -48,7 +48,7 @@
     {
       "name": "appraven",
       "filename": "appraven.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/appraven.js",
         "quantumultx": "quantumultx/appraven.js",
@@ -59,7 +59,7 @@
     {
       "name": "axs",
       "filename": "axs.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/axs.js",
         "quantumultx": "quantumultx/axs.js",
@@ -70,7 +70,7 @@
     {
       "name": "bizhi",
       "filename": "bizhi.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/bizhi.js",
         "quantumultx": "quantumultx/bizhi.js",
@@ -81,7 +81,7 @@
     {
       "name": "bksyds",
       "filename": "bksyds.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/bksyds.js",
         "quantumultx": "quantumultx/bksyds.js",
@@ -92,7 +92,7 @@
     {
       "name": "bzg",
       "filename": "bzg.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/bzg.js",
         "quantumultx": "quantumultx/bzg.js",
@@ -103,7 +103,7 @@
     {
       "name": "caiyun",
       "filename": "caiyun.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/caiyun.js",
         "quantumultx": "quantumultx/caiyun.js",
@@ -114,7 +114,7 @@
     {
       "name": "classdojo",
       "filename": "classdojo.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.468Z",
       "formats": {
         "original": "input/classdojo.js",
         "quantumultx": "quantumultx/classdojo.js",
@@ -125,7 +125,7 @@
     {
       "name": "duetdisplaypro",
       "filename": "duetdisplaypro.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/duetdisplaypro.js",
         "quantumultx": "quantumultx/duetdisplaypro.js",
@@ -136,7 +136,7 @@
     {
       "name": "felo",
       "filename": "felo.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/felo.js",
         "quantumultx": "quantumultx/felo.js",
@@ -147,7 +147,7 @@
     {
       "name": "filmix",
       "filename": "filmix.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/filmix.js",
         "quantumultx": "quantumultx/filmix.js",
@@ -158,7 +158,7 @@
     {
       "name": "github",
       "filename": "github.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/github.js",
         "quantumultx": "quantumultx/github.js",
@@ -169,7 +169,7 @@
     {
       "name": "grammarly",
       "filename": "grammarly.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/grammarly.js",
         "quantumultx": "quantumultx/grammarly.js",
@@ -180,7 +180,7 @@
     {
       "name": "hbqj",
       "filename": "hbqj.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/hbqj.js",
         "quantumultx": "quantumultx/hbqj.js",
@@ -191,7 +191,7 @@
     {
       "name": "hljx",
       "filename": "hljx.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/hljx.js",
         "quantumultx": "quantumultx/hljx.js",
@@ -202,7 +202,7 @@
     {
       "name": "iTunesdynamic",
       "filename": "iTunesdynamic.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/iTunesdynamic.js",
         "quantumultx": "quantumultx/iTunesdynamic.js",
@@ -213,7 +213,7 @@
     {
       "name": "igv",
       "filename": "igv.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/igv.js",
         "quantumultx": "quantumultx/igv.js",
@@ -224,7 +224,7 @@
     {
       "name": "ilovepdf",
       "filename": "ilovepdf.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/ilovepdf.js",
         "quantumultx": "quantumultx/ilovepdf.js",
@@ -235,7 +235,7 @@
     {
       "name": "ime",
       "filename": "ime.js",
-      "updateTime": "2025-09-16T03:28:50.302Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/ime.js",
         "quantumultx": "quantumultx/ime.js",
@@ -246,7 +246,7 @@
     {
       "name": "migumusic",
       "filename": "migumusic.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/migumusic.js",
         "quantumultx": "quantumultx/migumusic.js",
@@ -257,7 +257,7 @@
     {
       "name": "myshiftplanner",
       "filename": "myshiftplanner.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/myshiftplanner.js",
         "quantumultx": "quantumultx/myshiftplanner.js",
@@ -268,7 +268,7 @@
     {
       "name": "notebook",
       "filename": "notebook.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/notebook.js",
         "quantumultx": "quantumultx/notebook.js",
@@ -279,7 +279,7 @@
     {
       "name": "owlfiles",
       "filename": "owlfiles.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/owlfiles.js",
         "quantumultx": "quantumultx/owlfiles.js",
@@ -290,7 +290,7 @@
     {
       "name": "qqjsq",
       "filename": "qqjsq.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/qqjsq.js",
         "quantumultx": "quantumultx/qqjsq.js",
@@ -301,7 +301,7 @@
     {
       "name": "qqyd",
       "filename": "qqyd.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/qqyd.js",
         "quantumultx": "quantumultx/qqyd.js",
@@ -312,7 +312,7 @@
     {
       "name": "redditpremium",
       "filename": "redditpremium.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/redditpremium.js",
         "quantumultx": "quantumultx/redditpremium.js",
@@ -323,7 +323,7 @@
     {
       "name": "ringtonemaker",
       "filename": "ringtonemaker.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/ringtonemaker.js",
         "quantumultx": "quantumultx/ringtonemaker.js",
@@ -334,7 +334,7 @@
     {
       "name": "syb",
       "filename": "syb.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/syb.js",
         "quantumultx": "quantumultx/syb.js",
@@ -345,7 +345,7 @@
     {
       "name": "toonme",
       "filename": "toonme.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/toonme.js",
         "quantumultx": "quantumultx/toonme.js",
@@ -356,7 +356,7 @@
     {
       "name": "tpzwz",
       "filename": "tpzwz.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/tpzwz.js",
         "quantumultx": "quantumultx/tpzwz.js",
@@ -367,7 +367,7 @@
     {
       "name": "wall",
       "filename": "wall.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.469Z",
       "formats": {
         "original": "input/wall.js",
         "quantumultx": "quantumultx/wall.js",
@@ -378,7 +378,7 @@
     {
       "name": "yinbiao",
       "filename": "yinbiao.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.470Z",
       "formats": {
         "original": "input/yinbiao.js",
         "quantumultx": "quantumultx/yinbiao.js",
@@ -389,7 +389,7 @@
     {
       "name": "yygdsc",
       "filename": "yygdsc.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.470Z",
       "formats": {
         "original": "input/yygdsc.js",
         "quantumultx": "quantumultx/yygdsc.js",
@@ -400,7 +400,7 @@
     {
       "name": "zypg",
       "filename": "zypg.js",
-      "updateTime": "2025-09-16T03:28:50.303Z",
+      "updateTime": "2025-09-17T03:27:10.470Z",
       "formats": {
         "original": "input/zypg.js",
         "quantumultx": "quantumultx/zypg.js",
