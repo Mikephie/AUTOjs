@@ -78,7 +78,7 @@ WidgetMetadata = {
                         },
                         {
                             title: "OTT-IPTV",
-                            value: "https://sub.ottiptv.cc/iptv.m3u"
+                            value: "https://mursor.ottiptv.cc/iptv.m3u?userid=812526739&sign=10ec5f50e1c4f9ae2d306f3f0e6514dcf6a0d8642a8d6815a9513a1984bc7c75d1f8d0b833775d5f15482c291555e2a9d79ec228aab5cd3afdb6f89ff23150aa78324927f205&auth_token=5001e296b46ab98b3bc7c4f45eb8e359"
                         },
                         {
                             title: "OTT-虎牙清晰",
