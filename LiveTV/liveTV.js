@@ -17,16 +17,16 @@ WidgetMetadata = {
                     description: "输入直播订阅链接地址",
                     placeholders: [
                         {
-                            title: "Sport",
-                            value: "https://tv-1.iill.top/m3u/Sport"
+                            title: "YanG-1989-Sport",
+                            value: "https://tv.iill.top/m3u/Sport"
+                        },
+                        {
+                            title: "YanG-1989-IPTV",
+                            value: "https://tv.iill.top/m3u/Gather"
                         },
                         {
                             title: "风云TV",
                             value: "http://iptv.4666888.xyz/FYTV.m3u"
-                        },
-                        {
-                            title: "Gather",
-                            value: "https://tv-1.iill.top/m3u/Gather"
                         },
                         {
                             title: "Kimentanm",
@@ -39,14 +39,6 @@ WidgetMetadata = {
                         {
                             title: "smart(港澳台)",
                             value: "https://smart.pendy.dpdns.org/m3u/merged_judy.m3u"
-                        },
-                        {
-                            title: "YanG-Gather1",
-                            value: "https://tv.iill.top/m3u/Gather"
-                        },
-                        {
-                            title: "YanG-Gather2",
-                            value: "https://raw.githubusercontent.com/YanG-1989/m3u/main/Gather.m3u"
                         },
                         {
                             title: "suxuang",
@@ -78,7 +70,7 @@ WidgetMetadata = {
                         },
                         {
                             title: "OTT-IPTV",
-                            value: "https://mursor.ottiptv.cc/iptv.m3u?userid=812526739&sign=10ec5f50e1c4f9ae2d306f3f0e6514dcf6a0d8642a8d6815a9513a1984bc7c75d1f8d0b833775d5f15482c291555e2a9d79ec228aab5cd3afdb6f89ff23150aa78324927f205&auth_token=5001e296b46ab98b3bc7c4f45eb8e359"
+                            value: "https://live.ottiptv.cc/iptv.m3u?userid=812526739&sign=546b80f6e51bb0b466d1e27cc9aa9be422b5b52335322cd05567761bbe25beee6f604c0f3d026c4d96bc399282414590999fe0cd37028cdafbe77a1953624b7ce00e8f24a7b4&auth_token=5666378875345aefcac0cf54913626d8"
                         },
                         {
                             title: "OTT-虎牙清晰",
@@ -177,7 +169,7 @@ WidgetMetadata = {
             ]
         }
     ],
-    version: "2.5.0",
+    version: "2.6.0",
     requiredVersion: "0.0.1",
     description: "解析直播订阅",
     author: "MIKEPHIE",
