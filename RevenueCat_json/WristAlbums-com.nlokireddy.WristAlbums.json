@@ -1,0 +1,48 @@
+{
+  "user_agent": "WristAlbums",
+  "bundle_id": "com.nlokireddy.WristAlbums",
+  "data": {
+    "wvp_1999_1y": {
+      "entitlements": [
+        "wvp.premium"
+      ],
+      "product_identifier": "wvp_1999_1y"
+    },
+    "wvp_1999_1y_3d0": {
+      "entitlements": [
+        "wvp.premium"
+      ],
+      "product_identifier": "wvp_1999_1y_3d0"
+    },
+    "wvp_399_1w": {
+      "entitlements": [
+        "wvp.premium"
+      ],
+      "product_identifier": "wvp_399_1w"
+    },
+    "wvp_399_1w_3d0": {
+      "entitlements": [
+        "wvp.premium"
+      ],
+      "product_identifier": "wvp_399_1w_3d0"
+    },
+    "wvp_999_1m": {
+      "entitlements": [
+        "wvp.premium"
+      ],
+      "product_identifier": "wvp_999_1m"
+    },
+    "wvp_999_1m_3d0": {
+      "entitlements": [
+        "wvp.premium"
+      ],
+      "product_identifier": "wvp_999_1m_3d0"
+    },
+    "wvp_lifetime": {
+      "entitlements": [
+        "wvp.premium"
+      ],
+      "product_identifier": "wvp_lifetime"
+    }
+  }
+}
