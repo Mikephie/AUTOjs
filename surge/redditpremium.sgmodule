@@ -5,7 +5,7 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/reddit.png
 
 [Script]
-redditpremium = type=http-response, pattern=^https?:\/\/gql-fed\.reddit\.com\/$, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, timeout=60
+redditpremium = type=http-response, pattern=^https?:\/\/gql(-fed)?\.reddit\.com\/.*, requires-body=1, script-path=https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js, timeout=60
 
 [MITM]
 hostname = %APPEND% gql-fed.reddit.com
