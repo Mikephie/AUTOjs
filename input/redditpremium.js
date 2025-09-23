@@ -9,67 +9,80 @@
 ^https?:\/\/gql-fed\.reddit\.com\/$ url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/redditpremium.js
 
 [MITM]
-hostname = gql.reddit.com, gql-fed.reddit.com
+hostname = gql-fed.reddit.com
 
  */
 
-// =====================================
-// 请求阶段：提取 GraphQL 的 operationName
-const opName = $request?.body?.operationName || '';
+// reddit-unlock-and-adtrim.clean.js
+// 等效于你贴的混淆脚本：先字符串替换翻转标志，再解析并做数组级广告过滤
+(() => {
+  'use strict';
 
-// =====================================
-// 主逻辑
-let body;
+  const get = (o, k) => (o && k in o ? o[k] : undefined);
+  const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
 
-if (/Ads/i.test(opName)) {
-  // 如果是 Ads 相关请求，直接返回空 JSON
-  $done({ body: '{}' });
-} else {
   try {
-    // step1: 把 response body 转换为 JSON 并替换一些字段
-    body = JSON.parse(
-      $response.body
-        .replace(/"isObfuscated":true/g, '"isObfuscated":false')
-        .replace(/"obfuscatedPath":"[^"]*"/g, '"obfuscatedPath":null')
-        .replace(/"isNsfw":true/g, '"isNsfw":false')
-        .replace(/"isAdPersonalizationAllowed":true/g, '"isAdPersonalizationAllowed":false')
-        .replace(/"isThirdPartyInfoAdPersonalizationAllowed":true/g, '"isThirdPartyInfoAdPersonalizationAllowed":false')
-        .replace(/"isNsfwMediaBlocked":true/g, '"isNsfwMediaBlocked":false')
-        .replace(/"isNsfwContentShown":true/g, '"isNsfwContentShown":false')
-        .replace(/"isPremiumMember":false/g, '"isPremiumMember":true')
-        .replace(/"isEmployee":false/g, '"isEmployee":true')
-    );
+    // 1) 早退拦截: operationName 含 "Ads" 的查询直接短路
+    const opName = $request?.body ? (() => {
+      try { return JSON.parse($request.body)?.operationName || ''; } catch { return ''; }
+    })() : '';
+    if (/Ads/i.test(opName)) return $done({ body: '{}' });
 
-    // step2: 遍历 data，处理 timeline/edges
-    const data = body.data ?? {};
-    Object.keys(data).forEach(key => {
-      const edges = data[key]?.timeline?.edges;
-      if (!Array.isArray(edges)) return;
+    // 2) 先对原始文本做"字符串替换"翻转标志，再解析 JSON
+    let txt = $response?.body || '';
+    if (!txt) return $done({});
 
-      // 过滤掉广告相关的节点
-      data[key].timeline.edges = edges.filter(({ node }) => {
-        if (!node) return true;
+    txt = txt
+      .replace(/"isObfuscated":true/g, '"isObfuscated":false')
+      .replace(/"obfuscatedPath":"[^"]*"/g, '"obfuscatedPath":null')
+      .replace(/"isNsfw":true/g, '"isNsfw":false')
+      .replace(/"isNsfwMediaBlocked":true/g, '"isNsfwMediaBlocked":false')
+      .replace(/"isNsfwContentShown":false/g, '"isNsfwContentShown":true') // 显示 NSFW
+      .replace(/"isAdPersonalizationAllowed":true/g, '"isAdPersonalizationAllowed":false')
+      .replace(/"isThirdPartyInfoAdPersonalizationAllowed":true/g, '"isThirdPartyInfoAdPersonalizationAllowed":false')
+      .replace(/"isPremiumMember":false/g, '"isPremiumMember":true') // 伪装会员
+      .replace(/"isEmployee":false/g, '"isEmployee":true');          // 伪装员工（更少广告）
 
-        // __typename === "Ad" → 过滤
-        if (node.__typename === 'Ad') return false;
+    const body = JSON.parse(txt);
 
-        // 有 adPayload → 过滤
-        if (node.adPayload) return false;
+    // 3) 针对 feed 数组做"只过滤广告元素"的安全处理
+    //    （为了兼容不同接口，这里找数组更宽松；你原脚本只在某一处命中）
+    function looksLikeAd(node) {
+      if (!isObj(node)) return false;
+      if (node.__typename === 'AdPost') return true;
+      if (isObj(node.adPayload)) return true;
+      if (Array.isArray(node.cells) && node.cells.some(c => c && c.__typename === 'AdMetadataCell')) return true;
+      return false;
+    }
 
-        // cells 里存在广告 → 过滤
-        if (Array.isArray(node.cells)) {
-          return !node.cells.some(c => c?.__typename === 'Ad');
+    function filterArrays(obj) {
+      if (Array.isArray(obj)) {
+        return obj
+          .filter(item => {
+            // 兼容形如 { node: {...} } 的元素
+            const n = isObj(item?.node) ? item.node : item;
+            return !looksLikeAd(n);
+          })
+          .map(filterArrays);
+      }
+      if (!isObj(obj)) return obj;
+      const out = {};
+      for (const [k, v] of Object.entries(obj)) {
+        // 只对常见承载列表的字段进行数组过滤，避免误删父节点
+        if (Array.isArray(v) && ['items', 'edges', 'cells', 'children', 'posts', 'elements'].includes(k)) {
+          out[k] = filterArrays(v);
+        } else {
+          out[k] = filterArrays(v);
         }
+      }
+      return out;
+    }
 
-        return true;
-      });
-    });
+    const cleaned = filterArrays(body);
 
-    // step3: 再转回字符串
-    body = JSON.stringify(body);
-  } catch (err) {
-    console.log('[RedditCleaner][Error]', err);
-  } finally {
-    $done(body ? { body } : {});
+    return $done({ body: JSON.stringify(cleaned) });
+  } catch (e) {
+    console.log('[reddit clean] error:', String(e));
+    return $done({}); // 失败放行
   }
-}
+})();
