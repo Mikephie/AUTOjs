@@ -6,83 +6,162 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/reddit.png
 𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [rewrite_local]
-^https?:\/\/gql(-fed)?\.reddit\.com\/.* url script-response-body https://raw.githubusercontent.com/Mikephie/AUTOjs/main/quantumultx/redditpremium.js
+^https?:\/\/gql(-fed)?\.reddit\.com\/.* url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/redditpremium.js
 
 [MITM]
-hostname = gql-fed.reddit.com
+hostname = gql.reddit.com, gql-fed.reddit.com
+
 
  */
 
-// reddit-unlock-and-adtrim.clean.js
-// 等效于你贴的混淆脚本：先字符串替换翻转标志，再解析并做数组级广告过滤
+// reddit-premium-and-adtrim.js
+// 合并版（稳妥）----会员伪装 + 安全去广告（数组级过滤）
+// 注意：把 raw 链接指向此文件，并确保 MITM 包含 gql.reddit.com, gql-fed.reddit.com
+
 (() => {
   'use strict';
 
-  const get = (o, k) => (o && k in o ? o[k] : undefined);
   const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+  const safeParse = s => { try { return JSON.parse(s); } catch { return null; } };
+  const safeStringify = o => { try { return JSON.stringify(o); } catch { return null; } };
+
+  // 可选调试：开启后在重写日志里会看到 hook 信息（部署后可注释掉）
+  const DEBUG = false;
+  function dbg(...args) { if (DEBUG && typeof console !== 'undefined') console.log('[reddit-merge]', ...args); }
 
   try {
-    // 1) 早退拦截: operationName 含 "Ads" 的查询直接短路
-    const opName = $request?.body ? (() => {
-      try { return JSON.parse($request.body)?.operationName || ''; } catch { return ''; }
-    })() : '';
-    if (/Ads/i.test(opName)) return $done({ body: '{}' });
+    // 1) 尝试从 $request.body 读取 operationName（仅在存在时判断）
+    let reqOp = '';
+    try {
+      if (typeof $request !== 'undefined' && $request && $request.body) {
+        const rb = safeParse($request.body);
+        if (rb && typeof rb.operationName === 'string') reqOp = rb.operationName;
+      }
+    } catch (e) { /* ignore */ }
+    if (reqOp && /Ads/i.test(reqOp)) {
+      dbg('short-circuit by operationName', reqOp);
+      return $done({ body: '{}' }); // 若你不想短路，请把这行注释掉
+    }
 
-    // 2) 先对原始文本做"字符串替换"翻转标志，再解析 JSON
-    let txt = $response?.body || '';
-    if (!txt) return $done({});
+    // 2) 获取响应文本
+    let raw = typeof $response !== 'undefined' && $response && $response.body ? String($response.body) : '';
+    if (!raw) {
+      dbg('no response body, pass through');
+      return $done({});
+    }
 
-    txt = txt
-      .replace(/"isObfuscated":true/g, '"isObfuscated":false')
-      .replace(/"obfuscatedPath":"[^"]*"/g, '"obfuscatedPath":null')
-      .replace(/"isNsfw":true/g, '"isNsfw":false')
-      .replace(/"isNsfwMediaBlocked":true/g, '"isNsfwMediaBlocked":false')
-      .replace(/"isNsfwContentShown":false/g, '"isNsfwContentShown":true') // 显示 NSFW
-      .replace(/"isAdPersonalizationAllowed":true/g, '"isAdPersonalizationAllowed":false')
-      .replace(/"isThirdPartyInfoAdPersonalizationAllowed":true/g, '"isThirdPartyInfoAdPersonalizationAllowed":false')
-      .replace(/"isPremiumMember":false/g, '"isPremiumMember":true') // 伪装会员
-      .replace(/"isEmployee":false/g, '"isEmployee":true');          // 伪装员工（更少广告）
+    // 3) 尝试做安全的字符串替换（用 try/catch 包裹，失败则继续）
+    try {
+      // 宽松匹配（允许空格）
+      raw = raw
+        .replace(/"isObfuscated"\s*:\s*true/g, '"isObfuscated":false')
+        .replace(/"obfuscatedPath"\s*:\s*"[^"]*"/g, '"obfuscatedPath":null')
+        .replace(/"isNsfw"\s*:\s*true/g, '"isNsfw":false')
+        .replace(/"isNsfwMediaBlocked"\s*:\s*true/g, '"isNsfwMediaBlocked":false')
+        .replace(/"isNsfwContentShown"\s*:\s*false/g, '"isNsfwContentShown":true')
+        .replace(/"isAdPersonalizationAllowed"\s*:\s*true/g, '"isAdPersonalizationAllowed":false')
+        .replace(/"isThirdPartyInfoAdPersonalizationAllowed"\s*:\s*true/g, '"isThirdPartyInfoAdPersonalizationAllowed":false')
+        .replace(/"isPremiumMember"\s*:\s*false/g, '"isPremiumMember":true')
+        .replace(/"isEmployee"\s*:\s*false/g, '"isEmployee":true');
+    } catch (e) {
+      dbg('replace error', String(e));
+    }
 
-    const body = JSON.parse(txt);
+    // 4) 解析 JSON（失败则放行原响应）
+    const bodyObj = safeParse(raw);
+    if (!bodyObj) {
+      dbg('json parse failed, pass through original');
+      return $done({}); // 不修改，放行
+    }
 
-    // 3) 针对 feed 数组做"只过滤广告元素"的安全处理
-    //    （为了兼容不同接口，这里找数组更宽松；你原脚本只在某一处命中）
-    function looksLikeAd(node) {
-      if (!isObj(node)) return false;
-      if (node.__typename === 'AdPost') return true;
-      if (isObj(node.adPayload)) return true;
-      if (Array.isArray(node.cells) && node.cells.some(c => c && c.__typename === 'AdMetadataCell')) return true;
+    // 5) 伪装会员：遍历并修改已存在字段
+    const premiumBoolKeys = new Set([
+      'isPremium','isPremiumMember','isPremiumSubscriber','hasPremium','hasGold','isGold',
+      'userIsGold','userIsPremium','has_premium','has_gold','is_gold','user_is_premium',
+      'user_is_gold','subscriber','isEmployee','userIsSubscriber','goldSubscribed','isAdFree'
+    ]);
+    const premiumStringKeys = new Set(['goldStatus','premiumStatus','subscriptionStatus','membershipStatus']);
+
+    function walkPatchPremium(node) {
+      if (Array.isArray(node)) {
+        for (const v of node) if (isObj(v) || Array.isArray(v)) walkPatchPremium(v);
+        return;
+      }
+      if (!isObj(node)) return;
+      for (const k of Object.keys(node)) {
+        const v = node[k];
+        // 先递归
+        if (isObj(v) || Array.isArray(v)) walkPatchPremium(v);
+
+        if (typeof v === 'boolean' && premiumBoolKeys.has(k)) node[k] = true;
+        if (typeof v === 'boolean' && ['shouldSeeAds','showsAds','shows_ad','shows_ads'].includes(k)) node[k] = false;
+        if (k === 'features' && isObj(v)) {
+          if (typeof v.adsDisabled === 'boolean') v.adsDisabled = true;
+          if (typeof v.adFree === 'boolean') v.adFree = true;
+          if (isObj(v.specialMemberships)) {
+            for (const s of Object.keys(v.specialMemberships)) {
+              if (typeof v.specialMemberships[s] === 'boolean' && v.specialMemberships[s] === false) v.specialMemberships[s] = true;
+            }
+          }
+        }
+        if (typeof v === 'string' && premiumStringKeys.has(k)) node[k] = 'active';
+      }
+    }
+
+    // 6) 安全去广告：数组级别过滤
+    function looksLikeAd(el) {
+      if (!isObj(el)) return false;
+      const t = String(el.__typename || '').toLowerCase();
+      if (['ad','adpost','admetadata','adportalpost','promotedpost','feedad'].includes(t)) return true;
+      if (el.promoted === true) return true;
+      if (el.kind && String(el.kind).toLowerCase() === 'promoted') return true;
+      if (isObj(el.adPayload)) return true;
+      if (isObj(el.promotedDisplay) || isObj(el.promotedBy)) return true;
+      if (isObj(el.node) && looksLikeAd(el.node)) return true;
+      if (Array.isArray(el.cells) && el.cells.some(c => isObj(c) && String(c.__typename||'').toLowerCase().includes('ad'))) return true;
       return false;
     }
 
-    function filterArrays(obj) {
+    function filterArraysSafely(obj) {
       if (Array.isArray(obj)) {
-        return obj
-          .filter(item => {
-            // 兼容形如 { node: {...} } 的元素
-            const n = isObj(item?.node) ? item.node : item;
-            return !looksLikeAd(n);
-          })
-          .map(filterArrays);
+        const out = [];
+        for (const it of obj) {
+          const target = isObj(it?.node) ? it.node : it;
+          if (looksLikeAd(target)) continue;
+          out.push(filterArraysSafely(it));
+        }
+        return out;
       }
       if (!isObj(obj)) return obj;
       const out = {};
       for (const [k, v] of Object.entries(obj)) {
-        // 只对常见承载列表的字段进行数组过滤，避免误删父节点
-        if (Array.isArray(v) && ['items', 'edges', 'cells', 'children', 'posts', 'elements'].includes(k)) {
-          out[k] = filterArrays(v);
+        if (Array.isArray(v) && ['items','edges','cells','children','posts','elements','data'].includes(k)) {
+          out[k] = filterArraysSafely(v);
         } else {
-          out[k] = filterArrays(v);
+          out[k] = filterArraysSafely(v);
         }
       }
       return out;
     }
 
-    const cleaned = filterArrays(body);
-
-    return $done({ body: JSON.stringify(cleaned) });
+    // apply patches
+    try {
+      walkPatchPremium(bodyObj);
+      const cleaned = filterArraysSafely(bodyObj);
+      const out = safeStringify(cleaned);
+      if (out === null) {
+        dbg('stringify failed');
+        return $done({});
+      }
+      dbg('modified and returning');
+      return $done({ body: out });
+    } catch (e) {
+      dbg('apply patch error', String(e));
+      return $done({});
+    }
   } catch (e) {
-    console.log('[reddit clean] error:', String(e));
-    return $done({}); // 失败放行
+    // 全局捕获
+    try { console.log('[reddit-merge] uncaught error', String(e)); } catch (ee) {}
+    return $done({});
   }
 })();
