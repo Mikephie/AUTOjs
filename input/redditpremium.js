@@ -6,15 +6,14 @@
 #!icon=https://raw.githubusercontent.com/Mikephie/icons/main/icon/reddit.png
 𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹𒊹
 [rewrite_local]
-^https?:\/\/gql(-fed)?\.reddit\.com\/.* url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/redditpremium.js
+^https?:\/\/gql-fed\.reddit\.com\/$ url script-response-body https://raw.githubusercontent.com/Mikephie/Script/main/qx/redditpremium.js
 
 [MITM]
 hostname = gql-fed.reddit.com
 
  */
 
-// reddit-unlock-and-adtrim.clean.js
-// 等效于你贴的混淆脚本：先字符串替换翻转标志，再解析并做数组级广告过滤
+
 (() => {
   'use strict';
 
