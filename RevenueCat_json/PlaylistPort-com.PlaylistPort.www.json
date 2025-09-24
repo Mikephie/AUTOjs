@@ -1,0 +1,24 @@
+{
+  "user_agent": "PlaylistPort",
+  "bundle_id": "com.PlaylistPort.www",
+  "data": {
+    "com.PlaylistPort.www.Weekly": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "com.PlaylistPort.www.Weekly"
+    },
+    "com.PlaylistPort.www.lifetime198": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "com.PlaylistPort.www.lifetime198"
+    },
+    "com.PlaylistPort.www.lifetime298": {
+      "entitlements": [
+        "premium"
+      ],
+      "product_identifier": "com.PlaylistPort.www.lifetime298"
+    }
+  }
+}
